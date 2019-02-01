@@ -1,0 +1,262 @@
+<div class="portlet light bordered order-list-container" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span ng-show="ctrl.isAddAction" class="caption-subject bold"> Add Item Group</span>
+            <span ng-show="!ctrl.isAddAction" class="caption-subject bold"> Edit Item Group </span>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <form name="editForm" novalidate ng-submit="editForm.$valid && ctrl.addOrUpdateItemProperty()">
+            <div class="form-body">
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <label>Group Name</label>
+                        <input-validation-message field="groupName" form="editForm"></input-validation-message>
+                        <input type="text" name="groupName" ng-model="ctrl.itemPropertyGroup.name" class="form-control" required="true" placeholder="Enter text">
+                    </div>
+                    <div class="col-md-4">
+                        <label>Customer</label>
+                        <!--<input-validation-message field="customer" form="editForm"></input-validation-message>-->
+                        <organization-auto-complete name="customer" allow-clear="true" tag="Customer"
+                                                    ng-model="ctrl.itemPropertyGroup.customerId"  on-select="ctrl.onSelectCustomer(org)">
+                        </organization-auto-complete>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Parent Group</label>
+                        <ui-select name="parentGroup" on-select="ctrl.onSelectGroup($select.selected)" ng-model="ctrl.itemPropertyGroup.parentId">
+                            <ui-select-match allow-clear="true">
+                                {{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="group.id as group in ctrl.availableGroups | filter: $select.search" refresh="ctrl.getAvailableGroups($select.search)"
+                                refresh-delay="50">
+                                <div>{{group.name}}</div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="row form-group" style="margin-top: 30px;">
+                    <div class="col-md-6">
+                        <div style="padding: 15px 30px 20px 30px;; background-color: rgba(198, 228, 230, 0.36);">
+                            <div style="margin-left: -13px; margin-bottom: 30px; font-size: 15px; color: #739a9c;"><b>Static Properties</b></div>
+
+                            <div class="row form-group">
+                                <label class="col-md-4 control-label">Tags:</label>
+                                <div class="col-md-8">
+                                    <input-validation-message field="tags"></input-validation-message>
+                                    <ui-select multiple name="tags" ng-model="ctrl.itemPropertyGroup.tags"
+                                               on-select="ctrl.onSelectTag()" on-remove="ctrl.onSelectTag()" required="true">
+                                        <ui-select-match>
+                                            {{$item}}
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="tag in ['Material','Product'] | filter: $select.search">
+                                            <div>{{tag}}</div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <label class="col-md-4 control-label">NMFC:</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" ng-model="ctrl.itemPropertyGroup.nmfc" name="nmfc">
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="col-md-4 control-label">FreightClass:</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" ng-model="ctrl.itemPropertyGroup.freightClass" name="freightClass">
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="col-md-4 control-label">Grade:</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" ng-model="ctrl.itemPropertyGroup.grade" name="grade">
+                                </div>
+                            </div>
+
+                            <div class="row form-group" ng-show="ctrl.itemPropertyGroup.isAllowKitting">
+                                <label class="col-md-4 control-label">Kitting: </label>
+                                <div class="col-md-8">
+                                    <md-switch class="md-primary" aria-label="Kitting" ng-model="ctrl.itemPropertyGroup.bundle" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="col-md-4 control-label">Required Collect On Receiving</label>
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <md-switch class="md-primary" ng-model="ctrl.itemPropertyGroup.requireCollectLotNoOnReceive"
+                                                       style="margin-bottom:0px;">Lot No.</md-switch>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <md-switch class="md-primary" ng-model="ctrl.itemPropertyGroup.requireCollectExpirationDateOnReceive"
+                                                       style="margin-bottom:0px;">Expiration Date</md-switch>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <md-switch class="md-primary" ng-model="ctrl.itemPropertyGroup.requireCollectMfgDateOnReceive">Mfg Date</md-switch>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <md-switch class="md-primary" ng-model="ctrl.itemPropertyGroup.requireCollectShelfLifeDaysOnReceive">Shelf Life Date</md-switch>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="col-md-4 control-label">Has Serial Number:
+                                </label>
+                                <div class="col-md-8">
+                                    <md-switch class="md-primary" aria-label="Has Serial Number" ng-change="ctrl.hasSerialNumberOnChange(ctrl.itemPropertyGroup.hasSerialNumber)"
+                                        ng-model="ctrl.itemPropertyGroup.hasSerialNumber" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                </div>
+                            </div>
+                            <div class="row form-group" ng-show="ctrl.itemPropertyGroup.hasSerialNumber">
+                                <label class="col-md-4 control-label">Serial No Length:</label>
+                                <div class="col-md-8">
+                                    <input type="number" class="form-control" ng-model="ctrl.itemPropertyGroup.serialNoLength" name="serialNoLength" style="width:100px;">
+                                </div>
+                            </div>
+                            <div class="row form-group" ng-show="ctrl.itemPropertyGroup.hasSerialNumber">
+                                <label class="col-md-4 col-xs-3 control-label">Validate Inbound Serial No.:</label>
+                                <div class="col-md-8">
+                                    <md-switch class="md-primary" aria-label="Validate Inbound Serial No." ng-model="ctrl.itemPropertyGroup.validationInboundSerialNo" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                </div>
+                            </div>
+                            <div class="row form-group" ng-show="ctrl.itemPropertyGroup.hasSerialNumber">
+                                <label class="col-md-4 col-xs-3 control-label">Validate Outbound Serial No.:</label>
+                                <div class="col-md-8">
+                                    <md-switch class="md-primary" aria-label="Validate Outbound Serial No." ng-model="ctrl.itemPropertyGroup.validationOutboundSerialNo" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                </div>
+                            </div>
+                            <div class="row form-group" ng-show="ctrl.itemPropertyGroup.hasSerialNumber">
+                                <label class="col-md-4 col-xs-3 control-label">Validate Outbound Serial No Against Inbound:</label>
+                                <div class="col-md-8">
+                                    <md-switch class="md-primary" aria-label="Validate Outbound Serial No Against Inbound" ng-model="ctrl.itemPropertyGroup.validatedOutboundSerialNoAgainstInbound" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                </div>
+                            </div>
+                            <div class="row form-group" ng-show="ctrl.itemPropertyGroup.hasSerialNumber">
+                                <label class="col-md-4 col-xs-3 control-label">Serial No Scan Lot No Check:</label>
+                                <div class="col-md-8">
+                                    <md-switch class="md-primary" aria-label="Serial No Scan Lot No Check" ng-model="ctrl.itemPropertyGroup.serialNoScanLotNoCheck" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="col-md-4 control-label">Location Group</label>
+                                <div class="col-md-8">
+                                    <ui-select name="status" ng-model="ctrl.itemPropertyGroup.locationGroupId">
+                                        <ui-select-match allow-clear="true">
+                                            {{$select.selected.name}}
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="locationGroup.id as locationGroup in locationGroups| filter: $select.search">
+                                            {{locationGroup.name}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="col-md-4 control-label">Shipping Rule</label>
+                                <div class="col-md-8">
+                                    <ui-select name="shippingRule" class="form-control col-md-4" ng-model="ctrl.itemPropertyGroup.shippingRule">
+                                        <ui-select-match allow-clear="true">
+                                            <div ng-bind="$select.selected"></div>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="shippingRule in ['FIFO','LIFO', 'FEFO', 'LSFO']">
+                                            <div ng-bind="shippingRule"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="col-md-4 control-label">Country Origin:</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" ng-model="ctrl.itemPropertyGroup.countryOrigin" name="Country Origin" />
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="col-md-4 control-label">Hazardous Material:</label>
+                                <div class="col-md-8">
+                                    <md-switch class="md-primary" aria-label="Is Hazardous Material" ng-model="ctrl.itemPropertyGroup.isHazardousMaterial" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="col-md-4 control-label">Allow Overwrite Item: </label>
+                                <div class="col-md-8">
+                                    <md-switch class="md-primary" aria-label="Allow Overwrite Item"
+                                               ng-model="ctrl.itemPropertyGroup.allowOverWriteItem"  style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="col-md-4 control-label">Label:</label>
+                                <div class="col-md-8">
+                                    <lt-tags-input ng-model="ctrl.itemPropertyGroup.labels" name="Label"></lt-tags-input>
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <label class="col-md-4 control-label">Commodity Description:</label>
+                                <div class="col-md-8">
+                                    <textarea type="text" class="form-control" ng-model="ctrl.itemPropertyGroup.commodityDescription" name="Commodity Description"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div style="padding: 15px 30px 20px 30px;; background-color: rgba(198, 228, 230, 0.36); min-height: 406px;">
+                            <div style="margin-left: -13px; margin-bottom: 30px; font-size: 15px; color: #739a9c;"><b>Dynamic Properties</b></div>
+                            <div class="row form-group">
+                                <div class="col-md-8" style="text-align: center;">
+                                    <label>Property</label>
+                                </div>
+                                <div class="col-md-2" style="text-align: center;">
+                                    <label>Diverse</label>
+                                </div>
+                            </div>
+                            <div class="row form-group" ng-repeat="p in ctrl.parentGroupProperties track by $index">
+                                <div class="col-md-8">
+                                    <input class="form-control" ng-model="p.itemProperty.name" style="width:100%;" disabled/>
+                                </div>
+                                <div class="col-md-2" style="padding-left:40px; padding-top:5px;">
+                                    <span ng-show="p.diverse">YES</span>
+                                    <span ng-show="!p.diverse">NO</span>
+                                </div>
+                            </div>
+                            <div class="row form-group" ng-repeat="property in ctrl.itemPropertyGroup.properties track by $index">
+                                <div class="col-md-8">
+                                    <ui-select ng-model="property.propertyId" ng-click="ctrl.filterAvailableProperties()" style="border-radius: 4px;" required>
+                                        <ui-select-match>
+                                            <div ng-bind="$select.selected.name"></div>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="p.id as p in ctrl.availableProperties | filter:$select.search">
+                                            <div ng-bind="p.name"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <div class="col-md-2" style="padding-left:40px;">
+                                    <md-switch class="md-primary" aria-label="Diverse" ng-model="property.diverse" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn red" ng-click="ctrl.removeGroupProperty($index)">Remove</button>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-8">
+                                </div>
+                                <div class="col-md-2">
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn green" ng-click="ctrl.addGroupProperty()">Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions right">
+                <waitting-btn type="submit" btn-class="btn blue" value="submitLabel" is-loading="loading"></waitting-btn>
+                <button type="button" class="btn default" ng-click="ctrl.cancelEditItemPropertyGoup()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

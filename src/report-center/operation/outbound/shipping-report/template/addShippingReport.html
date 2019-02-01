@@ -1,0 +1,91 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">
+                <span class="caption-subject bold"> Add Shipping Report</span>
+
+            </h1>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <form novalidate name="editForm" novalidate ng-submit="editForm.$valid && submit()">
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-50">
+                        <div class="grid-parent grid-100 container">
+                            <div class="grid-50">
+                                <label>Customer:</label>
+                                <input-validation-message field="customer" form="editForm"></input-validation-message>
+                                <organization-auto-complete name="customer" ng-model="reportModel.customerId" tag="Customer" allow-clear="true" required="true"></organization-auto-complete>
+                            </div>
+                            <div class="grid-50">
+                                <label>Title:</label>
+                                <organization-auto-complete name="title" ng-model="reportModel.titleId" tag="Title" allow-clear="true"></organization-auto-complete>
+                            </div>
+                        </div>
+
+                        <div class="grid-parent grid-100 container">
+                            <div class="grid-50">
+                                <label>Start Schedule Date:</label>
+                                <lt-date-time value="reportModel.scheduleTimeStart" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                            </div>
+                            <div class="grid-50">
+                                <label>End Schedule Date:</label>
+                                <lt-date-time value="reportModel.scheduleTimeEnd" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                            </div>
+                        </div>
+                        <div class="grid-parent grid-100 container">
+                            <div class="grid-50">
+                                <label>Start Shipped  Date:</label>
+                                <input-validation-message field="startTime" form="editForm"></input-validation-message>
+                                <lt-date-time name="startTime" value="reportModel.startTime" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                            </div>
+                            <div class="grid-50">
+                                <label>End Shipped  Date:</label>
+                                <lt-date-time value="reportModel.endTime" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                            </div>
+                        </div>
+                        <div class="grid-parent grid-100 container">
+
+                            <div class="grid-50">
+                                <label>Supplier:</label>
+                                <organization-auto-complete ng-model="reportModel.supplierId" name="supplier" tag="Supplier" allow-clear="true"></organization-auto-complete>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="grid-50">
+                        <div class="grid-parent grid-100 container">
+                            <label>Item:</label>
+                            <itemspec-auto-complete ng-model="reportModel.itemSpecId" name="itemSpec" customer-id="reportModel.customerId" on-select="itemSpecIdOnSelect(reportModel.itemSpecId)"
+                                allow-clear="true" />
+                        </div>
+                        <div ng-show="diverseFields && diverseFields.length>0" style="background-color: rgba(93, 204, 214, 0.188235); padding:15px 25px 5px 5px; margin-bottom: 15px; margin-right:-15px;">
+                            <div class="grid-parent grid-100 container" ng-switch on="field.itemProperty.type" ng-repeat="field in diverseFields">
+                                <label class="control-label col-md-3">{{field.itemProperty.name}}:</label>
+                                <div class="col-md-9">
+                                    <input-validation-message field="field.{{$index}}.value" form="addItemLineForm"></input-validation-message>
+                                    <ui-select name="field.{{$index}}.value" ng-model="field.selectedProduct" ng-show="field.availableDiverseValues && field.availableDiverseValues.length>0"
+                                        on-select="diverseValuesSelected(field)">
+                                        <ui-select-match allow-clear="true">
+                                            <div>{{$select.selected.value}} {{$select.selected.unit}}</div>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="diverseObj in field.availableDiverseValues">
+                                            <div>{{diverseObj.value}} {{diverseObj.unit}}</div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-parent grid-100 container" style="margin-top:50px;">
+                    <unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="'Submit'" is-loading="loading"></unis-waitting-btn>
+                    <button type="button" class="grid-10 pull-right cancel" ng-click="cancel()">Cancel</button>
+
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+

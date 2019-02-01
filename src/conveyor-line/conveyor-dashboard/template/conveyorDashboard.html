@@ -1,0 +1,88 @@
+<div class="grid-100" style="background-color: rgba(77, 127, 137, 0.4)">
+
+  <div class="grid-100" style=" line-height: 50px;background-color: rgba(255, 255, 255, 0.87);padding-top: 20px;padding-bottom: 20px">
+      <div class="grid-40" style="text-align:center;">
+          <h1 class="section-label pull-left" style="font-size:40px">Conveyor Dashboard</h1>
+      </div>
+  </div>
+
+  <div class="grid-100" style="margin-top:20px ;background-color: rgba(255, 255, 255, 0.87);margin-bottom: 30px">
+
+      <div class="grid-100" style="margin-top:20px;margin-bottom:20px">
+          <div class="grid-25">
+              <b style="font-size:20px">Total Num. of Branch: </b><span style="font-size:20px">{{PickingDashboard.totalBranch}}</span>
+          </div>
+          <div class="grid-25">
+              <b style="font-size:20px">Available Branch(s): </b><span style="font-size:20px">{{PickingDashboard.availableBranchs}}</span>
+          </div>
+          <div class="grid-50">
+              <b style="font-size:20px">Occupied:</b> <span style="font-size:20px">{{PickingDashboard.occupiedBranchs}}</span>
+          </div>
+      </div>
+
+      <div class="grid-100" style="margin-bottom:20px">
+          <div class="grid-50">
+              <b style="font-size:20px">Store(s) Being Packed: </b><span style="font-size:20px">{{PickingDashboard.stores}}</span>
+          </div>
+          <div class="grid-50">
+              <b style="font-size:20px">Exception Branch: </b><span style="font-size:20px">{{PickingDashboard.exceptionBranch}}</span>
+          </div>
+      </div>
+
+
+      <div class="grid-100" style="margin-bottom:20px">
+        <div class="grid-90">
+            <b style="font-size:20px">DN(s) Packed: </b><span style="font-size:20px">{{PickingDashboard.orders}}</span>
+        </div>
+    </div>
+
+  </div>
+
+  <div class="grid-100" style="background-color: rgba(255, 255, 255, 0.87);margin-bottom: 20px;">
+      <div class="grid-100" style="margin-top: 20px;margin-bottom: 20px;">
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th style="font-size:24px">Branch</th>
+                      <th style="font-size:24px">Status</th>
+                      <th style="font-size:24px">Type</th>
+                      <th style="font-size:24px">Store No.</th>
+                      <th style="font-size:24px">Order No.</th>
+                      <th style="font-size:24px">Tasks</th>
+                      <th style="font-size:24px">Ttl Order CS QTY</th>
+                      <th style="font-size:24px">Ttl Task EA QTY</th>
+                      <th style="font-size:24px">Ttl Packed EA QTY</th>
+                      <th style="font-size:24px">Release Branch</th>
+                      <th style="font-size:24px">Bind Branch</th>
+                      <th style="font-size:24px">Set to Exception</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr ng-repeat="branch in PickingDashboard.branchDetail track by $index">
+                      <td style="font-size:24px">{{branch.branch}}</td>
+                      <td style="font-size:24px">{{branch.status}}</td>
+                      <td style="font-size:24px">{{branch.type}}</td>
+                      <td style="font-size:24px">{{branch.storeNo}}</td>
+                      <td style="font-size:24px">{{branch.orders}}</td>
+                      <td style="font-size:24px">{{branch.tasks}}</td>
+                      <td style="font-size:24px">{{branch.orderCsQty}}</td>
+                      <td style="font-size:24px">{{branch.taskEaQty}}</td>
+                      <td style="font-size:24px">{{branch.packEaQty}}</td>
+                      <td> <waitting-btn is-ready="branch.type=='NORMAL' && branch.storeNo" type="button" btn-class="ripplelink"
+                                         is-loading="releaseLoading[branch.branchId]" ng-click="releaseBranch(branch)" value="'Release'"></waitting-btn>
+                    </td>
+                      <td>
+                        <input  style="font-size:24px" ng-if="branch.type=='NORMAL' && !branch.storeNo" placeholder="enter store" ng-model="branch.store" required>
+                        <waitting-btn is-ready="branch.type=='NORMAL' && !branch.storeNo" type="button" btn-class="ripplelink"
+                            is-loading="bindLoading[branch.branchId]" ng-click="bindBranch(branch)" value="'Bind'"></waitting-btn>
+                    </td>
+                      <td><waitting-btn type="button" is-ready="branch.type=='NORMAL'" btn-class="ripplelink"
+                            is-loading="exceptionLoading[branch.branchId]" ng-click="exceptionBranch(branch)" value="'Exception'"></waitting-btn>
+                    </td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+  </div>
+
+</div>

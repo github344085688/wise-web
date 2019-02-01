@@ -1,0 +1,15 @@
+<ui-select name="{{name}}" ng-model="$parent.ngModel" required="{{required}}" ng-disabled="isDisabled"
+           on-select="_onSelect($select.selected)">
+    <ui-select-match allow-clear="{{allowClear}}">
+        <div ng-bind="$select.selected.longHaulNo"></div>
+    </ui-select-match>
+    <ui-select-choices repeat="item.id as item in longHauls | filter: $select.search.longHaulNo"
+                       refresh="getLongHaulList($select.search)" refresh-delay="50">
+        <!--<div ng-bind="item.longHaulNo"></div>-->
+        [{{item.longHaulShipDay.join(",")}}]
+        {{item.longHaulNo}}
+    </ui-select-choices>
+    <ui-select-no-choice>
+        No available option.
+    </ui-select-no-choice>
+</ui-select>

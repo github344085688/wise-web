@@ -1,0 +1,86 @@
+[
+	{
+		"title": "Inventory Count",
+		"icon": "loop",
+		"url": "",
+		"state": "inventory.inventorycount",
+		"permissions": "inventory::inventoryCount_read",
+		"subMenu": [
+			{
+				"title": "Inventory Count",
+				"icon": "assignment",
+				"state": "inventory.inventorycount.basic",
+				"url": "/inventory/inventorycount/basic"
+			},
+			{
+				"title": "Summary By Location",
+				"icon": "assignment",
+				"state": "inventory.inventorycount.location",
+				"url": "/inventory/inventorycount/location"
+			},
+			{
+				"title": "Summary By SKU",
+				"icon": "assignment",
+				"state": "inventory.inventorycount.summary",
+				"url": "/inventory/inventorycount/summary"
+			}
+		]
+	},
+	{
+		"title": "Adjustment",
+		"icon": "build",
+		"url": "",
+		"state": "inventory.adjustment",
+		"permissions": "adjustment::adjustment_read",
+		"subMenu": [
+			{
+				"title": "Adjustment",
+				"icon": "assignment",
+				"state": "inventory.adjustment.list",
+				"url": "/inventory/adjustment/list"
+			}
+		]
+	},
+	{
+		"title": "Inventory",
+		"icon": "loop",
+		"url": "",
+		"state": "inventory.inventory",
+		"permissions": "inventory::inventory_read",
+		"subMenu": [
+			{
+				"title": "Inventory List",
+				"icon": "assignment",
+				"state": "inventory.inventory.list",
+				"url": "/inventory/inventory/list"
+			},
+			{
+				"title": " Ocuppied Inventory ",
+				"icon": "assignment",
+				"state": "inventory.inventory.ocuppiedlist",
+				"url": "/inventory/inventory/ocuppiedlist"
+			},
+			{
+				"title": "Pickable Inventory ",
+				"icon": "assignment",
+				"state": "inventory.inventory.pickablelist",
+				"url": "/inventory/inventory/pickablelist"
+			}
+		]
+	},
+	{
+		"title": "Report",
+		"icon": "reorder",
+		"url": "",
+		"state": "inventory.report",
+		"permissions": "inventory::report_read",
+		"subMenu": [
+			{
+				"title": "Report List",
+				"state": "inventory.report.list",
+				"icon": "home",
+				"url": "/inventory/report/list"
+			}
+		]
+	}
+]

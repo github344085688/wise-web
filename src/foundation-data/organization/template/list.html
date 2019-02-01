@@ -1,0 +1,86 @@
+<div class="grid-100 row" ng-keyup="keyUpSearch($event)">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Organization List</h1>
+            <a class="create-button"  ui-sref="fd.organization.edit" permission-check="{{'organizationAdd_write'}}">
+                <b>Add Organization</b></a>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container" >
+            <div class="grid-33">
+                <label class="label-input">Tag:</label>
+                <ui-select name="tags" ng-model="searchInfo.relationship">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="tag in tagList| filter: $select.search">
+                        {{tag}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-33">
+                <label class="label-input">Name/Code:</label>
+                <input type="text" ng-model="searchInfo.keyword" placeholder="Name"/>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-80">&nbsp;</div>
+            <div class="grid-10">
+                <waitting-btn type="button" btn-class="btn yellow" ng-click="export()" value="'Export'" is-loading="exporting"></waitting-btn>
+            </div>
+            <div class="grid-10">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()"
+                              value="'Search'" is-loading="!searchOrganizationCompleted"></waitting-btn>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th> Name </th>
+                        <th> Tags </th>
+                        <th> Customer Code </th>
+                        <th> Contact </th>
+                        <th> Note </th>
+                        <th> Actions </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="organization in organizations track by $index">
+                        <td>{{organization.basic.name}}</td>
+                        <td>
+                            <span ng-repeat="item in organization.roles" style="margin-left: 5px; padding: 5px">{{item}}</span>
+                        </td>
+                        <td>{{organization.extend.customerCode}}</td>
+                        <th>
+                            <div class="grid-parent grid-100 container" ng-repeat="contact in organization.extend.contacts">
+                                <div class="grid-25">{{contact.name}}</div>
+                                <div class="grid-25">{{contact.phone}}</div>
+                                <div class="grid-35">{{contact.email}}</div>
+                                <div class="grid-15">{{contact.type}}</div>
+                            </div>
+                        </th>
+                        <td>{{organization.extend.note}}</td>
+                        <td>
+                            <a ui-sref="fd.organization.edit({organizationId:organization.basic.id})">Edit</a>  
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+    </div>
+</div>
+
+
+
+

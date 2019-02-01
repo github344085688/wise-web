@@ -1,0 +1,26 @@
+<div class="table-scrollable" ng-show="materialLines && materialLines.length > 0">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Item</th>
+            <th>Customer</th>
+            <th>Title</th>
+            <th>Supplier</th>
+            <th>UOM</th>
+            <th>Qty</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="materialLine in materialLineView track by $index">
+            <td><item-display item="materialLine"></item-display></td>
+            <td>{{materialLine.customerName}}</td>
+            <td>{{materialLine.titleName}}</td>
+            <td>{{materialLine.supplierName}}</td>
+            <td>{{materialLine.unitName}}</td>
+            <td>{{materialLine.qty}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<pager total-count="materialLines.length" page-size="pageSize"
+       load-content="loadContent(currentPage)"></pager>

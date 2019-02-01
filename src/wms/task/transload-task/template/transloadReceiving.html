@@ -1,0 +1,158 @@
+<div class="grid-100 Top-Bar">
+    <div class="grid-10">
+        <a href="javascript:void(0)">
+            <img src="assets/img/sso/unis-co.png" style="width:150px; height:60px" alt="logo" class="logo-default" />
+        </a>
+    </div>
+    <div class="grid-90 Valley" style="line-height:60px">
+        <div class="grid-25">
+            <span>Transload</span>
+        </div>
+        <div class="grid-25">
+            <span>&nbsp;</span>
+        </div>
+        <div class="grid-50">
+            <span style="float:right">Receiving</span>
+        </div>
+
+    </div>
+
+</div>
+<div class="grid-100 Top-Bar" style=" height: 50px;font-size: 18px;">
+    <div class="grid-20">
+        <label>Start Time:{{baseInfo.startTime|amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</label>
+    </div>
+    <div class="grid-30">
+        <label>Duration:{{baseInfo.duration}}</label>
+    </div>
+    <div class="grid-30">
+        <label>Status: {{baseInfo.status}}</label>
+    </div>
+    <div class="grid-20" style="text-align: right;">
+        <label>Current User: {{baseInfo.currentUser}}</label>
+    </div>
+</div>
+<div class="grid-100" style="padding:20px 10px 24px;background: #55626b;">
+    <div class="grid-100">
+        <div class="grid-100" style="border-radius: 2px;background-color: #ffffff;padding:20px 10px;font-size:18px">
+            <div class="grid-100">
+                <div class="grid-33">
+                    <label>RN:{{receiptInfo.receiptId}}</label>
+                </div>
+                <div class="grid-33">
+                    <label>PO#:{{receiptInfo.poNo}}</label>
+                </div>
+                <div class="grid-33">
+                    <label>Original Container#: {{receiptInfo.containerNo}}</label>
+                </div>
+            </div>
+            <div class="grid-100">
+                <div class="grid-33">
+                    <label>Entry ID:<a ng-href="{{'#/cf/facility/window/checkin/' + receiptInfo.entryId + '/' + receiptInfo.entryId + '/carrier-info'}}" target="_blank">{{receiptInfo.entryId}}</a></label>
+                </div>
+                <div class="grid-33">
+                    <label>Dock#:{{receiptInfo.dockName}}</label>
+                </div>
+                <div class="grid-33">
+                    <label>UOM: {{receiptInfo.unitName}}</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="grid-100 monitor-container" style="padding-top: 20px;">
+        <div class="grid-50 Rectangle" style="width: 20%;margin-right: 1%;  padding: 0px; height:300px">
+            <div class="grid-100 Valley" style=" line-height: 150px;font-size: 30px; text-align: center;">
+                <label>Grand Total</label>
+            </div>
+            <div class="grid-100 Valley" style=" line-height:90px;font-size: 30px; text-align: center;">
+                <label>{{receivingProgressInfo.grandTotal.totalReceiveQty}}/{{receivingProgressInfo.grandTotal.totalQty}}</label>
+            </div>
+        </div>
+        <div class="grid-50 Rectangle" style="width: 58%;margin-right: 1%;  padding: 0px; height:300px">
+            <div class="rec-title">
+                <div class="f-left Valley">
+                    <label> Transload Schedule</label>
+                </div>
+                <div class="f-right F-type">
+                    <a ng-click="aheadPage(scheduledDocumentPager.currentPage)" style="padding-right: 15px;">
+                        <</a>
+                            <label> Page {{scheduledDocumentPager.currentPage}} of {{scheduledDocumentPager.totalPage}}</label>
+                            <a
+                                style="padding-left: 15px;" ng-click="nextPage(scheduledDocumentPager.currentPage)">></a>
+                    <label></label>
+                </div>
+            </div>
+            <div class="grid-100" style="padding:0px">
+                <table class="monitor-overview-table F-type">
+                    <thead>
+                        <tr>
+                            <th>Dock#</th>
+                            <th>Total Qty</th>
+                            <th>Total Received</th>
+                            <th>Receiving Progress</th>
+                            <th>Total Shipped</th>
+                            <th>Total Loaded</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="stepsProgress in scheduledDocumentView">
+                            <td>{{stepsProgress.dockName}}</td>
+                            <td>{{stepsProgress.totalQty}}</td>
+                            <td>{{stepsProgress.totalReceiveQty}}</td>
+                            <td>
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'14px','width':widthPer25(stepsProgress.receivingProgress),'background':'#156998'}"></div>
+                                </div>
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'14px','width':widthPer50(stepsProgress.receivingProgress),'background':'#156998'}"></div>
+                                </div>
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'14px','width':widthPer75(stepsProgress.receivingProgress),'background':'#156998'}"></div>
+                                </div>
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'14px','width':widthPer100(stepsProgress.receivingProgress),'background':'#156998'}"></div>
+                                </div>
+                                <div style="display:inline-block"> {{ widthPer(stepsProgress.receivingProgress) }}</div>
+                            </td>
+                            <td>{{stepsProgress.totalShipped}}</td>
+                            <td>{{stepsProgress.totalLoaded}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <div class="grid-50 Rectangle" style="width: 20%; padding: 0px; height:300px">
+            <div class="grid-100 Valley" style=" line-height: 150px;font-size: 30px; text-align: center;">
+                <label>Destination Dock#</label>
+            </div>
+            <div class="grid-100 Valley" style=" line-height: 90px;font-size: 30px; text-align: center;">
+                <label>{{destinationDock}}</label>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="grid-100 " style="padding-top: 20px;">
+        <div class="grid-50 Rectangle" style="width: 59%;margin-right: 1%;  padding: 0px; height:300px;overflow: auto;">
+            <div class="grid-100 Valley" style=" font-size: 18px;padding: 20px 30px;line-height: 30px;">
+                <p ng-repeat="scannedCarton  in receivingScannedCartonLines">
+                    <span ng-if="scannedCarton.status==='Success'" ng-class="{'color-reds': scannedCarton.scanAction === 'Disallow'}">{{formatSucessMessage(scannedCarton)}}</span>
+                    <span ng-if="scannedCarton.status==='Failed'" style="color:rgb(204, 17, 17)">{{formatFailMessage(scannedCarton)}} </span>
+                </p>
+
+            </div>
+
+        </div>
+        <div class="grid-50 Rectangle" style="width: 40%; padding: 0px; height:300px;overflow: auto;">
+            <div class="grid-100 Valley" style=" font-size: 18px;padding: 20px 30px;line-height: 30px;">
+                <p ng-repeat="stepTimeline in receivingStepTimelines[0].timePoints ">
+                    {{formatStander(stepTimeline.time)}} -- {{stepTimeline.timeType}} task
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+</div>

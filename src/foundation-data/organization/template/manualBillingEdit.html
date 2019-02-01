@@ -1,0 +1,105 @@
+<md-dialog id="unis" flex="60">
+    <form class="light-theme" novalidate name="manualBillingForm" ng-submit="manualBillingForm.$valid && addOrUpdateManualBilling()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1 ng-show="id">Update Manual Billing</h1>
+                <h1 ng-show="!id">Create Manual Billing</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" style="min-height: 350px;">
+                <div class="grid-parent grid-100 container" style="margin-top:50px;">
+                    <div class="grid-30">
+                        <label class="label-input">item:</label>
+                        <div class="input-icon right" ng-show="manualBillingForm.itemSpec.$invalid && (manualBillingForm.$submitted || manualBillingForm.itemSpec.$touched)">
+                            <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                <span class="lt-tooltip-text">Required.</span>
+                            </i>
+                        </div>
+                        <!-- <itemspec-auto-complete show-empty-customer-id-item="true" customer-id="customerId" ng-model="param.itemSpecId"
+                            name="itemSpec" tags=['Material'] allow-clear="true" required /> -->
+                        <!-- <itemspec-auto-complete ng-model="param.accountItemId" name="itemSpec" allow-clear="true" required /> -->
+                        <ui-select name="itemSpec" ng-model="param.accountItemId" required>
+                            <ui-select-match allow-clear="true">
+                                <span ng-bind="$select.selected.AccountItem"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item.AccountItem as item in itemList | filter: $select.search">
+                                {{item.AccountItem}}
+                            </ui-select-choices>
+                            <ui-select-no-choice>
+                                No available item.
+                            </ui-select-no-choice>
+                        </ui-select>
+                    </div>
+                    <div class="grid-30">
+                        <label class="label-input">Ranges:</label>
+                        <div class="input-icon right" ng-show="manualBillingForm.ranges.$invalid && (manualBillingForm.$submitted || manualBillingForm.ranges.$touched)">
+                            <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                <span class="lt-tooltip-text">Required.</span>
+                            </i>
+                        </div>
+                        <ui-select multiple name="ranges" ng-model="param.ranges" required>
+                            <ui-select-match allow-clear="true">
+                                <span ng-bind="$item"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat=" range in ['Inbound', 'Outbound'] | filter: $select.search">
+                                {{range}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="grid-30">
+                        <label class="label-input">Qty:</label>
+                        <div class="input-icon right" ng-show="manualBillingForm.qty.$invalid && (manualBillingForm.$submitted || manualBillingForm.qty.$touched)">
+                            <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                <span class="lt-tooltip-text">Required.</span>
+                            </i>
+                        </div>
+                        <input type="number" name="qty" ng-model="param.qty" style="width: 100%;min-height: 27px;"
+                            required>
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container" style="margin-top:50px;">
+                    <div class="grid-30">
+                        <label class="label-input">MaterialUOM:</label>
+                        <div class="input-icon right" ng-show="manualBillingForm.materialUOM.$invalid && (manualBillingForm.$submitted || manualBillingForm.materialUOM.$touched)">
+                            <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                <span class="lt-tooltip-text">Required.</span>
+                            </i>
+                        </div>
+                        <ui-select name="materialUOM" ng-model="param.materialUOM" required>
+                            <ui-select-match allow-clear="true">
+                                {{$select.selected}}
+                            </ui-select-match>
+                            <ui-select-choices repeat=" materialUOM in ['Pallet', 'CS', 'Order', 'Order Item Line', 'EA', 'Tracking Number'] | filter: $select.search">
+                                {{materialUOM}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="grid-30">
+                        <label>Effective Date:</label>
+                        <lt-date-time value="param.effectiveDate" date-format="yyyy-mm-dd" min-view="2" required="true"></lt-date-time>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-60">&nbsp;
+                        </div>
+                        <div class="grid-20">
+                            <unis-waitting-btn btn-type="submit" btn-class="ripplelink" value="submitLabel" is-ready="isReady" is-loading="loading"></unis-waitting-btn>
+                        </div>
+                        <div class="grid-20">
+                            <button type="button" ng-click="cancel()" class="ripplelink">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>

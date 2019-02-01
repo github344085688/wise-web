@@ -1,0 +1,171 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Task</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Pick Task List</a>
+        </li>
+    </ul>
+</div>
+<div ng-show="isLoading" class="text-center">
+    <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+</div>
+<div class="portlet light bordered" ng-show="!isLoading"  style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold">Merge Tasks To {{currentTask.id}}</span>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <div class="form-group">
+            <div class="col-md-12">
+                <b>Order</b>:
+                <span ng-repeat="orderId in currentTask.orderIds">
+                    <a ng-href="{{'#/wms/outbound/order/' + orderId}}" target="_blank">{{orderId}}</a>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3"><b>Pick Type</b>: {{currentTask.pickType}}</div>
+            <div class="col-md-3"><b>Pick Way</b>: {{currentTask.pickWay}}</div>
+            <div class="col-md-3"><b>Status</b>: {{currentTask.status}}</div>
+            <div class="col-md-3"><b>Priority</b>: {{currentTask.priority}}</div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3"><b>Is Rush</b>: {{currentTask.isRush}}</div>
+            <span class="col-md-3">
+                <b>Assignee:</b> {{currentTask.assignee.firstName}} {{currentTask.assignee.lastName}}
+            </span>
+            <span class="col-md-3">
+                <b>Planned Assignee:</b>{{currentTask.plannedAssignee.firstName}} {{currentTask.plannedAssignee.lastName}}
+            </span>
+        </div>
+        <div class="form-group">
+            <span class="col-md-3"><b>Start Time: </b>{{currentTask.startTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</span>
+            <span class="col-md-3"><b>End Time: </b>{{currentTask.endTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</span>
+            <span class="col-md-3"><b>Create Time: </b>{{currentTask.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                                &nbsp;<span ng-show="task.createdBy">({{task.createdBy}})</span></span>
+            <span class="col-md-3"><b>Updated Time: </b>{{currentTask.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                                &nbsp;<span ng-show="task.updatedBy">({{task.updatedBy}})</span></span>
+        </div>
+        <div class="form-group"  style="margin-bottom: 30px;">
+            <div class="col-md-6">
+                <b>Note:</b> {{task.note}}
+            </div>
+        </div>
+        <div style="background-color:#e9edef; padding:15px 15px 5px 15px;">
+            <div class="row form-group" ng-repeat="itemLine in currentTask.pickItemLines">
+                <div class="col-md-2">
+                    <label class="bold">Item:</label>
+                    <label> {{itemLine.itemSpecName}} </label>
+                </div>
+                <div class="col-md-2">
+                    <label class="bold">Unit:</label>
+                    <label> {{itemLine.unitName}} </label>
+                </div>
+                <div class="col-md-2">
+                    <label class="bold">QTY:</label>
+                    <label> {{itemLine.qty}} </label>
+                </div>
+                <div class="col-md-2">
+                    <label class="bold">Location:</label>
+                     <span class="label box-shadow-none label-success"
+                           style="margin-left: 5px; padding: 5px ">
+                     {{itemLine.locationName}} </span>
+                </div>
+           
+            </div>
+        </div>
+        <h4 style="margin: 50px 0px 10px;"><b>Search Tasks</b></h4>
+        <form name="searchForm">
+            <div class="row form-group">
+                <div class="col-md-3">
+                    <label>Task ID</label>
+                    <lt-tags-input placeholder="Enter Task ID" ng-model="search.taskIds" fill="TASK-"></lt-tags-input>
+                </div>
+                <div class="col-md-3">
+                    <label>Order ID</label>
+                    <lt-tags-input placeholder="Enter Order ID" ng-model="search.orderIds" fill="DN-"></lt-tags-input>
+                </div>
+                <div class="col-md-3">
+                    <label>Assignee:</label>
+                    <user-auto-complete name="assignee" allow-clear="true" ng-model="search.assigneeUserId"></user-auto-complete>
+                </div>
+                <div class="col-md-3" style="padding-top:20px;">
+                    <waitting-btn type="button" btn-class="btn blue"
+                                  ng-click="searchTask()"
+                                  value="'Search'"
+                                  is-loading="searchLoading"></waitting-btn>
+                </div>
+            </div>
+        </form>
+        <div ng-repeat="task in taskViewList" style="padding:20px 20px 10px 20px; margin-bottom:10px; background-color:#e9edef; ">
+                <md-checkbox class="md-primary" ng-checked="isChecked(task)"  ng-click="toggle(task)">
+                    {{task.id}}
+                </md-checkbox>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <b>Pick Type:</b>
+                        <label>{{task.pickType}}</label>
+                    </div>
+                    <div class="col-md-3">
+                        <b>Pick Way:</b>
+                        <label>{{task.pickWay}}</label>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="bold">Start Time:</label>
+                        <label>{{task.startTime}}</label>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="bold">End Time:</label>
+                        <label>{{task.endTime}}</label>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <label class="bold">Orders:</label>
+                        <label ng-repeat="orderId in task.orderIds track by $index">
+                            <a href="{{'#/wms/outbound/order/' + orderId}}">{{orderId}}</a> &nbsp;
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="bold">Description:</label>
+                        <label>{{task.description}}</label>
+                    </div>
+                </div>
+                <div class="row form-group" ng-repeat="itemLine in task.pickItemLines">
+                    <div class="col-md-2">
+                        <label class="bold">Item:</label>
+                        <label> {{itemSpecMap[itemLine.itemSpecId].name}} </label>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="bold">Unit:</label>
+                        <label> {{itemUnitMap[itemLine.unitId].name}} </label>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="bold">QTY:</label>
+                        <label> {{itemLine.qty}} </label>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="bold">Location:</label>
+                             <span class="label box-shadow-none label-success"
+                                   style="margin-left: 5px; padding: 5px" ng-show="locationMap[itemLine.locationId].name">
+                             {{locationMap[itemLine.locationId].name}}</span>
+                    </div>
+                </div>
+            <!--</div>-->
+        </div>
+        <pager total-count="taskList.length" page-size="pageSize"  load-content="loadContent(currentPage)"></pager>
+        <div class="form-group form-actions right" >
+            <waitting-btn type="button" btn-class="btn blue" ng-click="mergeTasks()"
+                          value="'Merge'" is-loading="isSaveloading"></waitting-btn>
+            <button type="button" class="btn default" ng-click="cancel(editForm)">Cancel</button>
+        </div>
+    </div>
+</div>

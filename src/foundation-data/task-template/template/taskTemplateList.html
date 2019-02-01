@@ -1,0 +1,119 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Foundation Data</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#"> Task Template</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold">  Task Template</span>
+                </div>
+                <div class="actions" permission-check="{{'taskTemplate_write'}}">
+
+                    <a ui-sref="fd.taskTemplate.add"><b>Add Task Template</b></a>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <form>
+                    <div class="row form-group">
+                        <div class="col-md-4">
+                            <label>Customer</label>
+                            <organization-auto-complete ng-model="searchInfo.customerId" name="customer" allow-clear="true" tag="Customer"></organization-auto-complete>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Facility</label>
+
+                            <ui-select name="facility" ng-model="searchInfo.facilityId" class="form-control">
+                                <ui-select-match allow-clear="true">
+                                    <div ng-bind="$select.selected.basic.name"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="facility.id as facility  in facilities | filter: $select.search.basic.name">
+                                    <div ng-bind="facility.basic.name"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Task Type</label>
+                            <ui-select name="taskType" ng-model="searchInfo.taskType" class="form-control">
+                                <ui-select-match allow-clear="true">
+                                    <div ng-bind="$select.selected"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="taskType in taskTypes | filter: $select.search">
+                                    <div ng-bind="taskType"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+
+                    </div>
+                    <div class="row form-actions right">
+                        <button type="submit" class="btn blue" ng-click="search()">Search</button>
+                    </div>
+                </form>
+            </div>
+            <!-- TABLE -->
+            <div class="row">
+                <div class="portlet light box-shadow-none">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject bold"> Search Results</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div ng-show="!searchTaskTemplateCompleted" class="text-center">
+                            <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                        </div>
+                        <div ng-show="searchTaskTemplateCompleted" class="dataTables_wrapper no-footer">
+                            <div class="table-scrollable">
+                                <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_1"
+                                    role="grid" aria-describedby="sample_1_info">
+                                    <thead>
+                                        <tr role="row">
+                                            <th> Customer</th>
+                                            <th> Facility</th>
+                                            <th> Task Type</th>
+                                            <th> Steps</th>
+                                            <th permission-check="{{'taskTemplate_write'}}"> Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="taskTemplate in taskTemplateView track by $index">
+                                            <!--<td><a ui-sref="cf.facility.resource.location.edit({locationId:location.id})">{{location.name}}</a></td>-->
+
+                                            <td>{{taskTemplate.customerName}}</td>
+                                            <td>{{ facilitiesMap[taskTemplate.facilityId].basic.name}}</td>
+                                            <td>{{taskTemplate.taskType}}</td>
+                                            <td>
+                                                <li ng-repeat="step in taskTemplate.steps"  style="display:inline-block;">
+
+                                                    <span ng-show="step.genericStepTemplate.name" style="background-color:#f6f3e8; margin: 5px 5px;padding: 5px 10px;border-radius: 3px;">
+                                                       {{step.genericStepTemplate.name}}
+                                                    </span>
+
+                                                </li>
+
+                                            </td>
+
+                                            <td permission-check="{{'taskTemplate_write'}}">
+                                                <a ui-sref="fd.taskTemplate.edit({taskTemplateId:taskTemplate.id})">Edit</a>
+                                                <a ng-click="remove(taskTemplate)"> | Delete</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <pager total-count="taskTemplates.length" page-size="pageSize" load-content="loadContent(currentPage)"></pager>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

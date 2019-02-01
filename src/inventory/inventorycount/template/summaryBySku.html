@@ -1,0 +1,259 @@
+<div class="grid-100 row">
+    <form novalidate name="skuForm" ng-submit="skuForm.$valid && searchSkuCount(1)">
+    <div class="grid-content grid-100 ">
+        <div class="grid-parent grid-100 container">
+            <div class="grid-70">
+                <h1 class="section-label pull-left"> Summary By SKU</h1>
+                <hr>
+            </div>
+            <waitting-btn class="grid-15" type="button" btn-class="btn blue print-btn" value="'Import Data'" is-loading="isImporting"
+                ng-click="importData()"></waitting-btn>
+            <waitting-btn class="grid-15" type="button" btn-class="btn blue print-btn" value="'Compare Data'" is-loading="isComparing"
+                ng-click="compareData()"></waitting-btn>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Customer:<span style="color:red">*</span></label>
+                <div class="input-icon right" ng-show="skuForm.customer.$invalid && (skuForm.$submitted || skuForm.customer.$touched)">
+                        <i class="fa fa-warning tooltips lt-tooltip has-error">
+                            <span class="lt-tooltip-text">Required.</span>
+                        </i>
+                </div>
+                <organization-auto-complete ng-model="search.customerId" name="customer" allow-clear="true" tag="Customer" required="true"></organization-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Variance Compared To:</label>
+                <ui-select name="status" ng-model="search.varianceSource">
+                    <ui-select-match >
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in varianceSources">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+
+            <div class="grid-25">
+                <label class="label-input">Absolute Qty Variance Min:</label>
+                <input class="form-control" type="number" ng-model="search.varianceMin" />
+
+            </div>
+
+            <div class="grid-25">
+                <label class="label-input">Absolute Qty Variance Max:</label>
+                <input class="form-control" type="number" ng-model="search.varianceMax" />
+
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Variance Status:</label>
+                <ui-select name="status" ng-model="search.varianceStatus">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in varianceStatus">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Compare Status:</label>
+                <ui-select name="status" ng-model="search.compareStatus">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="compareStatu in compareStatuLists">
+                        {{compareStatu}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Item:</label>
+                <itemspec-auto-complete ng-model="search.itemSpecId" name="itemSpec" allow-clear="true" />
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-60">&nbsp;</div>
+            <div class="grid-20 ">
+                <unis-waitting-btn btn-type="button" btn-class="ripplelink" ng-click="inventoryCountRefreshSummaryData()" value="'RefreshSummaryData'" is-loading="refreshing"></unis-waitting-btn>
+            </div>
+            <div class="grid-20 ">
+                <unis-waitting-btn btn-type="submit" btn-class="ripplelink" value="'Search'" is-loading="loading"></unis-waitting-btn>
+            </div>
+        </div>
+     </div>
+    </form>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100 ">
+
+
+
+        <div class="grid-parent grid-100 card-view  container">
+            <div class="grid-25 tablet-grid-25">
+
+
+                <div class="grid-parent grid-100  container">
+                    <p class="card-label-input">System Net:
+                        <span>{{compareResult.sysNet}}</span>
+                    </p>
+                    <p class="card-label-input">System Absolute:
+                        <span>{{compareResult.sysAbsolute}} </span>
+                    </p>
+                    <p class="card-label-input">System Positive:
+                        <span>{{compareResult.sysPostive}} </span>
+                    </p>
+                    <p class="card-label-input">System Negative:
+                        <span>{{compareResult.sysNegative}} </span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid-25 tablet-grid-25">
+                <div class="grid-parent grid-100  container">
+                    <p class="card-label-input">System Net Cost:
+                        <span>{{compareResult.sysNetCost | number:2}}</span>
+                    </p>
+                    <p class="card-label-input">System Absolute Cost:
+                        <span>{{compareResult.sysAbsoluteCost | number:2}} </span>
+                    </p>
+                    <p class="card-label-input">System Positive Cost:
+                        <span>{{compareResult.sysPostivetCost | number:2}} </span>
+                    </p>
+                    <p class="card-label-input">System Negative Cost:
+                        <span>{{compareResult.sysNegativeCost | number:2}} </span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid-25 tablet-grid-25">
+                <div class="grid-parent grid-100  container">
+                    <p class="card-label-input">Client Net :
+                        <span>{{compareResult.clientNet}}</span>
+                    </p>
+                    <p class="card-label-input">Client Absolute :
+                        <span>{{compareResult.clientAbsolute}} </span>
+                    </p>
+                    <p class="card-label-input">Client Positive :
+                        <span>{{compareResult.clientPostive}} </span>
+                    </p>
+                    <p class="card-label-input">Client Negative :
+                        <span>{{compareResult.clientNegative}} </span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid-25 tablet-grid-25">
+                <div class="grid-parent grid-100  container">
+                    <p class="card-label-input">Client Net Cost:
+                        <span>{{compareResult.clientNetCost | number:2}}</span>
+                    </p>
+                    <p class="card-label-input">Client Absolute Cost:
+                        <span>{{compareResult.clientAbsoluteCost | number:2}} </span>
+                    </p>
+                    <p class="card-label-input">Client Positive Cost:
+                        <span> {{compareResult.clientPostivetCost | number:2}}</span>
+                    </p>
+                    <p class="card-label-input">Client Negative Cost:
+                        <span> {{compareResult.clientNegativeCost | number:2}}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="grid-parent grid-100  container" permission-check="{{'inventory::inventoryCount_write'}}">
+
+            <div class="grid-5">&nbsp;</div>
+            <div class="grid-15" style="line-height: 30px; float: right;">
+                <input type="checkbox" id="selectedItem" name="profile-subtheme" ng-model="exportParam.useBlindCount">
+                <label class="checkbox" for="selectedItem"></label> Use Bind Count
+            </div>
+            <waitting-btn class="grid-20" style=" float: right;" type="button" btn-class="btn gray print-btn" icon-class="glyphicon glyphicon-download"
+                ng-click="exportCountSheet()" is-loading="exportCounting" value="'Export Count Sheet'"></waitting-btn>
+            <waitting-btn class="grid-20" ng-if="isDisabledComfirm" style=" float: right;" type="button" btn-class="btn green print-btn"
+                value="'Confirm Selected'" is-loading="isConfirming" ng-click="confirmSelected()"></waitting-btn>
+            <waitting-btn class="grid-20" ng-if="isDisabledAck" style=" float: right;" type="button" btn-class="btn green print-btn"
+                value="'Acknowledge Selected'" is-loading="isAckSelecting" ng-click="acknowledgeSelected()"></waitting-btn>
+            <waitting-btn class="grid-20" ng-if="isDisabledUnAck" style=" float: right;" type="button" btn-class="btn green print-btn"
+                value="'UnAcknowledge Selected'" is-loading="isUnAckSelecting" ng-click="unAcknowledgeSelected()"></waitting-btn>
+
+            <!-- <waitting-btn class="grid-20" type="button" btn-class="btn blue print-btn" value="'Submit Final Result'" is-loading="isSeparateOrder"
+                ng-click="submit()"></waitting-btn> -->
+
+        </div>
+        <div class="grid-parent grid-100  container" style="overflow: auto;">
+            <div class="grid-parent grid-100 ">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th> Select Item </th>
+                            <th colspan="4" style="text-align: center;">Counted</th>
+                            <th colspan="2" style="text-align: center;">UNIS</th>
+                            <th colspan="2" style="text-align: center;">BevMo</th>
+                            <th style="text-align: center; vertical-align: middle;" rowspan="2"> Acknowledge</th>
+
+                        </tr>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="selectAll" name="selectAll" ng-click="toggleAll($event)" ng-checked="selectAllIsChecked()">
+                                <label class="checkbox" for="selectAll">
+                                </label>
+                            </th>
+                            <th ng-repeat="col in colDefs track by $index" class="{{getSortClass($index)}}" ng-click="sortClick($index)">
+                                {{col.headerName}}
+                            </th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <div ng-if="!loading">
+                            <tr ng-repeat="summaryView in summaryViews track by $index">
+                                <td style="width:50px">
+                                    <input type="checkbox" id="selectedItem_{{$index}}" name="profile-subtheme" ng-checked="isChecked(summaryView)" ng-click="checkSummary($event, summaryView)">
+                                    <label class="checkbox" for="selectedItem_{{$index}}"></label>
+                                </td>
+                                <td>{{summaryView.itemSpecName}}</td>
+
+                                <td>
+                                    <a href="#" ng-click="countTimeView(summaryView)"> {{summaryView.countQty}}</a>
+
+                                </td>
+                                <td> EA</td>
+                                <td>
+                                    <a href="#" ng-click="countTimeView(summaryView)"> {{summaryView.countTime}}</a>
+                                </td>
+                                <td> {{summaryView.inventoryQty}}</td>
+                                <td> {{summaryView.inventoryVariance}}</td>
+                                <td> {{summaryView.bevmoQty}}</td>
+                                <td> {{summaryView.bevmoVariance}}</td>
+                                <td permission-check="{{'inventory::inventoryCount_write'}}">
+                                    <waitting-btn ng-if="summaryView.status==='Pending'" style="width:40%;float:left;margin: 0 5% 0 10%;" type="button" btn-class="btn blue print-btn"
+                                        value="'Acknowledge'" is-loading="acknowledgeSingleClickObj[$index]" ng-click="setSingleAcknowledge(summaryView,$index)"></waitting-btn>
+                                    <waitting-btn ng-if="summaryView.status==='Acknowledged'" style="width:40%;float:left;margin: 0 5% 0 10%;" type="button" btn-class="btn blue print-btn"
+                                        value="'UnAcknowledge'" is-loading="unAcknowledgeSingleClickObj[$index]" ng-click="setSingleUnAcknowledge(summaryView,$index)"></waitting-btn>
+                                    <waitting-btn ng-if="summaryView.status!='Confirmed'" style="width:40%;float:left;margin-right:20px" type="button" btn-class="btn blue print-btn"
+                                        value="'Confirm'" is-loading="singleClickComfirmObj[$index]" ng-click="setSingleConfirm(summaryView,$index)"></waitting-btn>
+                                </td>
+
+                            </tr>
+                        </div>
+
+                    </tbody>
+                </table>
+                <div ng-if="loading" class="text-center" style="padding-top: 20px;">
+                    <img src="assets/img/loading-spinner-grey.gif">
+                    <span>&nbsp;LOADING...</span>
+                </div>
+            </div>
+        </div>
+        <div class="grid-parent grid-100  container">
+            <div class="grid-content grid-100" ng-show="!loading">
+                <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="page.pageSize" load-content="searchSkuCount(currentPage)"></unis-pager>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,188 @@
+
+
+<div class="week-day-content" ng-class="{'week-day-content-show': isShowWeekDayContent}">
+    <div ng-class="{'selected': selectedWeekDay == day}" ng-mouseover="selectWeekDay(day)"
+         ng-repeat="day in lineHaulWeekDays track by $index" class="week-day-item">
+        {{day}}
+    </div>
+</div>
+<div class="line-haul-content" ng-show="isShowLineHaulContent" ng-mouseleave="lineHaulMouseOut()">
+    <div ng-class="{'selected': longHaulNo == lineHaul.longHaulNo}" ng-click="selectLongHaul(lineHaul.longHaulNo)"
+         ng-repeat="lineHaul in weekDayLineHauls track by $index" class="line-haul-item">
+        {{lineHaul.longHaulNo}}
+    </div>
+</div>
+
+<div class="grid-100 Top-Bar" style=" height: 120px;">
+
+    <div class="grid-100">
+        <div class="grid-20 Valley" style="font-size:75px">
+            <label ng-if="lineHaulData">{{titlePer(lineHaulData.progress)}}</label>
+        </div>
+        <div class="grid-60 Valley haul-title" ng-if="lineHaulData">
+            <P>{{lineHaulData.longHaul.longHaulNo}}&nbsp;{{lineHaulData.longHaul.description}}</P>
+            <P> DEPARTURE {{lineHaulData.nextDepartureDate}} </P>
+            <P>{{lineHaulData.planedStoreCount}}/{{lineHaulData.longHaul.stops.length}} STOPS , {{lineHaulData.totalCSPickedQty}}/{{lineHaulData.totalCSRequiredQty}}
+                CS, {{lineHaulData.totalEAPickedQty}}/{{lineHaulData.totalEARequiredQty}} EA, {{lineHaulData.totalWeight
+                }} LB</P>
+        </div>
+        <div class="grid-20">&nbsp;</div>
+    </div>
+</div>
+<div class="grid-100 " style="padding: 0px 50px ;background: #fff;">
+    <div class="grid-100" style=" margin-bottom:1%;" ng-repeat="lineHaul in lineHaulMonitor">
+        <div class="grid-15 haul-rect" ng-class="{'border-white':lineHaul.store==''}">
+            <div ng-if="lineHaul.store!=''" class="rect">
+                <div ng-if="!storeBgColor(lineHaul)" ng-style="{'width':'100%','background':'#FFECA9','height':'100%'}">
+                </div>
+                <div ng-if="storeBgColor(lineHaul)" ng-style="{'width':'100%','background':'#C9E1B5','height':'100%'}">
+                </div>
+                <div class="haul-rect-container">
+                    <div style="height:30px">
+
+                    </div>
+                    <div class="grid-100" style="text-align: center;">
+                        <p><a style="text-decoration: none;color: #000;" title="{{lineHaul.store.shipToStore}}">{{ sliceStore(lineHaul.store.shipToStore)}}</a></p>
+                        <p ng-if="lineHaul.store.storeTotalLockQty < lineHaul.store.storeRequiredQty" style="color:red">Committed：<label>{{lineHaul.store.storeTotalLockQty}} of {{lineHaul.store.storeRequiredQty}}</label></p>
+                        <p ng-if="lineHaul.store.storeTotalLockQty == lineHaul.store.storeRequiredQty">Committed：<label>{{lineHaul.store.storeTotalLockQty}} of {{lineHaul.store.storeRequiredQty}}</label></p>
+                        <p ng-if="lineHaul.store.storeTotalLockQty > lineHaul.store.storeRequiredQty">Committed：<label>{{lineHaul.store.committed}}</label></p>
+                        <p> Order Planned:<a style="text-decoration: none;color: #000; font-size:12px" title="{{lineHaul.store.plannedOrderIds}}">
+                            {{sliceOrderPlanned(lineHaul.store.plannedOrderIds)}}
+                            <!-- <b ng-repeat="plannedOrderId in lineHaul.store.plannedOrderIds">{{plannedOrderId}}&nbsp;</b> -->
+                        </a>
+                            <p><a style="text-decoration: none;color: #000; font-size:12px" title="{{lineHaul.store.notPlannedOrderIds}}">
+                                <b style="color:red">{{sliceNotOrderPlanned(lineHaul.store.notPlannedOrderIds)}}</b>
+                            </a>
+                            </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid-15 haul-rect" ng-class="{'border-white':lineHaul.coldCSPick=='', 'border-red':lineHaul.coldCSPick !='' && lineHaul.coldCSPick.hasForceCloseTask}">
+            <div ng-if="lineHaul.coldCSPick!=''" class="rect">
+                <div ng-if="!bgColorFun(lineHaul.coldCSPick)" ng-style="{'width':(lineHaul.coldCSPick.totalPickedQty/lineHaul.coldCSPick.totalQty)*100+'%','background':'#FFECA9','height':'100%'}">
+                </div>
+                <div ng-if="bgColorFun(lineHaul.coldCSPick)" ng-style="{'width':'100%','background':'#C9E1B5','height':'100%'}">
+                </div>
+                <div class="haul-rect-container">
+                    <div style="height:30px">
+                        <img style="float:left" src="assets/img/snowflake-512.png" class="haul-img" />
+                        <img style="float:right" src="assets/img/packages-icon-13.png" class="haul-img" />
+                    </div>
+                    <div class="grid-100" style="text-align: center;">
+                        <p><a style="text-decoration: none;color: #000; " title="{{lineHaul.coldCSPick.taskIds}}"><span ng-repeat="task in lineHaul.coldCSPick.displayTasks" ng-class="{'fontred':task.isForceCloseTask}" >{{task.taskId}} </span><span ng-if="lineHaul.coldCSPick.displayTasks.length < lineHaul.coldCSPick.taskIds.length">...</span></a>COLD CS PICK</p>
+                        <p>{{lineHaul.coldCSPick.totalPickedQty}} of {{lineHaul.coldCSPick.totalQty}} CS {{widthPer(lineHaul.coldCSPick)}}</p>
+                        <p> {{lineHaul.coldCSPick.itemCount}} items,{{lineHaul.coldCSPick.totalWeight}} LB </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid-15 haul-rect" ng-class="{'border-white':lineHaul.dryCSPick=='','border-red':lineHaul.dryCSPick !='' && lineHaul.dryCSPick.hasForceCloseTask}">
+            <div ng-if="lineHaul.dryCSPick!=''" class="rect">
+                <div ng-if="!bgColorFun(lineHaul.dryCSPick)" ng-style="{'width':(lineHaul.dryCSPick.totalPickedQty/lineHaul.dryCSPick.totalQty)*100+'%','background':'#FFECA9','height':'100%'}">
+                </div>
+                <div ng-if="bgColorFun(lineHaul.dryCSPick)" ng-style="{'width':'100%','background':'#C9E1B5','height':'100%'}">
+                </div>
+                <div class="haul-rect-container">
+                    <div style="height:30px">
+                        <img style="float:right" src="assets/img/packages-icon-13.png" class="haul-img" />
+                    </div>
+                    <div class="grid-100" style="text-align: center;">
+                        <p><a style="text-decoration: none;color: #000;" title="{{lineHaul.dryCSPick.taskIds}}"><span ng-repeat="task in lineHaul.dryCSPick.displayTasks" ng-class="{'fontred':task.isForceCloseTask}" >{{task.taskId}} </span><span ng-if="lineHaul.dryCSPick.displayTasks.length < lineHaul.dryCSPick.taskIds.length">...</span></a>DRY CS PICK</p>
+                        <p>{{lineHaul.dryCSPick.totalPickedQty}} of {{lineHaul.dryCSPick.totalQty}} CS {{widthPer(lineHaul.dryCSPick)}}</p>
+                        <p> {{lineHaul.dryCSPick.itemCount}} items,{{lineHaul.dryCSPick.totalWeight}} LB</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid-15 haul-rect" ng-class="{'border-white':lineHaul.coldEAPick=='','border-red':lineHaul.coldEAPick !='' && lineHaul.coldEAPick.hasForceCloseTask}">
+            <div ng-if="lineHaul.coldEAPick!=''" class="rect">
+                <div ng-if="!bgColorFun(lineHaul.coldEAPick)" ng-style="{'width':(lineHaul.coldEAPick.totalPickedQty/lineHaul.coldEAPick.totalQty)*100+'%','background':'#FFECA9','height':'100%'}">
+
+                </div>
+                <div ng-if="bgColorFun(lineHaul.coldEAPick)" ng-style="{'width':'100%','background':'#C9E1B5','height':'100%'}">
+                </div>
+                <div class="haul-rect-container">
+                    <div style="height:30px">
+                        <img style="float:left" src="assets/img/snowflake-512.png" class="haul-img" />
+                        <img style="float:right " src="assets/img/056883-glossy-black-icon-food-beverage-drink-bottle1.png" class="haul-img-drink"
+                        />
+                    </div>
+                    <div class="grid-100" style="text-align: center;">
+                        <p><a style="text-decoration: none;color: #000;" title="{{lineHaul.coldEAPick.taskIds}}"><span ng-repeat="task in lineHaul.coldEAPick.displayTasks" ng-class="{'fontred':task.isForceCloseTask}" >{{task.taskId}} </span><span ng-if="lineHaul.coldEAPick.displayTasks.length < lineHaul.coldEAPick.taskIds.length">...</span></a>COLD
+                            EA PICK</p>
+                        <p>{{lineHaul.coldEAPick.totalPickedQty}} of {{lineHaul.coldEAPick.totalQty}} EA {{widthPer(lineHaul.coldEAPick)}}</p>
+                        <p> {{lineHaul.coldEAPick.itemCount}} items,{{lineHaul.coldEAPick.totalWeight}} LB</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid-15 haul-rect" ng-class="{'border-white':lineHaul.dryEAPick=='','border-red':lineHaul.dryEAPick !='' && lineHaul.dryEAPick.hasForceCloseTask}">
+            <div ng-if="lineHaul.dryEAPick!=''" class="rect">
+                <div ng-if="!bgColorFun(lineHaul.dryEAPick)" ng-style="{'width':(lineHaul.dryEAPick.totalPickedQty/lineHaul.dryEAPick.totalQty)*100+'%','background':'#FFECA9','height':'100%'}">
+
+                </div>
+                <div ng-if="bgColorFun(lineHaul.dryEAPick)" ng-style="{'width':'100%','background':'#C9E1B5','height':'100%'}">
+                </div>
+                <div class="haul-rect-container">
+                    <div style="height:30px">
+                        <img style="float:right" src="assets/img/056883-glossy-black-icon-food-beverage-drink-bottle1.png" class="haul-img-drink"
+                        />
+                    </div>
+                    <div class="grid-100" style="text-align: center;">
+                        <p><a style="text-decoration: none;color: #000; " title="{{lineHaul.dryEAPick.taskIds}}"><span ng-repeat="task in lineHaul.dryEAPick.displayTasks" ng-class="{'fontred':task.isForceCloseTask}" >{{task.taskId}} </span><span ng-if="lineHaul.dryEAPick.displayTasks.length < lineHaul.dryEAPick.taskIds.length">...</span></a>DRY
+                            EA PICK</p>
+                        <p>{{lineHaul.dryEAPick.totalPickedQty}} of {{lineHaul.dryEAPick.totalQty}} EA {{widthPer(lineHaul.dryEAPick)}}</p>
+                        <p> {{lineHaul.dryEAPick.itemCount}} items,{{lineHaul.dryEAPick.totalWeight}} LB</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid-15 haul-rect" ng-class="{'border-white':lineHaul.lockEAPick=='','border-red':lineHaul.lockEAPick !='' && lineHaul.lockEAPick.hasForceCloseTask}">
+            <div ng-if="lineHaul.lockEAPick!=''" class="rect">
+                <div ng-if="!bgColorFun(lineHaul.lockEAPick)" ng-style="{'width':(lineHaul.lockEAPick.totalPickedQty/lineHaul.lockEAPick.totalQty)*100+'%','background':'#FFECA9','height':'100%'}">
+
+                </div>
+                <div ng-if="!bgColorFun(lineHaul.lockEAPick)" ng-style="{'width':'100%','background':'#C9E1B5','height':'100%'}">
+                </div>
+                <div class="haul-rect-container">
+                    <div style="height:30px">
+                        <img style="float:right" src="assets/img/amenicon-locked.png" class="haul-img" />
+                    </div>
+                    <div class="grid-100" style="text-align: center;">
+                        <p><a style="text-decoration: none;color: #000; " title="{{lineHaul.lockEAPick.taskIds}}"><span ng-repeat="task in lineHaul.lockEAPick.displayTasks" ng-class="{'fontred':task.isForceCloseTask}" >{{task.taskId}} </span><span ng-if="lineHaul.lockEAPick.displayTasks.length < lineHaul.lockEAPick.taskIds.length">...</span></a>LOCK EA PICK</p>
+                        <p>{{lineHaul.lockEAPick.totalPickedQty}} of {{lineHaul.lockEAPick.totalQty}} EA {{widthPer(lineHaul.lockEAPick)}}</p>
+                        <p> {{lineHaul.lockEAPick.itemCount}} items,{{lineHaul.lockEAPick.totalWeight}} LB</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid-15 haul-rect-fina" ng-class="{'border-white':lineHaul.pack=='','border-red':lineHaul.pack !='' && lineHaul.pack.hasForceCloseTask}">
+            <div ng-if="lineHaul.pack!=''" class="rect">
+                <div ng-if="packDoneStatus(lineHaul.pack)==='NotAllPackTaskGenerated'" ng-style="{'width':'100%','background':'rgb(255, 236, 169)','height':'100%'}">
+                </div>
+                <div ng-if="packDoneStatus(lineHaul.pack)==='NotGenerated'" ng-style="{'width':'100%','background':'#FFFFFF','height':'100%'}">
+                 </div>
+                <div ng-if="packDoneStatus(lineHaul.pack)==='Done'" ng-style="{'width':'100%','background':'#C9E1B5','height':'100%'}">
+                </div>
+                <div ng-if="packDoneStatus(lineHaul.pack)==='InProgress'" ng-style="{'width':'100%','background':'#00FFFF','height':'100%'}">
+                </div>
+                <div class="haul-rect-container">
+                    <div style="height:30px">
+
+                        <img style="float:right" src="assets/img/set.png" class="haul-img" />
+                    </div>
+                    <div class="grid-100" style="text-align: center;">
+                        <p><a style="text-decoration: none;color: #000; " title="{{lineHaul.pack.taskIds}}"><span ng-repeat="task in lineHaul.pack.displayTasks" ng-class="{'fontred':task.isForceCloseTask}" >{{task.taskId}} </span><span ng-if="lineHaul.pack.displayTasks.length < lineHaul.pack.taskIds.length">...</span></a><b style="color:red">PACK</b></p>
+                        <p> {{lineHaul.pack.totalPackedCartonCount}} CS PACKED</p>
+                        <p> {{lineHaul.pack.itemCount}} items,{{lineHaul.pack.totalWeight}} LB</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div ng-show="isLoading" class="text-center" style=" position: absolute;top: 0;left: 0;right: 0;bottom: 0;margin-top: 25%;">
+    <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+</div>

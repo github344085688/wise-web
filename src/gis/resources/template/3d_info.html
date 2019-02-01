@@ -1,0 +1,45 @@
+<div>
+    <div style="font-size: 12px;">Current Location</div>
+    <div style="text-align: center;">
+        <b style="font-size: 20px;">{{_3DInfo.currLoc.name}}</b>
+    </div>
+</div>
+<div style="margin-top: 10px;">
+    <div style="font-size: 12px; margin-bottom: 10px;">Inventory Info</div>
+    <div ng-if="_3DInfo.inventory">
+        <table style="width: 100%; background-color: inherit;">
+            <tr style="border-bottom: 1px #cccccc solid; background-color: inherit; font-weight: 700;">
+                <td style="width: 25%;">Item</td>
+                <td style="width: 50%;">Desc</td>
+                <!-- <td style="width: 20%;">Title</td>
+                <td style="width: 20%;">Customer</td> -->
+                <td style="width: 50%; text-align: right;">Qty</td>
+            </tr>
+        </table>
+    </div>
+    <div style="max-height: 500px; display: block; overflow-x: hidden; overflow-y: auto;">
+        <table style="width: 100%; background-color: inherit;">
+            <tr ng-repeat="row in _3DInfo.inventory track by $index" 
+                style="border-bottom: 1px #cccccc solid;">
+                <td>
+                    <div class="inventory-cell">{{row.itemSpecName}}</div>
+                </td>
+                <td>
+                    <div class="inventory-cell" style="max-width: 140px;">{{row.itemSpecDesc}}</div>
+                </td>
+                <!-- <td>
+                    <div class="inventory-cell">{{row.titleName}}</div>
+                </td>
+                <td>
+                    <div class="inventory-cell">{{row.customerName}}</div>
+                </td> -->
+                <td style="color: blue; text-align: right;">
+                    <div class="inventory-cell">{{row.baseQty}} {{row.unitName || "EA"}}</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div ng-if="!_3DInfo.inventory" style="text-align: center;">
+        <b>No record</b>
+    </div>
+</div>

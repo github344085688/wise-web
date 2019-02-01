@@ -1,0 +1,85 @@
+<div class="portlet light bordered" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold">TaskId: {{task.id}}</span>
+        </div>
+        <div class="actions" permission-check="{{'task::putAwayTask_write'}}">
+            <button type="button" class="btn blue" ng-click="editTask()">Edit PutAway Task</button>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <div class="view-container">
+            <div class="form-group">
+                <span class="col-md-3"><b>Receive Task ID: </b>
+                    <a ng-href="{{'#/wms/task/receive-task/' + task.receiveTaskId}}" target="_blank">{{task.receiveTaskId}}</a>
+                </span>
+                <span class="col-md-3"><b>Assignee: </b>{{task.assignee.firstName}} {{task.assignee.lastName}}</span>
+                <span class="col-md-3"><b>Status: </b>{{task.status}}</span>
+                <span class="col-md-3"><b>Priority: </b>{{task.priority}}</span>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <b>Start Time:</b>
+                    <span>{{task.startTime}}</span>
+                </div>
+                <div class="col-md-3">
+                    <b>End Time:</b>
+                    <span>{{task.endTime}}</span>
+                </div>
+                <span class="col-md-3"><b>Created Time: </b>{{task.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                    &nbsp;<span ng-show="task.createdBy">({{task.createdBy}})</span></span>
+                <span class="col-md-3"><b>Updated Time: </b>{{task.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                    &nbsp;<span ng-show="task.updatedBy">({{task.updatedBy}})</span></span>
+            </div>
+
+            <div class="form-group">
+                <span class="col-md-12">
+                    <b>Description:</b> {{task.description}}
+                </span>
+            </div>
+            <!--<div class="row">-->
+                <!--<span class="col-md-12"><b>Note: </b>{{task.note}}</span>-->
+            <!--</div>-->
+            <div class="form-group">
+                <span class="col-md-12"><b>LP Put Away Results: </b>
+                    <li ng-repeat="putAwayResult in task.putAwayResults" style="
+                         display:inline-block; margin: 5px 5px; padding: 5px 10px;border-radius: 3px;"
+                        ng-class="{'label-background-right': putAwayResult.isPutAway == true,
+                        'label-background-wrong': putAwayResult.isPutAway == false}">
+                            <span class="ng-binding">{{putAwayResult.lpId}}</span>
+                    </li>
+                </span>
+            </div>
+            <div class="panel panel-default"  ng-repeat="step in task.steps">
+                <div class="panel-heading">
+                    <div class="panel-title"  style="display: block; float: left;line-height:34px;"> STEP | {{step.name}}</div>
+                    <div class="actions" style="text-align: right;">
+                        <button type="button" class="btn yellow"  permission-check="{{'task::putAwayTask_write'}}" update-step-assignees task-step="step">Edit Assignees</button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                <div class="tabbable-custom" style="margin-bottom: 0px; overflow: visible">
+                    <ul class="nav nav-tabs">
+                        <li ng-class="{'active':activeTabs[step.id] == 'content'}">
+                            <a data-toggle="tab" ng-click="changeTab('content', step.id)"> Content </a>
+                        </li>
+                        <li ng-class="{'active':activeTabs[step.id] == 'stepException'}">
+                            <a data-toggle="tab" ng-click="changeTab('stepException', step.id)"> Exception </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" style="padding:15px;">
+                        <div ng-class="{'active':activeTabs[step.id] == 'content'}" class="tab-pane ">
+                            <div ng-include="'wms/task/common/template/genericStep.html'"></div>
+                        </div>
+                        <div ng-class="{'active':activeTabs[step.id] == 'stepException'}" class="tab-pane ">
+                            <div class="row form-group" ng-include="'wms/task/common/template/stepException.html'"
+                                 ng-repeat="exception in execptionGroupByStepId[step.stepId]">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>

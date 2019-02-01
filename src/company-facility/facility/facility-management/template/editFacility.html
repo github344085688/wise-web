@@ -1,0 +1,313 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Company Facility</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Facility Management</a>
+        </li>
+    </ul>
+</div>
+<div class="portlet light" style="margin:15px">
+    <div class="portlet-title">
+        <div class="caption">
+            <span ng-show="!isAddAction" class="caption-subject bold"> Edit Facility
+                <span>:{{facility.basic.name}}</span>
+            </span>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <form novalidate name="facilityForm" ng-submit="facilityForm.$valid && updateFacility()">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <label class="">Use Dock Checking NO</label>
+                    <md-switch class="md-primary" ng-model="facility.useDockCheckingNo" aria-label="Use Dock Checking NO" style="margin-top:0px;" ng-change="useDockCheckingNoChange(facility.useDockCheckingNo)"></md-switch>
+                </div>
+                <div class="col-md-3">
+                    <label class="">Require Scan Check Digit For PickLocation </label>
+                    <md-switch class="md-primary" ng-model="facility.requireScanCheckDigitForPickLocation " aria-label="Require Scan Check Digit For PickLocation" style="margin-top:0px;"></md-switch>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="">Use Location Sequence</label>
+                    <md-switch class="md-primary" ng-model="facility.useLocationSequence" aria-label="Use Location Sequence" style="margin-top:0px;"></md-switch>
+                </div>
+                <div class="col-md-3">
+                    <label class="">Is Replenishment For Movement</label>
+                    <md-switch class="md-primary" ng-model="facility.isReplenishmentForMovement" aria-label="Is Replenishment For Movement" style="margin-top:0px;"></md-switch>
+                </div>
+
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <label class="">Enable Auto Group Pick Stragety</label>
+                    <md-switch class="md-primary" ng-model="facility.enableAutoGroupPickStragety" aria-label="Enable Auto Group Pick Stragety"
+                               style="margin-top:0px;"></md-switch>
+                </div>
+                <div class="col-md-3">
+                    <label class="">Enable Task Auto Assign</label>
+                    <md-switch class="md-primary" ng-model="facility.enableTaskAutoAssign" aria-label="Enable Task Auto Assign" style="margin-top:0px;"></md-switch>
+                </div>
+                <div class="col-md-3">
+                    <label class="">Use Pick New UI</label>
+                    <md-switch class="md-primary" ng-model="facility.usePickNewUI" aria-label="Use Pick New UI" style="margin-top:0px;"></md-switch>
+                </div>
+                <div class="col-md-3">
+                    <label class="">Enable Conveyor Line</label>
+                    <md-switch class="md-primary" ng-model="facility.enableConveyorLine" aria-label="Enable Conveyor Line" style="margin-top:0px;"></md-switch>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <label class="">Allow User Inactive Minutes</label>
+                    <input type="text" name="country" ng-model="facility.userInactiveMinutes" class="form-control" placeholder="Enter Number" required />
+                </div>
+                <div class="col-md-3">
+                    <label class="">User Pick Task Capacity</label>
+                    <input type="text" name="country" ng-model="facility.userTaskCapacity" class="form-control" placeholder="Enter Number" required
+                    />
+                </div>
+                <div class="col-md-3">
+                    <label class="">Default Task Assignee</label>
+                    <!--<input-validation-message field="assigne" form="facilityForm"></input-validation-message>-->
+                    <user-auto-complete name="assigne" ng-model="facility.taskAutoAssignment.globalDefaultTaskAssigneeUserId"
+                                        allow-clear="true"></user-auto-complete>
+                </div>
+                <div class="col-md-3 ">
+                    <label class="">Pick To Order Weight</label>
+                    <input type="number" name="pickToOrderWeight" class="form-control" ng-model="facility.pickToOrderWeight" />
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <label>Min Total CS by DN ( CPK )</label>
+                    <input type="number" name="minTotalCaseByDn" class="form-control" ng-model="facility.minTotalCaseByDn" />
+                </div>
+                <div class="col-md-3 ">
+                    <label>Default ZPL Printer</label>
+                    <ui-select class="form-group" name="defaultZPLPrinter" ng-model="facility.defaultZPLPrinter"
+                               style="margin-left: 0%; width: 100%;">
+                        <ui-select-match>
+                            <div ng-bind="$select.selected.printerName"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="printer.id as printer in zplPrinters | filter:$select.search"
+                                           refresh-delay="50">
+                            <div ng-bind="printer.printerName"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="col-md-3 ">
+                    <label>Default PDF Printer</label>
+                    <ui-select class="form-group" name="defaultPDFPrinter" ng-model="facility.defaultPDFPrinter"
+                               style="margin-left: 0%; width: 100%;">
+                        <ui-select-match>
+                            <div ng-bind="$select.selected.printerName"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="printer.id as printer in pdfrinters | filter:$select.search"
+                                           refresh-delay="50">
+                            <div ng-bind="printer.printerName"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="col-md-3 ">
+                    <label>Release Item-Location X days after Final Shipment</label>
+                    <input type="number" name="shipmentExpirationDays" class="form-control" ng-model="facility.shipmentExpirationDays" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 ">
+                    <label>Alert To Emails</label>
+                    <lt-tags-input placeholder="Enter alert To Emails" ng-model="facility.alertToEmails"></lt-tags-input>
+                </div>
+                <div class="col-md-3 ">
+                    <label>Alert CC Emails</label>
+                    <lt-tags-input placeholder="Enter alert CC Emails" ng-model="facility.alertCCEmails"></lt-tags-input>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label class="bold">Default Task Assignment</label>
+                    <div style="background-color: rgba(99, 160, 160, 0.14); padding:20px">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label>Task Type</label>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Auto Assignee User Tag</label>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Auto Assignee Role</label>
+                            </div>
+                            <div class="col-md-2">
+                                <label></label>
+                            </div>
+                        </div>
+                        <div class="row form-group" ng-repeat="taskAssignee in facility.taskAutoAssignment.defaultTaskAssignments track by $index">
+                            <div class="col-md-2">
+                                <ui-select name="status" class="form-control" ng-model="taskAssignee.taskType" required="true">
+                                    <ui-select-match allow-clear="true">
+                                        <div ng-bind="$select.selected"></div>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item  in taskTypes| filter: $select.search" refresh="getTaskTypes($select.search)" refresh-delay="50">
+                                        {{item}}
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-md-3">
+                                <ui-select multiple name="tags" ng-model="taskAssignee.userTagIds" class="form-control">
+                                    <ui-select-match>
+                                        <span ng-bind="$item.name"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item.id as item in tags  | filter: $select.search" refresh="getTags($select.search)" refresh-delay="50">
+                                        <div ng-bind="item.name"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-md-3">
+                                <ui-select multiple name="roles" ng-model="taskAssignee.userRoleIds" class="form-control">
+                                    <ui-select-match>
+                                        <span ng-bind="$item.name"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="role.id as role in roles | filter: $select.search" refresh="getRoles($select.search)" refresh-delay="50">
+                                        <div ng-bind="role.name"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn red" ng-click="removeTaskAssignee($index)">Remove</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn green" ng-click="addTaskAssignee()">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label class="bold">Address</label>
+                    <div style="background-color: rgba(99, 160, 160, 0.29); padding:20px">
+                        <div class="row form-group">
+                            <div class="col-md-4">
+                                <label>Country</label>
+                                <input-validation-message field="country" form="facilityForm"></input-validation-message>
+                                <input type="text" name="country" ng-model="address.country" class="form-control" placeholder="Enter text" required />
+                            </div>
+                            <div class="col-md-4">
+                                <label>State</label>
+                                <input-validation-message field="state" form="facilityForm"></input-validation-message>
+                                <input type="text" name="state" ng-model="address.state" class="form-control" placeholder="Enter text" required />
+                            </div>
+                            <div class="col-md-4">
+                                <label>City</label>
+                                <input-validation-message field="city" form="facilityForm"></input-validation-message>
+                                <input type="text" name="city" ng-model="address.city" class="form-control" placeholder="Enter text" required />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-4">
+                                <label>Zip Code</label>
+                                <input-validation-message field="zipCode" form="facilityForm"></input-validation-message>
+                                <input type="text" name="zipCode" ng-model="address.zipCode" class="form-control" placeholder="Enter text" required />
+                            </div>
+                            <div class="col-md-4">
+                                <label>Fax</label>
+                                <input type="text" name="fax" ng-model="address.fax" class="form-control" placeholder="Enter text" />
+                            </div>
+                            <div class="col-md-4">
+                                <label>Phone</label>
+                                <input type="text" name="phone" ng-model="address.phone" class="form-control" placeholder="Enter text" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-4">
+                                <label>Address1</label>
+                                <input type="text" name="address1" ng-model="address.address1" class="form-control" placeholder="Enter text" />
+                            </div>
+                            <div class="col-md-4">
+                                <label>Address2</label>
+                                <input type="text" name="address2" ng-model="address.address2" class="form-control" placeholder="Enter text" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <label class="bold" ng-if="activeCustomers.length>0">List active customers</label>
+            <div style="background-color: rgba(99, 160, 160, 0.29); padding:25px" ng-if="activeCustomers.length>0">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th style="width: 20%">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody style="background: #fff;">
+                    <tr ng-repeat="item in activeCustomers">
+                        <td>{{item.orgName}}</td>
+                        <td style="width: 20% ; border-left: #ddd solid 1px;"><a ui-sref="fd.organization.edit({organizationId:item.orgId})">Edit</a> </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label class="bold">Add Android Function Password</label>
+                    <div style="background-color: rgba(99, 160, 160, 0.14); padding:20px">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Function Name</label>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Password</label>
+                            </div>
+                            <div class="col-md-4">
+                                <label></label>
+                            </div>
+                        </div>
+                        <div class="row form-group" ng-repeat="androidnamePassword in androidFunctionPassword track by $index">
+                            <div class="col-md-4">
+                                <input type="text" name="functionName{{$index}}" ng-model="androidnamePassword.functionName" class="form-control" />
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="password{{$index}}" ng-model="androidnamePassword.password" class="form-control"  />
+                            </div>
+                            <div class="col-md-4">
+                                <button type="button" class="btn red" ng-click="removeAndroidFunctionPassword($index)">Remove</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-4">
+                                <button type="button" class="btn blue" ng-click="addAndroidFunctionPassword()">Add</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-actions right">
+                <waitting-btn type="submit" btn-class="btn blue" value="submitLabel" is-loading="loading"></waitting-btn>
+                <button type="button" class="btn default" ng-click="cancelEditFacility()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

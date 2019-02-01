@@ -1,0 +1,42 @@
+<md-dialog flex="50">
+    <form novalidate name="addItemLineForm" class="form-horizontal">
+    <md-toolbar>
+        <div class="md-toolbar-tools" style="background-color: #497982; ">
+            <h2>Trigger Report</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="" style="padding: 40px 0; min-height: 350px">
+        <div class="form-group" style="  width: 95%; margin: auto;" >
+            <div class="col-md-4">
+                <label>Customer:</label>
+                <input-validation-message field="customer" form="addItemLineForm"></input-validation-message>
+                <organization-auto-complete ng-model="search.customerId" name="customer" allow-clear="true" is-search-all-facilities="true" tag="Customer" required></organization-auto-complete>
+            </div>
+            <div class="col-md-4">
+                <label>Report Type:</label>
+                <input-validation-message field="reportType" form="addItemLineForm"></input-validation-message>
+                <ui-select ng-model="search.reportType" name="reportType" required>
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in reportTypes | filter: $select.search">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-md-4">
+                <label>Report Date:</label>
+                <input-validation-message field="sendDate" form="addItemLineForm"></input-validation-message>
+                <lt-date-time value="search.sendDate" name="sendDate" date-format="yyyy-mm-dd" min-view="2" required></lt-date-time>
+            </div>
+        </div>
+    </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <waitting-btn type="submit" btn-class="btn blue" ng-click="addItemLineForm.$valid && submit()" value="'Send'" is-loading="isLoading" style="margin-right: 20px"></waitting-btn>
+        <div style="margin-right: 50px">
+            <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+        </div>
+    </md-dialog-actions>
+    </form>
+</md-dialog>
+

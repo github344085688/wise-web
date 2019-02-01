@@ -1,0 +1,58 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Add Item Blacks</h1>
+        </div>
+        <form class="grid-100 grid-parent" novalidate name="editForm" ng-submit="editForm.$valid && batchCreate()">
+            <div class="grid-parent grid-100 container" ng-repeat="item in customerItems track by $index"
+                 style="margin-bottom: 30px;">
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-33">
+                        <label>Customer:</label>
+                        <input-validation-message field="customer" form="editForm"></input-validation-message>
+                        <organization-auto-complete  ng-model="item.customerId" name="customer" tag="Customer"
+                                                     on-select="customerOnSelect(org, param)"
+                                                     on-select-param = "$index"
+                                                     allow-clear="true"
+                                                     required="true"/>
+                    </div>
+                    <div class="grid-33">
+                        <label>Item:</label>
+                        <input-validation-message field="itemSpecId" form="editForm"></input-validation-message>
+                        <ui-select name="itemSpecId" ng-model="item.itemSpecId" name="itemSpec"  required="true">
+                            <ui-select-match allow-clear="true">
+                                <span ng-bind="$select.selected.name"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item.id as item in itemSpecOptionsMap[$index] | filter: $select.search">
+                                <b>{{item.name}}</b> [{{item.desc || 'N/A'}}]
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-66">
+                        <input-validation-message field="sn" form="editForm"></input-validation-message>
+                        <lt-tags-input placeholder="Enter SN" name="sn" ng-model="item.sns" ng-keyup="keyUpSearch($event)" required="true"></lt-tags-input>
+                    </div>
+                    <div class="grid-10">
+                        <button type="button" class="ripplelink delete"
+                                ng-show="!$first" ng-click="removeCustomerItem($index)">Remove</button>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container">
+                <div class="grid-66">
+                    &nbsp;
+                </div>
+                <div class="grid-10">
+                    <button  type="button" class="ripplelink" ng-click="addCustomerItem()">Add</button>
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container">
+                <unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="'Save'" is-loading="loading"
+                                   permission-check="{{'item::itemBlackSN_write'}}"></unis-waitting-btn>
+                <button type="button" class="grid-10 pull-right cancel" ng-click="cancelAddItemBlack()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

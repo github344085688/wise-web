@@ -1,0 +1,24 @@
+<div class="grid-content grid-100">
+    <div class="grid-100 grid-parent">
+        <!--<div class="grid-parent grid-100 container" style="margin-top: 30px;">-->
+            <!--<div class="tab-container">-->
+                <!--<ul>-->
+                    <!--<li data-tab-title="Section 1" ng-class="{'active':activetab == 'AllTask'}"-->
+                        <!--ng-click="changeTab('AllTask')"> All Tasks</li>-->
+                    <!--<li data-tab-title="Section 2" ng-class="{'active':activetab == 'PickTask'}"-->
+                        <!--ng-click="changeTab('PickTask')"> Pick Tasks</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+        <!--</div>-->
+        <div ng-class="{'active':activetab == 'AllTask'}" class="grid-100 tab-content" id="section1">
+            <div class="grid-100 grid-parent" style="margin-bottom: 30px;"
+                 ng-include="'wms/statistics/task-statistics/template/all-task-statistics.html'"></div>
+        </div>
+        <!--<div ng-class="{'active':activetab == 'PickTask'}" class="grid-100 tab-content" id="section2">-->
+            <!--<div class="grid-100 grid-parent" style="margin-bottom: 30px;"-->
+                 <!--ng-include="'wms/statistics/task-statistics/template/pick-task-statistics.html'"></div>-->
+        <!--</div>-->
+
+        <div id="template" style="display: none;"></div>
+    </div>
+</div>

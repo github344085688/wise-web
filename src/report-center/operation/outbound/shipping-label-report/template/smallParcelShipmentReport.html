@@ -1,0 +1,79 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label">Small Parcel Shipment Report</h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label>Shipment ID:</label>
+                <lt-tags-input placeholder="Shipment ID" ng-model="search.shipmentInfoIds"  ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+            <diwiv class="grid-25">
+                <label>Carrier:</label>
+                <multiple-organization-auto-complete ng-model="search.carrierIds" name="carrier" tag="Carrier"> </multiple-organization-auto-complete>
+            </diwiv>
+            <div class="grid-25" >
+                <label>Created From:</label>
+                <lt-date-time value="search.createdWhenFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+            <div class="grid-25" >
+                <label>Created To:</label>
+                <lt-date-time value="search.createdWhenTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-70">&nbsp; </div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="searchReports()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+            <div class="grid-20">
+                <waitting-btn type="button" is-loading="exporting" btn-class="ripplelink" ng-click="export()" value="'Export'"></waitting-btn>
+            </div>
+        </div>
+
+        <div class=" grid-parent grid-100 container">
+            <div class="grid-parent grid-100 container">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>package Item</th>
+                        <th>package Type</th>
+                        <th>tracking No</th>
+                        <th>lookup Id</th>
+                        <th>shipment Info Id</th>
+                        <th>printer</th>
+                        <th>created By</th>
+                        <th>created When</th>
+                        <th>updated By</th>
+                        <th>updated When</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="shipment in shipments">
+                        <th>{{shipment.id}}</th>
+                        <td>{{shipment.packageTypeItemName}}</td>
+                        <td>{{shipment.packageType}}</td>
+                        <td>{{shipment.trackingNo}}</td>
+                        <td>{{shipment.lookupId}}</td>
+                        <td>{{shipment.shipmentInfoId}}</td>
+                        <td>{{shipment.printer}}</td>
+                        <td>{{shipment.createdBy}}</td>
+                        <td>{{shipment.createdWhen}}</td>
+                        <th>{{shipment.updatedBy}}</th>
+                        <td>{{shipment.updatedWhen}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="grid-100">
+            <div class="grid-content grid-100">
+             <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>            </div>
+        </div>
+        <div style="height: 200px;"></div>
+    </div>
+</div>

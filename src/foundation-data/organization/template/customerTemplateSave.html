@@ -1,0 +1,55 @@
+<md-dialog id="unis" flex="30">
+    <form class="light-theme" novalidate name="form" ng-submit="form.$valid && save()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Save As a Template</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" style="min-height: 230px;">
+                <div class="grid-100">
+                    <div class="grid-content">
+                        <div class="grid-100 grid-parent container">
+
+                            <div class="grid-35">
+                                <label class="control-label" style="line-height:30px; text-align: right; display: block">
+                                    Template Name:
+                                </label>
+                            </div>
+                            <div class="grid-65">
+                                <div class="input-icon right" ng-show="form.name.$invalid && (form.$submitted || form.name.$touched)">
+                                    <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                        <span class="lt-tooltip-text">Required.</span>
+                                    </i>
+                                </div>
+                                <input type="text" name="name" ng-model="params.name" required>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+
+
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-60">&nbsp;</div>
+                        <div class="grid-20">
+                            <unis-waitting-btn btn-type="submit" btn-class="ripplelink" value="'Save'" is-loading="loading"></unis-waitting-btn>
+                        </div>
+                        <div class="grid-20">
+                            <button type="button" ng-click="cancel()" class="ripplelink">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>

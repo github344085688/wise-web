@@ -1,0 +1,125 @@
+<md-dialog id="unis" flex="80" ng-cloak>
+    <form class="light-theme">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>{{title}}</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div class="grid-100">
+                    <div class="grid-content">
+                        <div class="grid-100 grid-parent container">
+                            <div class="grid-50">
+                                <label class="label-input">Key Word</label>
+                                <input type="text" placeholder="ID /Pro# /PO# /Reference# /SO# /batch#" ng-model="searchInfo.keyword" ng-keyup="keyUpSearch($event)"
+                                />
+                            </div>
+                        </div>
+                        <div class="grid-100 grid-parent container">
+                            <div class="grid-25">
+                                <label class="label-input">Order ID</label>
+                                <lt-tags-input placeholder="Enter Order ID" ng-model="searchInfo.orderIds" fill="DN-" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                            </div>
+                            <div class="grid-25">
+                                <label class="label-input">Status</label>
+                                <ui-select multiple name="status" ng-model="searchInfo.statuses">
+                                    <ui-select-match>
+                                        {{$item}}
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item  in statusList| filter: $select.search">
+                                        {{item}}
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="grid-25">
+                                <label class="label-input">Customer</label>
+                                <organization-auto-complete ng-model="searchInfo.customerId" name="customer" ng-disabled="true" tag="Customer"></organization-auto-complete>
+                            </div>
+                            <div class="grid-25">
+                                <label class="label-input">Long Haul</label>
+                                <longhaul-auto-complete name="longHaul" placeholder="Enter Long Haul"  is-disabled="true" ng-model="searchInfo.longHaulId" required="true"></longhaul-auto-complete>
+                            </div>
+                        </div>
+                        <div class="grid-100 grid-parent container">
+                            <div class="grid-25">
+                                <label class="label-input">Batch Commitment No</label>
+                                <input type="text" name="Batch Commitment No" placeholder="Enter Batch Commitment No" ng-model="searchInfo.batchCommitmentNo"
+                                  />
+                            </div>
+                            <div class="grid-25">
+                                <label class="label-input">Customer Sales Order No.</label>
+                                <lt-tags-input placeholder="Enter SO" ng-model="searchInfo.soNos"></lt-tags-input>
+                            </div>
+                        </div>
+                        <div class="grid-parent grid-100 container">
+                                <unis-waitting-btn ng-type="button" btn-class="grid-10 ripplelink pull-right" ng-click="searchOrders()" value="'Search'"
+                                    is-loading="isLoading"></unis-waitting-btn>
+                            </div>
+                        <div class="grid-100 grid-parent container">
+                            <div>
+                                <div class="table-scrollable">
+                                    <table class="table">
+                                        <thead>
+                                            <tr role="row">
+                                                <th>
+                                                    <input type="checkbox" id="selectAll" name="selectAll" ng-click="toggleAll($event)" ng-checked="selectAllIsChecked()">
+                                                    <label class="checkbox" for="selectAll">
+
+                                                    </label>
+                                                </th>
+                                                <th> Order ID</th>
+                                                <th> Customer</th>
+                                                <th> Long Haul No</th>
+                                                <th> Batch Commitment No</th>
+                                                <th> Status</th>
+                                               
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="order in orders track by $index">
+                                                <td style="width:50px">
+                                                    <input type="checkbox" id="subtheme-orange_{{$index}}" name="profile-subtheme" ng-checked="isChecked(order)" ng-click="checkOrder($event, order)">
+                                                    <label class="checkbox" for="subtheme-orange_{{$index}}"></label>
+                                                </td>
+                                                <td>{{order.id}}</td>
+                                                <td>{{order.customerName}}</td>
+                                                <td>{{order.longHaulNo.join(" | ")}}</td>
+                                                <td>{{order.batchCommitmentNo}}</td>
+                                                <td>{{order.status}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageSize" load-content="loadContent(currentPage)"></pager>
+                            </div>
+
+                        </div>
+                   
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+
+
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-60">&nbsp;</div>
+                        <div class="grid-20">
+                            <button type="button" ng-click="submit()" class="ripplelink">&nbsp;Submit&nbsp;</button>
+                        </div>
+                        <div class="grid-20">
+                            <button type="button" ng-click="cancel()" class="ripplelink">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>

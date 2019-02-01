@@ -1,0 +1,171 @@
+<form name="editForm" class="form-horizontal">
+    <div class="row form-group" ng-show="!isAdvanced">
+        <div class="col-md-5">
+            <input class="form-control" placeholder="ID /Bol# /PO# /Container# /reference# /seal#" ng-model="receipt.keyword" ng-keyup="keyUpSearch($event)"
+            />
+        </div>
+        <button type="button" class="btn blue" style="float:left;" ng-click="_searchReceipts()">Search</button>
+
+        <waitting-btn type="button" btn-class="btn yellow" style="margin-left: 10px;" ng-click="_exportReceipt()" value="'Export'"
+            is-loading="isExporting"></waitting-btn>
+    </div>
+    <div style="margin:15px 0px 20px 0px;">
+        <a ng-click="isAdvanced = !isAdvanced" style="font-weight:600;">
+            <span ng-show="!isAdvanced">Advanced</span>
+            <span ng-show="isAdvanced">Keyword</span> Search
+        </a>
+    </div>
+    <div ng-if="isAdvanced">
+        <div class="form-group">
+            <div class="col-md-3">
+                <label>Receipt ID</label>
+                <lt-tags-input placeholder="Enter Receipt ID" fill="RN-" ng-model="receipt.receiptIds" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+            <div class="col-md-3">
+                <label>Entry ID</label>
+                <input class="form-control" name="refNo" input-auto-fill="ET-" placeholder="Enter Entry ID" ng-model="receipt.entryId" ng-keyup="keyUpSearch($event)"
+                />
+            </div>
+            <div class="col-md-3" ng-hide="hideProperties && hideProperties.indexOf('status') >-1">
+                <label>Status</label>
+                <ui-select multiple name="status" ng-model="receipt.statuses">
+                    <ui-select-match>
+                        {{$item}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in statusList| filter: $select.search" refresh="getStatusList($select.search)" refresh-delay="500">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-md-3">
+                <label>Customer</label>
+                <multiple-organization-auto-complete name="customer" ng-model="receipt.customerIds" tag="Customer"></multiple-organization-auto-complete>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <label>Title</label>
+                <multiple-organization-auto-complete name="title" ng-model="receipt.titleIds" tag="Title"></multiple-organization-auto-complete>
+            </div>
+            <div class="col-md-3">
+                <label>Carrier</label>
+                <multiple-organization-auto-complete name="carrier" ng-model="receipt.carrierIds" tag="Carrier"></multiple-organization-auto-complete>
+            </div>
+            <div class="col-md-3">
+                <label>Container</label>
+                <lt-tags-input placeholder="Enter Container" ng-model="receipt.containerNos" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+            <div class="col-md-3">
+                <label>Item:</label>
+                <itemspec-auto-complete name="itemSpec" ng-model="receipt.itemSpecId" name="itemSpec" allow-clear="true" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <label>Appointment Time From</label>
+                <lt-date-time value="receipt.appointmentTimeFrom" date-format="yyyy-mm-dd hh:ii" minute-step="60"></lt-date-time>
+            </div>
+            <div class="col-md-3">
+                <label>Appointment Time To</label>
+                <lt-date-time value="receipt.appointmentTimeTo" date-format="yyyy-mm-dd hh:ii" minute-step="60"></lt-date-time>
+            </div>
+            <div class="col-md-3">
+                <label>ETA From</label>
+                <lt-date-time value="receipt.etaFrom" date-format="yyyy-mm-dd hh:ii" minute-step="60"></lt-date-time>
+            </div>
+            <div class="col-md-3">
+                <label>ETA To</label>
+                <lt-date-time value="receipt.etaTo" date-format="yyyy-mm-dd hh:ii" minute-step="60"></lt-date-time>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <label>Reference</label>
+                <lt-tags-input placeholder="Enter Reference" ng-model="receipt.referenceNos" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+            <div class="col-md-3">
+                <label>PO</label>
+                <lt-tags-input placeholder="Enter PO" ng-model="receipt.poNos" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+            <div class="col-md-3">
+                <label>BOL</label>
+                <lt-tags-input placeholder="Enter BOL" ng-model="receipt.bolNos" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+            <div class="col-md-3">
+                <label>Seal</label>
+                <lt-tags-input placeholder="Enter Seal" ng-model="receipt.sealNos" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                <label>SN List</label>
+                <lt-tags-input enable-multiple-tag-input="true" placeholder="Enter SN List" ng-model="receipt.snList" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <label>Date Created From:</label>
+                <lt-date-time value="receipt.createdWhenFrom"></lt-date-time>
+            </div>
+            <div class="col-md-3">
+                <label>Date Created To:</label>
+                <lt-date-time value="receipt.createdWhenTo"></lt-date-time>
+            </div>
+            <div class="col-md-3">
+                <label>Devanned Date From:</label>
+                <lt-date-time value="receipt.devannedTimeFrom"></lt-date-time>
+            </div>
+            <div class="col-md-3">
+                <label>Devanned Date To:</label>
+                <lt-date-time value="receipt.devannedTimeTo"></lt-date-time>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <label class="label-input">Created By</label>
+                <ui-select ng-model="receipt.createdBy">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="getUserName($select.selected)"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="user.username as user in users | filter: $select.search" refresh="getUsers($select.search)" refresh-delay="50">
+                        <div ng-bind="getUserName(user)"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-md-3">
+                <label>Sort By:</label>
+                <ui-select ng-model="receipt.expirationDate">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item  in sorts | filter: $select.search">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>    
+                </ui-select>   
+            </div>
+            <div class="col-md-3">
+                <label class="label-input">Receipt Type</label>
+                <ui-select ng-model="receipt.receiptType">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in ['Regular Receipt',
+                        'Title Transfer Receipt', 'Migo Transfer Receipt', 'Inventory Receipt', 'CrossDock', 'Return', 'RDN'] | filter: $select.search">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12" style="text-align: right;">
+                <waitting-btn type="button" btn-class="btn blue" ng-click="_searchReceipts()" value="'Search'" is-loading="loading"></waitting-btn>
+
+                <waitting-btn type="button" btn-class="btn yellow" ng-click="_exportReceipt()" value="'Export'" is-loading="isExporting"></waitting-btn>
+            </div>
+        </div>
+    </div>
+</form>

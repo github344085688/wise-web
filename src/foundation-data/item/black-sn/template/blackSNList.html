@@ -1,0 +1,89 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Item Black SN List</h1>
+            <a class="create-button"  permission-check="{{'item::itemBlackSN_write'}}"
+               ui-sref="fd.item.blackSN.add"><b>Add Black SN</b></a>
+
+            <a class="create-button"  permission-check="{{'item::itemBlackSN_write'}}"
+               ui-sref="fd.item.blackSN.import" style="padding-right:20px;"><b>Import Batch SN</b></a>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label>Customer:</label>
+                <organization-auto-complete  ng-model="searchInfo.customerId" name="customer" tag="Customer"
+                                        allow-clear="true"/>
+            </div>
+            <div class="grid-25">
+                <label>Item:</label>
+                <itemspec-auto-complete  name="itemSpecId" ng-model="searchInfo.itemSpecId" name="itemSpec" allow-clear="true"></itemspec-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label>SN:</label>
+                <input class="form-control" placeholder="Enter SN" ng-model="searchInfo.sn" ng-keyup="keyUpSearch($event)"/>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-90">&nbsp;</div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="searchItemBlack()" value="'Search'" is-loading="isLoading"></waitting-btn>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" id="selectAll" name="selectAll"
+                               ng-checked="isAllChecked() " ng-click="clickAllChecked()">
+                        <label class="checkbox" for="selectAll"  >
+                            <span class="text"></span>
+                        </label>
+                    </th>
+                    <th>Customer</th>
+                    <th>Item</th>
+                    <th>SN</th>
+                    <th>Created When</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="itemBlack in itemBlackLists track by $index">
+                    <td>
+                        <input type="checkbox" id="{{itemBlack.id}}" name="{{itemBlack.id}}"
+                               ng-checked="isChecked(itemBlack.id) " ng-click="clickItem(itemBlack.id)">
+                        <label class="checkbox" for="{{itemBlack.id}}"  >
+                            <span class="text"></span>
+                        </label>
+                    </td>
+                    <td>{{itemBlack.customerName}}</td>
+                    <td>
+                        <item-display item="itemBlack"></item-display>
+                    </td>
+                    <td>{{itemBlack.sn}}</td>
+                    <td>{{itemBlack.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                        <span ng-show="itemBlack.createdBy">({{itemBlack.createdBy}})</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="grid-parent grid-100 container" style="margin-top: 15px;">
+            <unis-waitting-btn btn-type="button" btn-class="grid-10 ripplelink pull-left"
+                               value="'Batch Delete'"
+                               is-loading="isBatchDelete"
+                               ng-click="batchDelete()"
+                               permission-check="{{'item::itemBlackSN_write'}}"
+                               ></unis-waitting-btn>
+        </div>
+    </div>
+</div>
+
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageObj.pageSize" load-content="loadContent(currentPage)"></unis-pager>
+    </div>
+</div>

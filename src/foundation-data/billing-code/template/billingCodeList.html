@@ -1,0 +1,98 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Billing Code List</h1>
+            <a class="create-button" href="#/fd/billing-code/add" permission-check="{{'billingCode_write'}}">
+                                <b>Add Billing Code</b>
+                              </a>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container" ng-keyup="keyUpSearch($event)">
+            <div class="grid-25">
+                <label class="label-input">Code</label>
+                <input type="text" ng-model="searchInfo.id" class="form-control" placeholder="Enter ID" />
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Customer</label>
+                <organization-auto-complete name="customer" ng-model="searchInfo.customerId" tag="Customer" allow-clear="true"></organization-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Type</label>
+                <ui-select name="type" ng-model="searchInfo.type">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item  in ['PIEA', 'PICS', 'RVCT20', 'RVCT40', 'PKMX',
+                     'CCPL']| filter: $select.search">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Status</label>
+                <ui-select name="type" ng-model="searchInfo.status">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item  in ['ENABLE', 'DISABLE']| filter: $select.search">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-90">&nbsp;</div>
+            <div class="grid-10 ">
+               
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr role="row">
+                        <th> Code </th>
+                        <th> Customer </th>
+                        <th> Type </th>
+                        <th> Unit Price </th>
+                        <th> Status </th>
+                        <th> Summary </th>
+                        <th> Description </th>
+                        <th> Date Created </th>
+                        <th permission-check="{{'billingCode_write'}}"> Actions </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="billingCode in billingCodeView track by $index">
+                        <td>{{billingCode.id}}</td>
+                        <td>{{billingCode.customerName}}</td>
+                        <td>{{billingCode.type}}</td>
+                        <td>{{billingCode.unitPrice}}</td>
+                        <td>
+                            <span style="color: red;" ng-if="billingCode.status=='DISABLE'">{{billingCode.status}}</span>
+                            <span ng-if="billingCode.status=='ENABLE'">{{billingCode.status}}</span>
+                        </td>
+                        <td>{{billingCode.summary}}</td>
+                        <td>{{billingCode.description}}</td>
+                        <td>{{billingCode.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                        <td permission-check="{{'billingCode_write'}}">
+                            <a ui-sref="fd.billingCode.edit({codeId:billingCode.id})">Edit</a>
+                            <a href="#" ng-show="billingCode.status == 'DISABLE'" ng-click="enable(billingCode.id)">Enable</a>
+                            <a href="#" style="color: red;" ng-show="billingCode.status == 'ENABLE'" ng-click="disable(billingCode.id)">Disable</a>
+                            <a href="#" style="color: red;" ng-click="delete(billingCode.id)">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="billingCodes.length" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+    </div>
+</div>

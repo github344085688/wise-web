@@ -1,0 +1,154 @@
+<form class="form-horizontal" novalidate name="diverseUnitForm"
+      ng-submit="diverseUnitForm.$valid && saveOrUpdate(diverseUnitForm)">
+    <div class="row form-group">
+        <div class="col-md-2">
+            <label>UOM Name</label>
+            <input-validation-message field="unit" form="diverseUnitForm"></input-validation-message>
+            <ui-select name="unit" ng-model="diverseUnit.unitId" style="border-radius: 4px;" required="true">
+                <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="unit.id as unit in units">
+                    {{unit.name}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-3">
+                    <label> Length</label>
+                    <input-validation-message field="diverseUnit.length" form="diverseUnitForm"></input-validation-message>
+                    <input name="diverseUnit.length" class="form-control" ng-model="diverseUnit.length" type="number" required="true"/>
+                </div>
+                <div class="col-md-3">
+                    <label> Width</label>
+                    <input-validation-message field="diverseUnit.width" form="diverseUnitForm"></input-validation-message>
+                    <input name="diverseUnit.width" class="form-control" ng-model="diverseUnit.width" type="number" required="true"/>
+                </div>
+                <div class="col-md-3">
+                    <label> Height</label>
+                    <input-validation-message field="diverseUnit.height" form="diverseUnitForm"></input-validation-message>
+                    <input name="diverseUnit.height" class="form-control" ng-model="diverseUnit.height" type="number" required="true"/>
+                </div>
+                <div class="col-md-3">
+                    <label>&nbsp;</label>
+                    <input-validation-message field="linearUnit" form="diverseUnitForm"></input-validation-message>
+                    <select name="linearUnit" ng-model="diverseUnit.linearUnit" class="form-control" required="true">
+                        <option ng-repeat="item in fieldUnits['Linear']">{{item}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label>UOM Weight</label>
+            <div class="row">
+                <div class="col-md-6">
+                    <input-validation-message field="diverseUnit.weight" form="diverseUnitForm"></input-validation-message>
+                    <input name="diverseUnit.weight" class="form-control" ng-model="diverseUnit.weight" type="number" required="true"/>
+                </div>
+                <div class="col-md-6">
+                    <input-validation-message field="weightUnit" form="diverseUnitForm"></input-validation-message>
+                    <select name="weightUnit" ng-model="diverseUnit.weightUnit" class="form-control" required="true">
+                        <option ng-repeat="item in fieldUnits['Weight']">{{item}}</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-4">
+            <label>Price</label>
+            <div class="row">
+                <div class="col-md-6">
+                    <input name="diverseUnit.price" class="form-control" ng-model="diverseUnit.price" type="number"/>
+                </div>
+                <div class="col-md-6">
+                    <select ng-model="diverseUnit.priceUnit" class="form-control">
+                        <option ng-repeat="item in fieldUnits['Currency']">{{item}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-3">Properties:</label>
+    </div>
+    <div class="row  form-group" ng-repeat="productProperty in diverseUnit.properties">
+            <div class="col-md-3">
+                <input-validation-message field="propertyId_{{$index}}" form="diverseUnitForm"></input-validation-message>
+                <ui-select name="propertyId_{{$index}}" ng-model="productProperty.propertyId" on-select="propertyNameOnSelect($select.selected)"
+                           required="true">
+                    <ui-select-match>
+                        <div ng-bind="$select.selected.itemProperty.name"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="diverse.itemProperty.id as diverse in diverseFields | filter: $select.search"
+                                       ui-disable-choice="diverse.hasSelect">
+                        <div ng-bind="diverse.itemProperty.name"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-md-5">
+                <input-validation-message field="field.{{$index}}.value" form="diverseUnitForm"></input-validation-message>
+                <ui-select name="field.{{$index}}.value" ng-model="productProperty.selectedProduct" required="true">
+                    <ui-select-match>
+                        <div>{{$select.selected.value}} {{$select.selected.unit}}</div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="diverseObj in fieldMap[productProperty.propertyId].availableDiverseValues">
+                        <div>{{diverseObj.value}} {{diverseObj.unit}}</div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn red" ng-click="removeProperty($index)">Remove</button>
+            </div>
+
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-5">
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn green " ng-click="addProperty()"  permission-check="{{'item::itemSpec_write'}}">Add</button>
+        </div>
+    </div>
+    <div style="text-align:right;" permission-check="{{'item::itemSpec_write'}}">
+        <waitting-btn type="submit" btn-class="btn blue"
+                      value="submitLabel" is-loading="loading"  ></waitting-btn>
+        <button ng-click="cancel(diverseUnitForm)" type="button" class="btn grey">Reset</button>
+    </div>
+</form>
+<div class="portlet light box-shadow-none" style="padding-left:0px; padding-right:0px;"
+     ng-show="diverseUnits.length > 0 ">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold uppercase">Item UOMS</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="table-scrollable">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>UOM Name</th>
+                        <th>Length*Width*Height</th>
+                        <th>Weight</th>
+                        <th>Price</th>
+                        <th permission-check="{{'item::itemSpec_write'}}">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="diverseUnit in diverseUnits track by $index" ng-class="{'bg-light-green':hightLights[$index]}">
+                        <td>{{diverseUnit.unitName}}</td>
+                        <td>{{diverseUnit.length}} * {{diverseUnit.width}} * {{diverseUnit.height}}({{diverseUnit.linearUnit}}) </td>
+                        <td>{{diverseUnit.weight}} {{diverseUnit.weightUnit}}</td>
+                        <td>{{diverseUnit.price}} {{diverseUnit.priceUnit}}</td>
+                        <td  permission-check="{{'item::itemSpec_write'}}"><a ng-click="editDiverseUnit($index)" >Edit</a> |
+                            <a ng-click="removeDiverseUnit($index)">Delete</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

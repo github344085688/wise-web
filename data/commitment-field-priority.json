@@ -1,0 +1,13 @@
+{
+	"orderedFieldList": [{
+        "name": "Freight Term",
+        "values": ["Collect", "Prepaid", "Third Party"]
+    }, {
+        "name": "MADB",
+        "value": "asc"
+    }],
+	"defaultFieldList": [{
+        "name": "Ship To",
+        "values": ["BestBuy", "Wallmart", "Target"]
+    }]
+}

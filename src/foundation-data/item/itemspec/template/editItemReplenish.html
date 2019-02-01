@@ -1,0 +1,86 @@
+<form class="form-horizontal" novalidate name="forms.replennishmentForm" ng-submit="forms.replennishmentForm.$valid && ctrl.saveOrUpdateReplenishments()">
+    <div class="form-group">
+        <div class="col-md-12">
+            <div class="col-md-2">
+                <label>Location Type:</label>
+            </div>
+            <div class="col-md-2">
+                <label>Location SubType:</label>
+            </div>
+            <div class="col-md-1">
+                <label>Mini QTY:</label>
+            </div>
+            <div class="col-md-1">
+                <label>Max QTY:</label>
+            </div>
+            <div class="col-md-2">
+                <label>UOM:</label>
+            </div>
+            <div class="col-md-2">
+                <label>Frequency:</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group" ng-repeat="rp in itemReplenishment.miniInventories track by $index">
+        <div class="col-md-2">
+            <ui-select ng-model="rp.locationType" style="border-radius: 4px;">
+                <ui-select-match>
+                    <div ng-bind="$select.selected"></div>
+                </ui-select-match>
+                <ui-select-choices repeat="type in availableLocationTypes">
+                    {{type}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="col-md-2">
+            <ui-select ng-model="rp.locationSubType" style="border-radius: 4px;">
+                <ui-select-match>
+                    <div ng-bind="$select.selected"></div>
+                </ui-select-match>
+                <ui-select-choices repeat="type in availableLocationSubTypes">
+                    {{type}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="col-md-1">
+            <input class="form-control" type="number" ng-model="rp.miniQty">
+        </div>
+        <div class="col-md-1">
+            <input class="form-control" type="number" ng-model="rp.maxQty">
+        </div>
+        <div class="col-md-2">
+            <ui-select ng-model="rp.unitId" style="border-radius: 4px;">
+                <ui-select-match allow-clear="true">
+                    {{$select.selected.name}}
+                </ui-select-match>
+                <ui-select-choices repeat="unit.id as unit in units">
+                    {{unit.name}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="col-md-2">
+            <ui-select ng-model="rp.frequency" style="border-radius: 4px;">
+                <ui-select-match allow-clear="true">
+                    <div ng-bind="$select.selected"></div>
+                </ui-select-match>
+                <ui-select-choices repeat="frequency in ['Hourly','Daily','Weekly','Monthly']">
+                    {{frequency}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn red" ng-click="ctrl.removeReplenishment($index)">Remove</button>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-10 col-md-2">
+            <button type="button" class="btn green" ng-click="ctrl.addReplenishment($index)">Add</button>
+        </div>
+    </div>
+    <div class="form-actions"    permission-check="{{'item::itemSpec_write'}}">
+        <div class="col-md-12" style="text-align: right; padding-right: 40px;">
+            <waitting-btn type="submit" btn-class="btn blue"
+                          value="submitLabel" is-loading="loading"></waitting-btn>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,16 @@
+[
+    {"orderId": "order-001", "status": "picking"},
+    {"LP": "LP-001", "status": "picked"},
+    {"orderId": "order-002", "status": "packing"},
+    {"LP": "LP-002", "status": "packed"},
+    {"orderId": "order-003" ,"status": "packed"},
+    {"LP": "LP-003", "status": "packing"},
+    {"orderId": "order-004",  "status": "packing"},
+    {"LP": "LP-004",  "status": "packing"},
+    {"orderId": "order-005",  "status": "packing"},
+    {"LP": "LP-005", "status": "packing"},
+    {"LP": "LP-006", "status": "packing"},
+    {"LP": "LP-007", "status": "packed"},
+    {"LP": "LP-008", "status": "packed"}
+]
+

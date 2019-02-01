@@ -1,0 +1,25 @@
+<span id="webcam_player" ng-repeat="player in webcamPlayers" class="auto-box" 
+        style="float: left; background-color: rgba(173, 216, 230, 0.32); background-image: '../../assets/img/gis/webcam_0.png'';
+        height: {{player._size.height}}px; width: {{player._size.width}}px; position: relative;">
+    <span style="position: absolute; left: 0; z-index: 10;" class="text-stroke">
+		{{player.name}}
+	</span>
+	<span class='glyphicon glyphicon-remove ctrl-btn warn auto-hidden'
+          style="position: absolute; right: 0; color: #d2691e; z-index: 10;"
+          ng-click="removePlayer(player)"></span>
+	<embed pluginspage="http://www.videolan.org"
+	       type="application/x-vlc-plugin" version="VideoLAN.VLCPlugin.2"
+	       width="100%" height="100%" wmode="transparent"
+	       ng-src="{{player.rtspUrl}}" ng-if="!player.video"/>
+	<video class="rtspVideo" width="100%" height="100%" 
+	       id="{{player._uuid}}"
+	       autoplay 
+	       onwaiting="this.style.border='2px solid orange'"
+	       onplaying="gis.h5RtspCtrl.playing(event)"
+	       onstalled="gis.h5RtspCtrl.playFailed(event);"
+	       onerror="this.style.border='2px solid yellow'"
+		   vname="{{player.name}}" 
+		   ng-src="{{player.rtspUrl}}" 
+		   ng-dblclick="videoFullScreen(player.name)" 
+		   ng-if="player.video"></video>
+</span>

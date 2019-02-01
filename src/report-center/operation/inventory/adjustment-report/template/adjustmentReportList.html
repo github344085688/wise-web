@@ -1,0 +1,176 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Adjustment Report</h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+
+            <div class="grid-parent grid-100 container">
+                <div class="grid-33">
+                    <label class="label-input">LP</label>
+                    <input type="text" class="form-control" ng-pattern="/^[T,H,I,C,S]{0,1}LP-[0-9]*$/" ng-model="adjustmentSearch.lpId" placeholder="Enter LP ID (LP-1)" />
+                </div>
+                <div class="grid-33">
+                    <label class="label-input">Customer</label>
+                    <organization-auto-complete name="customer" ng-model="adjustmentSearch.customerId" tag="Customer" allow-clear="true"></organization-auto-complete>
+                </div>
+                <div class="grid-33">
+                    <label>Title:</label>
+                    <organization-auto-complete name="title" ng-model="adjustmentSearch.titleId" tag="Title" allow-clear="true"></organization-auto-complete>
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container">
+                <div class="grid-33">
+                    <label class="label-input">Item</label>
+                    <itemspec-auto-complete ng-model="adjustmentSearch.itemSpecId" name="itemSpec" customer-id="adjustmentSearch.customerId" allow-clear="true"/>
+                </div>
+                <div class="grid-33">
+                    <label class="label-input">Type</label>
+
+                    <ui-select ng-model="adjustmentSearch.type">
+                        <ui-select-match allow-clear="true">
+                            <span ng-bind="$select.selected"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in adjustmentType | filter: $select.search">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+
+                </div>
+                <div class="grid-33">
+                    <label class="label-input">Source</label>
+
+                    <ui-select ng-model="adjustmentSearch.source">
+                        <ui-select-match allow-clear="true">
+                            <span ng-bind="$select.selected"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in adjustmentSource | filter: $select.search">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label class="label-input">Progress</label>
+
+                    <ui-select ng-model="adjustmentSearch.progress">
+                        <ui-select-match allow-clear="true">
+                            <span ng-bind="$select.selected"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in adjustmentProgress | filter: $select.search">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Status</label>
+
+                    <ui-select ng-model="adjustmentSearch.status">
+                        <ui-select-match allow-clear="true">
+                            <span ng-bind="$select.selected"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in adjustmentStatus | filter: $select.search">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Time From</label>
+                    <lt-date-time value="adjustmentSearch.timeFrom"></lt-date-time>
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Time To</label>
+                    <lt-date-time value="adjustmentSearch.timeTo"></lt-date-time>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-80">&nbsp;</div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="clearQuery()" value="'Clear Query'" is-loading="loading"></waitting-btn>
+            </div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search(1)" value="'Search'" is-loading="isSearching"></waitting-btn>
+            </div>
+        </div>
+
+        <div class=" grid-parent grid-100 container">
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="export()" value="'Export to XLS'" is-loading="exporting"></waitting-btn>
+            </div>
+            <div class="grid-90 ">
+                &nbsp;
+            </div>
+        </div>
+
+        <div class=" grid-parent grid-100 container">
+            <div class="grid-parent grid-100 container">
+                <table class="table-condensed">
+                    <thead>
+                        <tr style="font-size:11px">
+                            <th>ID</th>
+                            <th>Location</th>
+                            <th>LP</th>
+                            <th>Item Spec</th>
+                            <th>Unit</th>
+                            <th>Diverse</th>
+                            <th>Customer</th>
+                            <th>Title</th>
+                            <th>Inventory Status</th>
+                            <th>Adjust Qty</th>
+                            <th>Adjust SN</th>
+                            <th>Adjust Type</th>
+                            <th>Adjust From</th>
+                            <th>Adjust To</th>
+                            <th>Adjust To Unit</th>
+                            <th>Adjust To Diverse</th>
+                            <th>Adjust Status</th>
+                            <th>Reporter</th>
+                            <th>Reporter Time</th>
+                            <th>Approver</th>
+                            <th>Approver Time</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="adjustment in adjustments track by $index" style="font-size:11px">
+                            <td> {{adjustment.id}} </td>
+                            <td> {{adjustment.locationName}} </td>
+                            <td> <span  ng-repeat="lp in adjustment.lpIds">  {{lp+" "}}</span> </td>
+                            <td> {{adjustment.itemName}} </td>
+                            <td> {{adjustment.unitName}}</td>
+                            <td> {{adjustment.diverseName}} </td>
+                            <td> {{adjustment.customerName}} </td>
+                            <td> {{adjustment.titleName}} </td>
+                            <td> {{adjustment.itemStatus}} </td>
+                            <td> {{adjustment.qty}} </td>
+                            <td> {{adjustment.sn}} </td>
+                            <td> {{adjustment.type}} </td>
+                            <td> {{adjustment.fromLocation}} </td>
+                            <td> {{adjustment.toLocation}} </td>
+                            <td> {{adjustment.adjustToUnitName}} </td>
+                            <td> {{adjustment.adjustToDiverseName}} </td>
+                            <td> {{adjustment.status}} </td>
+                            <td> {{adjustment.createdBy}} </td>
+                            <td> {{adjustment.createdWhen | date: 'yyyy-MM-dd HH:mm:ss'}} </td>
+                            <td> {{adjustment.approveBy}} </td>
+                            <td> {{adjustment.approveWhen | date: 'yyyy-MM-dd HH:mm:ss'}} </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo"  page-size="pageSize" load-content="search(currentPage)"></unis-pager>
+        </div>
+    </div>
+</div>

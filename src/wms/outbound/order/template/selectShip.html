@@ -1,0 +1,48 @@
+<md-dialog flex="40">
+	<form name="editForm" class="form-horizontal" novalidate>
+		<md-toolbar>
+			<div class="md-toolbar-tools">
+			    <h2>{{title}}</h2>
+			</div>
+		</md-toolbar>
+		<md-dialog-content>
+			<div>
+				<input type="text" class="form-control" ng-change="valueChange()" ng-model="searchValue"
+					   style="margin: 20px auto; width: 60%;" placeholder="Enter text to search"/>
+			</div>
+			<div class="alert alert-danger display-hide" style="display: block;"
+				 ng-show="editForm.$submitted && editForm.$invalid">
+				<button class="close" data-close="alert"></button>
+				Please select a record!
+			</div>
+				 <div class="table-scrollable">
+					 <table class="table table-striped table-bordered table-hover">
+						 <thead>
+						 <tr>
+							 <th></th>
+							 <th>Name</th>
+							 <th>Address</th>
+							 <th>City</th>
+							 <th>State</th>
+							 <th>Zip Code</th>
+						 </tr>
+						 </thead>
+						 <tbody>
+							 <tr ng-repeat="item in list track by $index">
+								 <td><input type="radio"  name="group" required  value="{{$index}}" ng-model="list.selectedRow"></td>
+								 <td>{{item.shipFromName}}</td>
+								 <td>{{item.address}}</td>
+								 <td>{{item.city}}</td>
+								 <td>{{item.state}}</td>
+								 <td>{{item.zipcode}}</td>
+							 </tr>
+						 </tbody>
+					 </table>
+				 </div>
+			<div class="form-group form-self-actions" style="padding-right:75px; margin-top:20px;">
+				<button type="submit" class="btn blue" ng-click="submit()">Submit</button>
+				<button type="button" class="btn default"ng-click="cancel()">Cancel</button>
+			</div>
+		</md-dialog-content>
+    </form>
+</md-dialog>

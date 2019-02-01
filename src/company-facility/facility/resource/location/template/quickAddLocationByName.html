@@ -1,0 +1,82 @@
+<md-dialog flex="60">
+    <form novalidate name="quickAddLocationForm" class="form-horizontal">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Quick Add Location By Name</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content class="position: relative;">
+            <div class="md-dialog-content">
+                <div class="tab-content" style="padding:0px 15px; min-height: 300px;">
+                    <div class="alert alert-danger display-hide" ng-if="hasErrorMessage" style="display: block; position: absolute;left: 20px; right: 20px; top: 70px;">
+                        <button class="close" ng-click="closeErrorAlert()" data-close="alert"></button>{{errorMsg}}
+                    </div>
+
+                    <div>
+                        <div class="portlet-title" style=" border-bottom: 1px solid #cfc7c7; margin-bottom: 10px;">
+                            <div class="caption">
+                                <span class="caption-subject bold"> Name List (Seperate by comma or line break)</span>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+
+                            <div class="col-md-12">
+
+                                <textarea type="text" rows="4" class="form-control" class="form-control" ng-model="Names" ng-change="namesChange(Names)"></textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="portlet-title" style=" border-bottom: 1px solid #cfc7c7; margin-bottom: 10px;">
+                            <div class="caption">
+                                <span class="caption-subject bold">Locations to be created:</span>
+                            </div>
+                        </div>
+                        <div class="row form-group" style="padding-left: 20px;">
+
+                            <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_1"
+                                role="grid" aria-describedby="sample_1_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th> Name</th>
+                                        <th> Type</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="location in locations track by $index">
+
+                                        <td>{{location.name}}</td>
+                                        <td>{{location.type}}</td>
+
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+
+        </md-dialog-content>
+        <md-dialog-actions layout="row" id='unis'>
+            <div style="margin-right: 50px" class="col-md-4">
+                <div class="col-md-12">
+                    <div class="col-md-5">
+                        <waitting-btn type="button" btn-class="btn blue" ng-click="addBatchLocation()" value="'Submit'" is-loading="loading"></waitting-btn>
+                    </div>
+                     <div class="col-md-2"></div>
+                    <div class="col-md-5">
+                        <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

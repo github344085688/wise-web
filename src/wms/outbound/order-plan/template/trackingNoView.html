@@ -1,0 +1,90 @@
+<md-dialog id="unis" flex="80" ng-cloak>
+    <form class="light-theme" novalidate name="printShippingLabelForm" ng-submit="printShippingLabelForm.$valid && newPrint($event)">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Tracking# View </h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="overflow: auto;">
+            <div class="md-dialog-content" style="min-height:200px ;">
+
+                <div class="grid-100 grid-parent container">
+                    <div class="grid-parent grid-100 container">
+                        <div class="grid-70">
+                            &nbsp;
+                        </div>
+                        <div class="grid-10">
+                          <span style="color:red"> Fail: {{singleAndMixItems.length + unPrintShippingDetails.length}}</span> / {{singleAndMixItems.length +unPrintShippingDetails.length +orderPlan.printShippingDetailsLength}}
+                        </div>
+                        <div class="grid-20">
+                            <button type="button" class="btn" ng-click="reprintFailedShippingLabel()">Re-print Failed
+                                Shipping Label </button>
+                        </div>
+                    </div>
+                    <div ng-show="isLoadingTable" class="grid-parent grid-100 container text-center">
+                            <img src="assets/img/loading-spinner-grey.gif">
+                            <span>&nbsp;LOADING...</span>
+                        </div>
+                    <div class="grid-parent grid-100 container"  ng-show="!isLoadingTable">
+                        <table class="table">
+                            <thead>
+                                <tr role="row">
+                                    <th> DN</th>
+                                    <th> Item</th>
+                                    <th> Carrier</th>
+                                    <th> Ship To</th>
+                                    <th> Picked</th>
+                                    <th> Scanned</th>
+                                    <th> UPC</th>
+                                    <th> Printed Tracking No# (Item Qty)</th>
+                                    <th> Unprinted Tracking No# (Item Qty)</th>
+                                    <th> Printed Qty</th>
+                                    <th> UnPrinted Qty</th>
+                                    <th> Actions </th> 
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="itemLine in orderItemLinesView track by $index">
+
+                                    <td>{{itemLine.orderId}}</td>
+                                    <td>
+                                        <item-display item="itemLine"></item-display>
+                                    </td>
+                                    <td>{{orderKeyById[itemLine.orderId].carrierName}}</td>
+                                    <td>{{getAddressInfo(orderKeyById[itemLine.orderId].shipToAddress)}}</td>
+                                    <td>{{itemLine.qty +" "+itemLine.unitName}}</td>
+                                    <td>{{itemLine.scanQty}}</td>
+                                    <td>{{itemLine.upcCodeForPrint}}</td>
+                                    <td>
+                                        <span ng-repeat="item in itemLine.beenPrintedTrackingNos" ng-if="item.itemLineDetail.unitId === itemLine.unitId"  style="margin: 5px 5px;padding: 5px 10px;border-radius: 3px; display: inline-block;background-color: olivedrab">
+                                            {{tranforQtyToCurrentUnit(item,itemLine)}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span ng-repeat="item in itemLine.unPrintedTrackingNos" ng-if="item.itemLineDetail.unitId === itemLine.unitId"  style="margin: 5px 5px;padding: 5px 10px;border-radius: 3px; display: inline-block;background-color: #ffffff">
+                                            {{tranforQtyToCurrentUnit(item,itemLine)}}
+                                        </span>
+                                    </td>
+                                    <td>{{sumPrintedQty(itemLine.beenPrintedTrackingNos,itemLine)}}</td>
+                                    <td>{{sumUnPrintedQty(itemLine,itemLine.beenPrintedTrackingNos)}}</td>
+                                    <td><button ng-click ='repack(itemLine.orderId)'>Repack</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="grid-100" >
+                        <div class="grid-content grid-100">
+                            <unis-pager total-count="orderPlan.orderItemLines.length" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

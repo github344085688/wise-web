@@ -1,0 +1,128 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Admin</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Service</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Print</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Printer management</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> Printer Management </span>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <form novalidate name="printerForm">
+                    <div class="row form-group">
+                        <div class="col-md-4">
+                            <label class="bold">Printer Name:</label>
+                            <div class="input-icon right" ng-show="printerForm.name.$invalid && (printerForm.$submitted || printerForm.name.$touched)">
+                                <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                        <span class="lt-tooltip-text">Required</span>
+                                    </i>
+                            </div>
+                            <input type="text" name="name" class="form-control" ng-model="printer.printerName" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="bold">Warehouse:</label>
+                            <input type="text" name="warehouse" class="form-control" ng-model="printer.warehouseId">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="bold">Type:</label>
+                            <ui-select name="printer.type" ng-model="printer.type">
+                                <ui-select-match allow-clear="true">
+                                    <div ng-bind="$select.selected"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in ['PDF', 'ZPL', 'RAW']">
+                                    <div ng-bind="item"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-6">
+                            <label class="bold">IP:</label>
+                            <div class="input-icon right" ng-show="printerForm.ip.$invalid && (printerForm.$submitted || printerForm.ip.$touched)">
+                                <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                        <span class="lt-tooltip-text">Required</span>
+                                    </i>
+                            </div>
+                            <input type="text" name="ip" class="form-control" ng-model="printer.ip" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="bold">Port:</label>
+                            <input type="text" name="port" class="form-control" ng-model="printer.port">
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-6">
+                            <label class="bold">Paper Size:</label>
+                            <input type="text" name="paperSize" class="form-control" ng-model="printer.paperSize">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="bold">Description:</label>
+                            <input type="text" name="description" class="form-control" ng-model="printer.description">
+                        </div>
+                    </div>
+                    <div class="row form-actions right">
+                        <waitting-btn type="submit" btn-class="btn blue"
+                                      permission-check="{{'service::print_write'}}"
+                                      ng-click="printerForm.$valid && submit()"
+                                      value="'submit'" is-loading="loading"></waitting-btn>
+                    </div>
+                </form>
+                <div class="panel non-border non-gutter bottom">
+                    <div class="panel-heading header-primary">
+                        <h3 class="panel-title">Printer Results<input type="text" ng-model="searchText" class="form-control input-circle" placeholder="Enter text"></h3>
+                    </div>
+                    <div class="panel-body non-gutter bottom">
+                        <div>
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Name</th>
+                                        <th>type</th>
+                                        <th>IP</th>
+                                        <th>port</th>
+                                        <th>paperSize</th>
+                                        <th>warehouse</th>
+                                        <th>description</th>
+                                        <th permission-check="{{'service::print_write'}}">action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="printer in printers | filter:searchText">
+                                        <td>{{printer.id}}</td>
+                                        <td><a ng-click="toUpdate(printer)">{{printer.printerName}}</a></td>
+                                        <td>{{printer.type}}</td>
+                                        <td>{{printer.ip}}</td>
+                                        <td>{{printer.port}}</td>
+                                        <td>{{printer.paperSize}}</td>
+                                        <td>{{printer.warehouseId}}</td>
+                                        <td>{{printer.description}}</td>
+                                        <td permission-check="{{'service::print_write'}}"><a ng-click="delete(printer.id)">delete</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

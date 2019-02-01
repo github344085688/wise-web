@@ -1,0 +1,198 @@
+<md-dialog flex="60">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{formTitle}}</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="" style="padding: 40px 40px 30px 14px;">
+        <form novalidate name="addItemLineForm" class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-md-2" style="margin-bottom: 5px;">Item:</label>
+                <div class="col-md-7">
+                    <input-validation-message field="itemSpec" form="addItemLineForm"></input-validation-message>
+                    <itemspec-auto-complete ng-model="currentItem.itemSpecId"
+                                            on-select="itemSpecIdOnSelect(itemSpec)"
+                                            name="itemSpec" required="true"
+                                            customer-id="customerId"
+                                            ext-param="{statuses:['Active']}"
+                                            ng-disabled="isDisabledMap.itemSpec">
+                    </itemspec-auto-complete>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Supplier:</label>
+                <div class="col-md-7">
+                    <organization-auto-complete name="supplier" ng-model="currentItem.supplierId"
+                                                on-select="supplierOnSelect(org)"
+                                                tag="Supplier" allow-clear="true"
+                                                ng-disabled="!customerId || isDisabledMap.supplier">
+                    </organization-auto-complete>
+
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <span class="col-md-2"></span>
+                <span class="col-md-5"><a ui-sref="fd.item.itemspec.edit" target="_blank">Setup New Item Spec</a></span>
+            </div>
+            <div class="item-line-diverse-container" ng-show="diverseFields && diverseFields.length>0">
+                <div class="form-group" ng-switch on="field.itemProperty.type" ng-repeat="field in diverseFields">
+                    <label class="control-label col-md-2">{{field.itemProperty.name}}:</label>
+                    <div class="col-md-5">
+                        <input-validation-message field="field.{{$index}}.value" form="addItemLineForm"></input-validation-message>
+                        <div ng-show="!field.availableDiverseValues || field.availableDiverseValues.length===0">
+                            <div ng-switch-when="Number">
+                                <div  class="col-md-6" style="padding: 0px;">
+                                    <!--<input-validation-message field="field.{{$index}}.value" form="addItemLineForm"></input-validation-message>-->
+                                    <input class="form-control" type="number" name="field.{{$index}}.value" ng-model="field.value"
+                                           ng-required="!(field.availableDiverseValues && field.availableDiverseValues.length>0)"
+                                           ng-disabled="isDisabledMap.itemSpec"/>
+                                </div>
+                                <div class="col-md-6"  style="padding-right: 0px;">
+                                    <ui-select name="field.{{$index}}.unit" ng-model="field.unit"  ng-disabled="isDisabledMap.itemSpec"
+                                               ng-show="field.itemProperty.unitType && field.itemProperty.unitType != ''">
+                                        <ui-select-match>
+                                            <div ng-bind="$select.selected"></div>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="item in fieldUnits[field.itemProperty.unitType]">
+                                            <div ng-bind="item"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <lt-date-time ng-switch-when="Date" value="field.value"  ng-disabled="isDisabledMap.itemSpec"
+                                          ng-required="!(field.availableDiverseValues && field.availableDiverseValues.length>0)"></lt-date-time>
+                            <input ng-switch-when="Text" class="form-control" type="text" name="field.{{$index}}.value"
+                                   ng-model="field.value"  ng-disabled="isDisabledMap.itemSpec"
+                                   ng-required="!(field.availableDiverseValues && field.availableDiverseValues.length>0)"/>
+                            <input ng-switch-default class="form-control" name="field.{{$index}}.value" ng-model="field.value"
+                                   ng-required="!(field.availableDiverseValues && field.availableDiverseValues.length>0)"
+                                   ng-disabled="isDisabledMap.itemSpec"/>
+                        </div>
+
+                        <ui-select name="field.{{$index}}.value" ng-model="field.selectedProduct"
+                                   ng-show="field.availableDiverseValues && field.availableDiverseValues.length>0"
+                                   on-select="diverseValuesSelected($index, $select.selected)"
+                                   ng-required="field.availableDiverseValues && field.availableDiverseValues.length>0"
+                                   ng-disabled="isDisabledMap.itemSpec">
+                            <ui-select-match>
+                                <div>{{$select.selected.value}} {{$select.selected.unit}}</div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="diverseObj in field.availableDiverseValues | filter: $select.search">
+                                <div>{{diverseObj.value}} {{diverseObj.unit}}</div>
+                            </ui-select-choices>
+                        </ui-select>
+
+                    </div>
+                    <div class="col-md-5"  ng-show="showfieldsOther[$index]" style="padding-left: 0px;">
+                        <input-validation-message field="field.{{$index}}.value" form="addItemLineForm"></input-validation-message>
+                        <div ng-switch-when="Number">
+                            <div  class="col-md-6"  style="padding: 0px;">
+                                <input class="form-control" type="number"  name="field.{{$index}}.value"  ng-required="showfieldsOther[$index]"
+                                       ng-model="field.otherValue"  ng-disabled="isDisabledMap.itemSpec"/>
+                            </div>
+                            <div class="col-md-6"  style="padding-right: 0px;">
+                                <!--ng-required="showfieldsOther[$index] && field.itemProperty.unitType && field.itemProperty.unitType != ''"-->
+                                <ui-select name="field.{{$index}}.value" ng-model="field.otherUnit"  ng-disabled="isDisabledMap.itemSpec"
+                                           ng-show="field.itemProperty.unitType && field.itemProperty.unitType != ''">
+                                    <ui-select-match>
+                                        <div ng-bind="$select.selected"></div>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item in fieldUnits[field.itemProperty.unitType]">
+                                        <div ng-bind="item"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <lt-date-time ng-switch-when="Date" value="field.otherValue" ng-required="showfieldsOther[$index]"
+                                      ng-disabled="isDisabledMap.itemSpec"></lt-date-time>
+                        <input ng-switch-when="Text" class="form-control" type="text" name="field.{{$index}}.value"
+                               ng-model="field.otherValue" ng-required="showfieldsOther[$index]"
+                               ng-disabled="isDisabledMap.itemSpec"/>
+                        <input ng-switch-default class="form-control" name="field.{{$index}}.value"
+                               ng-model="field.otherValue"
+                               ng-required="showfieldsOther[$index]"
+                               ng-disabled="isDisabledMap.itemSpec"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">UOM:</label>
+                <div class="col-md-7">
+                    <input-validation-message field="unit" form="addItemLineForm"></input-validation-message>
+                    <ui-select ng-model="currentItem.unit" name="unit" REQUIRED="true" ng-disabled="isDisabledMap.unit">
+                        <ui-select-match>
+                            <span ng-bind="$select.selected.name"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="unit in itemSpecUnits | filter: $select.search">
+                            <span ng-bind="unit.name"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2 ">Qty:</label>
+                <div class="col-md-7 ">
+                    <input-validation-message field="qty" form="addItemLineForm"></input-validation-message>
+                    <input type="number" name="qty" class="form-control"  ng-disabled="isDisabledMap.qty"
+                           ng-model="currentItem.qty" REQUIRED="true"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2 ">Pallet Qty:</label>
+                <div class="col-md-7 ">
+                    <input type="number" name="palletQty" ng-disabled="isDisabledMap.palletQty"
+                           class="form-control" ng-model="currentItem.palletQty" />
+                </div>
+            </div>
+         
+            <div class="form-group">
+                <label class="control-label col-md-2 ">Lot#:</label>
+                <div class="col-md-7 ">
+                    <input type="text" name="lotNo" class="form-control"  ng-disabled="isDisabledMap.lotNo"
+                           ng-model="currentItem.lotNo"/>
+                </div>
+            </div>
+            <div class="form-group" ng-repeat="(key, fieldName) in dynamicFields"  ng-disabled="isDisabledMap.dynamicProperties">
+                <label class="control-label col-md-2" style="margin-bottom: 5px;">{{fieldName}}:</label>
+                <div class="col-md-7">
+                     <lt-date-time  value="currentItem.dynamicFields[key]" date-format="yyyy-mm-dd hh:mm:ss" ng-if="isDataDynamicField(key)"></lt-date-time>
+                    <input class="form-control" type="text" ng-model="currentItem.dynamicFields[key]" ng-if="isTxtDynamicField(key)"/>
+                </div>
+            </div>
+            <div class="form-group">
+                    <label class="control-label col-md-2 ">Expiration Date:</label>
+                    <div class="col-md-7 ">
+                            <lt-date-time  value="currentItem.expirationDate" date-format="yyyy-mm-dd" min-view="2" ></lt-date-time>
+                    </div>
+            </div>
+            <div class="form-group" ng-show="itemHasSerialNumber">
+                <label class="control-label col-md-2 ">SN List:</label>
+                <div class="col-md-9 ">
+                    <textarea class="form-control" rows="4" ng-disabled="isDisabledMap.snList"
+                              placeholder="Enter SN, split by comma for multiple SN. E.g: 8001AB,8002AB,8003AB"
+                              ng-model="currentItem.snList"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Note</label>
+                <div class="col-md-9">
+                    <textarea class="form-control" name="note" id="note" rows="4" ng-disabled="isDisabledMap.note"
+                              ng-model="currentItem.note"></textarea>
+                </div>
+            </div>
+            <div class="form-group" ng-show="!ifFitStatus">
+                <label class="control-label col-md-2"></label>
+                <div class="col-md-10" style="color:red">The status of selected product is not Active.</div>
+            </div>
+            <div class="form-group form-self-actions" style="padding-right:75px; margin-top:20px;">
+                <button type="submit" class="btn blue" ng-click="addItemLineForm.$valid && submit()">{{submitLabel}}</button>
+                <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+            </div>
+        </form>
+
+    </md-dialog-content>
+
+</md-dialog>
+

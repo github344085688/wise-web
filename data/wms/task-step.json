@@ -1,0 +1,19 @@
+[{
+	"id":"receive",
+	"name":"Receive"
+},{
+	"id":"load",
+	"name":"Load"
+},{
+	"id":"pick",
+	"name":"Pick"
+},{
+	"id":"pack",
+	"name":"Pack"
+},{
+	"id":"changeConfiguartion",
+	"name":"Change Configuartion"
+},{
+	"id":"clcyleCount",
+	"name":"Clcyle Count"
+}]

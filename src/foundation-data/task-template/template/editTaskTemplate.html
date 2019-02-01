@@ -1,0 +1,128 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Foundation Data</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Task Template</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span ng-show="isAddAction" class="caption-subject bold"> Add Task Template</span>
+                    <span ng-show="!isAddAction" class="caption-subject bold"> Edit Task Template</span>
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+                <form novalidate name="taskTemplateForm" ng-submit="taskTemplateForm.$valid && addOrUpdateTaskTemplate()">
+                    <div class="alert alert-danger display-hide" ng-show="taskTemplateForm.$invalid && taskTemplateForm.$submitted" style="display: block;">
+                        <button class="close" data-close="alert"></button> You have some form errors. Please check below.
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row form-group">
+                                <div class="col-md-4">
+                                    <label>Customer</label>
+                                    <input-validation-message field="customer" form="taskTemplateForm"></input-validation-message>
+                                    <organization-auto-complete ng-model="taskTemplate.customerId" name="customer" allow-clear="true" tag="Customer" required="true"></organization-auto-complete>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Facility</label>
+                                    <input-validation-message field="facility" form="taskTemplateForm"></input-validation-message>
+                                    <ui-select name="facility" ng-model="taskTemplate.facilityId" class="form-control" required="true">
+                                        <ui-select-match allow-clear="true">
+                                            <div ng-bind="$select.selected.basic.name"></div>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="facility.id as facility  in facilities | filter: $select.search.basic.name">
+                                            <div ng-bind="facility.basic.name"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Task Type</label>
+                                    <input-validation-message field="taskType" form="taskTemplateForm"></input-validation-message>
+                                    <ui-select name="taskType" ng-model="taskTemplate.taskType" class="form-control" required="true">
+                                        <ui-select-match allow-clear="true">
+                                            <div ng-bind="$select.selected"></div>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="taskType in taskTypes | filter: $select.search">
+                                            <div ng-bind="taskType"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+
+                            </div>
+                            <div class="tab-pane ">
+                                <div class="form-section">Steps</div>
+
+                                <div class="row form-group" ng-repeat="itemLine in taskTemplate.steps track by $index" style="margin:5px 0px;padding: 15px 30px 20px 30px;background-color: rgba(198, 228, 230, 0.36);">
+                                    <div class="col-md-4">
+
+                                        <div class="col-md-12" id="template-files">
+                                            <ul data-as-sortable="getFieldDragListener" data-ng-model="itemLine.genericStepTemplate.instructionFileIds" class="img-sort">
+                                                <li data-ng-repeat="item in itemLine.genericStepTemplate.instructionFileIds" data-as-sortable-item>
+                                                    <span class="badge img-sort-index">{{$index+1}}</span>
+                                                    <div data-as-sortable-item-handle><img http-src="/file-app/file-download/{{item}}" />
+                                                    </div>
+                                                    <i class="glyphicon glyphicon-remove img-sort-remove" ng-click="removeFile(item,itemLine)"></i>
+                                                </li>
+                                            </ul>
+                                            <button type="button" class="btn yellow" ng-click="uploadFiles($index,itemLine)">Upload Img</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <div class="row form-group">
+                                            <label class="col-md-2 control-label">Step Type:</label>
+                                            <div class="col-md-10">
+                                                <input-validation-message field="stepType{{$index}}" form="taskTemplateForm"></input-validation-message>
+                                                <ui-select name="stepType{{$index}}" ng-model="itemLine.stepType" style="border-radius: 4px;" required="true">
+                                                    <ui-select-match allow-clear="true">{{$select.selected}}</ui-select-match>
+                                                    <ui-select-choices repeat=" item in StepTypes | filter: $select.search">
+                                                        {{item}}
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+
+                                        </div>
+                                        <div class="row form-group">
+                                            <label class="col-md-2 control-label">Name:</label>
+                                            <div class="col-md-10">
+                                                <input-validation-message field="name{{$index}}" form="taskTemplateForm"></input-validation-message>
+                                                <input type="text" name="name{{$index}}" ng-model="itemLine.genericStepTemplate.name" class="form-control" required="true"/>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <label class="col-md-2 control-label">Description:</label>
+                                            <div class="col-md-10">
+
+                                                <textarea type="text" name="itemLine{{$index}}description" ng-model="itemLine.genericStepTemplate.description" placeholder="Enter text"
+                                                    class="form-control" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn  green" ng-click="addTaskTempleteItem()">Add</button>
+                                        <button type="button" class="btn  red" ng-show="!$first" ng-click="removeTaskTempleteItem($index)" aria-hidden="false">Remove</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class=" row form-actions right">
+                                <waitting-btn type="submit" btn-class="btn blue" value="submitLabel" is-loading="loading"></waitting-btn>
+                                <button type="button" class="btn default" ng-click="cancelEditLocation()">Cancel</button>
+                            </div>
+                        </div>
+
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>

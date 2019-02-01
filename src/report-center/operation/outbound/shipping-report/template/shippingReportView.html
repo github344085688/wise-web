@@ -1,0 +1,80 @@
+<div class="grid-100 row">
+        <div class="grid-content grid-100">
+            <div class="grid-parent grid-100 container">
+                <h1 class="section-label pull-left">Shipping Report View</h1>
+    
+            </div>
+           
+            <div class=" grid-parent grid-100 container">
+                <div class="grid-10 ">
+                    <waitting-btn type="button" btn-class="ripplelink" ng-click="getDownload()" value="'Export to XLS'" is-loading="loading"></waitting-btn>
+                </div>
+                <div class="grid-90 ">
+                    &nbsp;
+                </div>
+            </div>
+            <div class=" grid-parent grid-100 container">
+                <div class="grid-parent grid-100 container" style="overflow: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr style="font-size:11px">
+    
+                                <th ng-repeat="col in colDefs track by $index" class="{{getSortClass($index)}}" ng-click="sortClick($index)">
+                                    {{col.headerName}}
+                                </th>
+    
+                            </tr>
+                        </thead>
+                        <tbody style="font-size:11px">
+                            <tr ng-repeat="shipping in shippingReportView">
+                                    <th>{{shipping["CUSTOMER ID"]}}</th>
+                                    <th>{{shipping["TITLE"]}}</th>
+                                    <th>{{shipping["ORDER NO."]}}</th>
+                                    <th>{{shipping["ORDER TYPE"]}}</th>
+                                    <th>{{shipping["ACCOUNT ID"]}}</th>
+                                    <th>{{shipping["ITEM ID"]}}</th>
+                                    <th>{{shipping["ITEM DESCRIPTION"]}}</th>
+                                    <th>{{shipping["UOM"]}}</th>
+                                    <th>{{shipping["GRADE"]}}</th>
+                                    <th>{{shipping["REFERENCE NO."]}}</th>
+                                    <th>{{shipping["PO NO."]}}</th>
+                                    <th>{{shipping["SOURCE"]}}</th>
+                                    <th>{{shipping["ITEM CFT"]}}</th>
+                                    <th>{{shipping["ITEM WGT(lb.)"]}}</th>
+                                    <th>{{shipping["LOAD NO."]}}</th>
+                                    <th>{{shipping["STATUS"]}}</th>
+                                    <th>{{shipping["SHIPPED DATE"]}}</th>
+                                    <th>{{shipping["SHIP TO"]}}</th>
+                                    <th>{{shipping["STORE NO."]}}</th>
+                                    <th>{{shipping["CARRIER NO."]}}</th>
+                                    <th>{{shipping["SEAL NO."]}}</th>
+                                    <th>{{shipping["PRO NO."]}}</th>
+                                    <th>{{shipping["shipping DATE"]}}</th>
+                                    <th>{{shipping["APPOINTMENT DATE"]}}</th>
+                                    <th>{{shipping["IN YARD DATE"]}}</th>
+                                    <th>{{shipping["MASTER SHIP TO"]}}</th>
+                                    <th>{{shipping["SHIPPED QTY"]}}</th>
+                                    <th>{{shipping["ORDER QTY"]}}</th>
+                                    <th>{{shipping["CARTON QTY"]}}</th>
+                                    <th>{{shipping["PALLET QTY"]}}</th>
+                                    <th>{{shipping["PALLET TYPE"]}}</th>
+                                    <th>{{shipping["UNITS PALLET"]}}</th>
+    
+    
+                            </tr>
+    
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container">
+                <unis-pager total-count="shippingReport.length" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+            </div>
+    
+            <div class=" grid-parent grid-100 container">
+    
+                <button type="button" class="grid-10 pull-right cancel" ng-click="cancel()">Cancel</button>
+    
+            </div>
+        </div>
+    </div>

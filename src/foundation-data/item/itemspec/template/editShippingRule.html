@@ -1,0 +1,85 @@
+<form class="form-horizontal" novalidate name="forms.shippingRuleForm"
+      ng-submit="forms.shippingRuleForm.$valid && ctrl.saveOrUpdateShippingRule(forms.shippingRuleForm)">
+    <div class="form-group">
+        <div class="col-md-10 control-label">
+            <div class="form-group">
+                <label class="col-md-2 control-label">Item Name:</label>
+                <label class="col-md-10 control-label" style="text-align: left;">{{item.name}}</label>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-md-2">Shipping Rule</div>
+                <div class="col-md-10">
+                    <input-validation-message field="pickRule" form="forms.shippingRuleForm"></input-validation-message>
+                    <ui-select name="shippingRule" ng-model="shippingRule.shippingRule" required="true" style="border-radius: 4px;">
+                        <ui-select-match>{{$select.selected}}</ui-select-match>
+                        <ui-select-choices repeat="item in ctrl.shippingRules">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-2">Cycle</div>
+                <div class="col-md-5">
+                    <input-validation-message field="pickRule" form="forms.shippingRuleForm"></input-validation-message>
+                    <ui-select name="shippingRule" ng-model="shippingRule.cycle" required="true" style="border-radius: 4px;">
+                        <ui-select-match>{{$select.selected}}</ui-select-match>
+                        <ui-select-choices repeat="item in ctrl.cycle">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-2">Time Window</div>
+                <div class="col-md-5">
+                    <input type="number" class="form-control" ng-model="shippingRule.timeWindow" name="timeWindow" required="true">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-12">
+            <div class="form-actions right">
+                <waitting-btn type="submit" btn-class="btn blue"  permission-check="{{'item::itemSpec_write'}}"
+                              value="submitLabel" is-loading="loading"></waitting-btn>
+                <button ng-click="ctrl.resetItemShippingRule()" type="button" class="btn grey">Reset</button>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="portlet light box-shadow-none">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold uppercase">Item shipping rule</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="table-scrollable">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>Shipping Rule</th>
+                    <th>Cycle</th>
+                    <th>Time Window</th>
+                    <th permission-check="{{'item::itemSpec_write'}}">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="shipping in itemShippingRules track by $index" ng-class="{'bg-light-green':hightLights[$index]}">
+                    <td>{{shipping.shippingRule}}</td>
+                    <td>{{shipping.cycle}}</td>
+                    <td>{{shipping.timeWindow}}</td>
+                    <td  permission-check="{{'item::itemSpec_write'}}"><a ng-click="ctrl.editShippingRule($index)">Edit</a> |
+                        <a ng-click="ctrl.delShippingRule($index)">Delete</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

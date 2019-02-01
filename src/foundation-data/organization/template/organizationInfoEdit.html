@@ -1,0 +1,108 @@
+<form novalidate name="organizationForm"
+      ng-submit="organizationForm.$valid && ctrl.addOrUpdateOrganization()">
+    <div class="grid-parent grid-100 container">
+        <div class="grid-60">
+            <div class="grid-parent grid-100 container">
+                <div class="grid-50">
+                    <label class="label-input">Name</label>
+                    <input-validation-message field="orgName" form="organizationForm"></input-validation-message>
+                    <input type="text" name="orgName" ng-model="ctrl.organization.basic.name" required="true" placeholder="Enter text"/>
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Customer Code</label>
+                    <input type="text" ng-required="isCustomerCodeRequired" ng-model="ctrl.organization.extend.customerCode" ng-disabled="isCustomerCodeDisabled"  />
+                </div>
+                <div class="grid-25">
+                        <label class="label-input">Print Name <i class="fa fa-question-circle" title="No more then 10 characters"></i></label>
+                        <input type="text" ng-model="ctrl.organization.basic.printName" maxlength="10" />
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container">
+                <div class="grid-100">
+                    <label class="label-input">Note</label>
+                    <textarea type="text" ng-model="ctrl.organization.extend.note" placeholder="Enter text"/>
+                </div>
+            </div>
+            <div class="second-title"> Contact Info</div>
+            <div class="grid-parent grid-100 container" style="margin-bottom: 0px;">
+                <div class="grid-15">
+                    <label class="label-input">Contact</label>
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Phone</label>
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Email</label>
+                </div>
+                <div class="grid-15">
+                    <label class="label-input">Department</label>
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container"
+                 ng-repeat="contact in ctrl.organization.extend.contacts track by $index">
+                <div class="grid-15">
+                    <input type="text" name="name" ng-model="contact.name" placeholder="Enter text"/>
+                </div>
+                <div class="grid-25">
+                    <input type="text" name="phone" ng-model="contact.phone" placeholder="Enter text"/>
+                </div>
+                <div class="grid-25">
+                    <input type="email" name="email" ng-model="contact.email" placeholder="Enter text"/>
+                </div>
+                <div class="grid-15">
+                    <ui-select name="type" ng-model="contact.type">
+                        <ui-select-match allow-clear="true">
+                            {{$select.selected}}
+                        </ui-select-match>
+                        <ui-select-choices
+                                repeat="department in ['Accounting', 'Shipping', 'Warehouse', 'Other', 'Acct Rep' , 'EDI', 'IT' , 'Sales'] | filter: $select.search">
+                            {{department}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="grid-10">
+                    <button type="button" class=" ripplelink"
+                            ng-click="ctrl.addContactInfo()">Add
+                    </button>
+                </div>
+                <div class="grid-10">
+                    <button type="button" class=" ripplelink delete"
+                            ng-show="!$first" ng-click="ctrl.removeContactInfo($index)">Remove
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-20" style="padding: 10px; background: #fff;border: 2px dashed #028AF4;height: 180px;">
+            <div style="width: 100%; height: 130px; text-align: center">
+                <img style="max-width: 100%; max-height: 100%;" ng-if="logoFileId" http-src="/file-app/file-download/{{logoFileId}}"/>
+            </div>
+            <div class="btn blue" style="width: 100%; position: relative;">
+                <input type="file"style="width: 100%; display: block;opacity:0; filter:alpha(opacity=0);height: 100%;position: absolute;left: 0; top:0;z-index:1; cursor: pointer; " onchange="angular.element(this).scope().organizationFileChange(this)" accept="image/png, image/jpeg, image/gif, image/jpg">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Upload Logo'"
+                              is-loading="organizationFileLoading">
+                </waitting-btn>
+            </div>
+        </div>
+
+        <div class="grid-20" style="border-left: 1px solid #ddd">
+            <label class="label-input" style="font-size: 1rem;">Tags</label>
+            <div class="grid-parent grid-100" ng-repeat="property in ctrl.roles track by $index">
+                <input type="checkbox" id="{{property}}" name="{{property}}"
+                       ng-click="ctrl.updateSelection($event,property)" ng-checked="ctrl.isSelected(property)">
+                <label class="checkbox" for="{{property}}">
+                    <span class="text" style="font-weight: normal;">{{ctrl.upperRoles[$index]}} </span>
+                </label>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="grid-parent grid-100 container" style="margin-top:50px;">
+            <div ng-if= "submitLabel === 'Save'"><unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="submitLabel" is-loading="loading"
+                permission-check="{{'organizationAdd_write'}}"></unis-waitting-btn></div>
+            <div ng-if= "submitLabel === 'Update'" > <unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="submitLabel" is-loading="loading"
+                permission-check="{{'organizationUpdate_write'}}"></unis-waitting-btn></div>
+        <button type="button" class="grid-10 pull-right cancel" ng-click="ctrl.cancelEditOrganization()">Cancel</button>
+    </div>
+
+</form>

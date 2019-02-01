@@ -1,0 +1,140 @@
+[{
+    "title": "Company",
+    "state": "cf.company",
+    "icon": "local_shipping",
+    "url": "",
+    "subMenu": [
+        {
+            "title": "Company Management",
+            "state": "cf.company.company-management.list",
+            "icon": "web_asset",
+            "url": "/cf/company/companyManagement/list",
+            "permissions": "company::management_read"
+        }
+    ]
+},{
+    "title": "Facility",
+    "state": "cf.facility",
+    "icon": "local_shipping",
+    "url": "",
+    "subMenu": [
+        {
+            "title": "Facility Management",
+            "state": "cf.facility.facility-management.list",
+            "icon": "web_asset",
+            "url": "/cf/facility/facilityManagement/list",
+            "permissions": "facility::management_read"
+        },
+        {
+            "title": "Window Check In",
+            "state": "cf.facility.window-checkin",
+            "icon": "web_asset",
+            "url": "",
+           "subMenu": [{
+                "title": "Entry List",
+                "state": "cf.facility.windowCheckin.entry.entryList",
+                "icon": "list",
+                "url": "/cf/facility/window/entry/entryList",
+               "permissions": "facility::checkinEntry_read"
+            }, {
+                "title": "Waiting List",
+                "state": "cf.facility.windowCheckin.entry.waittingList",
+                "icon": "hourglass_empty",
+                "url": "/cf/facility/window/entry/waittingList",
+                "permissions": "facility::checkinWaiting_read"
+            }]
+        }, {
+            "title": "Appointment",
+            "state": "cf.facility.appointment",
+            "icon": "schedule",
+            "url": "/cf/facility/appointment",
+            "subMenu": [{
+                "title": "Appointment Setting",
+                "state": "cf.facility.appointment.setting",
+                "icon": "list",
+                "url": "/cf/facility/appointment/setting",
+                "permissions": "facility::appointmentSet_read"
+            },{
+                "title": "Make Appointment",
+                "state": "cf.facility.appointment.makeAppointment",
+                "icon": "list",
+                "url": "/cf/facility/appointment/makeAppointment",
+                "permissions": "facility::appointmentMake_read"
+            },{
+                "title": "Appointment Schedule",
+                "state": "cf.facility.appointment.schedule",
+                "icon": "list",
+                "url": "/cf/facility/appointment/schedule",
+                "permissions": "facility::appointmentMake_read"
+            }]
+        }, {
+            "title": "Resource Maintenance",
+            "icon": "account_balance",
+            "state": "cf.facility.resource",
+            "url": "",
+            "subMenu": [{
+                "title": "Location",
+                "state": "cf.facility.resource.location.list",
+                "icon": "list",
+                "url": "/cf/facility/resource/location/list",
+                "permissions": "facility::location_read"
+            },{
+                "title": "Item & Location",
+                "state": "cf.facility.resource.itemAndLocation.list",
+                "icon": "list",
+                "url": "/cf/facility/resource/itemAndLocation/list",
+                "permissions": "facility::itemLocation_read"
+            },{
+                "title": "Location & Item",
+                "state": "cf.facility.resource.locationItem.list",
+                "icon": "list",
+                "url": "/cf/facility/resource/locationItem/list",
+                "permissions": "facility::locationItem_read"
+            },{
+                "title": "Virtual Location Group",
+                "state": "cf.facility.resource.virtualLocationGroup",
+                "icon": "web_asset",
+                "permissions": "facility::virtualLocationGroup_read",
+                "subMenu": [{
+                    "title": "Group Management",
+                    "state": "cf.facility.resource.virtualLocationGroup.groupManagement.list",
+                    "icon": "list",
+                    "url": "/cf/facility/resource/virtualLocationGroup/groupManagement/list",
+                    "permissions": "facility::virtualLocationGroup_read"
+                },{
+                    "title": "Title VLG Mapping",
+                    "state": "cf.facility.resource.virtualLocationGroup.titleVlgMapping.list",
+                    "icon": "list",
+                    "url": "/cf/facility/resource/virtualLocationGroup/titleVlgMapping/list",
+                    "permissions": "facility::virtualLocationGroup_read"
+                }]
+            },{
+                "title": "Location Tag",
+                "state": "cf.facility.resource.locationTag.list",
+                "icon": "list",
+                "url": "/cf/facility/resource/locationTag/list",
+                "permissions": "facility::locationTag_read"
+            },{
+                "title": "Conveyor",
+                "icon": "web_asset",
+                "subMenu": [{
+                    "title": "Conveyor Line",
+                    "state": "cf.facility.resource.conveyorLine.list",
+                    "icon": "list",
+                    "url": "/cf/facility/resource/conveyorLine/list"
+                },{
+                    "title": "Conveyor Branch",
+                    "state": "cf.facility.resource.conveyorBranch.list",
+                    "icon": "list",
+                    "url": "/cf/facility/resource/conveyorBranch/list"
+                }]
+            },{
+                "title": "Equipment",
+                "state": "cf.facility.resource.equipment.list",
+                "icon": "list",
+                "url": "/cf/facility/resource/equipment/list",
+                "permissions": "facility::equipment_read"
+            }]
+        }
+    ]
+}]

@@ -1,0 +1,110 @@
+<md-dialog flex="70" ng-cloak>
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Order Import Selection</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <i class="material-icons">close</i>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="max-height:570px; min-height: 300px;">
+            <div class="md-dialog-content">
+                <div class="row">
+                    <div class="portlet light bordered" style="padding-bottom: 0;margin-bottom: 0">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <span class="caption-subject bold"> Order Import</span>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-2" style="text-align: right;">
+                                Long Haul No:
+                            </div>
+                            <div class="col-md-3">
+                                <longhaul-auto-complete allow-clear="true" on-select="selectLongHaul(longHaul)"
+                                                        customer-id="param.customerId" placeholder="Enter Long Haul"
+                                                        ng-model="param.longHaulId"></longhaul-auto-complete>
+                            </div>
+
+                            <div class="col-md-1" style="text-align: right;">
+                                Status:
+                            </div>
+                            <div class="col-md-4">
+                                <ui-select  multiple name="status" ng-model="param.statuses">
+                                    <ui-select-match>
+                                        {{$item}}
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item in statusList| filter: $select.search"
+                                                       refresh="getStatusList($select.search)" refresh-delay="50">
+                                        {{item}}
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-md-2">
+                                <waitting-btn type="button" btn-class="btn blue"
+                                              ng-click="search()"
+                                              value="'Search'" is-loading="orderCompleted"></waitting-btn>
+                            </div>
+                        </div>
+                        <!-- <div class="alert alert-danger display-hide" ng-show="IsHasErorrMsg" style="display: block;">
+							<button class="close" ng-click="closeAlert()" data-close="alert"></button>Please select Retailer First
+						</div> -->
+                        <!-- TABLE -->
+                        <div class="portlet light box-shadow-none" style="padding-bottom: 0;margin-bottom: 0">
+                      
+                            <div class="portlet-body">
+                               <div ng-show="orderCompleted" class="text-center">
+									<img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+								</div>
+								<div ng-show="!orderCompleted" class="dataTables_wrapper no-footer">
+                                    <div class="table-scrollable">
+                                        <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_1"
+                                            role="grid" aria-describedby="sample_1_info">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th>Select</th>
+                                                    <th>Order NO</th>
+                                                    <th>Customer</th>
+                                                    <th>Reference NO</th>
+                                                    <th>PO NO</th>
+                                                    <th>Ship TO</th>
+                                                    <th>MABD</th>
+                                                    <th>Status</th>
+                                                   
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="order in orderLinesView track by $index" ng-click="select($index)">
+                                                    <td>
+                                                        <input type="checkbox" ng-checked="isChecked(order)" ng-click="checkOrderItem(order)">
+                                                    </td>
+                                                    <td><a ng-href="{{'#/wms/outbound/order/' + order.id}}" target="_blank">{{order.id}}</a>                                                        </td>
+                                                    <td>{{order.customerName}}</td>
+                                                    <td>{{order.referenceNo}}</td>
+                                                    <td>{{order.poNos}}</td>
+                                                    <td>{{getAddressInfo(order.shipToAddress)}}</td>
+                                                    <td>{{order.mabd}}</td>
+                                                    <td>{{order.status}}</td>
+                                                   
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <div style="margin-right: 20px">
+                <button type="button" ng-click="submit() " class="btn blue ">&nbsp;OK&nbsp;</button>
+                <button type="button " ng-click="cancel() " class="btn default ">Cancel</button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

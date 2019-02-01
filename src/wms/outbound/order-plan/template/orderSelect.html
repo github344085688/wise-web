@@ -1,0 +1,105 @@
+<div class="grid-content grid-100 row">
+    <div class="grid-parent grid-100 container">
+        <h1 class="section-label pull-left">Search Order</h1>
+        <hr>
+    </div>
+    <div class="grid-parent grid-100 container">
+        <unis-order-search-form is-loading="isLoading" for-order-plan="true" search-orders="searchOrders(searchParam)"></unis-order-search-form>
+    </div>
+</div>
+<div  class="grid-content grid-100 row">
+    <div class="grid-parent grid-100 container">
+        <h1 class="section-label pull-left" style="font-size: 1.1rem">Search Results  | Estimated Weight: {{totalSelectWeight}}</h1>
+        <hr>
+    </div>
+    <unis-pager class="container" total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageObj.pageSize" load-content="loadContent(currentPage)" current-page="pageObj.currentPage"></unis-pager>
+    <div  class="grid-parent grid-100" ng-show="orders.length > 0">
+        <div class="grid-parent grid-100 container">
+            <input type="checkbox" id="selectAll" name="selectAll"
+                   ng-click="toggleAll($event)" ng-checked="selectAllIsChecked()">
+            <label class="checkbox" for="selectAll"  >
+                <span class="text">Order  List</span>
+            </label>
+        </div>
+        <div class="grid-parent grid-100" style="margin-bottom: 10px;" ng-repeat="order in orders"
+                 ng-show="itemLineMap[order.id].length>0">
+                <div class="mt-element-ribbon bg-grey-steel">
+                    <div class="grid-parent grid-100 container">
+                        <input type="checkbox" id="{{order.id}}" name="{{order.id}}"
+                               ng-click="toggle($event, order)"  ng-checked="isChecked(order)">
+                        <label class="checkbox" for="{{order.id}}">
+                            <span class="text">{{order.id}}  | Estimated Weight: <b>{{order.totalWeight}} {{order.weightUnit}}</b></span>
+                        </label>
+                    </div>
+                    <div class="grid-parent grid-100 container">
+                        <div class="grid-75">
+                           <span class="bold">LongHaulNo:</span>
+                           <span ng-if="order.longHaulNo">{{order.longHaulNo.join(" | ")}}</span>
+                        </div>
+                        <div class="grid-25">
+                                <span class="bold">Retailer:</span>
+                                <span>{{order.retailerName}}</span>
+                             </div>
+                    </div>
+                    <div class="grid-parent grid-100 container">
+                        <div class="grid-75">
+                            <span class="bold">Ship To:</span> {{order.shipToAddressStr}}
+                        </div>
+                        <div class="grid-25">
+                            <span class="bold">Deliver Request Date:</span>{{order.mabd | amDateFormat:'YYYY-MM-DD HH:00'}}
+                        </div>
+                    </div>
+                    <div class="grid-parent grid-100 container">
+                        <div class="grid-25">
+                            <span class="bold">Customer:</span>{{order.customerName}}
+                        </div>
+                        <div class="grid-25">
+                            <span class="bold">Reference No.:</span>{{order.referenceNo}}
+                        </div>
+                        <div class="grid-25">
+                            <span class="bold">Purchase Order No.: </span>{{order.poNo}}
+                        </div>
+                        <div class="grid-25">
+                            <span class="bold">Batch Commitment No.: </span>{{order.batchCommitmentNo}}
+                        </div>
+                    </div>
+                    <div class="grid-parent grid-100 container">
+                        <div class="grid-25">
+                            <span class="bold">Order Type:</span>{{order.orderType}}
+                        </div>
+                        <div class="grid-25">
+                                <span class="bold">Carrier:</span>{{order.carrierName}}
+                        </div>
+                        <div class="grid-25">
+                                <span class="bold">Delivery Service:</span>{{order.deliveryService}}
+                        </div>
+                        <div class="grid-25">
+                                <span class="bold">Freight Term:</span>{{order.freightTerm}}
+                        </div>
+                       
+                    </div>
+                    <div>
+                        <span class="bold">ItemLine Count: </span>
+                        <span>{{itemLineMap[order.id].length}}</span>
+                        &nbsp;&nbsp;&nbsp;
+                        <a ng-if="!order.showItemLine" ng-click="showItemLine(order)" style="color: #0c91e5; cursor: pointer;">show detail...</a>
+                        <a ng-if="order.showItemLine" ng-click="hideItemLine(order)" style="color: #0c91e5; cursor: pointer;">hide detail</a>
+                    </div>
+                    <div ng-show="order.showItemLine">
+                        <unis-item-line-viewer ng-repeat="itemLine in itemLineMap[order.id]" item-line="itemLine"></unis-item-line-viewer>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+
+<div class="grid-content grid-100">
+    <unis-pager class="container" total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageObj.pageSize" load-content="loadContent(currentPage)" current-page="pageObj.currentPage"></unis-pager>
+    <div class="grid-parent grid-100 container">
+        <button type="button" class="grid-10 ripplelink pull-right button-between" ng-click="add()">Save</button>
+        <button type="button" class="grid-10 ripplelink pull-right cancel" ng-click="cancel()">Cancel</button>
+    </div>
+</div>
+
+
+

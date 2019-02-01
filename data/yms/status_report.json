@@ -1,0 +1,54 @@
+{
+    "yardName": "Valley",
+    "operator": "wang lan",
+    "reportTime": "2016-01-01",
+    "reportLines": [{
+        "resourceType": "Parking Space",
+        "resourceNo": "P001",
+        "equipmentType": "Tractor",
+        "equipmentNo": "9EFY20021",
+        "hasCargo": "N",
+        "equipmentStatus": "Parking",
+        "inYardTime": "2015-12-09",
+        "carrierMCDot": 1717174,
+        "carrierName": "Bosie Truck",
+        "driverName": "Bruce Hu",
+        "entryNo": "400001"
+    }, {
+        "resourceType": "Parking Space",
+        "resourceNo": "P001",
+        "equipmentType": "Container",
+        "equipmentNo": "CCLU1234561",
+        "hasCargo": "Y",
+        "equipmentStatus": "Parking",
+        "inYardTime": "2015-12-09",
+        "carrierMCDot": 1717174,
+        "carrierName": "Bosie Truck",
+        "driverName": "Bruce Hu",
+        "entryNo": "400001"
+    }, {
+        "resourceType": "Loading Dock",
+        "resourceNo": "D001",
+        "equipmentType": "Trailer",
+        "equipmentNo": "5328",
+        "hasCargo": "Y",
+        "equipmentStatus": "Offloading",
+        "inYardTime": "2015-12-31",
+        "carrierMCDot": 1234567,
+        "carrierName": "Versa Logistics",
+        "driverName": "Quinn Chen",
+        "entryNo": "400010"
+    }, {
+        "resourceType": "Loading Dock",
+        "resourceNo": "D001",
+        "equipmentType": "Container",
+        "equipmentNo": "CAIU12389823",
+        "hasCargo": "N",
+        "equipmentStatus": "Need shuttle",
+        "inYardTime": "2015-12-31",
+        "carrierMCDot": 878231,
+        "carrierName": "NRT",
+        "driverName": "Quinn Chen",
+        "entryNo": "400011"
+    }]
+}

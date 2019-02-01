@@ -1,0 +1,71 @@
+<div class="grid-100 row">
+  <div class="grid-content grid-100">
+    <div class="grid-parent grid-100 container">
+      <h1 class="section-label pull-left">QTY Compare Report</h1>
+      <hr>
+    </div>
+    <div class="grid-parent grid-100 container">
+      <form novalidate name="form" ng-submit="form.$valid && searchReports()">
+        <div class="grid-parent grid-100 container">
+          <div class="grid-25">
+            <label class="label-input">Customer:<span style="color:red">*</span></label>
+            <div class="input-icon right" ng-show="form.customer.$invalid && (form.$submitted || form.customer.$touched)">
+              <i class="fa fa-warning tooltips lt-tooltip has-error">
+                <span class="lt-tooltip-text">Required.</span>
+              </i>
+            </div>
+            <organization-auto-complete name="customer" ng-model="search.customerId" tag="Customer" allow-clear="true"
+              required="true"></organization-auto-complete>
+          </div>
+          <div class="grid-25">
+            <label>Order ID:</label>
+            <lt-tags-input placeholder=" " ng-model="search.orderIds" fill="DN-"></lt-tags-input>
+          </div>
+          <div class="grid-25">
+            <label>Shipped Time From:</label>
+            <lt-date-time value="search.shippedTimeFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+          </div>
+          <div class="grid-25">
+            <label>Shipped Time To:</label>
+            <lt-date-time value="search.shippedTimeTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+          </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+          <div class="grid-80">&nbsp;</div>
+          <div class="grid-10 ">
+            <waitting-btn type="button" btn-class="ripplelink" ng-click="form.$valid && export()" value="'Export'"
+              is-loading="exporting"></waitting-btn>
+          </div>
+          <div class="grid-10 ">
+            <unis-waitting-btn btn-type="submit" btn-class="ripplelink" value="'Search'" is-loading="loading">
+              </waitting-btn>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class=" grid-parent grid-100 container">
+      <div class="grid-parent grid-100 container" style="overflow: auto;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th ng-repeat="head in reportHead"> {{head}} </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="report in reportData">
+              <td ng-repeat="head in reportHead"> {{report[head]}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid-100">
+      <div class="grid-content grid-100">
+        <unis-pager total-count="paging.totalCount" current-page="paging.pageNo" page-size="pageSize" load-content="loadContent(currentPage)">
+        </unis-pager>
+      </div>
+    </div>
+  </div>
+</div>

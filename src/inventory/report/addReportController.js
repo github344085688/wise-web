@@ -1,0 +1,93 @@
+'use strict';
+
+define(['angular', 'lodash', 'moment'], function (angular, _, moment) {
+    var controller = function ($scope, $state, lincUtil, reportService, itemService, lincResourceFactory) {
+
+        init();
+
+        function init() {
+            $scope.reportModel = { shippingReportStatus: "All", includeZeroQty: "Exclude" };
+        }
+
+        $scope.submit = function (form) {
+            var report = angular.copy($scope.reportModel);
+            if ($scope.diverseFields && $scope.diverseFields.length > 0) {
+                report.properties = setSelectedProduct($scope.diverseFields);
+            }
+            addReport(report);
+        };
+
+        $scope.itemSpecIdOnSelect = function (itemSpecId) {
+            if (itemSpecId) {
+                itemService.getItemByIdAndProductId(itemSpecId, null, true).then(function (response) {
+                    $scope.diverseFields = response.diverseFields;
+                });
+            } else {
+                $scope.diverseFields = null;
+            }
+        };
+
+        function formatEndTime(time) {
+            var arr = _.split(time, "T");
+            return arr[0] + "T23:59:59";
+        }
+
+        function addReport(report) {
+            if (report.endTime) {
+                report.endTime = formatEndTime(report.endTime);
+            }
+            if (report.scheduleTimeEnd) {
+                report.scheduleTimeEnd = formatEndTime(report.scheduleTimeEnd);
+            }
+
+            if (report.type != "Outbound_schedule" || report.type != "Outbound_finished") {
+                delete report.scheduleTimeEnd;
+                delete report.scheduleTimeStart;
+                delete report.shippingReportStatus;
+            }
+            $scope.loading = true;
+            reportService.addReport(report).then(function () {
+                $scope.loading = false;
+                lincUtil.saveSuccessfulPopup(function () {
+                    $state.go('inventory.report.list');
+                });
+            }, function (error) {
+                $scope.loading = false;
+                lincUtil.errorPopup('Save Report Error! ' + error.data.error);
+            });
+        }
+
+        function setSelectedProduct(diverseFields) {
+            var proList = [];
+            angular.forEach(diverseFields, function (field) {
+                if (field.selectedProduct) {
+                    proList.push({
+                        propertyId: field.propertyId, propertyName: field.itemProperty.name, value: field.selectedProduct.value,
+                        unit: field.selectedProduct.unit
+                    });
+                }
+            });
+            return proList;
+        }
+
+        $scope.cancel = function () {
+            $state.go('inventory.report.list');
+        };
+
+        $scope.typeOnSelect = function (type) {
+            $scope.timeName = $scope.getTimeName(type);
+        };
+
+        $scope.getTimeName = function (type) {
+            var name;
+            if (type == "Inbound_finished" || type == "Inbound_schedule") {
+                name = "Devanned";
+            } else if (type == "Outbound_schedule" || type == "Outbound_finished") {
+                name = "Shipped ";
+            }
+            return name;
+        };
+    };
+    controller.$inject = ['$scope', '$state', 'lincUtil', 'reportService', 'itemService', 'lincResourceFactory'];
+    return controller;
+});

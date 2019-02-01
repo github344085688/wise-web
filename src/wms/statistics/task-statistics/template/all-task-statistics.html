@@ -1,0 +1,132 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label">Task Statistics</h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <b>Total Task Count</b>:
+                <a ng-click="filterTask('all')" style="text-decoration: underline;">{{taskData.taskCount}}</a>
+            </div>
+            <div class="grid-25">
+                <b>Progress Task Count</b>: {{taskData.progressTaskCount}}
+            </div>
+            <div class="grid-25">
+                <b>Open Task Count</b>: {{taskData.openTaskCount}}
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <b>Receive Task Count</b>:
+                <a ng-click="filterTask('Receive')" style="text-decoration: underline;">{{taskData.receiveTaskCount}}</a>
+            </div>
+            <div class="grid-25">
+                <b>Pick Task Count</b>:
+                <a ng-click="filterTask('Pick')" style="text-decoration: underline;">{{taskData.pickTaskCount}}</a>
+            </div>
+            <div class="grid-25">
+                <b>Pack Task Count</b>:
+                <a ng-click="filterTask('Pack')" style="text-decoration: underline;">{{taskData.packTaskCount}}</a>
+            </div>
+            <div class="grid-25">
+                <b>Load Task Count</b>:
+                <a ng-click="filterTask('Load')" style="text-decoration: underline;">{{taskData.loadTaskCount}}</a>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <b>QC Task Count</b>:
+                <a ng-click="filterTask('QC')" style="text-decoration: underline;">{{taskData.qcTaskCount}}</a>
+            </div>
+            <div class="grid-25">
+                <b>CC Task Count</b>:
+                <a ng-click="filterTask('Configuration Change')" style="text-decoration: underline;">{{taskData.ccTaskCount}}</a>
+            </div>
+            <div class="grid-25">
+                <b>Put Away Task Count</b>:
+                <a ng-click="filterTask('Put Away')" style="text-decoration: underline;">{{taskData.putAwayTaskCount}}</a>
+            </div>
+            <div class="grid-25">
+                <b>Put Back Task Count</b>:
+                <a ng-click="filterTask('Receive')" style="text-decoration: underline;">{{taskData.putBackTaskCount}}</a>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <b>Replenishment Task Count</b>:
+                <a ng-click="filterTask('Replenishment')" style="text-decoration: underline;">{{taskData.replenishmentTaskCount}}</a>
+            </div>
+            <div class="grid-25">
+                <b>Generic Task Count</b>:
+                <a ng-click="filterTask('Generic')" style="text-decoration: underline;">{{taskData.genericTaskCount}}</a>
+            </div>
+        </div>
+        <div ng-show="isLoading" class="grid-parent grid-100 container text-center">
+            <img src="assets/img/loading-spinner-grey.gif">
+            <span>&nbsp;LOADING...</span>
+        </div>
+        <div ng-show="!isLoading" class="grid-parent grid-100 container" style="overflow-x: scroll">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th style="max-width: 160px;">User</th>
+                    <th style="max-width: 160px;" class="order-sorting" ng-click="sortClick('progressTaskCount')">Progress Task</th>
+                    <th style="max-width: 200px;" class="order-sorting" ng-click="sortClick('openTaskCount')">Open Task</th>
+                    <th style="max-width: 160px;" class="order-sorting" ng-click="sortClick('taskCount')">Task Count</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-if="line.isOnline || line.taskCount > 0" ng-repeat="line in taskData.workerList track by $index" ng-class="{'case-high-light':line.highLight}">
+                    <td ng-class="{'fontred': !line.isOnline && line.taskCount >0,'font-green':line.isOnline && line.taskCount == 0}">{{line.worker}}</td>
+                    <td>
+                        {{line.progressTaskCount}}
+                        <a ng-if="line.progressTaskCount > 0" ng-click="selectLine(line.progressTasks, line.worker, 'progress', $event)" style="float: right;">detail...</a>
+                    </td>
+                    <td>
+                        {{line.openTaskCount}}
+                        <a ng-if="line.openTaskCount > 0" ng-click="selectLine(line.openTasks, line.worker, 'open', $event)" style="float: right;">detail...</a>
+                    </td>
+                    <td>{{line.taskCount}}</td>
+                </tr>
+                <tr id="taskInfo" ng-show="selTasks != null">
+                    <td colspan="8">
+                        <div ng-if="selTaskType === 'open'" style="text-align: center; padding-bottom: 10px; font-size: 15px; font-weight: bold;">Open Task Detail</div>
+                        <div ng-if="selTaskType === 'progress'" style="text-align: center; padding-bottom: 10px; font-size: 15px; font-weight: bold;">Progress Task Detail</div>
+                        <table style="width: 100%;margin-bottom: 20px">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Task</th>
+                                <th>Type</th>
+                                <th ng-if="selTaskType === 'open'">Assign Time</th>
+                                <th ng-if="selTaskType === 'progress'">Start Time</th>
+                                <!--<th>Change Assign</th>-->
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="selTask in selTaskView track by $index">
+                                <td>{{$index + 1}}</td>
+                                <td>{{selTask.id}}</td>
+                                <td>{{selTask.taskType}}</td>
+                                <td ng-if="selTaskType === 'open'">{{selTask.lastAssignedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                                <td ng-if="selTaskType === 'progress'">{{selTask.startTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                                <!--<td style="width: 300px;">-->
+                                    <!--<multiple-user-auto-complete name="assignees" ng-model="step.assigneeUserIds"-->
+                                                                 <!--on-select="onSelectUser(user)"></multiple-user-auto-complete>-->
+                                <!--</td>-->
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="grid-parent grid-100 container">
+                            <unis-pager total-count="totalCount" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

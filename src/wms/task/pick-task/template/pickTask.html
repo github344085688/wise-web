@@ -1,0 +1,27 @@
+<div class="page-bar" ng-hide="pickWay == 'Wave Pick By Order'">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Task</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Pick Task</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px;">
+    <div class="row">
+        <div class="portlet light bordered" >
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> {{pickWay}} </span>
+                </div>
+            </div>
+            <ui-view></ui-view>
+        </div>
+    </div>
+</div>

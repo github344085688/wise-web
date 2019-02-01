@@ -1,0 +1,16 @@
+<div class="row form-group">
+    <div class="col-md-3"><b>Assignee</b>:
+            <span style="margin:5px 5px" ng-repeat="user in step.assignees">
+                {{user.firstName}} {{user.lastName}}
+            </span>
+    </div>
+    <div class="col-md-3"><b>Status</b>: {{step.status}}</div>
+</div>
+<div class="row form-group">
+    <div class="col-md-3"><b>Start Time</b>:
+        {{step.startTime | amDateFormat:'YYYY-MM-DD HH:mm'}}
+    </div>
+    <div class="col-md-3"><b>End Time</b>:
+        {{step.endTime | amDateFormat:'YYYY-MM-DD HH:mm'}}
+    </div>
+</div>

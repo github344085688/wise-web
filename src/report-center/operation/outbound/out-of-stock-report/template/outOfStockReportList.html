@@ -1,0 +1,57 @@
+<div class="grid-100 row">
+  <div class="grid-content grid-100">
+    <div class="grid-parent grid-100 container">
+      <h1 class="section-label pull-left">Out Of Stock Report</h1>
+      <hr>
+    </div>
+
+    <div class="grid-parent grid-100 container">
+
+      <div class="grid-parent grid-100 container">
+        <div class="grid-25">
+          <label>Customer:</label>
+          <organization-auto-complete name="customer" ng-model="search.customerId" tag="Customer" allow-clear="true"></organization-auto-complete>
+        </div>
+
+        <div class="grid-25">
+          <label>Time From:</label>
+          <lt-date-time value="search.timeFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+        </div>
+        <div class="grid-25">
+          <label>Time To:</label>
+          <lt-date-time value="search.timeTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="grid-parent grid-100 container">
+      <div class="grid-80">&nbsp;</div>
+      <div class="grid-10 ">
+        <waitting-btn type="button" btn-class="ripplelink" ng-click="export()" value="'Export'" is-loading="exporting"></waitting-btn>
+      </div>
+
+      <div class="grid-10 ">
+        <waitting-btn type="button" btn-class="ripplelink" ng-click="searchReports()" value="'Search'" is-loading="loading"></waitting-btn>
+      </div>
+
+    </div>
+
+    <div class=" grid-parent grid-100 container">
+      <div class="grid-parent grid-100 container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th ng-repeat="head in reportHead"> {{head}} </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="report in reportData">
+              <td ng-repeat="head in reportHead"> {{report[head]}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

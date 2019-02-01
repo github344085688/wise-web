@@ -1,0 +1,74 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Appointment Schedule</h1>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label>Customer:</label>
+                <organization-auto-complete name="customerId" ng-model="search.customerId"  tag="Customer"  allow-clear="true"/>
+            </div>
+            <div class="grid-25">
+                <label>Date From</label>
+                <lt-date-time placeholder="From" date-format="yyyy-mm-dd" min-view="60" value="search.appointmentTimeFrom"></lt-date-time>
+            </div>
+            <div class="grid-25" >
+                <label>Date To</label>
+                <lt-date-time placeholder="To" date-format="yyyy-mm-dd" min-view="60" value="search.appointmentTimeTo"></lt-date-time>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-90">&nbsp;</div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="searchAppointmentStatistic()" value="'Search'" is-loading="searching"></waitting-btn>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100" style="min-height: 200px;">
+        <div class="grid-parent grid-100 container" >
+           <div class="grid-50" style="overflow-x: auto;">
+               <div class="second-title">Inbound：</div>
+               <table class="table">
+                   <thead>
+                   <tr>
+                       <th ng-repeat="col in columnDefs track by $index">
+                           {{col.headerName}}
+                       </th>
+                   </tr>
+                   </thead>
+                   <tbody>
+                   <tr ng-repeat="item in schedule.inbound">
+                       <td ng-repeat="col in columnDefs">
+                           {{item[col.field]}}
+                       </td>
+                   </tr>
+                   </tbody>
+               </table>
+           </div>
+            <div class="grid-5">
+                &nbsp;
+            </div>
+            <div class="grid-45" style="overflow-x: auto; padding-left:0px;">
+                <div class="second-title">Outbound：</div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th ng-repeat="col in columnDefs track by $index">
+                            {{col.headerName}}
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in schedule.outbound">
+                        <td ng-repeat="col in columnDefs">
+                            {{item[col.field]}}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+<ui-select ng-model="$parent.ngModel" on-select="_onSelect($select.selected)" 
+           required="{{required}}" name="{{name}}" ng-disabled="$parent.ngDisabled">
+    <ui-select-match allow-clear="{{allowClear}}"  placeholder="{{placeholder}}">
+        <span ng-bind="$select.selected.id"></span>
+    </ui-select-match>
+    <ui-select-choices repeat="order.id as order in orderList | filter: $select.search"
+                       refresh="searchOrder($select.search)" refresh-delay="50">
+        <b>{{order.id}}</b>
+    </ui-select-choices>
+    <ui-select-no-choice>
+        No available item.
+    </ui-select-no-choice>
+</ui-select>

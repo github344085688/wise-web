@@ -1,0 +1,140 @@
+<div class="row step-lines">
+    <div class="col-lg-4 "></div>
+    <div class="col-lg-4 step-line"></div>
+    <div class="col-lg-4 step-line"></div>
+</div>
+<div class="row step-body">
+    <form novalidate name="carrierInfoForm">
+        <div class="portlet light box-shadow-none">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> Driver Info</span>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>MC/DOT</label>
+                        <label ng-show="isSearchCarrier" style="float: right;">
+                            <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                        </label>
+                        <input type="text" class="form-control" ng-model="carrierInfo.mcDot" ng-blur="mcDotInput(carrierInfo.mcDot)" placeholder="Enter text" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Carrier</label>
+                        <label ng-click="addCarrier()" style="float: right;"><a>Add Carrier</a></label>
+                        <!-- <organization-auto-complete name="carrier" tag="Carrier" ng-model="carrierInfo.carrierId"></organization-auto-complete> -->
+                        <ui-select ng-model="carrierInfo.carrierId" style="border-radius: 4px;"
+                                   ng-change="carrierSelect($select.selected)">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected.name"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="o.id as o in availableCarriers | filter: $select.search"
+                                               refresh="searchAvailableCarriers($select.search)" refresh-delay="50">
+                             <div>{{o.name}}<span ng-if="tag === 'Carrier'">{{o.scac? (' ('+o.scac +')') :"" }}</span></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Driver Name</label>
+                        <div class="input-icon right" ng-show="carrierInfoForm.driverName.$invalid && (carrierInfoForm.$submitted || carrierInfoForm.driverName.$touched)">
+                            <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                <span class="lt-tooltip-text">Required</span>
+                            </i>
+                        </div>
+                        <input type="text" name="driverName" class="form-control" ng-model="carrierInfo.driverName" placeholder="Enter text" required />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Driver License</label>
+                        <div class="input-icon right" ng-show="carrierInfoForm.driverLicense.$invalid && (carrierInfoForm.$submitted || carrierInfoForm.driverLicense.$touched)">
+                            <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                <span class="lt-tooltip-text">Required</span>
+                            </i>
+                        </div>
+                        <input type="text" name="driverLicense" class="form-control" ng-model="carrierInfo.driverLicense" placeholder="Enter text" required />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="portlet light box-shadow-none">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> Equipment</span>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <label>Equipment Type</label>
+                        <div class="input-icon right" ng-show="carrierInfoForm.equipmentType.$invalid && (carrierInfoForm.$submitted || carrierInfoForm.equipmentType.$touched)">
+                            <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                <span class="lt-tooltip-text">Required</span>
+                            </i>
+                        </div>
+                        <ui-select name="equipmentType" ng-model="carrierInfo.equipmentType" ng-change="selectEquipmentType()" required>
+                            <ui-select-match>
+                                <div ng-bind="$select.selected"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="type in enquipmentTypes | filter: $select.search">
+                                {{type}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Tractor</label>
+                        <input type="text" class="form-control" ng-model="carrierInfo.tractor" placeholder="Tractor" required />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-6" ng-show="trailerNoShow">
+                        <label>Trailer</label>
+                        <div class="input-icon right" ng-show="trailerInvalid">
+                            <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                <span class="lt-tooltip-text">Required & Must be in right format</span>
+                            </i>
+                        </div>
+                        <tags-input placeholder="add a Trailer" ng-class="{'ng-invalid':trailerInvalid}" ng-model="trailers"></tags-input>
+                        <!-- <input type="text" class="form-control" ng-class="ng-invalid:trailerInvalid" ng-model="carrierInfo.trailer" placeholder="Trailer"/> -->
+                    </div>
+                    <div class="col-md-6" ng-show="containerNoShow">
+                        <label>Container</label>
+                        <div class="input-icon right" ng-show="containerNoInvalid">
+                            <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                <span class="lt-tooltip-text">Required & Must be in right format</span>
+                            </i>
+                        </div>
+                        <tags-input placeholder="add a Container" ng-class="{'ng-invalid':containerNoInvalid}" ng-model="containerNOs"></tags-input>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <label>Seal Number</label>
+                        <input type="text"  class="form-control"  ng-model="carrierInfo.seal">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Heavy Pickup Date</label>
+                        <lt-date-time value="carrierInfo.heavyPickupDate" date-format="yyyy-mm-dd" min-view="2"/>
+
+                    </div>
+                    <div class="col-md-3">
+                        <label>Empty Return Date</label>
+                        <lt-date-time value="carrierInfo.emptyReturnDate" date-format="yyyy-mm-dd" min-view="2"/>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row form-actions right">
+                <waitting-btn type="submit" btn-class="btn blue" ng-disabled="isCheckedOut()"
+                              ng-click="carrierInfoForm.$valid && save()"
+                              value="'Save'" is-loading="saveLoading"></waitting-btn>
+
+                <waitting-btn type="submit" btn-class="btn blue" ng-disabled="!loadOrReceive()"
+                              ng-click="carrierInfoForm.$valid && continue()"
+                              value="'Continue'" is-loading="continueLoading"></waitting-btn>
+            </div>
+        </div>
+    </form>
+</div>

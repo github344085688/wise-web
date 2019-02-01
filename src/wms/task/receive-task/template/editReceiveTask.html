@@ -1,0 +1,114 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Task</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Receive Task</a>
+        </li>
+    </ul>
+</div>
+<div class="portlet light bordered" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold">Receive Task: {{task.id}}</span>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <form name="taskInfoForm_{{task.taskId}}" novalidate class="form-horizontal">
+            <div class="row form-group">
+                <div class="col-md-4">
+                    <label class="col-md-4 control-label">Entry ID</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="entryId" ng-disabled="true"
+                               ng-model="task.entryId">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="col-md-4 control-label">Task Status</label>
+                    <div class="col-md-8">
+                        <task-status-auto-complete ng-model="task.status" is-disabled="true"></task-status-auto-complete>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="col-md-4 control-label">Assignee</label>
+                    <div class="col-md-8">
+                        <user-auto-complete name="assignee" ng-model="task.assigneeUserId" allow-clear="true"></user-auto-complete>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-4">
+                    <label class="col-md-4 control-label">Dock</label>
+                    <div class="col-md-8">
+                        <dock-auto-complete ng-model="task.dockId" ng-disabled="isEnable" on-select="selectDock(dock, task)"></dock-auto-complete>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="col-md-4 control-label">Priority</label>
+                    <div class="col-md-8">
+                        <task-priority-auto-complete ng-model="task.priority"></task-priority-auto-complete>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label  class="col-md-4 control-label">Apply Assignee To All Task Steps </label>
+                    <div class="col-md-8">
+                        <md-switch class="md-primary" style="margin: 0px"   aria-label="Apply Assignee To All Task Steps"
+                                   ng-model="task.isUpdateStepAssignee"></md-switch>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div>
+                    <span style="display: inline-block"><h4><b>Receipt List</b></h4></span>
+                    <!--<button class="btn blue" style="float: right;"-->
+                            <!--disabled="true"-->
+                            <!--ng-click="addReceipt(task)">Add Load</button>-->
+                </div>
+                <div class="table-scrollable">
+                    <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" role="grid">
+                        <thead>
+                            <tr>
+                                <th>Receipt ID</th>
+                                <th>Customer</th>
+                                <th>Title</th>
+                                <th>Supplier</th>
+                                <th>Purchase Order No.</th>
+                                <th>BOL</th>
+                                <th>Reference</th>
+                                <th>Seal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="receipt in task.receipts">
+                            <td>{{receipt.id}}</td>
+                            <td>{{receipt.customerName}}</td>
+                            <td>{{receipt.titleName}}</td>
+                            <td>{{receipt.supplierName}}</td>
+                            <td>{{receipt.poNo}}</td>
+                            <td>{{receipt.bolNo}}</td>
+                            <td>{{receipt.referenceNo}}</td>
+                            <td>{{receipt.sealNo}}</td>
+                        </tr>
+                        <tr ng-show="task.receipts.length<=0">
+                            <td colspan="6" style="text-align: center;"> There is no receipt for this task.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="form-actions">
+                <div class="col-md-12" style="text-align: right">
+                    <waitting-btn type="submit" btn-class="btn blue" ng-click="submit(task)"
+                                  value="submitLabel" is-loading="loading"></waitting-btn>
+                    <button class="btn default" ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

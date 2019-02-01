@@ -1,0 +1,44 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Facility</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Appointment</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Appointment Setting</a>
+        </li>
+    </ul>
+</div>
+<div id="wms-appointment" class="portlet light bordered" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-gift"></i>Appointment Setting
+        </div>
+    </div>
+    <div class="portlet-body" style="padding-top:15px;">
+        <form novalidate name="editForm" ng-submit="saveFacility()">
+            <div class="row" style="width:95%; margin:auto; margin-top: 20px;">
+                <div class="col-md-2" ng-repeat="p in hourlyAppointmentCapacities" style="margin-bottom:25px;">
+                    <a class="btn  btn-info">
+                        <b>{{p.hour}}:00</b>
+                        <div><i class="material-icons ng-binding">flight_land</i>&nbsp;Inbound
+                            <input type="number" class="form-control" placeholder="Max Inbound Count"
+                                   ng-model="p.maxInbound" /></div>
+                        <div><i class="material-icons ng-binding">flight_takeoff</i>&nbsp;Outbound
+                            <input type="number" class="form-control" placeholder="Max Outbound Count"
+                                   ng-model="p.maxOutbound"/></div>
+                    </a>
+                </div>
+            </div>
+            <div style="width:95%; text-align: right; margin: auto; padding: 30px 30px 30px;">
+                <waitting-btn type="submit" btn-class="btn blue" permission-check="{{'facility::appointmentSet_write'}}"
+                              value="submitLabel" is-loading="loading"></waitting-btn>
+
+            </div>
+        </form>
+    </div>
+</div>

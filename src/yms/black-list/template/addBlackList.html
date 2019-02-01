@@ -1,0 +1,59 @@
+<md-dialog flex="40">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Add Black List</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="" style="padding: 20px 20px 30px 25px; min-height: 400px;">
+        <form name="editForm" class="form-horizontal">
+            <div class="form-group">
+                <button type="button" class="btn blue" style="float: right;right: 20px" ng-click="addRow()">Add Row</button>
+            </div>
+            <div class="form-group" ng-repeat="black in blackList track by $index">
+                <div class="col-md-1" style="float:left; margin-top: 30px">
+                    <i class="material-icons" ng-click="removeRow($index)" title="Remove" style="top:5px;">clear</i>
+                </div>
+                <div class="col-md-11">
+                    <div class="row form-group">
+                        <div class="col-md-6">
+                            <ui-select name="customer" ng-model="black.type">
+                                <ui-select-match>
+                                    <div ng-bind="$select.selected"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in ['Carrier','Driver Name', 'Driver License', 'MC/Dot'] | filter: $select.search">
+                                    <div ng-bind="item"></div>
+                                   </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-6">
+                            <input class="form-control" ng-model="black.value" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-6">
+                            <label>Effective Date</label>
+                            <lt-date-time value="black.effectiveDate"></lt-date-time>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Expired Date</label>
+                            <lt-date-time value="black.effectiveDate"></lt-date-time>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <button class="btn blue" ng-click="selectFile()">Select Photo To Upload</button>
+                            <ul class="list-unstyled list-inline">
+                                <li ng-repeat="f in files track by $index"><a ng-click="removeFile($index)"> X </a> {{f.name}} |</li>
+                            </ul>
+                            <input type="file" ng-show="false" id="file1" ng-model="file" onchange="angular.element(this).scope().fileChange(this)" class="form-control" name="file" multiple />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-self-actions" style="padding-right:75px; margin-top:20px;">
+                <button type="button" class="btn blue" ng-click="submit()" validation-submit="editForm">Submit</button>
+                <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+            </div>
+        </form>
+    </md-dialog-content>
+</md-dialog>

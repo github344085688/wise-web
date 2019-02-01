@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40 (33762) - http://www.bohemiancoding.com/sketch -->
+    <title>dropdown</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Docs-Manager-v2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Docs-Manager---Checked-Boxes-Copy-2" transform="translate(-237.000000, -620.000000)">
+            <g id="a_Filter" transform="translate(73.000000, 571.000000)">
+                <g id="a_File-Owner" transform="translate(0.000000, 28.000000)">
+                    <g id="dropdown" transform="translate(164.000000, 21.000000)">
+                        <rect id="Rectangle-3" fill="#8AD6E1" x="0" y="0" width="24" height="24"></rect>
+                        <g id="Group" stroke-width="1" transform="translate(6.000000, 9.000000)" fill="#333333">
+                            <polygon id="Rectangle-4" transform="translate(3.716812, 3.716812) rotate(-315.000000) translate(-3.716812, -3.716812) " points="-0.650665023 2.82792303 7.96549046 2.82792303 8.08428886 4.60570082 -0.650665023 4.60570081"></polygon>
+                            <path d="M4.27851313,2.82246316 C4.27851313,2.82246316 12.225463,2.82246316 12.4485316,2.82246316 C12.6716001,2.82246316 12.8946686,2.82246316 12.8946686,2.82246316 L12.9980242,4.60024095 L4.27851313,4.60024094 L4.27851313,2.82246316 Z" id="Rectangle-4" transform="translate(8.638269, 3.711352) scale(-1, 1) rotate(-315.000000) translate(-8.638269, -3.711352) "></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

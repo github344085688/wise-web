@@ -1,0 +1,54 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Legacy Inventory Make Pallet Report</h1>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container">
+
+            <form novalidate name="searchForm" ng-submit="searchForm.$valid && searchReports()">
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-25">
+                        <label class="label-input">Customer:</label>
+                        <div class="input-icon right" ng-show="searchForm.customer.$invalid && (searchForm.$submitted || searchForm.customer.$touched)">
+                            <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                <span class="lt-tooltip-text">Required.</span>
+                            </i>
+                        </div>
+                        <organization-auto-complete name="customer" ng-model="search.customerId" tag="Customer" allow-clear="true"  required="true"></organization-auto-complete>
+                    </div>
+                    <div class="grid-25">
+                        <label>Item:</label>
+                        <itemspec-auto-complete  name="itemSpec" customer-id="search.customerId" ng-model="search.itemSpecId" name="itemSpec" allow-clear="true" />
+                    </div>
+                    <div class="grid-30">&nbsp;</div>
+                    <div class="grid-10" style="padding-top: 20px;">
+                        <waitting-btn type="button" btn-class="ripplelink" ng-click="searchForm.$valid && export()" value="'Export'" is-loading="exporting"></waitting-btn>
+                    </div>
+                    <div class="grid-10" style="padding-top: 20px;">
+                        <unis-waitting-btn  btn-type="submit" btn-class="ripplelink"  value="'Search'" is-loading="loading"></unis-waitting-btn>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class=" grid-parent grid-100 container">
+            <div class="grid-parent grid-100 container">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th ng-repeat="head in reportHead"> {{head}} </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="report in reportData">
+                        <td ng-repeat="head in reportHead"> {{report[head]}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+        </div>
+    </div>
+</div>

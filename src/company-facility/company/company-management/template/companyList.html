@@ -1,0 +1,84 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Company Facility</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Company Management</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold">Company</span>
+                </div>
+                <div class="actions">
+                    <a ui-sref="cf.company.company-management.add"  permission-check="{{'company::management_write'}}">
+                        <b>Add Company</b>
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <form>
+                    <div class="row form-group">
+                        <div class="col-md-4">
+                            <label>Name</label>
+                            <input type="text" ng-model="searchInfo.name" class="form-control" placeholder="Name" />
+                        </div>
+                    </div>
+                    <div class="row form-actions right">
+                        <waitting-btn type="submit" btn-class="btn blue" ng-click="search()"
+                                      value="'Search'" is-loading="loading"></waitting-btn>
+                        <!--<button type="submit" class="btn blue" ng-click="search()">Search</button>-->
+                    </div>
+                </form>
+            </div>
+            <!-- TABLE -->
+            <div class="row">
+                <div class="portlet light box-shadow-none">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject bold"> Search Results</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div ng-show="!loading" class="dataTables_wrapper no-footer">
+                            <div class="table-scrollable">
+                                <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer"
+                                       id="sample_1" role="grid" aria-describedby="sample_1_info">
+                                    <thead>
+                                    <tr role="row">
+                                        <th> Name </th>
+                                        <th>  Related Facility  </th>
+                                        <th> Date Created </th>
+                                        <th> Date Updated </th>
+                                        <th  permission-check="{{'company::management_write'}}"> Actions </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="company in companiesView track by $index">
+                                        <td>{{company.basic.name}}</td>
+                                        <td> <span ng-repeat="relationship in company.relationShips">{{relationship.basic.name+";  "}}</span> </td>
+                                        <td>{{company.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                                        <td>{{company.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                                        <td>
+                                            <!--<a href="#" ng-click="deleteCompany(company)">Delete</a>&nbsp;&nbsp;-->
+                                            <a href="#" ng-click="openCreateFacilityDialog($index)"  permission-check="{{'company::management_write'}}">Relate Facility</a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <pager total-count="companies.length"
+                               page-size="pageSize" load-content="loadContent(currentPage)"></pager>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

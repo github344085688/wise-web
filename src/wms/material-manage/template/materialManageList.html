@@ -1,0 +1,95 @@
+<div class="portlet light bordered order-list-container" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold"> Material Manage List </span>
+        </div>
+        <div class="actions">
+            <a ui-sref="wms.material-manage.customer-material"><b>Approve Customer Material</b></a>&nbsp;&nbsp;&nbsp;
+            <a ui-sref="wms.material-manage.add" permission-check="{{'materialManage_write'}}"><b>Add Material</b></a>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <form name="editForm" class="form-horizontal">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <label>Item</label>
+                    <itemspec-auto-complete name="itemSpec" ng-model="materialLineSearch.itemSpecId" ext-param="{statuses:['Active','Discontinue']}"
+                        on-select="itemSpecIdOnSelect(itemSpec)" tags="['Material']" allow-clear="true" />
+                </div>
+                <div class="col-md-3">
+                    <label>Receipt ID</label>
+                    <lt-tags-input placeholder="Enter Receipt ID" ng-model="materialLineSearch.receiptIds" fill="RN-" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                </div>
+                <div class="col-md-3">
+                    <label>Order ID</label>
+                    <lt-tags-input placeholder="Enter Order ID" ng-model="materialLineSearch.orderIds" fill="DN-" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                </div>
+                <div class="col-md-3">
+                    <label>Shippment Ticket ID</label>
+                    <lt-tags-input placeholder="Enter Ticket ID" ng-model="materialLineSearch.ticketIds" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                </div>
+
+            </div>
+            <div class="form-group">
+
+                <div class="col-md-3">
+                    <label>Material Type</label>
+                    <ui-select multiple name="types" ng-model="materialLineSearch.types">
+                        <ui-select-match>
+                            {{$select.selected}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in ['Inbound','Outbound']">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+
+            </div>
+
+            <div class="form-actions right">
+                <waitting-btn type="button" btn-class="btn blue" ng-click="searchMaterialLine()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+
+        </form>
+        <div ng-show="loading" class="text-center">
+            <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+        </div>
+        <div class="table-scrollable">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Receipt ID</th>
+                        <th>Order ID</th>
+                        <th>Pack Task ID</th>
+                        <th>Shippment Ticket ID</th>
+                        <th>Material Type</th>
+                        <th>UOM</th>
+                        <th>Qty</th>
+                        <th>Title</th>
+                        <th>Supplier</th>
+                        <th  permission-check="{{'materialManage_write'}}">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in materialLineView track by $index" ng-init="materialIndex = $index">
+                        <td><item-display item="item"></item-display></td>
+                        <td>{{item.receiptId}}</td>
+                        <td>{{item.orderId}}</td>
+                        <td>{{item.packTaskId}}</td>
+                        <td>{{item.ticketId}}</td>
+                        <td>{{item.type}}</td>
+                        <td>{{item.unitName}}</td>
+                        <td>{{item.qty}}</td>
+                        <td>{{item.titleName}}</td>
+                        <td>{{item.supplierName}}</td>
+                        <td  permission-check="{{'materialManage_write'}}" >
+                            <a ng-click="editMaterialLine(item)" stitle="Delete">Edit</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <pager total-count="MaterialLines.length" page-size="pageSize" load-content="loadContent(currentPage)"></pager>
+    </div>
+</div>

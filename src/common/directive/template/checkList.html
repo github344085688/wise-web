@@ -1,0 +1,15 @@
+<div class="checkList">
+    <div class="checkListBox" ng-click="checkListOpen()">
+        <input id="selAll" type="checkbox" ng-checked="isCheckAll" ng-click="checkAll()" />
+        <label for="selAll">check all</label>
+
+        <span class="checkTip" ng-show="ngModel.sel.length > 0">{{ngModel.sel.length}} Selected</span>
+        <i class="caret pull-right" style="margin-top: 10px;" role="button" tabindex="0"></i>
+    </div>
+    <div class="checkListContent" ng-show="isCheckListOpen">
+        <div class="checkItem" ng-repeat="item in ngModel.data">
+            <input id="{{item.id}}" type="checkbox" ng-checked="isChecked(item.id)" ng-click="checkOrUnCheck(item.id)"/>
+            <label for="{{item.id}}">{{item.name}}</label>
+        </div>
+    </div>
+</div>

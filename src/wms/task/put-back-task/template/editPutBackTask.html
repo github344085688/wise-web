@@ -1,0 +1,69 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Task</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Put Back Task</a>
+        </li>
+    </ul>
+</div>
+<div class="portlet light bordered" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold">Put Back Task: {{task.id}}</span>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <form name="editTaskForm" novalidate class="form-horizontal"  ng-submit="editTaskForm.$valid && submit()">
+            <div class="row form-group">
+                <label class="col-md-4" style="text-align: right;"> Assignee: </label>
+                <div class="col-md-4">
+                    <input-validation-message field="assignee" form="editForm"></input-validation-message>
+                    <user-auto-complete name="assignee" ng-model="task.assigneeUserId" required="true"></user-auto-complete>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-md-4" style="text-align: right;">Apply Assignee To All Task Steps: </label>
+                <div class="col-md-4">
+                    <md-switch class="md-primary" style="margin: 0px" ng-model="task.isUpdateStepAssignee"
+                               aria-label="Apply Assignee To All Task Steps"></md-switch>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-md-4" style="text-align: right;"> Priority: </label>
+                <div class="col-md-4">
+                    <input-validation-message field="priority" form="editTaskForm"></input-validation-message>
+                    <task-priority-auto-complete ng-model="task.priority" required="true"></task-priority-auto-complete>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label class="col-md-4" style="text-align: right;"> Status: </label>
+                <div class="col-md-4">
+                    <input-validation-message field="Status" form="editTaskForm"></input-validation-message>
+                    <task-status-auto-complete name="Status" ng-model="task.status" required="true"></task-status-auto-complete>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label class="col-md-4" style="text-align: right;"> Description: </label>
+                <div class="col-md-4">
+                    <textarea class="form-control" ng-model="task.description"/>
+                </div>
+            </div>
+            <div class="form-actions">
+                <div class="col-md-12" style="text-align: right">
+                    <waitting-btn type="submit" btn-class="btn blue"
+                                  value="submitLabel" is-loading="loading"></waitting-btn>
+                    <button class="btn default" ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

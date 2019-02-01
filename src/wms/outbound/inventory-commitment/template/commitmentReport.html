@@ -1,0 +1,114 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Outbound</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Inventory Commitment</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Commitment Report</a>
+        </li>
+    </ul>
+</div>
+<div class="portlet light bordered" style="margin: 15px">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-gift"></i>Commitment Report
+        </div>
+        <div class="actions" style="font-size: 16px;">
+            <a ui-sref="wms.outbound.inventoryCommitment.buildCommitment"  permission-check="{{'outbound::commitment_write'}}"><b>Build Commitment</b></a>
+
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <order-search-form is-loading="searchLoading" order="searchParam" need-export="true" is-exporting="exporting" export-order="export(searchParam)"
+                           search-orders="searchOrders(searchParam)"></order-search-form>
+            <div ng-show="isLoading" class="text-center">
+                <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+            </div>
+            <div style="padding-top: 10px;" ng-show="!isLoading">
+                <pager  total-count="paging.totalCount" page-size="pageSize"  load-content="loadContent(currentPage)" current-page="currentPage"></pager>
+                <div style="padding-left: 25px;font-weight: bold" >
+                    <md-checkbox type="checkbox" ng-checked="isOrderAllSelected()" ng-click="onSelectAll(selectedOrders)">Select All</md-checkbox>
+                    <waitting-btn type="button" btn-class="btn blue" style="float:right; margin-right: 15px;"
+                                  ng-click="commitmentRollback(editForm)"
+                                  permission-check="{{'outbound::commitment_write'}}"
+                                  value="submitLabel" is-loading="loading"></waitting-btn>
+                </div>
+                <div class="portlet box col-md-12 default" ng-repeat="order in orders"
+                     ng-class="{'yellow-soft': order.status === 'Commit Blocked' || order.status === 'Commit Failed', 'red-pink': order.status === 'Partial Committed'}">
+                    <div class="portlet-title">
+                        <div class="caption" style="width: 100%;">
+                            <div class="col-xs-2"><md-checkbox type="checkbox" ng-checked="orderExists(order, selectedOrders)" ng-click="selectedOrderToggle(order, selectedOrders)">{{order.id}}</md-checkbox></div>
+                            <div class="col-xs-3">BatchCommitmentNo: {{order.batchCommitmentNo}}</div>
+                            <div class="col-xs-3">Reference No: {{order.referenceNo}}</div>
+                            <div class="col-xs-4">
+                                Status:
+                                <span ng-class="{'font-red-pink':order.status == 'Commit Blocked' || order.status === 'Commit Failed'}">{{order.status}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-scrollable table-scrollable-borderless">
+                            <table class="table table-hover table-light">
+                                <tbody>
+                                    <tr ng-repeat="item in order.items">
+                                        <td>
+                                            <b>Require Item:</b>
+                                            <label ng-class="{'font-red-pink': item.qty != item.lockQty}">
+                                                <item-display item="item"></item-display>
+                                            </label>
+                                        </td>
+                                        <td ng-if="item.titleId">
+                                            <b>Title:</b>
+                                            <label ng-class="{'font-red-pink': item.qty != item.lockQty}">{{item.titleName}}</label>
+                                        </td>
+                                        <td ng-if="item.supplierId">
+                                            <b>Supplier:</b>
+                                            <label ng-class="{'font-red-pink': item.qty != item.lockQty}">{{item.supplierName}}</label>
+                                        </td>
+                                        <td ng-if="item.lotNo">
+                                            <b>Lot#:</b>
+                                            <label ng-class="{'font-red-pink': item.qty != item.lockQty}">{{item.lotNo}}</label>
+                                        </td>
+                                        <td>
+                                            <b>UOM:</b>
+                                            <label ng-class="{'font-red-pink': item.qty != item.lockQty}">{{item.unitName}}</label>
+                                        </td>
+                                        <td>
+                                            <b>Order QTY:</b>
+                                            <label ng-class="{'font-red-pink': item.qty != item.lockQty}">{{item.qty}}</label>
+                                        </td>
+                                        <td>
+                                            <b>Commit QTY:</b>
+                                            <label ng-class="{'font-red-pink': item.qty != item.lockQty}">{{item.lockQty}}</label>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12" style="padding-top: 10px;"
+                                 ng-if="order.note && order.note !== ''">
+                                <b>Note:</b> {{order.note}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageSize"  load-content="loadContent(currentPage)" current-page="currentPage"></pager>
+                <div class="row">
+                    <waitting-btn type="button" btn-class="btn blue" style="float:right; margin-right: 15px;"
+                                  ng-click="commitmentRollback(editForm)"
+                                  permission-check="{{'outbound::commitment_write'}}"
+                                  value="submitLabel" is-loading="loading"></waitting-btn>
+                </div>
+            </div>
+    </div>
+</div>

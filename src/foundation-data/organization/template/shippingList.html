@@ -1,0 +1,75 @@
+<form novalidate name="shippingForm" ng-submit="shippingForm.$valid && createShippingMapConfig()">
+  <div class="grid-parent grid-100 container">
+    <div class="grid-15" style="margin-right: -40px;margin-left: 25px;">
+      Order Shipping Service
+    </div>
+    <div class="grid-15">
+      <div class="input-icon right" ng-show="shippingForm.carrierNameFromEDI.$invalid && (shippingForm.$submitted || shippingForm.carrierNameFromEDI.$touched)">
+        <i class="fa fa-warning tooltips lt-tooltip has-error">
+          <span class="lt-tooltip-text">Required.</span>
+        </i>
+      </div>
+      <input type="text" name="carrierNameFromEDI" ng-model="createParam.carrierNameFromEDI" required>
+    </div>
+    <div class="grid-15">
+      <input type="text" ng-model="createParam.shippingServiceFromEDI">
+    </div>
+    <div class="grid-15" style="margin-right: -28px;margin-left: 28px;">
+      Map to WISE Shipping Service
+    </div>
+    <div class="grid-15">
+      <div class="input-icon right" ng-show="shippingForm.carrier.$invalid && (shippingForm.$submitted || shippingForm.carrier.$touched)">
+        <i class="fa fa-warning tooltips lt-tooltip has-error">
+          <span class="lt-tooltip-text">Required.</span>
+        </i>
+      </div>
+      <organization-auto-complete name="carrier" tag="Carrier" ng-model="createParam.carrierId" allow-clear="true"
+        on-select="onSelect(org)" required="true"></organization-auto-complete>
+    </div>
+    <div class="grid-15">
+      <div class="input-icon right" ng-show="shippingForm.shippingService.$invalid && (shippingForm.$submitted || shippingForm.shippingService.$touched)">
+        <i class="fa fa-warning tooltips lt-tooltip has-error">
+          <span class="lt-tooltip-text">Required.</span>
+        </i>
+      </div>
+      <ui-select name="shippingService" ng-model="createParam.shippingService" placeholder="service Types" class="form-control"
+        required>
+        <ui-select-match allow-clear="true">
+          <div ng-bind="$select.selected"></div>
+        </ui-select-match>
+        <ui-select-choices repeat="type in serviceTypes | filter: $select.search">
+          <div ng-bind="type"></div>
+        </ui-select-choices>
+        <ui-select-no-choice>
+          No available option.
+        </ui-select-no-choice>
+      </ui-select>
+    </div>
+    <div class="grid-10">
+      <unis-waitting-btn btn-type="submit" btn-class="ripplelink pull-right button-between" value="'Add'" is-loading="isLoading"></unis-waitting-btn>
+    </div>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Order Shipping Carrier</th>
+        <th>Order Shipping Service</th>
+        <th>Map to WISE Shipping Carrier</th>
+        <th>Map to WISE Shipping Service</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="shippingMapConfig in shippingMapConfigList track by $index">
+        <td>{{shippingMapConfig.carrierNameFromEDI}}</td>
+        <td>{{shippingMapConfig.shippingServiceFromEDI}}</td>
+        <td>{{shippingMapConfig.carrierName}}</td>
+        <td>{{shippingMapConfig.shippingService}}</td>
+        <td>
+          <a ng-click="deleteShippingMapConfig(shippingMapConfig.id)">delete</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</form>

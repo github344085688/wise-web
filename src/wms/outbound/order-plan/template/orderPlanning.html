@@ -1,0 +1,61 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Outbound</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Order Plan</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Order Planning</a>
+        </li>
+    </ul>
+</div>
+<div class="portlet light bordered" style="margin:15px">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold">Order Planning </span>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <order-search-form is-loading="isLoading" order="searchParam" search-orders="searchOrders(searchParam)"></order-search-form>
+        <md-checkbox class="md-primary" aria-label="Select All" style="margin-top:40px;"
+             ng-click="toggleAll()" ng-checked="selectAllIsChecked()">
+            <span class="caption-subject bold"> Order List</span>
+        </md-checkbox>
+        <div ng-repeat="order in orders"  ng-show="itemLineMap[order.id].length>0">
+            <div class="mt-element-ribbon bg-grey-steel" style="margin-bottom: 5px;padding-bottom: 5px;">
+                        <md-checkbox class="md-primary" ng-checked="isChecked(order)"  ng-click="toggle(order)">
+                            {{order.id}}
+                        </md-checkbox>
+                        <div class="row form-group">
+                            <div class="col-md-3">
+                                <span class="bold">Customer:</span>{{order.customerName}}
+                            </div>
+                            <div class="col-md-3">
+                                <span class="bold">Carrier:</span>{{order.carrierName}}
+                            </div>
+                            <div class="col-md-3">
+                                <span class="bold">Purchase Order No.: </span>{{order.poNo}}
+                            </div>
+                        </div>
+                        <div style="margin-left:-10px; margin-right: -10px;">
+                            <item-line-viewer  ng-repeat="itemLine in itemLineMap[order.id]" item-line="itemLine"></item-line-viewer>
+                        </div>
+
+                    </div>
+        </div>
+        <div class="row right form-actions" style="border-top: 1px solid #ddd;">
+            <waitting-btn type="button" btn-class="btn blue"
+                                  ng-click="orderPlanning(editForm)"
+                                  value="orderPlanningBtnLabel" is-loading="loading"></waitting-btn>
+            <button class="btn blue" ng-click="directCreatePickTask()">Create Pick Task Directly</button>
+        </div>
+    </div>
+</div>

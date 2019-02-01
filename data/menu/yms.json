@@ -1,0 +1,36 @@
+[{
+	"title": "Report",
+	"icon": "local_shipping",
+	"url": "",
+	"state": "yms.report",
+	"subMenu": [{
+		"title": "Status Report",
+		"icon": "home",
+		"state":"yms.report.statusReport",
+		"url": "/yms/report/status-report"
+	}, {
+		"title": "Activity Report",
+		"icon": "home",
+		"state":"yms.report.activityReport",
+		"url": "/yms/report/activity-report"
+	}, {
+		"title": "Equipment Report",
+		"icon": "home",
+		"state":"yms.report.equipmentReport",
+		"url": "/yms/report/equipment-report"
+	}]
+},
+	{
+		"title": "Entry",
+		"icon": "local_shipping",
+		"state":"yms.entry.entryList",
+		"url": "/yms/entry/entryList"
+
+	},
+	{
+		"title": "Black List",
+		"icon": "local_shipping",
+		"state":"yms.black-list.blackList",
+		"url": "/yms/black-list/blackList"
+
+	}]

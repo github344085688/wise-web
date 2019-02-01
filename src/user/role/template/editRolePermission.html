@@ -1,0 +1,115 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">User</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Role Permission</a>
+        </li>
+    </ul>
+</div>
+<div id="user-tags" class="portlet light bordered" style="margin: 15px">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-gift"></i>
+            <span ng-show="isAddAction">Add Role Permission</span>
+            <span ng-show="!isAddAction">Edit Role Permission</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <form novalidate name="rolePermissionForm" class="form-horizontal">
+            <div class="form-group" style="margin-bottom: 30px;">
+                <div class="col-md-3">
+                    <label>Role</label>
+                    <input-validation-message field="role" form="rolePermissionForm"></input-validation-message>
+                    <ui-select name="role" ng-model="rolePermission.roleId" class="form-control" required="true"
+                    ng-disabled="!isAddAction" on-select="onRoleSelect(rolePermission.roleId)">
+                        <ui-select-match>
+                            <span ng-bind="$select.selected.name"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="role.id as role in availableRoles | filter: $select.search" >
+                            <div ng-bind="role.name"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 30px;">
+                <div class="col-md-12">
+                    <label>Selected Permissions</label>
+                    <ul class="feeds">
+                        <li ng-repeat="permissionId in rolePermission.permissionIds"
+                            style="background-color:#f6f3e8; display:inline-block; margin-right: 10px; margin-bottom: 10px;
+                            padding: 5px 10px;border-radius: 3px;">
+                            <span >{{permissionIdMap[permissionId].name}}</span>
+                            <i class="material-icons" style="font-size: 10px;"
+                               permission-check="{{'user::rolePermission_write'}}"
+                               ng-click="removePermission(permissionId)">clear</i>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="row form-group">
+                <div class="col-md-3">
+                    <input class="form-control" placeholder="Enter Permission Name" ng-model="permissionSearch.name" />
+                </div>
+                <div class="col-md-3">
+                    <ui-select name="category" ng-model="permissionSearch.category">
+                        <ui-select-match allow-clear="true" placeholder="Enter Permission Category">
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in ['WEB', 'ANDROID', 'API', 'ALL']">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="col-md-3">
+                    <input class="form-control" placeholder="Enter Description" ng-model="permissionSearch.description" />
+                </div>
+                <button type="button" class="btn blue" style="float:left;" ng-click="searchPermissions()">Search</button>
+            </div>
+
+            <div class="table-scrollable">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th width="30px;">
+                            <md-checkbox name="selectAll" style="margin-bottom: 0px;"
+                                         class="md-primary"
+                                         aria-label = "Select All"
+                                         ng-click="toggleAll()"  ng-checked="selectAllIsChecked()"> </md-checkbox>
+                        </th>
+                        <th width="25%"> Permission Name </th>
+                        <th width="5%"> Category </th>
+                        <th style="text-align: center;"> Description </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="permission in permissionView">
+                        <td>
+                            <md-checkbox name="permission_{{permission.id}}"
+                                         ng-click="togglePermission(permission)"
+                                         ng-checked="isChecked(permission)"
+                                         aria-label = "Select Permission {{permission.name}}"
+                                         class="md-primary"
+                                         style="margin-bottom: 0px;">
+                            </md-checkbox>
+                        </td>
+                        <td style="color: #0b7b5c; font-weight: 600;">{{permission.name}}</td>
+                        <td>{{permission.category}}</td>
+                        <td  align="center">{{permission.description}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <pager total-count="permissions.length" page-size="pageSize"  load-content="loadContent(currentPage)"></pager>
+            <div style="text-align: right;">
+                <button type="submit" permission-check="{{'user::rolePermission_write'}}" ng-click="rolePermissionForm.$valid && saveOrUpdate()"
+                       class="btn blue ">Submit</button>
+                <button type="button" ng-click="cancel() " class="btn default ">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

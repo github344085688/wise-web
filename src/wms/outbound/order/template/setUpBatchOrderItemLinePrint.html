@@ -1,0 +1,102 @@
+<md-dialog id="unis" flex="60" ng-cloak>
+    <form class="light-theme" novalidate name="printShippingLabelForm" ng-submit="printShippingLabelForm.$valid && print($event)">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Batch Pre-Print Shipping Label</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" style="min-height:200px">
+                <div class="grid-100">
+                    <div class="grid-content">
+                        <div class="grid-100 grid-parent container">
+                            <div class="grid-100 grid-content container" style="background-color: rgba(198, 228, 230, 0.36);margin-bottom: 20px;">
+                                <div class="grid-15">
+                                    <label class="label-input">item Qty Per Package:</label>
+                                    <div>
+                                        <input-validation-message field="itemqty" form="printShippingLabelForm"></input-validation-message>
+                                        <input type="number" min="1" name="itemqty" ng-model="printShippingLabelSetUp.itemQty" required/>
+
+                                    </div>
+                                </div>
+                                <div class="grid-25">
+                                        <label class="label-input">Print Packing List Together with Label</label>
+                                        <md-switch class="md-primary" ng-model="printShippingLabelSetUp.isPrintPackingList"  style="margin-top: 0;margin-bottom: 0;" ng-change="showPdfPrinter()"></md-switch>
+                                 </div>
+                                <div class="grid-30" ng-if="!printShippingLabelSetUp.isPrintPackingList">
+                                    <label class="label-input" > ZPL Printer</label>
+                                    <input-validation-message field="zplprinterName" form="printShippingLabelForm"></input-validation-message>
+                                    <printer-auto-complete name="zplprinterName" ng-model="zplPrinterName" on-select="ZplPrinterSelect(printer)" types="['ZPL','RAW']" required ></printer-auto-complete>
+                                </div>
+                           
+                                <div class="grid-30" ng-if="printShippingLabelSetUp.isShowPdfPrinter">
+                                    <label class="label-input"> PDF Printer </label>
+                                    <input-validation-message field="pdfPrinterName" form="printShippingLabelForm"></input-validation-message>
+                                    <printer-auto-complete name="pdfPrinterName" ng-model="pdfPrinterName" on-select="PdfPrinterSelect(printer)" types="['PDF']"
+                                        required></printer-auto-complete>
+                                </div>
+                                <div class="grid-30" ng-if="!printShippingLabelSetUp.isShowPdfPrinter || printShippingLabelSetUp.isPrintPackingList">
+                                            &nbsp;
+                                </div>
+                              
+                             
+                            </div>
+                            <div class="grid-100 grid-parent container">
+                                <div class="grid-90"  style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap">
+                                   <span >Order Id : <span title="{{orderIds}}">{{orderIds}}</span> </span> 
+                                </div>
+
+                            </div>
+                            <div class="grid-100 grid-parent container">
+                                 <div class="grid-10">
+                                    <label class="label-input">Item</label>
+                                </div>
+                                <div class="grid-30">
+                                    <ui-select name="itemLine" ng-model="printShippingLabelSetUp.itemSpecId" on-select="selectItemLine(printShippingLabelSetUp.itemSpecId)">
+                                        <ui-select-match>
+                                            <div> <item-display item="$select.selected"></item-display> </div>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="itemline.itemSpecId as itemline in itemLines| filter: $select.search">
+                                            <div>
+                                                <item-display item="itemline"></item-display> 
+                                            </div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <div>
+                                    <unis-waitting-btn btn-type="submit" is-ready="loadingComplete" btn-class="grid-25 ripplelink pull-right button-between" value="'Batch Pre-Print Shipping Label'" is-loading="isLoading"></unis-waitting-btn>
+                                </div>
+                            </div>
+                            <div>Print Information: </div> 
+                            <div class="grid-100 grid-parent container" style="overflow: auto; min-height: 400px;border: 1px solid #eee; max-height: 450px">
+                                <div class="grid-100 Valley" style=" font-size: 15px;padding: 20px 10px;line-height: 30px;font-weight: 300">
+                                    <div ng-repeat="printLog in printLogs track by $index">
+                                        <div>
+                                            <b>[{{printLog.printHeader.createTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}})]</b> &nbsp;
+                                            <b>Item Qty Per Package:</b> {{printLog.printHeader.itemQty}}&nbsp;
+                                            <b>Total Printed Qty/Total Qty:</b> &nbsp;{{printLog.printHeader.beenPrintedTotalQty}}/{{printLog.printHeader.totalQty}}&nbsp;
+
+                                        </div>
+                                        <div style="border-bottom: 1px solid #c4baba; padding: 10px 30px">
+                                            <p ng-repeat="pro in printLog.printInprogress track by $index" ng-style="{'color': judgeColor(pro,printLog)}">
+                                                {{pro}}
+                                            </p>
+                                        </div>
+
+                                        </dv>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

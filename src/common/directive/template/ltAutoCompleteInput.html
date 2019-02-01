@@ -1,0 +1,6 @@
+<input type="text" list="list" class="{{clazz}}" ng-blur="blur()" ng-focus="focus()" ng-keyup="keyUp()" ng-model='data' autocomplete="off">
+<div class="{{textFocus}}">
+    <ul class="dropdown-menu inner list-group col-md-12" style="margin-left: 15px ">
+        <li class="list-group-item" ng-repeat="data in dataList" ng-click="select(data)"><a><span class="text">{{data[property]||data}}</span></a></li>
+    </ul>
+</div>

@@ -1,0 +1,35 @@
+<div class="grid-content grid-100">
+    <form class="grid-100 grid-parent" novalidate name="editForm" ng-submit="editForm.$valid && submit()">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">{{formTitle}}
+                <span ng-show="group.id">: {{group.id}}</span>
+            </h1>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label>Customer</label>
+                <input-validation-message field="customer" form="editForm"></input-validation-message>
+                <organization-auto-complete name="customer" ng-model="group.customerId" on-select="customerChange(org)" required="true" tag="Customer"
+                                            allow-clear="true"></organization-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label>Title</label>
+                <input-validation-message field="title" form="editForm"></input-validation-message>
+                <organization-auto-complete name="title" ng-model="group.titleId" tag="Title" required="true"
+                                            custom-ctrl="titleCustomCtrl" allow-clear="true"></organization-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label>Virtual Location Group</label>
+                <input-validation-message field="virtualLocationGroup" form="editForm"></input-validation-message>
+                <location-virtual-group-auto-complete name="virtualLocationGroup" ng-model="group.virtualLocationGroupId"
+                                                      allow-clear="true" required="true"></location-virtual-group-auto-complete>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" permission-check="{{'facility::virtualLocationGroup_write'}}"
+                value="submitLabel" is-loading="loading"></waitting-btn>
+            <button type="button" class="grid-10 ripplelink pull-right cancel" ng-click="cancel(editForm)">Cancel</button>
+        </div>
+    </form>
+</div>

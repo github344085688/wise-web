@@ -1,0 +1,98 @@
+<div class="grid-100 row">
+  <div class="grid-content grid-100">
+    <div class="grid-parent grid-100 container">
+      <h1 class="section-label pull-left">Inventory Report</h1>
+      <hr>
+    </div>
+
+    <div class="grid-parent grid-100 container">
+
+      <div class="grid-parent grid-100 container">
+        <div class="grid-25">
+          <label class="label-input">Customer:</label>
+          <div class="input-icon right" ng-show="isRequire">
+            <i class="fa fa-warning tooltips lt-tooltip has-error">
+              <span class="lt-tooltip-text">Required.</span>
+            </i>
+          </div>
+          <organization-auto-complete on-select="onSelect()" name="customer" ng-model="search.customerId" tag="Customer"
+            allow-clear="true"></organization-auto-complete>
+        </div>
+        <div class="grid-25">
+          <label>Item</label>
+          <itemspec-auto-complete name="itemSpec" ng-model="search.itemSpecId" name="itemSpec" allow-clear="true" />
+        </div>
+        <div class="grid-25">
+          <label>Supplier</label>
+          <multiple-organization-auto-complete ng-model="search.supplierIds" name="supplier" tag="Supplier"></multiple-organization-auto-complete>
+        </div>
+        <div class="grid-25">
+          <label>Title</label>
+          <multiple-organization-auto-complete ng-model="search.titleIds" name="title" tag="Title"></multiple-organization-auto-complete>
+        </div>
+      </div>
+
+      <div class="grid-parent grid-100 container">
+        <div class="grid-25">
+          <label>Status</label>
+          <ui-select name="orderStatuses" ng-model="search.statuses">
+            <ui-select-match allow-clear="true">
+              <div ng-bind="$select.selected"></div>
+            </ui-select-match>
+            <ui-select-choices repeat="status  in statuses | filter: $select.search">
+              <div ng-bind="status"></div>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+        <div class="grid-25">
+          <label>LP ID</label>
+          <lt-tags-input placeholder=" " ng-model="search.lpIds" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="grid-parent grid-100 container">
+      <div class="grid-80">&nbsp;</div>
+      <div class="grid-10 ">
+        <div class="export-link" style="position: relative">
+          <waitting-btn type="button" btn-class="ripplelink" value="'Export'" is-loading="exporting"></waitting-btn>
+          <div class="dis-bl" style="display: none;position: absolute; background:#4D7F89;right: 0; left:0;  top: 28px;z-index: 1;">
+            <waitting-btn type="button" btn-class="ripplelink" ng-click="export('Lp Level')" value="'LP Level'"
+              is-loading="exporting"></waitting-btn>
+          </div>
+        </div>
+      </div>
+      <div class="grid-10 ">
+        <div class="export-link" style="position: relative">
+          <waitting-btn type="button" btn-class="ripplelink" value="'Search'" is-loading="loading"></waitting-btn>
+          <div class="dis-bl" style="display: none;position: absolute; background:#4D7F89;right: 0; left:0;  top: 28px;z-index: 1;">
+            <waitting-btn type="button" btn-class="ripplelink" ng-click="searchReports('Lp Level')" value="'LP Level'"
+              is-loading="loading"></waitting-btn>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class=" grid-parent grid-100 container">
+      <div class="grid-parent grid-100 container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th ng-repeat="head in reportHead"> {{head}} </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="report in reportData">
+              <td ng-repeat="head in reportHead"> {{report[head]}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="grid-parent grid-100 container">
+      <unis-pager total-count="paging.totalCount" current-page="paging.pageNo" page-size="pageSize" load-content="loadContent(currentPage,reportName)">
+      </unis-pager>
+    </div>
+  </div>
+</div>

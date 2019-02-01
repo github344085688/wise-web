@@ -1,0 +1,15 @@
+<div>
+    <ul class="list-unstyled" ng-show="entry.photos && entry.photos.length > 0">
+        <li ng-repeat="(photoType, photos) in entry.groupedPhotos" class="form-group">
+            <ul class="list-inline">
+                <span class="col-md-1">{{photoType}}:</span>
+                <li ng-repeat="p in photos">
+                    <img style="width:200px;height: 200px;" http-src="{{p.url}}"
+                         title="{{photoType}}: {{formatTime(p.createTime)}}"/>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <span ng-show="(!entry.photos&&!loadingPhoto) || (entry.photos && entry.photos.length < 1)">Entry Photo QTY is 0.</span>
+    <span ng-show="loadingPhoto">Loading Photos.</span>
+</div>

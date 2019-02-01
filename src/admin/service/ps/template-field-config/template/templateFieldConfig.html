@@ -1,0 +1,125 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Admin</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Service</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Print</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Template Field Config</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> Template Field Config </span>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <form novalidate name="tfcForm">
+                    <div class="row form-group">
+                        <div class="col-md-4">
+                            <label class="bold">Template</label>
+                            <ui-select name="tfc.templateId" ng-model="tfc.templateId">
+                                <ui-select-match allow-clear="true">
+                                    <div ng-bind="$select.selected.template"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="item.id as item in availableModuleTemplates"
+                                                   refresh="searchAvailableModuleTemplates($select.search)"
+                                                   refresh-delay="50">
+                                    <div ng-bind="item.template"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="bold">Customer</label>
+                            <organization-auto-complete ng-model="tfc.organizationId" name="customer"  allow-clear="true"
+                                                        tag="Customer"></organization-auto-complete>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="bold">Ship To ID</label>
+                            <organization-auto-complete ng-model="tfc.shipToId"  allow-clear="true"
+                                                        name="organization"></organization-auto-complete>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-4">
+                            <label class="bold">Template Field:</label>
+                            <input type="text" name="templateField" class="form-control" ng-model="tfc.templateField"
+                                   required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="bold">Reference Field:</label>
+                            <ui-select name="tfc.referenceField" ng-model="tfc.referenceField">
+                                <ui-select-match  allow-clear="true">
+                                    <div ng-bind="$select.selected"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in referenceFields" refresh-delay="50">
+                                    <div ng-bind="item"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="bold">Description:</label>
+                            <input type="text" name="description" class="form-control" ng-model="tfc.description"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="row form-actions right">
+                        <waitting-btn type="submit" btn-class="btn blue"
+                                      permission-check="{{'service::print_write'}}"
+                                      ng-click="tfcForm.$valid && submit()"
+                                      value="'submit'" is-loading="loading"></waitting-btn>
+                        <button type="submit" class="btn gray" ng-click="reset()">Reset</button>
+                    </div>
+                </form>
+                <div class="panel non-border non-gutter bottom">
+                    <div class="panel-heading header-primary">
+                        <h3 class="panel-title">Template Field Results
+                            <input type="text" ng-model="searchText" class="form-control input-circle"
+                                   placeholder="Enter text">
+                        </h3>
+                    </div>
+                    <div class="panel-body non-gutter bottom">
+                        <div>
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Template</th>
+                                    <th>Customer</th>
+                                    <th>Ship To ID</th>
+                                    <th>Template Field</th>
+                                    <th>Reference Field</th>
+                                    <th>Description</th>
+                                    <th permission-check="{{'service::print_write'}}">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="tfc in tfcs | filter:searchText">
+                                    <td><a ng-click="toUpdate(tfc)">{{tfc.templateId}}</a></td>
+                                    <td>{{tfc.organizationId}}</td>
+                                    <td>{{tfc.shipToId}}</td>
+                                    <td>{{tfc.templateField}}</td>
+                                    <td>{{tfc.referenceField}}</td>
+                                    <td>{{tfc.description}}</td>
+                                    <td permission-check="{{'service::print_write'}}"><a ng-click="delete(tfc.id)">delete</a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

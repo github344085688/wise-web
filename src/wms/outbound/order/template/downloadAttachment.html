@@ -1,0 +1,40 @@
+<md-dialog flex="40">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Download Attachments</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <i class="material-icons">close</i>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <div class="row">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject bold" style="color: rgba(185, 57, 57, 0.56);">
+                                Click the link below to download
+                            </span>
+                        </div>
+                    </div>
+                    <div class="portlet-body form form-horizontal">
+                        <div class="form-group">
+                            <ul style="list-style:none; margin-top:10px;">
+                                <li ng-repeat="file in files track by $index"
+                                    style="margin-right:20px;">
+                                    <a  href="#" ng-click="getDownload(file.id)"
+                                        download="{{file.name}}" style="text-decoration:none;">
+                                        <span class="glyphicon glyphicon-file"></span>
+                                        {{file.name}}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </md-dialog-content>
+</md-dialog>

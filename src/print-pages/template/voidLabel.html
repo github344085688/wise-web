@@ -1,0 +1,98 @@
+<md-dialog id="unis" flex="60" ng-cloak>
+    <form class="light-theme" novalidate name="selectPrinterForm" ng-submit="selectPrinterForm.$valid && save()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Void Label Select</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" style="min-height:200px">
+                <div class="grid-100">
+                    <div class="grid-content">
+                        <div class="grid-100 grid-parent container">
+                            <div class="grid-100 grid-content container">
+                                <div class="grid-50">
+                                    <label class="label-input">Tracking No</label>
+                                    <input type="text" placeholder="Search Tracking No" ng-model="searchInfo.trackingNos" />
+                                </div>
+                                <div class="grid-50">
+                                    &nbsp;
+                                </div>
+                            </div>
+                            <div class="grid-100 grid-parent container">
+                                <div style="float:right">
+                                    <waitting-btn type="button" btn-class="btn blue" ng-click="search($event)" value="'Search'"
+                                        is-loading="searching"></waitting-btn>
+                                </div>
+                            </div>
+                            <div class="grid-100 grid-parent container" >
+                                <div>
+                                    <table class="table">
+                                        <thead>
+                                            <tr role="row">
+                                                <th style="width:50px">
+                                                    <input type="checkbox" id="selectAll" name="selectAll" ng-click="toggleAll($event)"
+                                                        ng-checked="selectAllIsChecked()">
+                                                    <label class="checkbox" for="selectAll">
+
+                                                    </label>
+                                                </th>
+                                                <th style="width:200px"> Order ID</th>
+                                                <th style="width:200px"> Item</th>
+                                                <th> Tracking No</th>
+
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div style="max-height: 460px; overflow: auto;">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr ng-repeat="itemline in shipmentDetailView track by $index">
+                                                    <td style="width:50px">
+                                                        <input type="checkbox" id="subtheme-orange_{{$index}}" name="profile-subtheme"
+                                                            ng-checked="isChecked(itemline)" ng-click="checkItemLine($event, itemline)">
+                                                        <label class="checkbox" for="subtheme-orange_{{$index}}"></label>
+                                                    </td>
+                                                    <td style="width:200px">{{itemline.orderId}}</td>
+                                                    <td style="width:200px">{{itemline.itemSpecName}}</td>
+                                                    <td>{{itemline.trackingNo}}</td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                <div style="margin-top:10px">
+                                        <unis-pager total-count="shipmentDetailLists.length" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-70">&nbsp;</div>
+
+                        <div class="grid-15">
+                            <button type="submit" class="ripplelink">&nbsp;Void&nbsp;</button>
+                        </div>
+                        <div class="grid-15">
+                            <button type="button" ng-click="cancel()" class="ripplelink">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>

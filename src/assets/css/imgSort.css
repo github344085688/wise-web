@@ -1,0 +1,32 @@
+.img-sort {
+    padding: 0;
+}
+
+.img-sort li {
+    position: relative;
+    width: 260px;
+    height: 150px;
+}
+
+.img-sort li:not(:first-child){
+    margin-top: 20px;
+}
+
+.img-sort li img {
+    width: 220px;
+    height: 100px;
+    margin: 20px 10px;
+}
+
+.img-sort li .img-sort-remove {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+}
+
+.img-sort li .img-sort-index {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+}
+

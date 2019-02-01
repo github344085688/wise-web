@@ -1,0 +1,24 @@
+<div class="table-scrollable">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Item</th>
+            <th>QTY</th>
+            <th>Unit</th>
+            <th>Put Back QTY</th>
+            <th>SN</th>
+            <th>Note</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="itemLine in task.putBackItemLines">
+            <td><item-display item="itemLine"></item-display></td>
+            <td>{{itemLine.qty}}</td>
+            <td>{{itemLine.unitName}}</td>
+            <td>{{itemLine.putBackQty}}</td>
+            <td> <span ng-repeat="sn in itemLine.snList">{{sn}}&nbsp;</span></td>
+            <td>{{itemLine.note}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

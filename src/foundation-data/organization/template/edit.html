@@ -1,0 +1,58 @@
+<div class="grid-content grid-100">
+    <div class="grid-100 grid-parent">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">
+                <span ng-show="isAddAction">Add Organization</span>
+                <span ng-show="!isAddAction">Edit Organization: {{organization.basic.name}}</span>
+            </h1>
+        </div>
+        <div class="grid-parent grid-100 container" style="margin-top: 15px;">
+            <div class="grid-parent grid-100 container" style="border-bottom: 1px solid #eee;">
+                <ul class="nav-tabs ">
+                    <li ng-class="{'active':activetab == 'basic'}">
+                        <a ng-click="changeTab('basic')" data-toggle="tab"> Basic Info </a>
+                    </li>
+                    <li ng-class="{'active':activetab == 'address'}" ng-show="organization.basic.id && isCustomer">
+                        <a ng-click="changeTab('address')" data-toggle="tab"> Address </a>
+                    </li>
+                    <li ng-class="{'active':activetab == 'accounting'}" ng-show="organization.basic.id && isCustomer">
+                        <a ng-click="changeTab('accounting')" data-toggle="tab"> Accounting </a>
+                    </li>
+                    <li ng-class="{'active':activetab == 'aka'}" ng-show="organization.basic.id">
+                        <a ng-click="changeTab('aka')" data-toggle="tab"> AKA </a>
+                    </li>
+                    <li ng-class="{'active':activetab == 'customerRelation'}" ng-show="organization.basic.id && isCustomer">
+                        <a ng-click="changeTab('customerRelation')" data-toggle="tab"> Customer Relationships </a>
+                    </li>
+                    <li ng-class="{'active':activetab == 'customer'}" ng-show="organization.basic.id && isCustomer">
+                        <a ng-click="changeTab('customer')" data-toggle="tab"> Customer </a>
+                    </li>
+                    <li ng-class="{'active':activetab == 'title'}" ng-show="organization.basic.id && isTitle">
+                        <a ng-click="changeTab('title')" data-toggle="tab"> Title </a>
+                    </li>
+                    <li ng-class="{'active':activetab == 'material'}" ng-show="organization.basic.id && isCustomer">
+                        <a ng-click="changeTab('material')" data-toggle="tab"> Material </a>
+                    </li>
+                    <li ng-class="{'active':activetab == 'manualBilling'}" ng-show="organization.basic.id && isCustomer">
+                        <a ng-click="changeTab('manualBilling')" data-toggle="tab"> Manual Billing </a>
+                    </li>
+                    <li ng-class="{'active':activetab == 'history'}" ng-show="organization.basic.id && isCustomer">
+                        <a data-toggle="tab"> History </a>
+                    </li>
+                    <li ng-class="{'active':activetab == 'sales'}" ng-show="organization.basic.id && isCustomer">
+                        <a data-toggle="tab"> Sales </a>
+                    </li>
+                    <li ng-class="{'active':activetab == 'shipping'}" ng-show="organization.basic.id && isCustomer">
+                        <a ng-click="changeTab('shipping')" data-toggle="tab"> Shipping </a>
+                    </li>
+                    <li ng-class="{'active':activetab == 'documents'}" ng-show="organization.basic.id && isCustomer">
+                        <a ng-click="changeTab('documents')" data-toggle="tab"> Documents </a>
+                    </li>
+                </ul>
+            </div>
+            <div ui-view class="grid-100 tab-content active" style="padding-top: 10px; min-height: 500px;">
+                <ui-view></ui-view>
+            </div>
+        </div>
+    </div>
+</div>

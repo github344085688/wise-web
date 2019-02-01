@@ -1,0 +1,51 @@
+<div ng-app="linc.fileUpload">
+    <div class="row" ng-controller="uploadController" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
+        <div class="grid-100">
+            <div class="grid-100 grid-content">
+
+                <div class="grid-100 grid-parent container">
+                    <div class="alert alert-danger" style="padding:10px;" ng-show="errorTips">
+                        {{errorTips}}
+                    </div>
+                </div>
+
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-50">
+                        <div class="attach-div">
+
+                            <ul style="margin: 0;padding: 0;">
+                                <li class="attach-li" ng-repeat="item in uploader.queue track by $index">
+                                    <span>{{item.file.name}}</span>
+                                    <a ng-click="uploader.removeItem(item)" class="attach-a">×</a>
+
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                    <div class="grid-20">
+                        <label  class="btn blue"  style="height: 30px;line-height: 28px;padding: 2px 12px;" for='clickFile'>select file
+                            <input type="file" nv-file-select="" id="clickFile" uploader="uploader"  multiple/>
+                        </label>
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-50 portlet-body">
+                        <div ng-show="uploader.isHTML5">
+                            <div class="file-drop-zone margin-bottom-20" nv-file-over="" uploader="uploader" over-class="file-drop-zone-over"> Drop file into zone
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-20">
+                        <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
+                            <span class="glyphicon glyphicon-upload"></span> Upload
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

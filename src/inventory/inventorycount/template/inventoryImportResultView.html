@@ -1,0 +1,77 @@
+<md-dialog id="unis" flex="60">
+    <form class="light-theme">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Import Result</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div class="grid-100">
+                    <div class="grid-content">
+                        <div class="grid-100 grid-parent container">
+                            <div>
+                                <div class="table-scrollable">
+                                    <table class="table">
+                                        <thead>
+                                            <tr role="row">
+
+                                                <th>Text Index</th>
+                                                <th>Location Name</th>
+                                                <th> File Name</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <div>
+                                                <tr ng-repeat="importListsView in importListsViews track by $index">
+
+                                                    <td>{{importListsView.textIndex}}</td>
+                                                    <td>{{importListsView.locationName}}</td>
+                                                    <td>{{importListsView.fileName}}</td>
+
+                                                </tr>
+                                            </div>
+                                        </tbody>
+                                    </table>
+
+
+                                    <div ng-if="loading" class="text-center" style="padding-top: 20px;">
+                                        <img src="assets/img/loading-spinner-grey.gif">
+                                        <span>&nbsp;LOADING...</span>
+                                    </div>
+                                </div>
+                                <div>
+
+                                    <unis-pager total-count="importLists.length" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+
+
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-80">&nbsp;</div>
+
+                        <div class="grid-20">
+                            <button type="button" ng-click="cancel()" class="ripplelink">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>

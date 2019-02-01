@@ -1,0 +1,97 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Facility</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Appointment</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Make Appointment</a>
+        </li>
+    </ul>
+</div>
+<div id="wms-appointment" class="portlet light bordered" style="margin: 15px">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-gift"></i>Appointment
+        </div>
+    </div>
+    <div class="portlet-body">
+        <ui-view>
+            <div>
+                <div class="col-md-4" style="padding-left: 0px;">
+                    <div style="display: inline-block;">
+                        <uib-datepicker ng-model="ctrl.appointmentDate" class="well"
+                                        datepicker-options="datepickerOptions"></uib-datepicker>
+                    </div>
+                </div>
+                <div class="tabbable-custom time-list col-md-8">
+                    <ul class="nav nav-tabs">
+                        <li ng-class="{'active': ctrl.activeTab == 'total'}">
+                            <a ng-click="ctrl.activeTab = 'total'"  data-toggle="tab">Total</a>
+                        </li>
+                        <li ng-class="{'active': ctrl.activeTab == 'Inbound'}">
+                            <a ng-click="ctrl.activeTab = 'Inbound'" data-toggle="tab">Inbound</a>
+                        </li>
+                        <li ng-class="{'active': ctrl.activeTab == 'Outbound'}">
+                            <a ng-click="ctrl.activeTab = 'Outbound'" data-toggle="tab">Outbound</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active row">
+                            <div class="col-md-2" ng-repeat="item in appointmentHours" style="margin-top: 15px;">
+                                <a href="javascript:;" class="btn" ng-class="{ active: ctrl.selectedHour == $index, default: !ctrl.isTimeAvailable($index, item), blue: ctrl.isTimeAvailable($index, item) }" data-toggle="button" ng-click="clickTimeBlock($index,item)">
+                                    {{item.hour}}:00
+                                    <br/><span class="badge" style="margin-top: 5px;">{{item.available}} / {{item.total}}</span>
+                                </a>
+                                <span ng-if="ctrl.isTimeAvailable($index, item)" class="badge add"
+                                      permission-check="{{'facility::appointmentMake_write'}}"
+                                      ng-click="addAppointment($index)">+</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3 class="col-md-12">Appointment List</h3>
+            <div class="table-scrollable">
+                <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" role="grid">
+                    <thead>
+                    <tr role="row">
+                        <th>Date Time</th>
+                        <th>SCAC</th>
+                        <th>L/R Info</th>
+                        <th>Contacts</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th>Driver</th>
+                        <th>Driver License</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="appointment in appointmentView track by $index">
+                            <td>{{appointment.appointmentTime}}</td>
+                            <td>{{appointment.scac}}</td>
+                            <td>{{appointment.documentNos}}</td>
+                            <td>{{appointment.contacts}}</td>
+                            <td>{{appointment.phone}}</td>
+                            <td>{{appointment.status}}</td>
+                            <td>{{appointment.driverName}}</td>
+                            <td>{{appointment.driverLicense}}</td>
+                            <td permission-check="{{'facility::appointmentMake_write'}}"><div
+                                    ng-show="appointment.status==='Active'"
+                                    permission-check="{{'facility::appointmentMake_write'}}">
+                                <a ng-click="editAppointment(appointment)">Edit</a> |
+                                <a ng-click="removeAppointment($index)">Cancel</a></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <pager total-count="appointmentList.length" page-size="paging.pageSize"  load-content="loadAppointmentList(currentPage)" ></pager>
+        </ui-view>
+    </div>
+</div>

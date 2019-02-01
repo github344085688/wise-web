@@ -1,0 +1,106 @@
+<div class="grid-100 row" ng-keyup="keyUpSearch($event)">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Conveyor Branch List</h1>
+            <a class="create-button"  ui-sref="cf.facility.resource.conveyorBranch.add">
+                <b>Add Conveyor Branch</b></a>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container" >
+            <div class="grid-25">
+                <label class="label-input">Name:</label>
+                <input type="text" ng-model="conveyorBranchParam.name" placeholder="Name"/>
+            </div>
+            <div class="grid-25">
+                  <label class="label-input">Status:</label>
+                  <ui-select ng-model="conveyorBranchParam.status" class="form-control">
+                          <ui-select-match allow-clear="true">
+                              <div ng-bind="$select.selected"></div>
+                          </ui-select-match>
+                          <ui-select-choices repeat="status in ['AVAILABLE','UNAVAILABLE'] | filter: $select.search">
+                              <div ng-bind="status"></div>
+                          </ui-select-choices>
+                      </ui-select>
+              </div>
+              <div class="grid-25">
+                  <label class="label-input">Type:</label>
+                  <ui-select ng-model="conveyorBranchParam.type" class="form-control">
+                      <ui-select-match allow-clear="true">
+                          <div ng-bind="$select.selected"></div>
+                      </ui-select-match>
+                      <ui-select-choices repeat="status in ['NORMAL','EXCEPTION'] | filter: $select.search">
+                          <div ng-bind="status"></div>
+                      </ui-select-choices>
+                  </ui-select>        
+              </div>
+              <div class="grid-25">
+                <label class="label-input">Conveyor Line Name:</label>
+                <ui-select ng-model="conveyorBranchParam.conveyorLineId" class="form-control">
+                        <ui-select-match allow-clear="true">
+                            <div ng-bind="$select.selected.name"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="line.id as line in conveyorLineList | filter: $select.search">
+                            <div ng-bind="line.name"></div>
+                        </ui-select-choices>
+                    </ui-select>
+              </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-80">&nbsp;</div>
+            <div class="grid-10">
+                &nbsp;
+            </div>
+            <div class="grid-10">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()"
+                              is-loading="loading" value="'Search'"></waitting-btn>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th> Name </th>
+                        <th> Status </th>
+                        <th> Type </th>
+                        <th> OccupiedBy </th>
+                        <th> Conveyor Line</th>
+                        <th> CreatedBy </th>
+                        <th> CreatedWhen </th>
+                        <th> UpdatedBy </th>
+                        <th> UpdatedWhen</th>
+                        <th> Action </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="branch in conveyorBranchList track by $index">
+                        <td>{{branch.name}}</td>
+                        <td>{{branch.status}}</td>
+                        <td>{{branch.type}}</td>
+                        <td>{{branch.occupiedBy}} </td>
+                        <td>{{branch.conveyorLineName}}</td>
+                        <td>{{branch.createdBy}}</td>
+                        <td>{{branch.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm'}}</td>
+                        <td>{{branch.updatedBy}}</td>
+                        <td>{{branch.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm'}}</td>
+                        <td>
+                            <a ui-sref="cf.facility.resource.conveyorBranch.edit({branchId:branch.id})">Edit</a>   
+                            &nbsp; | &nbsp;
+                            <a href="#" ng-click="delete(branch.id)">Delete</a>
+                            &nbsp; | &nbsp;
+                            <a ui-sref="cl.packingStation.branch({branchId:branch.id})">Update OccupiedBy</a> 
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+  
+  
+  
+  
+  

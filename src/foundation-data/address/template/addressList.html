@@ -1,0 +1,105 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100"  ng-keyup="keyUpSearch($event)">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Address</h1>
+            <a class="create-button" href="#/fd/address/add"  permission-check="{{'address_write'}}">
+                <b>Add Address</b></a>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container" ng-show="isKeyOrAdvanceSeach">
+            <div class="grid-30">
+                <a ng-click="keySearch()">
+                  Keyword Search
+                </a>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container" ng-if="isKeyOrAdvanceSeach">
+            <div class="grid-25">
+                <label class="label-input">Organization:</label>
+                <organization-auto-complete ng-model="searchInfo.organizationId" name="organization" allow-clear="true" on-select="onSelectOrganization(org)"></organization-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Store No:</label>
+                <input type="text" ng-model="searchInfo.storeNo" class="form-control" placeholder="Enter storeNo" />
+            </div>
+
+            <div class="grid-25">
+                <label class="label-input">Name</label>
+                <input type="text" ng-model="searchInfo.name" class="form-control" placeholder="Enter name" />
+            </div>
+            <div class="grid-25">
+                <label class="label-input">State</label>
+                <input type="text" ng-model="searchInfo.state" class="form-control" placeholder="Enter state" />
+            </div>
+
+
+        </div>
+
+        <div class="grid-parent grid-100 container" ng-if="!isKeyOrAdvanceSeach">
+
+            <div class="grid-60">
+                <label class="label-input">Name:</label>
+                <input type="text" ng-model="searchInfo.keyword" class="form-control" placeholder="Name /OrganizationName /Address1 /Address2 /City /State /ZipCode /Fax /StoreNo"
+                />
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container" ng-show="!isKeyOrAdvanceSeach">
+            <div class="grid-30">
+                <a ng-click="advanceSearch()">
+                    Advanced Search
+                </a>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-90">&nbsp;</div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th> Organization </th>
+                        <th> Name </th>
+                        <th> Address1 </th>
+                        <th> City </th>
+                        <th> State </th>
+                        <th> Store No </th>
+                        <th> Zipcode </th>
+                        <th> Fax </th>
+                        <th  permission-check="{{'address_write'}}">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="address in addressesView track by $index">
+                        <td>{{address.organizationName}}</td>
+                        <td>{{address.name}}</td>
+                        <td>{{address.address1}}</td>
+                        <td>{{address.city}}</td>
+                        <td>{{address.state}}</td>
+                        <td>{{address.storeNo}}</td>
+                        <td>{{address.zipCode}}</td>
+                        <td>{{address.fax}}</td>
+                        <td  permission-check="{{'address_write'}}"><a ui-sref="fd.address.edit({addressId:address.id})">Edit</a>
+                            <a href="#" ng-click="remove($index)">Delete</a>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="addresses.length" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+    </div>
+</div>

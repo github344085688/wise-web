@@ -1,0 +1,448 @@
+<form class="form-horizontal" novalidate name="forms.itemForm" ng-submit="forms.itemForm.$valid && saveOrUpdateItemInfo()">
+    <div class="row form-group">
+        <div class="col-md-12">
+            <div class="col-md-5">
+                <div class="upload-well" style="height: 205px; overflow:hidden;">
+                    <div style="margin-bottom:45px;">
+                        <button type="button" class="btn blue" ng-click="uploadFiles()">
+                            Upload Product Images
+                        </button>
+                    </div>
+                    <ul ng-repeat="p in itemPictures">
+                        <li>
+                            <img http-src="/file-app/file-download/{{p.id}}" />
+                            <i class="glyphicon glyphicon-remove img-sort-remove" style="top: -30px;left: -25px;" ng-click="removeFile(p.id)"></i>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="row form-group">
+                    <label class="col-md-2 control-label">Customer:</label>
+                    <div class="col-md-10">
+                        <organization-auto-complete name="customer" on-select="onSelectCustomer(org.id)" ng-model="item.customerId" tag="Customer"
+                            allow-clear="true"></organization-auto-complete>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-2 control-label">Group:</label>
+                    <div class="col-md-10">
+                        <ui-select ng-model="item.groupId" on-select="onSelectGroup($select.selected.id)" style="border-radius:4px;">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected.name"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="group.id as group in availableGroups" refresh="searchAvailableGroups($select.search)">
+                                <div ng-bind="group.name"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-2 control-label">Tags:</label>
+                    <div class="col-md-10">
+                        <input-validation-message field="tags" form="forms.itemForm"></input-validation-message>
+                        <ui-select multiple name="tags" ng-model="item.tags" required="true" on-select="tagOnSelect()" on-remove="tagOnSelect()">
+                            <ui-select-match>
+                                {{$item}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="tag in ['Material','Product'] | filter: $select.search">
+                                <div>{{tag}}</div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="col-md-2 control-label">Supplier:</label>
+                    <div class="col-md-10">
+                        <multiple-organization-auto-complete name="supplier" ng-model="item.supplierIds" tag="Supplier"></multiple-organization-auto-complete>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="col-md-2 control-label">Brand:</label>
+                    <div class="col-md-10">
+                        <organization-auto-complete ng-model="item.brandId" tag="Brand" allow-clear="true" />
+                    </div>
+                </div>
+                <div ng-show="submitLabel === 'Update'" class="row form-group" n style="position:relative">
+                    <label class="col-md-2 control-label">Status
+                        <i class="fa fa-question-circle" ng-mouseout="showTip ='false'" ng-mouseover="showTip ='true'" ng-init="showTip='false'" ></i>:</label>
+                    <div class="col-md-10">
+                        <ui-select name="status" ng-model="item.status">
+                            <ui-select-match>
+                                <div ng-bind="$select.selected"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="status  in statusList| filter: $select.search" refresh="getStatusList($select.search)" refresh-delay="50">
+                                <div ng-bind="status"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="item-statu-tips" ng-if="showTip==='true'">
+                        <div class="title">
+                            <p><b>Inactive: </b></p>
+                            <div class="title-second">
+                                <p>Inbound: </p>
+                                <div class="title-third">
+                                    <p> 1. Can not create RN from Web</p>
+                                    <p> 2. Can import RN through EDI and the RN can be received.</p>
+                                </div>
+                                <p>Outbound: </p>
+                                <div class="title-third">
+                                    <p> 1. Can not create DN from Web</p>
+                                    <p> 2. Can import DN through EDI but can not ship out.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="title">
+                            <p><b>Discontinue:</b> </p>
+                            <div class="title-second">
+                                <p>Inbound: </p>
+                                <div class="title-third">
+                                    <p> 1. Can not create RN from Web</p>
+                                    <p> 2. Can import RN through EDI and the RN can be received.</p>
+                                </div>
+                                <p>Outbound: </p>
+                                <div class="title-third">
+                                    <p> 1. Can create DN from Web</p>
+                                    <p> 2. Can import DN through EDI and ship out.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-section">Properties</div>
+    <div class="row form-group" style="margin-top: 30px;">
+        <div class="col-md-5">
+            <div style="padding: 15px 30px 20px 30px;; background-color: rgba(198, 228, 230, 0.36);">
+                <div style="margin-left: -13px; margin-bottom: 30px; font-size: 15px; color: #739a9c;">
+                    <b>Static Properties</b>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Item ID: </label>
+                    <div class="col-md-7">
+                        <input-validation-message field="name" form="forms.itemForm"></input-validation-message>
+                        <input type="text" class="form-control" ng-model="item.name" name="name" required maxlength="50" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Short Description:</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" ng-model="item.shortDescription" name="Short Description" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Description:</label>
+                    <div class="col-md-7">
+                        <textarea type="text" class="form-control" ng-model="item.desc" name="Description"></textarea>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Label:</label>
+                    <div class="col-md-7">
+                        <lt-tags-input ng-model="item.labels" name="Label"></lt-tags-input>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Commodity Description:</label>
+                    <div class="col-md-7">
+                        <textarea type="text" class="form-control" ng-model="item.commodityDescription" name="Commodity Description"></textarea>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">NMFC:</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" ng-model="item.nmfc" name="nmfc">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Freight Class:</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" ng-model="item.freightClass" name="freightClass">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Grade:</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" ng-model="item.grade" name="grade">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">UPC:</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" ng-model="item.upcCode" name="UPC Code" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Case UPC:</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" ng-model="item.upcCodeCase" name="UPC Code Case" />
+                        <span style="color:green;" ng-if="item.isCaseUPCVerified">
+                            <i class="fa fa-check-circle" style=" font-size:25px;     position: absolute;
+                                right: 20px;
+                                top: 10px;"></i>
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="row form-group" ng-if="itemUpcCollects.length > 0">
+                    <label class="col-md-5 control-label">Require Case UPC Approval</label>
+                    <div class="col-md-5">
+                        <ui-select class="form-control col-md-4" ng-model="item.seletedUpcId">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected.caseUpc"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="itemUpc.id as itemUpc in itemUpcCollects">
+                                <div ng-bind="itemUpc.caseUpc"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-md-2" style="margin-left: -20px;">
+                        <waitting-btn type="button" btn-class="btn blue" value="'Approve'" is-loading="approveLoading" ng-click="approve()"></waitting-btn>
+                    </div>
+                </div>
+                <div class="row form-group" ng-if="submitLabel === 'Update'">
+                    <label class="col-md-5 control-label">Case UPC Verified: </label>
+                    <div class="col-md-7">
+                        <md-switch class="md-primary" aria-label="Case UPC Verified" ng-model="item.isCaseUPCVerified" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Has Serial Number:</label>
+                    <div class="col-md-7">
+                        <md-switch class="md-primary" aria-label="Has Serial Number" ng-change="hasSerialNumberOnChange(item.hasSerialNumber)" ng-model="item.hasSerialNumber"
+                            style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                    </div>
+                </div>
+                <div class="row form-group" ng-show="item.hasSerialNumber">
+                    <label class="col-md-5 control-label">SN Validation Rule:</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" ng-model="itemSNValidateRule.validateRegex" name="SNValidationRule">
+                    </div>
+                </div>
+                <div class="row form-group" ng-show="item.hasSerialNumber">
+                    <label class="col-md-5 control-label">Serial No Length:</label>
+                    <div class="col-md-7">
+                        <input type="number" class="form-control" ng-model="item.serialNoLength" name="serialNoLength" style="width:100px;">
+                    </div>
+                </div>
+                <div class="row form-group" ng-show="item.hasSerialNumber">
+                    <label class="col-md-5 control-label">Validate Inbound Serial No.:</label>
+                    <div class="col-md-7">
+                        <md-switch class="md-primary" aria-label="Validate Inbound Serial No" ng-model="item.validationInboundSerialNo" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                    </div>
+                </div>
+                <div class="row form-group" ng-show="item.hasSerialNumber">
+                    <label class="col-md-5 control-label">Validate Outbound Serial No.:</label>
+                    <div class="col-md-7">
+                        <md-switch class="md-primary" aria-label="Validate Outbound Serial No" ng-model="item.validationOutboundSerialNo" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                    </div>
+                </div>
+                <div class="row form-group" ng-show="item.hasSerialNumber">
+                    <label class="col-md-5 control-label">Validate Outbound Serial No Against Inbound:</label>
+                    <div class="col-md-7">
+                        <md-switch class="md-primary" aria-label="Validate Outbound Serial No Against Inbound" ng-model="item.validatedOutboundSerialNoAgainstInbound"
+                            style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                    </div>
+                </div>
+                <div class="row form-group" ng-show="item.hasSerialNumber">
+                    <label class="col-md-5 control-label">Serial No Scan Lot No Check:</label>
+                    <div class="col-md-7">
+                        <md-switch class="md-primary" aria-label="Serial No Scan Lot No Check" ng-model="item.serialNoScanLotNoCheck" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                    </div>
+                </div>
+                <div class="row form-group" ng-show="item.isAllowKitting">
+                    <label class="col-md-5 control-label">Kitting: </label>
+                    <div class="col-md-7">
+                        <md-switch class="md-primary" aria-label="Kitting" ng-model="item.bundle" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Required Collect On Receiving</label>
+                    <div class="col-md-7">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <md-switch class="md-primary" ng-model="item.requireCollectLotNoOnReceive" style="margin-bottom:0px;">Lot No.</md-switch>
+                            </div>
+                            <div class="col-md-7">
+                                <md-switch class="md-primary" ng-model="item.requireCollectExpirationDateOnReceive" style="margin-bottom:0px;">Expiration Date</md-switch>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <md-switch class="md-primary" ng-model="item.requireCollectMfgDateOnReceive">Mfg Date</md-switch>
+                            </div>
+                            <div class="col-md-7">
+                                <md-switch class="md-primary" ng-model="item.requireCollectShelfLifeDaysOnReceive">Shelf Life Days</md-switch>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Shipping Rule</label>
+                    <div class="col-md-7">
+                        <input-validation-message field="shippingRule" form="forms.itemForm"></input-validation-message>
+                        <ui-select name="shippingRule" class="form-control col-md-4" ng-model="item.shippingRule" ng-required="item.tags.indexOf('Product') > -1">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="shippingRule in ['FIFO','LIFO', 'FEFO', 'LSFO']">
+                                <div ng-bind="shippingRule"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Default Put Away Location Type:</label>
+                    <div class="col-md-7">
+                        <ui-select ng-model="item.defaultPutAwayLocationSubType">
+                            <ui-select-match>
+                                <div ng-bind="$select.selected"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in ['2D', '3D', '3D_GRID'] | filter:$select.search">
+                                <div ng-bind="item"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Abbreviation:</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" ng-model="item.abbreviation" name="Abbreviation" />
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">EAN Code:</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" ng-model="item.eanCode" name="EAN Code" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Country Origin:</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" ng-model="item.countryOrigin" name="Country Origin" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Hazardous Material:</label>
+                    <div class="col-md-7">
+                        <md-switch class="md-primary" aria-label="Is Hazardous Material" ng-model="item.isHazardousMaterial" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Allow Overwrite Item: </label>
+                    <div class="col-md-7">
+                        <md-switch class="md-primary" aria-label="Allow Overwrite Item" ng-model="item.allowOverWriteItem" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Allow Overwrite Item By Import: </label>
+                    <div class="col-md-7">
+                        <md-switch class="md-primary" aria-label="Allow Overwrite Item By Import" ng-model="item.allowOverWriteByImport" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                    </div>
+                </div>
+                <div class="row form-group">
+                        <label class="col-md-5 control-label">Allow Mixed Packaging For Small Parcel: </label>
+                        <div class="col-md-7">
+                            <md-switch class="md-primary" aria-label="Allow Mixed Packaging For Small Parcel" ng-model="item.allowMixedPackagingForSmallParcel" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                        </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-5 control-label">Require Collect Seasonal Pack: </label>
+                    <div class="col-md-7">
+                        <md-switch class="md-primary" aria-label="Require Collect Seasonal Pack"
+                                   ng-model="item.requireCollectSeasonalPack"
+                                   style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div style="padding: 15px 30px 20px 30px;; background-color: rgba(198, 228, 230, 0.36); min-height: 406px;">
+                <div style="margin-left: -13px; margin-bottom: 30px; font-size: 15px; color: #739a9c;">
+                    <b>Dynamic Properties</b>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-4" style="text-align: center;">
+                        <label>Property</label>
+                    </div>
+                    <div class="col-md-5" style="text-align: center;">
+                        <label>Value</label>
+                    </div>
+                    <!-- <div class="col-md-1" style="text-align: center;">
+                        <label>Diverse</label>
+                    </div> -->
+                </div>
+                <div class="row form-group" ng-repeat="p in item.fields track by $index">
+                    <div class="col-md-4">
+                        <ui-select ng-model="p.propertyId" style="border-radius: 4px;" required on-select="itemPropertyOnSelect($select.selected, $index)">
+                            <ui-select-match>
+                                <div ng-bind="$select.selected.name"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="pro.id as pro in availableProperties | filter:$select.search">
+                                <div ng-bind="pro.name"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-md-5" ng-show="!p.diverse">
+                        <div class="col-md-9" ng-if="p.itemProperty.type==='Text'">
+                            <input type="text" class="form-control" ng-model="p.value">
+                        </div>
+
+                        <div class="col-md-9" ng-if="p.itemProperty.type==='Date'">
+                            <lt-date-time date-format="yyyy-MM-dd" value="p.value" ng-model="p.value" style="padding-left: 0px;"></lt-date-time>
+                        </div>
+                        <div class="col-md-9" ng-if="p.itemProperty.type=='Number'">
+                            <input type="text" class="form-control" ng-model="p.value" name="{{p.itemProperty.name}}">
+                        </div>
+                        <div class="col-md-3" style="padding:0px;" ng-if="p.itemProperty.type==='Number' && p.itemProperty.unitType && p.itemProperty.unitType != ''">
+                            <select ng-model="p.unit" ng-options="o for o in fieldUnits[p.itemProperty.unitType]" class="form-control"></select>
+                        </div>
+                        <div class="col-md-9" ng-if="p.itemProperty.type==='Select'">
+                            <ui-select ng-model="p.value" style="border-radius: 4px;">
+                                <ui-select-match>
+                                    <div ng-bind="$select.selected"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="option in p.itemProperty.options">
+                                    {{option}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="col-md-5" ng-show="p.diverse"></div>
+                    <!-- <div class="col-md-1">
+                        <md-switch class="md-primary" aria-label="Diverse" ng-model="p.diverse" ng-change="diverseChange($index)" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                    </div> -->
+                    <div class="col-md-2">
+                        <button type="button" class="btn red" ng-click="removeProperty($index)">Remove</button>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-4">
+                    </div>
+                    <div class="col-md-5">
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn green" ng-click="addProperty()">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row form-actions right" permission-check="{{'item::itemSpec_write'}}">
+        <div class="col-md-12">
+            <waitting-btn type="submit" btn-class="btn blue" value="submitLabel" is-loading="loading"></waitting-btn>
+            <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+        </div>
+    </div>
+</form>

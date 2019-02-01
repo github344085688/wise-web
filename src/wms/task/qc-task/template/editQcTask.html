@@ -1,0 +1,67 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">
+                <span ng-show="isAddAction" class="caption-subject bold"> Add QC Task</span>
+                <span ng-show="!isAddAction" class="caption-subject bold"> Edit QC Task </span>
+            </h1>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <form novalidate name="editForm" ng-submit="editForm.$valid && submitQcTask()">
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-25">
+                        <label class="label-input">Customer</label>
+                        <input-validation-message field="customer" form="editForm"></input-validation-message>
+                        <organization-auto-complete name="customer" ng-disabled="!isAddAction" ng-model="qcTask.customerId" tag="Customer" required="true"></organization-auto-complete>
+                    </div>
+                    <div class="grid-25">
+                        <label class="label-input">Long Haul</label>
+                        <input-validation-message field="longHaul" form="editForm"></input-validation-message>
+                        <longhaul-auto-complete name="longHaul" placeholder="Enter Long Haul" is-disabled="!isAddAction" ng-model="qcTask.longHaulId"
+                            required="true"></longhaul-auto-complete>
+                    </div>
+                </div>
+
+                <div class="grid-parent grid-100 container" style="margin-top:30px;" ng-if="!isAddAction">
+                    <button type="button" class="grid-10 ripplelink pull-right" ng-click="selectOrder()">Add Order
+                    </button>
+                </div>
+                <div class="grid-parent grid-100 container" ng-if="!isAddAction">
+                    <table class="table">
+                        <thead>
+                            <tr role="row">
+                                <th> Order ID</th>
+                                <th> Customer</th>
+                                <th> Long Haul No</th>
+                                <th> Batch Commitment No</th>
+                                <th> Status</th>
+                                <th> Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="order in ordersView track by $index">
+                                <td>{{order.id}}</td>
+                                <td>{{order.customerName}}</td>
+                                <td>{{order.longHaulNo.join(" | ")}}</td>
+                                <td>{{order.batchCommitmentNo}}</td>
+                                <td>{{order.status}}</td>
+                                <td>
+                                    <a ng-click="delete(order)">Delete</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <unis-pager total-count="orders.length" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+                </div>
+                <div class="grid-parent grid-100 container" style="margin-top:50px;">
+
+                    <unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="submitLabel" is-loading="loading"></unis-waitting-btn>
+                    <button type="button" class="grid-10 pull-right cancel" ng-click="cancel()">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

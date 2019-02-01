@@ -1,0 +1,31 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Foundation Data</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">LP Configuration Template</a>
+        </li>
+    </ul>
+</div>
+<div class="portlet light">
+    <div class="portlet-body form">
+        <div class="tabbable-custom" style="border:1px solid #e7ecf1 !important;margin-top: 15px;">
+            <ul class="nav nav-tabs ">
+                <li ng-class="{'active':(activetab == 'singleTemplateList' || activetab == 'singleTemplateAdd'  || activetab == 'singleTemplateEdit' )}">
+                    <a ng-click="ctrl.changeTab('singleTemplateList')" data-toggle="tab"> LP Single Item Template </a>
+                </li>
+                <li ng-class="{'active':(activetab == 'multipleTemplateList' || activetab == 'multipleTemplateAdd'  || activetab == 'multipleTemplateEdit' )}">
+                    <a ng-click="ctrl.changeTab('multipleTemplateList')" data-toggle="tab"> LP Mixed Item Template </a>
+                </li>
+            </ul>
+            <div class="tab-content" style="padding:25px; height: auto;">
+                <div style="min-height:300px;" class="active tab-pane">
+                    <ui-view></ui-view>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

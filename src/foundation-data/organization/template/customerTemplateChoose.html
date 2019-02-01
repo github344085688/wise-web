@@ -1,0 +1,62 @@
+<md-dialog id="unis" flex="30">
+    <form class="light-theme" novalidate name="form" ng-submit="form.$valid && clone()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Choose Customer Template</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" style="min-height: 230px;">
+                <div class="grid-100">
+                    <div class="grid-content">
+                        <div class="grid-100 grid-parent container">
+
+                            <div class="grid-20">
+                                <label class="control-label" style="line-height:30px; text-align: right; display: block">
+                                    Template:
+                                </label>
+                            </div>
+                            <div class="grid-70">
+                                <div class="input-icon right" ng-show="form.templateId.$invalid && (form.$submitted || form.templateId.$touched)">
+                                    <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                        <span class="lt-tooltip-text">Required.</span>
+                                    </i>
+                                </div>
+                                <ui-select name="templateId" ng-model="params.id" required>
+                                    <ui-select-match allow-clear="true">
+                                        <span ng-bind="$select.selected.name"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="customerTemplate.id as customerTemplate in customerTemplateList | filter: $select.search">
+                                        {{customerTemplate.name}}
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+
+
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-60">&nbsp;</div>
+                        <div class="grid-20">
+                            <unis-waitting-btn btn-type="submit" btn-class="ripplelink" value="'OK'" is-loading="loading"></unis-waitting-btn>
+                        </div>
+                        <div class="grid-20">
+                            <button type="button" ng-click="cancel()" class="ripplelink">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>

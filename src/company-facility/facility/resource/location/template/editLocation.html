@@ -1,0 +1,257 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Facility</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Location</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span ng-show="ctrl.isAddAction" class="caption-subject bold"> Add Location</span>
+                    <span ng-show="!ctrl.isAddAction" class="caption-subject bold"> Edit Location </span>
+                </div>
+                <div class="actions">
+                    <button type="button" class="btn blue" ng-click="ctrl.generateBarcode(ctrl.location.checkingNo)">Generate Barcode for Check ID No.</button>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <form novalidate name="locationForm" ng-submit="locationForm.$valid && ctrl.addOrUpdateLocation()">
+                    <div class="alert alert-danger display-hide" ng-show="locationForm.$invalid && locationForm.$submitted" style="display: block;">
+                        <button class="close" data-close="alert"></button> You have some form errors. Please check below.
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row form-group">
+                                <div class="col-md-5">
+                                    <label>Name</label>
+                                    <input type="text" name="name" ng-model="ctrl.location.name" class="form-control" placeholder="Enter name" required />
+                                </div>
+                                <div class="col-md-5">
+                                    <label>Location Group</label>
+                                    <!--<input type="text" name="status" ng-model="ctrl.location.status" class="form-control" placeholder="Enter status" required />-->
+                                    <ui-select name="status" ng-model="ctrl.location.locationGroupId"
+                                               on-select="ctrl.onSelectLocationGroup($select.selected)">
+                                        <ui-select-match allow-clear="true">
+                                            {{$select.selected.name}}
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="locationGroup.id as locationGroup in locationGroups| filter: $select.search">
+                                            {{locationGroup.name}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-5">
+                                    <label>Support Pick Type</label>
+                                    <ui-select name="supportPickType" ng-model="ctrl.location.supportPickType">
+                                        <ui-select-match allow-clear="true">
+                                            {{$select.selected}}
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="pickType in pickTypes | filter: $select.search"
+                                                           refresh="getPickTypes()" refresh-delay="50">
+                                            <div ng-bind="pickType"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <div class="col-md-5">
+                                    <label>Support Equipment</label>
+                                    <ui-select multiple name="supportEquipment" ng-model="ctrl.location.supportEquipments">
+                                        <ui-select-match allow-clear="true">
+                                            <div ng-bind="$item"></div>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="supportEquipment in supportEquipments | filter: $select.search">
+                                            {{supportEquipment}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-5">
+                                    <label>Floor</label>
+                                    <input type="number" name="floor" ng-model="ctrl.location.floor" class="form-control" placeholder="Enter floor" />
+                                </div>
+                                <div class="col-md-5">
+                                    <label>Parent ID</label>
+                                    <ui-select name="type" ng-model="ctrl.location.parentId">
+                                        <ui-select-match allow-clear="true">
+                                            <div ng-bind="$select.selected.name"></div>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="zone.id as zone in zones | filter: $select.search">
+                                            {{zone.name}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-5">
+                                    <label>Type</label>
+                                    <!--<input type="text" name="type" ng-model="ctrl.location.type" class="form-control" placeholder="Enter type" />-->
+                                    <ui-select name="type" ng-model="ctrl.location.type" required>
+                                        <ui-select-match allow-clear="true">
+                                            {{$select.selected}}
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="type in locationTypes| filter: $select.search">
+                                            {{type}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <div class="col-md-5">
+                                    <label>Sub Type</label>
+                                    <!--<input type="text" name="subType" ng-model="ctrl.location.subType" class="form-control" placeholder="Enter sub type" />-->
+                                    <ui-select name="type" ng-model="ctrl.location.subType">
+                                        <ui-select-match allow-clear="true">
+                                            {{$select.selected}}
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="subType in locationSubType | filter: $select.search">
+                                            {{subType}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-5">
+                                    <label>Layer Number</label>
+                                    <input type="number" name="tierNumber" ng-model="ctrl.location.tierNumber" class="form-control" placeholder="Enter layer number"
+                                    />
+                                </div>
+                                <div class="col-md-5">
+                                    <label>Max Size</label>
+                                    <input type="number" name="maxSize" ng-model="ctrl.location.maxSize" class="form-control" placeholder="Enter max size" />
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-5">
+                                    <label>Points</label>
+                                    <input type="text" name="points" ng-model="ctrl.location.points" class="form-control" placeholder="Enter points" />
+                                </div>
+                                <div class="col-md-5">
+                                    <label>Bill of Lating (BoL)</label>
+                                    <input type="text" name="latlng" ng-model="ctrl.location.latlng" class="form-control" placeholder="Enter BoL" />
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-5">
+                                    <label>Checking NO</label>
+                                    <div style="position:relative">
+                                        <input type="text" name="checkingNO" ng-model="ctrl.location.checkingNo"
+                                               class="form-control" placeholder="Enter checking NO"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <label>Sequence</label>
+                                    <div style="position:relative">
+                                        <input type="text" name="sequence" ng-model="ctrl.location.sequence"
+                                               class="form-control" placeholder="Enter Sequence"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group" ng-show="!ctrl.isAddAction">
+                                <div class="col-md-5">
+                                    <label>Reserve Entry Id</label>
+                                    <input type="text" name="reserveEntryId" ng-model="ctrl.location.reserveEntryId" class="form-control" disabled />
+                                </div>
+                                <div class="col-md-5">
+                                    <label>Occupy Entry Id</label>
+                                    <input type="text" name="occupyEntryId" ng-model="ctrl.location.occupyEntryId" class="form-control" disabled />
+                                </div>
+                                <div class="col-md-2">
+                                    <label></label>
+                                    <span class="form-control" style="border: 0;">
+                                        <button type="button" class="btn btn-warning" ng-click="ctrl.release()">Release</button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-5">
+                                    <label>Status</label>
+                                    <!--<input type="text" name="status" ng-model="ctrl.location.status" class="form-control" placeholder="Enter status" required />-->
+                                    <ui-select name="status" ng-model="ctrl.location.status">
+                                        <ui-select-match allow-clear="true">
+                                            {{$select.selected}}
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="status in locationStatus| filter: $select.search">
+                                            {{status}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <div class="col-md-5">
+                                    <label>Tenant </label>
+                                    <multiple-organization-auto-complete name="customer"  tag="Customer" ng-model="ctrl.location.tenantIds"></multiple-organization-auto-complete>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-5">
+                                    <label>HLP ID</label>
+                                    <input type="text" ng-model="ctrl.location.hlpId" class="form-control" disabled />
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Capacity Type</label>
+                                    <ui-select name="status" ng-model="ctrl.location.capacity.type">
+                                        <ui-select-match allow-clear="true">
+                                            {{$select.selected}}
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="item in ['Pallet']| filter: $select.search">
+                                            {{item}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Capacity QTY</label>
+                                    <input type="number" ng-model="ctrl.location.capacity.qty" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-3">
+                                    <label>Length (m)</label>
+                                    <div style="position:relative">
+                                        <input type="number" name="length" ng-model="ctrl.location.length"
+                                               class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Width (m)</label>
+                                    <div style="position:relative">
+                                        <input type="number" name="width" ng-model="ctrl.location.width"
+                                               class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Height (m)</label>
+                                    <div style="position:relative">
+                                        <input type="number" name="height" ng-model="ctrl.location.height"
+                                               class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-5">
+                                    <label>Stack</label>
+                                    <ui-select name="supportPickType" ng-model="ctrl.location.stack">
+                                        <ui-select-match allow-clear="true">
+                                            {{$select.selected}}
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="pickType in stack | filter: $select.search"
+                                                           refresh="getPickTypes()" refresh-delay="50">
+                                            <div ng-bind="pickType"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-actions right">
+                        <waitting-btn type="submit" btn-class="btn blue" value="submitLabel" is-loading="loading"></waitting-btn>
+                        <button type="button" class="btn default" ng-click="ctrl.cancelEditLocation()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

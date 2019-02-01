@@ -1,0 +1,59 @@
+<md-dialog flex="50">
+    <form novalidate name="addItemLineForm" class="form-horizontal">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Combine EA Replenish Tasks</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content class="" style="padding: 20px 20px 30px 15px; min-height: 350px; box-sizing: border-box">
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label class="label-input">Customer</label>
+                    <organization-auto-complete name="customer" ng-model="replenish.customerId" tag="Customer"
+                                                allow-clear="true"></organization-auto-complete>
+                </div>
+                <div class="col-md-3" style=" margin-top: 23px;">
+                    <waitting-btn type="button" btn-class="btn green" ng-click="combineEAReplenishTasks()"
+                                  value="'Combine'"></waitting-btn>
+                </div>
+            </div>
+            <ul style="width: 100%; max-height: 200px;overflow-x: hidden; overflow-y: auto; padding: 0; margin: 0"
+                v-if="isCombineEAReplenish">
+                <li ng-repeat="replenishTask in replenishTasks" style="list-style-type:none; padding: 0; margin: 0"
+                    v-if="replenishTasks.length > 1">
+                    <div class="form-group" style="margin-top: 20px;">
+                        <div style="padding-left: 16px;">Combine Result</div>
+                        <div style="border-top: #ddd solid 1px; margin-left: 15px; padding: 20px 0;">
+                            <label class="label-input" style="display: block">Be Combined Tasks:</label>
+                            <div ng-repeat="originTaskId in replenishTask.originTaskIds "
+                                 style="display: inline-block; margin: 0 10px;">
+                                <span style="background: #e4e3e5;padding: 5px; margin-top: 8px;  display: inline-block">{{originTaskId}}</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+
+                        <div style=" margin-left: 15px;">
+                            <label class="label-input">New Task:</label>
+                            <div>
+                                <span style="background: #bfdce5;padding: 5px; margin: 10px;">{{replenishTask.combinedTaskId}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li ng-if="replenishTasks.length < 1 && isCombineEAReplenish" >
+                    No Available Task To Combine!
+                </li>
+
+            </ul>
+
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <div style="margin-right: 10px">
+                <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+

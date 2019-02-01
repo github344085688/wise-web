@@ -1,0 +1,84 @@
+<md-dialog id="unis" flex="80" ng-cloak>
+    <form class="light-theme">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Receipt: {{receipt.id}}</h1>
+                <b flex></b>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+           <div class="grid-100">
+               <div class="grid-content">
+                       <div class="grid-100 grid-parent container">
+                           <div class="grid-25">
+                               <b class="b-input">Status: </b>
+                               {{receipt.status}}
+                           </div>
+                           <div class="grid-25">
+                               <b class="b-input">Customer: </b>
+                               {{receipt.customerName}}
+                           </div>
+                           <div class="grid-25">
+                               <b class="b-input">Title: </b>
+                               {{receipt.titleName}}
+                           </div>
+                           <div class="grid-25">
+                               <b class="b-input">Carrier: </b>
+                               {{receipt.carrierName}}
+                           </div>
+                       </div>
+                       <div class="grid-100 grid-parent container">
+                           <div class="grid-25">
+                               <b class="b-input">Purchase Order No.: </b>
+                               {{receipt.poNo}}
+                           </div>
+                           <div class="grid-25">
+                               <b class="b-input">Reference: </b>
+                               {{receipt.referenceNo}}
+                           </div>
+                           <div class="grid-25">
+                               <b class="b-input">BOL: </b>
+                               {{receipt.bolNo}}
+                           </div>
+                           <div class="grid-25">
+                               <b class="b-input">Seal: </b>
+                               {{receipt.sealNo}}
+                           </div>
+                       </div>
+
+                       <div class="grid-100 grid-parent container">
+                               <table class="table">
+                                   <thead>
+                                   <tr>
+                                       <th>#</th>
+                                       <th>Item</th>
+                                       <th>UOM</th>
+                                       <th>Expected Qty</th>
+                                       <th>Received Qty</th>
+                                       <th>Received UOM</th>
+                                       <th>Pallet Qty</th>
+                                       <th>Supplier</th>
+                                       <th>Source</th>
+                                   </tr>
+                                   </thead>
+                                   <tbody>
+                                   <tr ng-repeat="item in receipt.itemLines track by $index">
+                                       <td> {{$index + 1}}</td>
+                                       <td>{{item.itemSpecName}}</td>
+                                       <td>{{item.unit.name}}</td>
+                                       <td>{{item.qty}}</td>
+                                       <td>{{item.receivedQty}}</td>
+                                       <td>{{item.receivedUnit.name}}</td>
+                                       <td>{{item.palletQty}}</td>
+                                       <td>{{item.supplierName}}</td>
+                                       <td>{{item.source}}</td>
+                                   </tr>
+                                   </tbody>
+                               </table>
+                       </div>
+               </div>
+           </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

@@ -1,0 +1,49 @@
+<div class="grid-100 row">
+
+    <div class="grid-100">
+        <upload-attachment  app='fd-app' module='organization' service='customerDocument' upload-file-success="uploadFileSuccess(param)"></upload-attachment>
+
+    </div>
+    <div class="grid-100">
+        <div class="grid-100 grid-content">
+            <div class="grid-parent grid-100 container">
+                <div class="table-scrollable">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Update By</th>
+                                <th>Time</th>
+                                <th>Action</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <div>
+                                <tr ng-repeat="file in orgFilesView track by $index">
+
+                                    <td>
+                                        <span class="glyphicon glyphicon-file"></span>
+                                         {{file.name}}
+                                    </td>
+                                    <td> {{file.createdBy}}</td>
+                                    <td> {{file.createdWhen}}</td>
+                                    <td>
+                                        <a href="#" ng-click="deleteFileEntry(file.id)" style="text-decoration:none;"><b>Delete</b> | </a>
+                                        <a href="#" ng-click="loadFile(file)" download="{{file.name}}" style="text-decoration:none;"><b>Download</b></a>
+                                    </td>
+                                </tr>
+                            </div>
+
+                        </tbody>
+                    </table>
+                </div>
+                <unis-pager total-count="orgFiles.length" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+
+
+            </div>
+        </div>
+    </div>
+</div>

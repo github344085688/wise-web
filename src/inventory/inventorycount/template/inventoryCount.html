@@ -1,0 +1,165 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Inventory</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Inventory Count</a>
+        </li>
+    </ul>
+</div>
+
+<div style="margin:15px" ui-view>
+    <form name="editForm" class="form form-horizontal">
+        <div class="form-group">
+            <div class="col-md-3">
+                <label>Item:</label>
+                <itemspec-auto-complete ng-model="search.itemSpecId" name="itemSpec" allow-clear="true"/>
+            </div>
+            <div class="col-md-3">
+                <label>Location:</label>
+                <ui-select ng-model="search.locationNames" multiple>
+                    <ui-select-match>
+                        {{$item.name}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="location.name as location in locationList | filter: $select.search.name"
+                                       refresh="getLocations($select.search)" refresh-delay="50">
+                        <div ng-bind="location.name"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-md-3">
+                <label>Time From</label>
+                <lt-date-time value="search.timeFrom"></lt-date-time>
+            </div>
+            <div class="col-md-3">
+                <label>Time To</label>
+                <lt-date-time value="search.timeTo"></lt-date-time>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <label>Is EmptyLocation</label>
+
+                <ui-select ng-model="search.emptyLocation">
+                    <ui-select-match allow-clear="true">{{$select.selected}}</ui-select-match>
+                    <ui-select-choices repeat="item in ['EmptyLocation','UnEmptyLocation']">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-md-3">
+                <label>Is Adjusted</label>
+
+                <ui-select ng-model="search.adjusted">
+                    <ui-select-match allow-clear="true">{{$select.selected}}</ui-select-match>
+                    <ui-select-choices repeat="item in ['Adjusted','UnAdjusted']">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-md-3">
+                <label>Is Effective</label>
+
+                <ui-select ng-model="search.effective">
+                    <ui-select-match allow-clear="true">{{$select.selected}}</ui-select-match>
+                    <ui-select-choices repeat="item in ['Effective','UnEffective']">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-md-3">
+                <label>Adjust Result</label>
+
+                <ui-select ng-model="search.adjustedResults">
+                    <ui-select-match allow-clear="true">{{$select.selected}}</ui-select-match>
+                    <ui-select-choices repeat="item in adjustedResults">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <label>CreatedBy:</label>
+                <user-auto-complete name="assignee" needEmpty="true" allow-clear="true" on-select="getuser(user)" ng-model="search.userId"></user-auto-complete>
+            </div>
+            <div class="col-md-3">
+                <label>Max Diff Qty:</label>
+                <input class="form-control" type="number" placeholder="Enter Number" ng-model="search.diffQtyLT"/>
+            </div>
+            <div class="col-md-3">
+                <label>LP:</label>
+                <input type="text" class="form-control" ng-pattern="/^[T,H,I,C,S]{0,1}LP-[0-9]*$/" ng-model="search.lpId" placeholder="Enter LP ID (LP-1)" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12"  style="text-align: right;">
+                <waitting-btn type="button" btn-class="btn green" ng-click="export()" value="'Export'" is-loading="exporting"></waitting-btn>
+                <waitting-btn type="button" permission-check="{{'inventory::inventoryCount_write'}}" btn-class="btn yellow" ng-click="batchAdjust()" value="'Batch Adjust'" is-loading="isAdjusting"></waitting-btn>
+                <waitting-btn type="submit" btn-class="btn blue" ng-click="searchCount(1)" value="'Search'" is-loading="isSearching"></waitting-btn>
+            </div>
+        </div>
+    </form>
+    <div ng-show="isSearching" class="text-center">
+        <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+    </div>
+
+    <div class="table-scrollable" ng-show="!isSearching">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>LP</th>
+                <th>Location</th>
+                <th>Item</th>
+                <th>ItemDesc</th>
+                <th>CaseUPC</th>
+                <th>UOM</th>
+                <th>QTY</th>
+                <th>Diff Cs Qty</th>
+                <th>Diff Ea Qty</th>
+                <th>CreatedBy</th>
+                <th>CreatedWhen</th>
+                <th>Is Effective</th>
+                <th>Is EmptyLocation</th>
+                <th>AdjustedResult</th>
+                <th permission-check="{{'cycleCount::task_write'}}">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in countDatas track by $index">
+                <td>{{$index + 1}}</td>
+                <td>{{item.lpId}}</td>
+                <td>{{item.locationName}}</td>
+                <td>{{item.itemSpecName}}</td>
+                <td>{{item.itemSpecDesc}}</td>
+                <td>{{item.caseUPC}}</td>
+                <td>{{item.uom}}</td>
+                <td>{{item.qty}}</td>
+                <td>{{item.diffCsQty}}</td>
+                <td>{{item.diffEaQty}}</td>
+                <td>{{item.createdBy}}</td>
+                <td>{{item.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                <td>{{item.isEffective}}</td>
+                <td>{{item.isEmptyLocation}}</td>
+                <td style="color: red;">
+                    {{item.adjustedResult}}
+                    <div ng-if="item.adjustedErrorMsg">({{item.adjustedErrorMsg}})</div>
+                </td>
+                <td permission-check="{{'inventory::inventoryCount_write'}}">
+                    <a ng-if="!item.isEffective" ng-click="effect(item.id)" title="effect">Effect</a>
+                    <a ng-if="!item.adjustedResult && item.isEffective" ng-click="adjust(item.id)" title="adjust">Adjust</a>
+                    <a ng-if="!item.adjustedResult" ng-click="delete(item.id)" style="color: red;" title="Delete">Delete</a>
+                  
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="page.pageSize" load-content="searchCount(currentPage)"></pager>
+
+</div>
+
+

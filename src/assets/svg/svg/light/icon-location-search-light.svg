@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="20px" height="24px" viewBox="0 0 20 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>D801707A-7F66-49EE-83DF-6EE1CF75506D</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <rect id="path-1" x="0.684018342" y="0.722613791" width="18.3809231" height="22.3325408"></rect>
+        <polygon id="path-3" points="1.68401834 1.72261379 12.8637695 1.72261379 12.8637695 11.475034 18.0649414 11.475034 18.0649414 22.0551546 1.68401834 22.0551546"></polygon>
+    </defs>
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="TMS-Icons" transform="translate(-279.000000, -337.000000)">
+            <g id="ic_location-search" transform="translate(279.000000, 337.000000)">
+                <g id="Condense-Header">
+                    <g>
+                        <g id="SEARCH---light">
+                            <g id="Search-Dropdown">
+                                <g id="ic_location-search">
+                                    <g id="Path-2">
+                                        <g id="path-1-link" transform="translate(1.000000, 1.000000)" fill="#FFFFFF">
+                                            <polygon id="path-1" points="0.684018342 0.722613791 11.8637695 0.722613791 11.8637695 10.475034 17.0649414 10.475034 17.0649414 21.0551546 0.684018342 21.0551546"></polygon>
+                                        </g>
+                                        <g id="Clipped">
+                                            <mask id="mask-2" fill="black">
+                                                <use xlink:href="#path-1"></use>
+                                            </mask>
+                                            <g id="Rectangle-path"></g>
+                                            <g id="path-1-link" mask="url(#mask-2)" stroke-width="2" stroke="#FFFFFF">
+                                                <g transform="translate(1.000000, 1.000000)" id="path-1">
+                                                    <polygon points="0.684018342 0.722613791 11.8637695 0.722613791 11.8637695 10.475034 17.0649414 10.475034 17.0649414 21.0551546 0.684018342 21.0551546"></polygon>
+                                                </g>
+                                            </g>
+                                            <mask id="mask-4" fill="black">
+                                                <use xlink:href="#path-3"></use>
+                                            </mask>
+                                            <g id="path-1"></g>
+                                        </g>
+                                    </g>
+                                    <rect id="Rectangle-13" fill="#000000" x="3.34782609" y="3.34782609" width="2.34782609" height="2.34782609"></rect>
+                                    <rect id="Rectangle-13-Copy" fill="#000000" x="8.82608696" y="3.34782609" width="2.34782609" height="2.34782609"></rect>
+                                    <rect id="Rectangle-13-Copy-3" fill="#000000" x="3.34782609" y="8.04347826" width="2.34782609" height="2.34782609"></rect>
+                                    <rect id="Rectangle-13-Copy-2" fill="#000000" x="8.82608696" y="8.04347826" width="2.34782609" height="2.34782609"></rect>
+                                    <rect id="Rectangle-13-Copy-5" fill="#000000" x="3.34782609" y="12.7391304" width="2.34782609" height="2.34782609"></rect>
+                                    <rect id="Rectangle-13-Copy-4" fill="#000000" x="8.82608696" y="12.7391304" width="2.34782609" height="2.34782609"></rect>
+                                    <rect id="Rectangle-13-Copy-8" fill="#000000" x="3.34782609" y="17.4347826" width="2.34782609" height="2.34782609"></rect>
+                                    <rect id="Rectangle-13-Copy-7" fill="#000000" x="8.82608696" y="17.4347826" width="2.34782609" height="2.34782609"></rect>
+                                    <rect id="Rectangle-13-Copy-6" fill="#000000" x="14.3043478" y="12.7391304" width="2.34782609" height="2.34782609"></rect>
+                                    <rect id="Rectangle-13-Copy-9" fill="#000000" x="14.3043478" y="17.4347826" width="2.34782609" height="2.34782609"></rect>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

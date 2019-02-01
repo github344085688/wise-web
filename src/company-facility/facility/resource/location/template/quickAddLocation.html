@@ -1,0 +1,113 @@
+<md-dialog flex="60" >
+    <form novalidate name="quickAddLocationForm"  ng-submit="quickAddLocationForm.$valid && addBatchLocation()" class="form-horizontal">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Quick Add By Pattern</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="padding: 40px 40px 30px 14px;min-height:300px;">
+            <div class="form-group">
+                <label class="control-label col-md-2" style="margin-bottom: 5px;">Prefix</label>
+                <div class="col-md-4">
+                    <input type="text" name="locationView.prefix" ng-keyup="reviewName()" class="form-control" ng-model="locationView.prefix"/>
+                </div>
+                <label class="control-label col-md-2">End</label>
+                <div class="col-md-4">
+                    <input type="text" name="locationView.end" ng-keyup="reviewName()"  class="form-control" ng-model="locationView.end"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">From</label>
+                <div class="col-md-4">
+                    <input type="number" name="locationView.from" ng-keyup="reviewName()" class="form-control" ng-model="locationView.from"/>
+                </div>
+                <label class="control-label col-md-2">To</label>
+                <div class="col-md-4">
+                    <input type="number" name="locationView.to" ng-keyup="reviewName()" class="form-control" ng-model="locationView.to"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">Interval</label>
+                <div class="col-md-4">
+                    <input type="number" name="locationView.gap" ng-keyup="reviewName()" class="form-control" ng-model="locationView.gap"/>
+                </div>
+
+                <label class="control-label col-md-2">In Zone</label>
+                <div class="col-md-4">
+                    <ui-select name="type" ng-model="locationView.zone">
+                        <ui-select-match>
+                            <div ng-bind="$select.selected.name"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="zone.id as zone in zones | filter: $select.search">
+                            {{zone.name}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+
+            <div class="form-group" ng-show="locationView.name">
+                <label class="control-label col-md-2">Preview(Name)</label>
+                <div class="col-md-10">
+                    <ul class="preview">
+                        <li ng-repeat="name in locationView.name"><h4><span type="text" class="form-control label label-info">{{name}}</span></h4></li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <span style="color: red; ">{{ errorMsg }}</span>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Location Group</label>
+                <div class="col-md-4">
+                    <ui-select name="status" ng-model="locationView.locationGroupId"
+                               on-select="onSelectLocationGroup($select.selected)">
+                        <ui-select-match allow-clear="true">
+                            {{$select.selected.name}}
+                        </ui-select-match>
+                        <ui-select-choices  repeat="locationGroup.id as locationGroup in locationGroups | filter: $select.search"
+                                            refresh="getLocationGroups($select.search)" refresh-delay="50">
+                            <div ng-bind="locationGroup.name"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+
+                <label class="control-label col-md-2">Support Pick Type</label>
+                <div class="col-md-4">
+                    <ui-select name="supportPickType" ng-model="locationView.supportPickType">
+                        <ui-select-match allow-clear="true">
+                            {{$select.selected}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="pickType in pickTypes | filter: $select.search"
+                                           refresh="getPickTypes()" refresh-delay="50">
+                            <div ng-bind="pickType"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Support Equipments</label>
+                <div class="col-md-4">
+                    <ui-select multiple name="supportEquipment" ng-model="locationView.supportEquipments">
+                        <ui-select-match allow-clear="true">
+                            <div ng-bind="$item"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="supportEquipment in supportEquipments | filter: $select.search">
+                            {{supportEquipment}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <div style="margin-right: 50px">
+                <button type="submit" class="btn blue" ng-click="quickAddLocationForm.$valid && submit()">Submit
+                </button>
+                <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+

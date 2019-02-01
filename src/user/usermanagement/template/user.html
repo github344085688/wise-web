@@ -1,0 +1,114 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">User Management</h1>
+            <a class="create-button" ui-sref="user.userManagement.add" permission-check="{{'user::userManagement_write'}}">
+                <b>Add User</b>
+            </a>
+            <hr>
+        </div>
+
+        <div ng-if="!isAdvanced" class="grid-parent grid-100 container">
+            <div class="grid-60">
+                <label class="label-input">Name:</label>
+                <input type="text" ng-model="searchInfo.keyword" class="form-control" placeholder="User Name /First Name /Last Name /SSO User Name"
+                />
+            </div>
+        </div>
+
+        <div ng-if="isAdvanced" class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">First Name:</label>
+                <input type="text" ng-model="searchInfo.firstName" class="form-control" />
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Last Name:</label>
+                <input type="text" ng-model="searchInfo.lastName" class="form-control" />
+            </div>
+            <div class="grid-25">
+                <label class="label-input">User Name:</label>
+                <input type="text" ng-model="searchInfo.username" class="form-control" />
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Android Online:</label>
+
+                <ui-select ng-model="searchInfo.isOnline">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in ['Online','Offline']">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+        <div style="margin:15px 0px 20px 0px;">
+            <a ng-click="isAdvanced = !isAdvanced" style="font-weight:600;">
+                <span ng-show="!isAdvanced">Advanced</span>
+                <span ng-show="isAdvanced">Keyword</span> Search
+            </a>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-80">&nbsp;</div>
+            <div class="grid-10">
+                <waitting-btn type="button" is-loading="exporting" btn-class="ripplelink" ng-click="export()" value="'Export'"></waitting-btn>
+            </div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width: 120px;">Android Online</th>
+                        <th> User Name </th>
+                        <th> First Name </th>
+                        <th> Last Name </th>
+                        <th> Roles</th>
+                        <th> Status </th>
+                        <th> Last Login When </th>
+                        <th permission-check="{{'user::userManagement_write'}}"> Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="user in userView track by $index">
+                        <td>
+                            <i ng-if="user.isAndroidOnline" class="material-icons" title="Android Online" style="color: green;">android</i>
+                        </td>
+                        <td>
+                            {{user.username}}
+                        </td>
+                        <td>{{user.firstName}}</td>
+                        <td>{{user.lastName}}</td>
+                        <td>
+                            <span  ng-repeat="role in user.roles" style="background-color:#f6f3e8; margin: 5px 5px;padding: 5px 10px;border-radius: 3px;">
+                            {{role.name}}
+                            </span>
+                        </td>
+                        <td>{{user.status}}</td>
+                        <td>{{user.lastLoginWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                        <td permission-check="{{'user::userManagement_write'}}">
+                            <a ui-sref="user.userManagement.edit({userId:user.idmUserId})">Edit</a>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="userList.length" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+    </div>
+</div>

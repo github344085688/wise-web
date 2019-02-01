@@ -1,0 +1,53 @@
+<md-dialog id="unis" flex="30" ng-cloak>
+    <form class="light-theme" novalidate name="selectPrinterForm" ng-submit="selectPrinterForm.$valid && save()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Select Printer</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content >
+            <div class="md-dialog-content" style="min-height:200px">
+                <div class="grid-100">
+                    <div class="grid-content">
+                        <div class="grid-100 grid-parent container">
+                            <div class="grid-100 grid-content">
+                                <div class="grid-parent grid-100 container">
+                                    <label> ZPL Printer</label>
+                                    <input-validation-message field="zplprinterName" form="selectPrinterForm"></input-validation-message>
+                                    <printer-auto-complete name="zplprinterName" ng-model="zplprinter" on-select="ZplPrinterSelect(printer)"
+                                    types="['ZPL',''RAW]" required="true"></printer-auto-complete>
+                                </div>
+                                <div class="grid-parent grid-100 container">
+                                    <label> PDF Printer (For print packing list for the orders to Canada)</label>
+                                    <input-validation-message field="pdfPrinterName" form="selectPrinterForm"></input-validation-message>
+                                    <printer-auto-complete name="pdfPrinterName" ng-model="pdfprinter" on-select="PdfPrinterSelect(printer)"
+                                    types="['PDF']" required="true"></printer-auto-complete>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-60">&nbsp;</div>
+                        <div class="grid-20">
+                            <button type="submit"  class="ripplelink">&nbsp;OK&nbsp;</button>
+                        </div>
+                        <div class="grid-20">
+                            <button type="button" ng-click="cancel()" class="ripplelink">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>

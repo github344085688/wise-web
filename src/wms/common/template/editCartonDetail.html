@@ -1,0 +1,82 @@
+<md-dialog flex="50">
+    <form novalidate name="addItemLineForm" class="form-horizontal">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Edit Cartons</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="padding: 20px;">
+            <div style="text-align: right">
+                <a ng-click="changeShowWay()">{{labelText}}</a>
+            </div>
+            <div ng-if="!showTableDetail">
+                <div class="form-group col-md-12">
+                    <div class="col-md-3">
+                        <span>Carton No</span>
+                    </div>
+                    <div class="col-md-3">
+                        <span>Qty</span>
+                    </div>
+                    <div class="col-md-3">
+                        <span>Pound Per Carton</span>
+                    </div>
+                    <div class="col-md-2">
+                        <span>Lot No</span>
+                    </div>
+                </div>
+                <div class="form-group col-md-12" ng-repeat="carton in cartons track by $index">
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" ng-model="carton.cartonNo" required/>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" ng-model="carton.poundPerCarton" required/>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" ng-model="carton.qty" />
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" ng-model="carton.lotNo" />
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn red" ng-click="remove($index)">Remove</button>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-11">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn blue" ng-click="add()">Add</button>
+                    </div>
+
+                </div>
+            </div>
+            <div ng-if="showTableDetail">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Carton No</th>
+                            <th>Pound Per Carton</th>
+                            <th>Lot No</th>
+                            <th>Qty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="carton in cartons">
+                            <td>{{carton.cartonNo}}</td>
+                            <td>{{carton.poundPerCarton}}</td>
+                            <td>{{carton.lotNo}}</td>
+                            <td>{{carton.qty}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <div style="margin-right: 20px;  margin-bottom: 7px">
+                <waitting-btn type="submit" btn-class="btn blue" value="'Update'" is-loading="loading" ng-click="addItemLineForm.$valid && submit()"></waitting-btn>
+                <button type="button" class="btn default" ng-click="cancel()" style="margin-left: 10px">Cancel</button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

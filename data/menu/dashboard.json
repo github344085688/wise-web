@@ -1,0 +1,27 @@
+[{
+  "title": "Monitor",
+  "state": "dashboard.monitor",
+  "icon": "local_shipping",
+  "url": "",
+  "subMenu": [{
+    "title": "Document OverView",
+    "state": "dashboard.monitor.documentOverview",
+    "icon": "receipt",
+    "url": "/dashboard/monitor/dc-overview"
+  },{
+    "title": "Document Progress",
+    "state": "dashboard.monitor.documentProgress",
+    "icon": "receipt",
+    "url": "/dashboard/monitor/dc-progress"
+  },{
+    "title": "LineLaul Progress",
+    "state": "dashboard.monitor.lineHaulProgress",
+    "icon": "receipt",
+    "url": "/wms/outbound/order/lineLaul/"
+  },{
+    "title": "New Dashboards",
+    "state": "dashboard.monitor.newDashboards",
+    "icon": "receipt",
+    "url": "/dashboard/monitor/new-dashboards"
+  }]
+}]

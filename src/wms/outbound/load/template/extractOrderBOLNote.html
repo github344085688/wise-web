@@ -1,0 +1,43 @@
+<md-dialog id="unis" flex="50">
+    <form class="light-theme">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Extract Order BOL Note to Load Note</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" style="min-height: 230px;">
+                <div class="grid-parent grid-100">
+                    <label class="label-input" style="text-transform: inherit;">Currrent note:</label>
+                    <textarea type="text" ng-model="param.loadNote" disabled="true" class="form-control" />
+                    </div>
+                <div style="text-align: center;">
+                        <i class="fa fa-long-arrow-down" aria-hidden="true" style="margin: 10px 0px -5px; font-weight: 900;font-size: 24px;color: #4d7f89; "></i>
+                </div>
+                <div class="grid-parent grid-100" >
+                    <label class="label-input" style="text-transform: inherit;"> After update note will be :</label>
+                    <textarea type="text" ng-model="param.bolNote" class="form-control"/>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions style="padding: 0">
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-60">&nbsp;</div>
+                        <div class="grid-20">
+                            <button type="button" ng-click="save()" class="ripplelink">&nbsp;Save&nbsp;</button>
+                        </div>
+                        <div class="grid-20">
+                            <button type="button" ng-click="cancel()" class="ripplelink">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>

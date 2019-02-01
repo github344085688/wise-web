@@ -1,0 +1,62 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label">EDI Log Detail</h1>
+            <h1 class="section-label">Id:{{ediId}}</h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <b>ID</b>: {{ediView.id}}
+            </div>
+            <div class="grid-25">
+                <b>Type</b>: {{ediView.type}}
+            </div>
+            <div class="grid-25">
+                <b>CustomerName</b>: {{ediView.customerName}}
+            </div>
+
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <b>ForeignId</b>: {{ediView.foreignId}}
+            </div>
+            <div class="grid-25">
+                <b>CreatedWhen</b>: {{ediView.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm'}}
+            </div>
+            <div class="grid-25">
+                <b>UpdatedWhen</b>: {{ediView.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm'}}
+            </div>
+            <div class="grid-25">
+                <b>Status</b>: {{ediView.status}}
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-100">
+                <b>ShippedSlpIds</b>: {{ediView.shippedSlpIds}}
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-100">
+                <b>ConventContent</b>: {{ediView.conventContent}}
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-100" style="word-wrap:break-word">
+                <b>RequestContent</b>: {{ediView.requestContent}}
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-100">
+                <b>Response</b>: {{ediView.response}}
+            </div>
+        </div>
+
+    </div>
+</div>

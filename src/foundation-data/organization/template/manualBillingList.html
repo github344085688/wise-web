@@ -1,0 +1,37 @@
+<form novalidate name="titleForm">
+  <div class="grid-parent grid-100 container">
+    <div class="grid-85">
+      &nbsp;
+    </div>
+    <div class="grid-15">
+      <a ng-click="editManualBilling()">Create Manual Billing</a>
+    </div>
+  </div>
+
+  <table class="table" style="margin-top: 50px;">
+    <thead>
+      <tr>
+        <th>Manual Billing</th>
+        <th>Range</th>
+        <th>QTY</th>
+        <th>UOM</th>
+        <th>Effective Date</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="manualBillingConfig in manualBillingConfigList track by $index">
+        <td>{{manualBillingConfig.accountItemId}}</td>
+        <td>
+          <span ng-repeat="range in manualBillingConfig.ranges">{{range}}&nbsp;&nbsp;</span>
+        </td>
+        <td>{{manualBillingConfig.qty}}</td>
+        <td>{{manualBillingConfig.materialUOM}} </td>
+        <td>{{manualBillingConfig.effectiveDate | amDateFormat:'YYYY-MM-DD'}}</td>
+        <td><a ng-click="editManualBilling(manualBillingConfig.id)">edit</a> &nbsp;|&nbsp;
+          <a ng-click="deleteManualBilling(manualBillingConfig.id)">delete</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</form>

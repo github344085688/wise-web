@@ -1,0 +1,267 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Task</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a ui-sref="wms.task.receiptTask.list">Pick Task View</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div ng-show="isLoading" class="text-center">
+        <img src="assets/img/loading-spinner-grey.gif"><label>&nbsp;LOADING...</label>
+    </div>
+    <div ng-show="!isLoading" class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <label class="caption-subject bold">Pick Task: {{task.id}}</label>
+                </div>
+                <div  style="float:right;  padding: 6px 0 10px 0;" permission-check="{{'task::pickTask_write'}}">
+                    <waitting-btn type="button" btn-class="btn gray " icon-class="glyphicon glyphicon-print" ng-click="printPalletLabel(task)"
+                                  is-loading="printPalletLabeling" value="'Pallet Label'"></waitting-btn>
+                    <waitting-btn type="button" btn-class="btn gray " icon-class="glyphicon glyphicon-print" ng-click="printShippingLabel(task)"
+                                  is-loading="printShippingtLabeling" value="'Pre-Print Shipping Label'"></waitting-btn>
+                    <button type="button" class="btn gray" ng-click="printPickTicketLabel(task.id)" >
+                          <span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print Pick Ticket
+                    </button>
+                    <button type="button" class="btn yellow" ng-show="task.status=='New'" ng-click="separateTask(task)">Separate</button>
+                    <button type="button" class="btn yellow" ng-show="task.status=='New'" ng-click="mergeTask(task)">Merge</button>
+                    <button type="button" class="btn blue" ng-show="task.status == 'Closed'" ng-click="reopenTask(task)">Reopen</button>
+                    <!-- <button type="button" class="btn blue" ng-click="editTask(task.id)">Edit</button> -->
+                     <a class="btn blue" ng-href="{{'#/wms/task/pick-task/edit/' + task.id}}" target="_blank">Edit</a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="row row-text">
+                    <div class="col-md-12">
+                        <b>Order</b>:
+                        <span ng-repeat="orderId in task.orderIds">
+                            <a ng-href="{{'#/wms/outbound/order/' + orderId}}" target="_blank">{{orderId}}</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="row row-text">
+                    <div class="col-md-3"><b>Pick Type</b>: {{task.pickType}}</div>
+                    <div class="col-md-3"><b>Pick Way</b>: {{task.pickWay}}</div>
+                    <div class="col-md-3"><b>Status</b>: {{task.status}}</div>
+                    <div class="col-md-3"><b>Priority</b>: {{task.priority}}</div>
+                </div>
+                <div class="row row-text">
+                    <div class="col-md-3"><b>Is Rush</b>: {{task.isRush}}</div>
+                    <div class="col-md-3">
+                        <b>Assignee:</b> {{task.assignee.firstName}} {{task.assignee.lastName}}
+                    </div>
+                    <div class="col-md-3">
+                        <b>Planned Assignee:</b>{{task.plannedAssignee.firstName}} {{task.plannedAssignee.lastName}}
+                    </div>
+                    <div class="col-md-3">
+                            <span><b>Is Pick To Order: </b>{{task.isPickToOrder ? 'Yes' : 'No'}}</span>
+                        </div>
+                </div>
+                <div class="row row-text">
+                    <div class="col-md-3"><b>Start Time: </b>{{task.startTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</div>
+                    <div class="col-md-3"><b>End Time: </b>{{task.endTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</div>
+                    <div class="col-md-3"><b>Create Time: </b>{{task.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                                        &nbsp;<span ng-show="task.createdBy">({{task.createdBy}})</span></div>
+                    <div class="col-md-3"><b>Updated Time: </b>{{task.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                                        &nbsp;<span ng-show="task.updatedBy">({{task.updatedBy}})</span></div>
+                </div>
+                <div class="row row-text" style="margin-bottom: 30px;">
+                    <div class="col-md-12">
+                        <b>Description:</b> {{task.description}}
+                    </div>
+                    <div class="col-md-12">
+                        <b>note:</b> {{task.note}}
+                    </div>
+                </div>
+                <div class="tabbable-custom" style="margin-bottom: 0px; overflow: visible">
+                    <ul class="nav nav-tabs">
+                        <li ng-class="{'active':activetab == 'itemLines'}" >
+                            <a data-toggle="tab" ng-click="changeTab('itemLines', task.id)"> Item Lines </a>
+                        </li>
+                        <li ng-class="{'active':activetab == 'materialLines'}" >
+                            <a data-toggle="tab" ng-click="changeTab('materialLines', task.id)"> Material Lines </a>
+                        </li>
+                        <li ng-class="{'active':activetab == 'pickHistories'}">
+                            <a data-toggle="tab" ng-click="changeTab('pickHistories', task.id)"> Pick History </a>
+                        </li>
+                        <li ng-class="{'active':activetab == 'returnHistories'}">
+                            <a data-toggle="tab" ng-click="changeTab('returnHistories', task.id)"> Return History </a>
+                        </li>
+                        <li ng-class="{'active':activetab == 'pickRounds'}">
+                                <a data-toggle="tab" ng-click="changeTab('pickRounds', task.id)"> Pick Rounds </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" style="padding:15px;">
+                        <div ng-class="{'active':activetab == 'itemLines'}" class="tab-pane">
+                            <div class="table-scrollable" style="border: hidden;">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th> Item </th>
+                                        <th> Title </th>
+                                        <th> Base QTY </th>
+                                        <th> QTY </th>
+                                        <th> Unit </th>
+                                        <th> Location </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="itemLine in task.pickItemLines">
+                                        <td><item-display item="itemLine"></item-display></td>
+                                        <td>{{itemLine.titleName}}</td>
+                                        <td>{{itemLine.baseQty}}</td>
+                                        <td>{{itemLine.qty}}</td>
+                                        <td>{{itemLine.unitName}}</td>
+                                        <td>{{itemLine.locationName}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div ng-class="{'active':activetab == 'materialLines'}" class="tab-pane">
+                            <material-lines search-param="materialLinesSearchParam"></material-lines>
+                        </div>
+                        <div ng-class="{'active':activetab == 'pickHistories'}" class="tab-pane">
+                            <div class="table-scrollable" style="border: hidden;">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th> Item </th>
+                                        <th> From LP </th>
+                                        <th> To LP </th>
+                                        <th> From Location </th>
+                                        <th> Is Entire LP Pick </th>
+                                        <th> Unit </th>
+                                        <th> Picked Base QTY </th>
+                                        <th> SN </th>
+                                        <th> Picker </th>
+                                        <th> Picked When </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="pickHistory in task.pickHistories">
+                                        <td><item-display item="pickHistory"></item-display></td>
+                                        <td>{{pickHistory.fromLPId}}</td>
+                                        <td>{{pickHistory.toLPId}}</td>
+
+                                        <td>{{pickHistory.fromLocationName}}</td>
+                                        <td>{{pickHistory.isEntireLPPick ? "Yes": (pickHistory.lpRelocateBaseQty == 0 ? "Yes" : "No")}}</td>
+                                        <td>{{pickHistory.unitName}}</td>
+
+                                        <td>{{pickHistory.pickedBaseQty}}</td>
+                                        <td>
+                                        <label ng-repeat="sn in pickHistory.snList" style="margin-left:10px;">
+                                           {{sn}}
+                                        </label>
+                                        </td>
+                                        <td>{{pickHistory.pickedBy}}</td>
+                                        <td>{{pickHistory.pickedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div ng-class="{'active':activetab == 'returnHistories'}" class="tab-pane ">
+                            <div class="table-scrollable" style="border: hidden;">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th> Item </th>
+                                        <th> From LP </th>
+                                        <th> To LP </th>
+                                        <th> From Location </th>
+                                        <th> Is Entire LP Return </th>
+                                        <th> Unit </th>
+                                        <th> Returned Base QTY </th>
+                                        <th> Returned QTY </th>
+                                        <th> SN </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="returnHistory in task.returnHistories">
+                                        <td><item-display item="returnHistory"></item-display></td>
+                                        <td>{{returnHistory.fromLPId}}</td>
+                                        <td>{{returnHistory.toLPId}}</td>
+
+                                        <td>{{returnHistory.fromLocationName}}</td>
+                                        <td>{{returnHistory.isEntireLPPick}}</td>
+                                        <td>{{returnHistory.unitName}}</td>
+
+                                        <td>{{returnHistory.returnedQty}}</td>
+                                        <td>{{returnHistory.returnedBaseQty}}</td>
+                                        <td>
+                                        <label ng-repeat="sn in returnHistory.snList" style="margin-left:10px;">
+                                           {{sn}}
+                                        </label>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div ng-class="{'active':activetab == 'pickRounds'}" class="tab-pane ">
+                                <div class="table-scrollable" style="border: hidden;">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th> </th>
+                                            <th> Weight </th>
+                                            <th> Weight Unit </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="pickRound in task.pickRounds track by $index">
+                                            <td>{{$index+1}}</td>
+                                            <td>{{pickRound.weight}}</td>
+                                            <td>{{pickRound.weightUnit}}</td>
+
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div style="margin-top:20px;">
+                    <div class="panel panel-default" ng-repeat="step in task.steps">
+                        <div class="panel-heading">
+                            <div class="panel-title" style="display: block; float: left;line-height:34px;"> STEP | {{step.name}}</div>
+                            <div class="actions" style="text-align: right;">
+                                <button type="button" class="btn blue" ng-click="reopenStep(step)"
+                                        permission-check="{{'task::pickTask_write'}}"
+                                        ng-disabled="step.status != 'Done' && step.status != 'Force Closed'">Reopen
+                                </button>
+                                <button type="button" class="btn yellow" permission-check="{{'task::pickTask_write'}}" update-step-assignees task-step="step">Edit Assignees</button>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="tabbable-custom" style="margin-bottom: 0px; overflow: visible">
+                                <ul class="nav nav-tabs">
+                                    <li ng-class="{'active':activeStepTabs[step.id] == 'content'}">
+                                        <a data-toggle="tab" ng-click="changeStepTab('content', step.id)"> Content </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" style="padding:15px;">
+                                    <div ng-class="{'active':activeStepTabs[step.id] == 'content'}" class="tab-pane ">
+                                        <div ng-include="'wms/task/common/template/genericStep.html'"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" style="text-align: right;">
+            <button type="button" class="btn default" ng-click="cancel()">Go back</button>
+        </div>
+    </div>
+</div>

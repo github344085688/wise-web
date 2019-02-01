@@ -1,0 +1,156 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Task</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Pick Task Separate</a>
+        </li>
+    </ul>
+</div>
+<div ng-show="isLoading" class="text-center">
+    <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+</div>
+<div class="portlet light bordered" ng-show="!isLoading" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold"> Pick Task: {{task.id}}  </span>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <div class="form-group">
+            <div class="col-md-12">
+                <b>Order</b>:
+                <span ng-repeat="orderId in task.orderIds">
+                    <a ng-href="{{'#/wms/outbound/order/' + orderId}}" target="_blank">{{orderId}}</a>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3"><b>Pick Type</b>: {{task.pickType}}</div>
+            <div class="col-md-3"><b>Pick Way</b>: {{task.pickWay}}</div>
+            <div class="col-md-3"><b>Status</b>: {{task.status}}</div>
+            <div class="col-md-3"><b>Priority</b>: {{task.priority}}</div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3"><b>Priority</b>: {{task.priority}}</div>
+            <span class="col-md-3">
+                <b>Assignee:</b> {{task.assignee.firstName}} {{task.assignee.lastName}}
+            </span>
+            <span class="col-md-3">
+                <b>Planned Assignee:</b>{{task.plannedAssignee.firstName}} {{task.plannedAssignee.lastName}}
+            </span>
+        </div>
+        <div class="form-group">
+            <span class="col-md-3"><b>Start Time: </b>{{task.startTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</span>
+            <span class="col-md-3"><b>End Time: </b>{{task.endTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</span>
+            <span class="col-md-3"><b>Create Time: </b>{{task.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                                &nbsp;<span ng-show="task.createdBy">({{task.createdBy}})</span></span>
+            <span class="col-md-3"><b>Updated Time: </b>{{task.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                                &nbsp;<span ng-show="task.updatedBy">({{task.updatedBy}})</span></span>
+        </div>
+        <div class="form-group"  style="margin-bottom: 30px;">
+            <div class="col-md-12">
+                <b>Description:</b> {{task.description}}
+            </div>
+        </div>
+        <div class="table-scrollable">
+            <table class="table table-striped table-hover">
+                <tr style="background: rgb(176, 193, 216);">
+                    <th> Item </th>
+                    <th> Title </th>
+                    <th> Unit </th>
+                    <th> Location </th>
+                    <th> QTY </th>
+                </tr>
+                <tr ng-repeat="itemLine in task.pickItemLines" >
+                    <td>{{itemLine.itemSpecName}}</td>
+                    <td>{{itemLine.titleName}}</td>
+                    <td>{{itemLine.unitName}}</td>
+                    <td>{{itemLine.locationName}}</td>
+                    <td>{{itemLine.qty}}</td>
+                </tr>
+            </table>
+        </div>
+        <div style="margin: 50px 0px 10px;">
+            <span style="font-weight: 600; font-size: 15px;line-height: 34px;">Separate Tasks</span>
+            <button type="button" class="btn default" ng-click="addSeparateTask()"
+                    style="background-color:rgb(176, 193, 216);
+                    border-color: rgb(176, 193, 216);
+                    float:right">add Separate Task</button>
+            <div style="clear:both;"></div>
+        </div>
+        <div ng-show="showAddTaskWarnning" class="custom-alerts alert alert-danger fade in">
+            <i class="fa-lg fa fa-warning"></i>Please add separate task!
+        </div>
+        <form name="editForm" ng-submit="editForm.$valid && saveSeparateTasks()">
+            <div class="portlet light bordered" ng-repeat="separateTask in separateTasks track by $index"
+                 style="border:2px solid rgba(194, 202, 214, 0.7) !important; padding-top:20px; padding-bottom:18px;">
+                <div class="portlet-title">
+                    <div class="row form-group">
+                        <div class="col-md-9">
+                            <div class="col-md-6">
+                                <label style="float:left; padding-top: 8px; padding-right: 5px;">Order ID:</label>
+                                <input-validation-message field="orderId{{$index}}" form="editForm"></input-validation-message>
+                                <ui-select name="orderId{{$index}}" multiple style="float:left; width: 80%;"
+                                           ng-model="separateTask.orderIds" required="true"
+                                           on-select="orderIdOnSelect($select.selected, separateTask)"
+                                           on-remove="orderIdOnRemove($select.selected, separateTask)">
+                                    <ui-select-match>
+                                        {{$item}}
+                                    </ui-select-match>
+                                    <ui-select-choices ui-disable-choice="isOrderSelectedBySeparateTask(orderId)"
+                                            repeat="orderId in  task.orderIds| filter: $select.search">
+                                        <div ng-bind="orderId"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="text-align: right; margin-top:10px; font-size: 15px;">
+                            <a href="javascript:;" class="btn btn-circle btn-outline dark" ng-click="deleteSeparateTask($index)">
+                                <i class="fa icon-trash"></i> Delete </a>
+                        </div>
+                </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="table-scrollable">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th> Item </th>
+                                    <th> Title </th>
+                                    <th> Unit </th>
+                                    <th> Location </th>
+                                    <th> QTY </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="itemLine in separateTask.itemLines">
+                                    <td>{{itemLine.itemSpecName}}</td>
+                                    <td>{{itemLine.titleName}}</td>
+                                     <td>{{itemLine.unitName}}</td>
+                                    <td>{{itemLine.locationName}}</td>
+                                    <td>{{itemLine.qty}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-actions right">
+                <waitting-btn type="submit" btn-class="btn blue"
+                              value="'Save'" is-loading="isSaveloading"></waitting-btn>
+                <button type="button" class="btn default" ng-click="cancel(editForm)">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+

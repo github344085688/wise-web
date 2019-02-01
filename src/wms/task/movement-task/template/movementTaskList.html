@@ -1,0 +1,118 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Movement Task List</h1>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label>Task ID #:</label>
+                <lt-tags-input ng-model="search.taskIds" placeholder="Enter Task ID" fill="TASK-" ng-keyup="keyUpSearch($event)"> </lt-tags-input>
+            </div>
+            <div class="grid-25">
+                <label>Item:</label>
+                <itemspec-auto-complete name="itemSpecId" ng-model="search.itemSpecId" name="itemSpec" on-select="itemSpecIdOnSelect(itemSpec)"
+                    allow-clear="true" />
+            </div>
+
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Assignee</label>
+                <user-auto-complete ng-model="search.assigneeUserId" allow-clear="true"></user-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Status</label>
+                <task-status-auto-complete ng-model="search.status" allow-clear="true"></task-status-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Priority</label>
+                <task-priority-auto-complete ng-model="search.priority" allow-clear="true"></task-priority-auto-complete>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label>Start Time</label>
+                <lt-date-time placeholder="From" date-format="yyyy-mm-dd hh:ii" minute-step="60" value="search.startTimeFrom"></lt-date-time>
+            </div>
+            <div class="grid-25" style="padding-top: 25px;">
+                <lt-date-time placeholder="To" date-format="yyyy-mm-dd hh:ii" minute-step="60" value="search.startTimeTo"></lt-date-time>
+            </div>
+            <div class="grid-25">
+                <label>End Time</label>
+                <lt-date-time placeholder="From" date-format="yyyy-mm-dd hh:ii" minute-step="60" value="search.endTimeFrom"></lt-date-time>
+            </div>
+            <div class="grid-25" style="padding-top: 25px;">
+                <lt-date-time placeholder="To" date-format="yyyy-mm-dd hh:ii" minute-step="60" value="search.endTimeTo"></lt-date-time>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-90">&nbsp;</div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="searchTasks()" value="'Search'" is-loading="searching"></waitting-btn>
+            </div>
+            <!--<div class="grid-10">-->
+            <!--<button type="button" class="ripplelink" ng-click="reset()"> Reset</button>-->
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Task ID</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Item</th>
+                        <th>QTY</th>
+                        <th>Unit</th>
+                        <th>From LP</th>
+                        <th>To LP</th>
+                        <th>To Location</th>
+                        <th>SN</th>
+                        <th>Assignee</th>
+                        <th>Description</th>
+                        <th>Date Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="task in tasks track by $index">
+                        <td>
+                            <a ng-href="{{'#/wms/task/movement-task/view/' + task.id}}" target="_blank">{{task.id}}</a>
+                        </td>
+                        <td>{{task.status}}</td>
+                        <td>{{task.priority}}</td>
+                        <td>
+                            <item-display item="task"></item-display>
+                        </td>
+                        <td>{{task.qty}}</td>
+                        <td>{{task.unitName}}</td>
+                        <td>{{task.fromLPId}}</td>
+                        <td>{{task.toLPId}}</td>
+                        <td>{{task.toLocationName}}</td>
+                        <td>
+                            <span ng-repeat="sn in task.snList">{{sn}}</span>
+                        </td>
+                        <td>{{task.assignee.firstName}} {{task.assignee.lastName}}</td>
+
+                        <td>{{task.description}}</td>
+                        <td>{{task.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                            <span ng-show="task.createdBy">({{task.createdBy}})</span>
+                        </td>
+                        <!-- <td>{{task.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}<span ng-show="task.updatedBy">({{task.updatedBy}})</span></td> -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageObj.pageSize" load-content="loadContent(currentPage)"></unis-pager>
+    </div>
+</div>

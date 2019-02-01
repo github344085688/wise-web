@@ -1,0 +1,18 @@
+[{
+	"title": "Map",
+	"icon": "language",
+	"url": "",
+	"subMenu": [{
+		"title": "Resources",
+		"icon": "local_shipping",
+		"state":"gis.resources",
+		"url": "/gis/resources"
+
+	}, {
+		"title": "Location Setup",
+		"icon": "view_quilt",
+		"state": "gis.setup",
+		"url": "/gis/setup"
+
+	}]
+}]

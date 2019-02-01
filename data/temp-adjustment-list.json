@@ -1,0 +1,50 @@
+[{
+    "id": "adjustment-1",
+    "adjustmentTime": "2016-06-15 00:00:00",
+    "reporter": "Bruce",
+    "type": "Movement",
+    "kind": "item",
+    "item": "itemId:TV",
+    "adjustmentContent": {
+        "SN": "SN-1",
+        "From": "LP-1",
+        "To": "LP-2"
+    }
+},{
+    "id": "adjustment-2",
+    "adjustmentTime": "2016-06-15 00:00:00",
+    "reporter": "Bruce",
+    "type": "Movement",
+    "kind": "LP",
+    "LP": "LP-1",
+    "adjustmentContent": {
+        "From": "LP-1",
+        "To": "LP-2"
+    }
+},{
+    "id": "adjustment-3",
+    "adjustmentTime": "2016-06-15 00:00:00",
+    "reporter": "Bruce",
+    "type": "Condition",
+    "kind": "item",
+    "item": "itemId:TV",
+    "adjustmentContent": {
+        "LP":"LP-1",
+        "SN": "SN-1",
+        "Condition":"Type",
+        "From": "Good",
+        "To": "Damage"
+    }
+},{
+    "id": "adjustment-4",
+    "adjustmentTime": "2016-06-15 00:00:00",
+    "reporter": "Bruce",
+    "type": "Adjustment",
+    "kind": "item",
+    "item": "itemId:TV",
+    "adjustmentContent": {
+        "LP":"LP-1",
+        "From": "10",
+        "To": "9"
+    }
+}]

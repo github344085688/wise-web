@@ -1,0 +1,8 @@
+.inline-input{
+	display: block;
+}
+.inline-input > input , .inline-input > lt-auto-complete-input{
+	float: left;
+	width: 15%;
+	margin-right: 15px;
+}

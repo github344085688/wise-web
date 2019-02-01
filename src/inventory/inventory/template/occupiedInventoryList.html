@@ -1,0 +1,90 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100 ">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left"> Occupied Inventory </h1>
+            <hr>
+        </div>
+
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-33">
+                <label class="label-input">LP:</label>
+                <lt-tags-input placeholder="Enter LP " fill="ILP-" ng-model="search.lpIds" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+
+            <div class="grid-33">
+                <label class="label-input">Location:</label>
+                <multiple-location-auto-complete ng-model="search.locationIds"  />
+            </div>
+        </div>
+
+
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-80">&nbsp;</div>
+            <div class="grid-20 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="searchOcuppiedInventories()" value="'Search Ocuppied Inventory'"
+                    is-loading="occupyLoading"></waitting-btn>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-100 grid-parent">
+
+            <div class="row" style="overflow: auto;">
+                <div class="grid-parent grid-100 ">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Title</th>
+                                <th>Location</th>
+                                <th>Order ID</th>
+                                <th>LP ID</th>
+                                <th>Task ID</th>
+                                <th>Order Planning ID</th>
+                                <th>Strategy Type</th>
+                                <th>Pick Mode</th>
+                                <th>Full LP Path</th>
+                                <th>Qty</th>
+                                <th>UOM</th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="pickStragety in pickStragetyListView track by $index">
+                                <td>
+                                        <item-display item="pickStragety"></item-display>
+                                </td>
+                                <td>{{pickStragety.titleName}}</td>
+                                <td>
+                                    {{pickStragety.locationName}}
+                                </td>
+                                <td>{{pickStragety.orderId}}</td>
+                                <td>{{pickStragety.lpId}}</td>
+
+                                <td>{{pickStragety.taskId}}</td>
+                                <td>{{pickStragety.orderPlanningId}}</td>
+                                <td>{{pickStragety.strategyType}}</td>
+                                <td>{{pickStragety.pickMode}}</td>
+                                <td>{{pickStragety.fullLpPath}}</td>
+                                <td>{{pickStragety.qty}}</td>
+                                <td>{{pickStragety.unitName}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="grid-100">
+                <div class="grid-content grid-100">
+                    <unis-pager total-count="pickStragetyLists.length" page-size="pageSize" load-content="loadOcuppiedInventorContent(currentPage)"></unis-pager>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,166 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label">Billing Check Report</h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label>Report Type</label>
+                <ui-select ng-model="search.type">
+                    <ui-select-match>
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in types | filter: $select.search">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                <label>Customer</label>
+                <organization-auto-complete name="customer" ng-model="search.customerId" tag="Customer" allow-clear="true"></organization-auto-complete>
+            </div>
+            <div class="grid-25" ng-if="search.type == 'InBound' || search.type == 'Manual'">
+                <label>ReceiptId</label>
+                <lt-tags-input placeholder="Enter Receipt ID" ng-model="search.receiptIds" fill="RN-" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+            <div class="grid-25" ng-if="search.type == 'OutBound' || search.type == 'Manual'">
+                <label>OrderId</label>
+                <lt-tags-input placeholder="Enter Order ID" ng-model="search.orderIds" fill="DN-" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label ng-if="search.type == 'OutBound'">Shipped Time From</label>
+                <label ng-if="search.type == 'InBound'">Devanned Time From</label>
+                <label ng-if="search.type == 'Manual'">Created Time From</label>
+                <lt-date-time value="search.timeFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+            <div class="grid-25">
+                <label ng-if="search.type == 'OutBound'">Shipped Time To</label>
+                <label ng-if="search.type == 'InBound'">Devanned Time To</label>
+                <label ng-if="search.type == 'Manual'">Created Time To</label>
+                <lt-date-time value="search.timeTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+            <div class="grid-25">
+                <label>Status</label>
+                <ui-select ng-model="search.status">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in billingStatus | filter: $select.search">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-55">&nbsp;</div>
+            <div class="grid-15">
+                <waitting-btn type="button" is-loading="searching" btn-class="ripplelink" ng-click="searchByPaging()" value="'Search'"></waitting-btn>
+            </div>
+            <div class="grid-15">
+                <waitting-btn type="button" is-loading="sending" btn-class="ripplelink" ng-click="batchSend()" value="'Batch Send'"></waitting-btn>
+            </div>
+            <div class="grid-15">
+                <waitting-btn type="button" is-loading="exporting" btn-class="ripplelink" ng-click="export()" value="'Export'"></waitting-btn>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" ng-click="checkAll()" ng-checked="selectAllChecked()"
+                               style="display: block;-webkit-appearance:checkbox;" name="selectAll" />
+                    </th>
+                    <th ng-repeat="head in reportHead" title="Show Detail">{{head}}</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="report in reportData">
+                    <td class="ribbon ribbon-color-info uppercase" ng-click="checkRow(report)">
+                        <input type="checkbox" ng-checked="isChecked(report)"
+                               ng-show="!(report.Billing === 'SENT' && report.type ==='WEB_MANUAL')"
+                               style="display: block;-webkit-appearance:checkbox;">
+                    </td>
+                    <td ng-repeat="head in reportHead">
+                        <a ng-if="head=='ID'" title="Show Detail" ng-click="showDetail(report)">{{report[head]}}</a>
+                        <span ng-if="head!='ID'">{{report[head]}}</span>
+                    </td>
+                    <td>
+                        <a ng-show="report.Billing !== 'SENT' && isCanSendBilling(report)" ng-click="sendReport(report)">Send</a>
+                        <a ng-show="report.Billing === 'SENT' && report.type !=='WEB_MANUAL' && isCanSendBilling(report)" ng-click="sendReport(report)">ReSend</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <unis-pager total-count="paging.totalCount" page-size="pageSize" load-content="searchByPaging(currentPage)"> </unis-pager>
+        </div>
+
+    </div>
+
+    <div style="visibility: hidden;">
+        <div id="billingDetail" class="md-dialog-container">
+            <md-dialog>
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        <h1>Detail {{detail.ID}}</h1>
+                        <span flex></span>
+                        <i class="fa fa-times" ng-click="closeDetail()"></i>
+                    </div>
+                </md-toolbar>
+                <md-dialog-content>
+                    <div class="md-dialog-content">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" ng-class="{'active':detailTabActiveId == 'Materials'}">
+                                <a role="tab" data-toggle="tab" ng-click="tabActive('Materials')">Materials</a>
+                            </li>
+                            <li role="presentation" ng-class="{'active':detailTabActiveId == 'LPS'}">
+                                <a role="tab" data-toggle="tab" ng-click="tabActive('LPS')">LPS</a>
+                            </li>
+                        </ul>
+                        <div class="grid-100 grid-parent container" style="margin-top: 10px; max-height: 500px; overflow-x: hidden; overflow-y: auto;">
+                            <table class="table" ng-show="detailTabActiveId == 'Materials'">
+                                <tr>
+                                    <th>Material</th>
+                                    <th>MaterialQty</th>
+                                    <th>MaterialType</th>
+                                    <th>Title</th>
+                                    <th>PalletSize</th>
+                                    <th>MaterialProperty</th>
+                                </tr>
+                                <tr ng-repeat="material in detail.Materials track by $index" >
+                                    <td>{{material.Material}}</td>
+                                    <td>{{material.MaterialQty}}</td>
+                                    <td>{{material.MaterialType}}</td>
+                                    <td>{{material.Title}}</td>
+                                    <td>{{material.PalletSize}}</td>
+                                    <td>{{material.MaterialProperty}}</td>
+                                </tr>
+                            </table>
+
+                            <table class="table" ng-show="detailTabActiveId == 'LPS'">
+                                <tr>
+                                    <th ng-repeat="row in lpDetailHead">{{row}}</th>
+                                </tr>
+                                <tr ng-repeat="lp in detail.LPs track by $index" >
+                                    <td ng-repeat="row in lpDetailHead">{{lp[row]}}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                    </div>
+                </md-dialog-content>
+            </md-dialog>
+        </div>
+    </div>
+
+</div>

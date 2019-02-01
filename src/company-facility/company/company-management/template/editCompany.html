@@ -1,0 +1,47 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Company Facility</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Company Management</a>
+        </li>
+    </ul>
+</div>
+<div class="portlet light" style="margin:15px">
+    <div class="portlet-title">
+        <div class="caption">
+            <span ng-show="isAddAction" class="caption-subject bold"> Add Company</span>
+            <span ng-show="!isAddAction" class="caption-subject bold"> Edit Company </span>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <form novalidate name="companyForm" ng-submit="companyForm.$valid && addOrUpdateCompany()">
+            <div class="alert alert-danger display-hide" ng-show="companyForm.$invalid && companyForm.$submitted" style="display: block;">
+                <button class="close" data-close="alert"></button>
+                You have some form errors. Please check below.
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label>Name</label>
+                    <input-validation-message field="orgName" form="companyForm"></input-validation-message>
+                    <input  class="form-control" type="text" name="orgName" ng-model="company.basic.name" ng-required="true"
+                           ng-disabled="!isAddAction" placeholder="Enter Name" />
+                </div>
+                <!--<div class="col-md-6">
+                    <label>Measure</label>
+                    <input-validation-message field="measure" form="companyForm"></input-validation-message>
+                    <input  class="form-control" type="number" name="measure" ng-model="company.measure" ng-required="true"
+                           placeholder="Enter Measure" />
+                </div>-->
+            </div>
+            
+            <div class="row form-actions right">
+                <waitting-btn type="submit" btn-class="btn blue"
+                              value="submitLabel" is-loading="loading"></waitting-btn>
+                <button type="button" class="btn default" ng-click="cancelEditCompany()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+<div id="menu" class="gis-menu-static" style="position: relative; width: 300px; overflow-y: auto; padding-bottom: 50px; margin-top: 46px;">
+    <div style="margin-top: 10px;">
+        <img src="./assets/img/unis_logo.png" style="height: 30px; margin: 0 5px;"/>
+        <span style="font-size: 26px; font-family: Arial !important; vertical-align: top; color: dimgrey;">map</span>
+    </div>
+    <div ng-repeat="group in ctrl.menuGroups track by $index">
+        <hr/>
+        <div ng-repeat="k in group track by $index" style="margin: 20px 0;" ng-class="{'disable' : ctrl.menus[k].disabled}">
+            <div ng-click="ctrl.clickMenu(k)" class="hover-blue" ng-class="{'blue' : ctrl.menus[k].checked}">
+	            <div style="float: left;" ng-if="ctrl.menus[k].fontIcon">
+	                <i class="material-icons" style="font-size: 20px; margin: 0 10px;">{{ctrl.menus[k].fontIcon}}</i>
+	            </div>
+	            <span class='h4'>{{ctrl.menus[k].name}}</span>
+	            <span class='glyphicon glyphicon-menu-right' ng-if="ctrl.menus[k].children"></span>
+            </div>
+        </div>
+    </div>
+</div>

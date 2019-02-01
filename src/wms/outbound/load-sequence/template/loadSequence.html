@@ -1,0 +1,117 @@
+<script type="text/ng-template" id="list.html">
+    <ul dnd-list="list">
+        <li class="form-group group-{{!load.loadNo}}" ng-repeat="load in list" dnd-draggable="load" dnd-effect-allowed="move" dnd-moved="dndMovedCallBack(list, $index)" dnd-selected="models.selected = load" ng-class="{selected: models.selected === load}">
+            <div ng-if="load.loadNo">
+                <div ng-include="'item.html'">
+                </div>
+            </div>
+            <div ng-if="!load.loadNo">
+                <div ng-include="'group.html'">
+                </div>
+            </div>
+        </li>
+    </ul>
+</script>
+<script type="text/ng-template" id="item.html">
+    <div class="collapse-row row">
+        <div class="col-md-2">
+            <label class="bold">Load No:</label>
+            <label><a ng-click="toOrderSquence(load)">{{load.loadNo}}</a></label>
+        </div>
+        <div class="col-md-2">
+            <label class="bold">Load Type:</label>
+            <label>{{load.loadType}}</label>
+        </div>
+        <div class="col-md-3">
+            <label class="bold">Carrier:</label>
+            <label>{{load.carrier.name}}</label>
+        </div>
+        <div class="col-md-5">
+            <label class="bold">Appointment Time:</label>
+            <label>{{load.appointmentTime}}</label>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="group.html">
+    <div class="collapse-row row">
+        <div class="container-element box box-blue">
+            <!--  <h3 class="active">Group {{load.id}}</h3> -->
+            <div ng-repeat="list in load.columns" ng-include="'list.html'">
+            </div>
+        </div>
+    </div>
+</script>
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Outbound</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Sequence</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Load Sequence</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px;">
+    <div class="row">
+        <div class="portlet light box-shadow-none">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> Load Sequence</span>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <form>
+                    <div class="row form-group">
+                        <div class="form-group col-md-8">
+                            <input type="text" class="form-control" ng-model="loadNo" placeholder="Load NO search loads" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <button class="btn blue" ng-click="searchSequenceByLoad()"> search</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="row form-actions right" style="padding: 0px;">
+                    <div class="col-md-7 text-left" style="padding-top:15px;padding-left:0px;color: #666"><span>{{tips}}</span></div>
+                    <div class="col-md-5 text-right">
+                        <div style="display: inline-block">
+                            <ul class="list-unstyled" style="margin-bottom: 0">
+                                <li ng-repeat="item in templates" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1">
+                                    <button class="btn blue" style="cursor: move;"> Drag to add new Group</button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div style="display: inline-block" style="margin-bottom: 0">
+                            <ul dnd-list="[]" dnd-drop="dropCallback(event, index, item, external)" class="list-unstyled">
+                                <li>
+                                    <button class="btn blue"> Drop here to remove group</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group" style="margin-top: 0px;padding: 15px 15px 0px 15px;">
+                    <div class="col-md-12" style="border:2px solid #e7ecf1;border-radius: 5px;padding-top: 15px;">
+                        <div class="dropzone box">
+                            <div class="text-center">{{message}}</div>
+                            <!-- The dropzone also uses the list template -->
+                            <div ng-include="'list.html'"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-actions right">
+                    <button type="button" ng-click="save()" class="btn blue">Save</button>
+                   <!--  <button type="button" ng-click="delete()" class="btn grey">Delete Sequence</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

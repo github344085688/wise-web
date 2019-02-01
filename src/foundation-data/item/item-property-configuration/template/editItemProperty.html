@@ -1,0 +1,57 @@
+<div class="portlet light box-shadow-none">
+    <div class="portlet-title">
+        <div class="caption">
+            <span ng-show="ctrl.isAddAction" class="caption-subject bold"> Add Item Property</span>
+            <span ng-show="!ctrl.isAddAction" class="caption-subject bold"> Edit Item Property </span>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <form novalidate name="itemPropertyForm" ng-submit="itemPropertyForm.$valid && ctrl.addOrUpdateItemProperty(itemPropertyForm)">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row form-group">
+                        <div class="col-md-3">
+                            <label>Name</label>
+                            <div class="input-icon right" ng-show="itemPropertyForm.name.$invalid && (itemPropertyForm.$submitted || itemPropertyForm.name.$touched)">
+                                <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                            <span class="lt-tooltip-text">Required</span>
+                                        </i>
+                            </div>
+                            <input type="text" name="name" ng-model="ctrl.itemProperty.name" required class="form-control" placeholder="Enter text" />
+                        </div>
+                        <div class="col-md-2">
+                            <label>Type</label>
+                            <select ng-model="ctrl.itemProperty.type" ng-change="ctrl.changeType()" class="form-control"
+                                    ng-options="option for option in ctrl.propertyTypes">
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <div ng-if="ctrl.itemProperty.type != 'Text' && ctrl.itemProperty.type != 'Date'">
+                                <label>UOM/Option</label>
+                                <div ng-if="ctrl.itemProperty.type == 'Number'">
+                                    <ui-select name="number" ng-model="ctrl.itemProperty.unitType">
+                                        <ui-select-match allow-clear="true">
+                                            <div>{{$select.selected}}</div>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="unitType in ['Linear', 'Weight', 'Currency'] | filter: $select.search">
+                                            <div>{{unitType}}</div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <div ng-if="ctrl.itemProperty.type == 'Select'">
+                                    <lt-tags-input display-property="text" placeholder="Enter Option"
+                                                ng-model="ctrl.itemProperty.options"></lt-tags-input>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-actions right">
+                <waitting-btn type="submit" btn-class="btn blue"
+                              value="submitLabel" is-loading="loading"></waitting-btn>
+                <button type="button" class="btn default" ng-click="ctrl.cancelEditItemProperty()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

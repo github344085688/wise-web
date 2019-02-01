@@ -1,0 +1,31 @@
+<md-dialog flex="30">
+    <form novalidate name="receiptSyncToHonForm" class="form-horizontal">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Sync Receipts To Hon</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content class="" style="padding: 16px 40px 30px 14px;">
+            <div class="form-group" style="margin:8px auto 0 auto; padding-bottom: 8px; min-height: 220px;">
+                <div class="col-md-12" style="line-height: 36px;">
+                    <label class="col-md-3">Customer:</label>
+                    <div class="col-md-9">
+                        <input-validation-message field="customer" form="receiptSyncToHonForm"></input-validation-message>
+                        <organization-auto-complete name="customer" ng-model="syncToHon.customerId" tag="Customer" required="true"></organization-auto-complete>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row" style="border-top: 1px solid #eee;">
+            <div style="margin-right: 50px">
+                <waitting-btn type="submit" btn-class="btn blue" style="margin-right: 15px;" value="'Sync'"
+                    is-loading="loading" ng-click="receiptSyncToHonForm.$valid && submit()"></waitting-btn>
+                <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

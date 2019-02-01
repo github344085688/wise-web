@@ -1,0 +1,166 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Facility</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Appointment</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Make Appointment</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin: 15px;">
+    <div class="portlet box default" style="border: 1px solid #e1e5ec">
+        <div class="portlet-title">
+            <div class="caption" style="text-transform: capitalize">
+                <span ng-bind="isNew? 'New': 'Edit'"></span> {{appointmentType}} Appointment
+            </div>
+        </div>
+        <div class="portlet-body form">
+            <form name="editForm" novalidate class="form-horizontal">
+                <div class="form-body">
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-5 control-label">Appointment</label>
+                            <div class="col-md-7">
+                                <lt-date-time value="currentItem.appointmentTime"
+                                              is-set-start-data="'true'"
+                                              name="appointmentTime"></lt-date-time>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-5 control-label">SCAC</label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" name="scac" ng-model="currentItem.scac">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-5 control-label">Contacts</label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" name="contacts" ng-model="currentItem.contacts">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-5 control-label">Phone</label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" name="phone" ng-model="currentItem.phone">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-5 control-label">License Plate</label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" name="licensePlate" ng-model="currentItem.licensePlate">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-5 control-label">Driver License</label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" name="driverLicense" ng-model="currentItem.driverLicense">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-5 control-label">Driver Name</label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" name="driverName" ng-model="currentItem.driverName">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" ng-if="appointmentType === 'Inbound'">
+                    <div>
+                        <span style="display: inline-block"><h4>Relevance Receipt</h4></span>
+                        <button class="btn blue" style="float: right;" ng-click="addReceipt()">Add Receipt</button>
+                    </div>
+                    <div class="table-scrollable">
+                        <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" role="grid">
+                            <thead>
+                                <tr role="row">
+                                    <th>RN</th>
+                                    <th>Company</th>
+                                    <th>Reference No.</th>
+                                    <th>Container No.</th>
+                                    <th>Purchase Order No.</th>
+                                    <th>Seal No.</th>
+                                    <th>Status</th>
+                                    <th>Customer</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="receipt in selectedReceiptView track by $index">
+                                    <td>{{receipt.id}}</td>
+                                    <td>{{receipt.companyName}}</td>
+                                    <td>{{receipt.referenceNo}}</td>
+                                    <td>{{receipt.containerNo}}</td>
+                                    <td>{{receipt.poNo}}</td>
+                                    <td>{{receipt.sealNo}}</td>
+                                    <td>{{receipt.status}}</td>
+                                    <td>{{receipt.customerName}}</td>
+                                    <td>
+                                        <a ng-click="removeReceipt(receipt.id)">Remove</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <pager total-count="selectedReceipts.length" page-size="paging.pageSize" load-content="loadRelevanceReceipts(currentPage)"></pager>
+                </div>
+                <div class="col-md-12" ng-if="appointmentType === 'Outbound'">
+                    <div>
+                        <span style="display: inline-block"><h4>Relevance Loads</h4></span>
+                        <button class="btn blue" style="float: right;" ng-click="addLoad()">Add Load</button>
+                    </div>
+                    <div class="table-scrollable">
+                        <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" role="grid">
+                            <thead>
+                                <tr role="row">
+                                    <th>Load ID</th>
+                                    <th>Load NO</th>
+                                    <th>Company</th>
+                                    <th>Status</th>
+                                    <th>MBOL</th>
+                                    <th>Customer</th>
+                                    <th>Carrier</th>
+                                    <th>Freight Term</th>
+                                     <th>Status</th>
+                                      <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="load in selectedLoadView track by $index">
+                                    <td>{{load.id}}</td>
+                                    <td>{{load.loadNo}}</td>
+                                    <td>{{load.companyName}}</td>
+                                    <td>{{load.status}}</td>
+                                    <td>{{load.masterBolNo}}</td>
+                                    <td>{{load.customerName}}</td>
+                                    <td>{{load.carrierName}}</td>
+                                    <td>{{load.freightTerm}}</td>
+                                    <td>{{load.status}}</td>
+                                    <td>
+                                        <a ng-click="removeLoad(load.id)">Remove</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <pager total-count="selectedLoads.length" page-size="paging.pageSize" load-content="loadRelevanceLoads(currentPage)"></pager>
+                </div>
+                <div class="form-actions">
+                    <div class="col-md-12" style="text-align: right">
+                        <waitting-btn type="submit" btn-class="btn blue" ng-click="submit()" value="submitLabel" is-loading="loading"></waitting-btn>
+                        <button class="btn default" ng-click="cancel()">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

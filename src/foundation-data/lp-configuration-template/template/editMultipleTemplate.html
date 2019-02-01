@@ -1,0 +1,132 @@
+<div class="row">
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="caption">
+                <span ng-show="ctrl.isAddAction" class="caption-subject bold"> Add LP Mixed Item Template</span>
+                <span ng-show="!ctrl.isAddAction" class="caption-subject bold"> Edit LP Mixed Item Template </span>
+            </div>
+        </div>
+        <div class="portlet-body form">
+            <form novalidate name="addTemplateForm" ng-submit="addTemplateForm.$valid && ctrl.addOrUpdateTemplate()">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="col-md-12" id="template-files">
+                            <ul data-as-sortable="getFieldDragListener"
+                                data-ng-model="ctrl.cartonConfigurationTemplate.fileIds" class="img-sort">
+                                <li data-ng-repeat="item in ctrl.cartonConfigurationTemplate.fileIds" data-as-sortable-item>
+                                    <span class="badge img-sort-index">{{$index+1}}</span>
+                                    <div data-as-sortable-item-handle><img http-src="/file-app/file-download/{{item}}"/>
+                                    </div>
+                                    <i class="glyphicon glyphicon-remove img-sort-remove"
+                                       ng-click="ctrl.removeFile(item)"></i>
+                                </li>
+                            </ul>
+                            <button type="button" class="btn default" ng-click="ctrl.uploadFiles()">Upload Img</button>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row form-group">
+                            <div class="col-md-6">
+                                <label>Name</label>
+                                <input-validation-message field="templateName" form="addTemplateForm"></input-validation-message>
+                                <input class="form-control" name="templateName" required="true" ng-model="ctrl.cartonConfigurationTemplate.name" placeholder="Enter Name" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-6">
+                                <label>Customer</label>
+                                <input-validation-message field="customer" form="addTemplateForm"></input-validation-message>
+                                <organization-auto-complete ng-model="ctrl.cartonConfigurationTemplate.customerId" name="customer"
+                                                            tag="Customer" required="true"></organization-auto-complete>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <label>Description</label>
+                                <input-validation-message field="description"
+                                                          form="addTemplateForm"></input-validation-message>
+                                <input type="text" name="description"
+                                       ng-model="ctrl.cartonConfigurationTemplate.description" class="form-control"
+                                       placeholder="Enter text" required/>
+                            </div>
+                        </div>
+                        <div class="row form-group" >
+                            <div class="col-md-6">
+                                <label>Package Material</label>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Quantity</label>
+                            </div>
+                        </div>
+                        <div class="row form-group" ng-repeat="stackLine in ctrl.cartonConfigurationTemplate.packageTypeItemLines track by $index">
+                            <div class="col-md-6">
+                                <itemspec-auto-complete ng-model="stackLine.packageTypeItemSpecId"
+                                                        tags=['Material'] required/>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" name="name" ng-model="stackLine.qty"
+                                       class="form-control" placeholder="Qty" required />
+                            </div>
+                            <div class="col-md-3">
+                                <button type="button" class="btn  green" ng-click="ctrl.addStackLine()">Add</button>
+                                <button type="button" class="btn red" ng-show="!$first"
+                                        ng-click="ctrl.removeStackLine($index)" aria-hidden="false">Remove</button>
+                            </div>
+                        </div>
+
+                        <div class="row form-group" >
+                            <div class="col-md-3">
+                                <label>Item</label>
+                            </div>
+                            <div class="col-md-3">
+                                <label>UOM Name</label>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Quantity</label>
+                            </div>
+                        </div>
+                        <div class="row form-group" ng-repeat="itemLine in ctrl.cartonConfigurationTemplate.itemSpecLines track by $index">
+                            <div class="col-md-3">
+                                <itemspec-auto-complete ng-model="itemLine.itemSpecId"
+                                                        customer_id="ctrl.cartonConfigurationTemplate.customerId"
+                                                        on-select="ctrl.onSelectItemSpec(itemLine.itemSpecId,$index,param)"
+                                                        on-select-param="itemLine" required/>
+                            </div>
+                            <div class="col-md-3">
+                                <ui-select ng-model="itemLine.unitId"  style="border-radius: 4px;" required>
+                                    <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="uomItem.id as uomItem in uomItems[$index] | filter: $select.search"  refresh="searchUom(itemLine.itemSpecId,$index)" refresh-delay="50">
+                                        {{uomItem.name}}
+                                    </ui-select-choices>
+                                </ui-select>
+
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" name="name" ng-model="itemLine.qty" class="form-control" placeholder="Qty" required />
+                            </div>
+                            <div class="col-md-3">
+                                <!--<button type="button" class="btn  green" ng-click="ctrl.addItemStackLine()">Add</button>-->
+                                <button type="button" class="btn  red" ng-click="ctrl.removeItemStackLine($index)" aria-hidden="false">Remove</button>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-3"></div>
+                            <div class="col-md-3"></div>
+                            <div class="col-md-3">
+                                <button type="button" class="btn  green" ng-click="ctrl.addItemStackLine()">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-actions right">
+                    <waitting-btn type="submit" btn-class="btn blue" value="submitLabel"
+                                  is-loading="loading"></waitting-btn>
+                    <button type="button" class="btn default" ng-click="ctrl.cancelEditCartonConfigurationTemplate()">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

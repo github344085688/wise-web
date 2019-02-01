@@ -1,0 +1,52 @@
+<div class="row" style="background-color: white;margin: 0px;height: 100%" >
+    <div class="col-md-3 form-group" style="margin-top: 10px;">
+        <div ng-show="isUCCLabel" class="col-md-12 form-group" style="margin-top: 10px;">
+            <div class="col-md-6"  style="padding-left: 0px;">
+                <label>From Carton No.:</label>
+                <input type="number" class="form-control" ng-model="UCCLabelPrint.cartonNoFrom">
+            </div>
+            <div class="col-md-6" style="padding: 0;">
+                <label>To Carton No.:</label>
+                <input type="number" class="form-control" ng-model="UCCLabelPrint.cartonNoTo">
+            </div>
+        </div>            
+        <div class="col-md-12 form-group" style="margin-top: 10px;">
+            <label>Printer</label>
+            <printer-auto-complete name="printer" ng-model="printerId" on-select="printerSelect(printer)"
+                                   types="printerType"></printer-auto-complete>
+            <div style="padding-top: 5px;"></div>
+            <div ng-if="!isZPL">
+                <waitting-btn type="button" btn-class="btn blue form-group"  style="float:left;margin-right: 30px"
+                              value="'Print'" is-loading="isLoading" ng-click="print()"></waitting-btn>
+                <button class="btn blue form-group "  onclick="window.frames[0].print()">Window
+                    Print
+                </button>
+            </div>
+            <div ng-if="isZPL">
+                <waitting-btn type="button" btn-class="btn blue form-group"
+                              value="'Print'" is-loading="isLoading" ng-click="print()"></waitting-btn>
+            </div>
+            <div ng-if="areTransloadLoads">
+                <waitting-btn type="button" btn-class="btn blue form-group" value="'Close Transload Shipping Step'" is-loading="isCloseLoading" ng-click="closeTransLoadShippingStep()">
+                </waitting-btn>
+            </div>
+        </div>
+        <div class="col-md-12" ng-show="hasMessage">
+            <fieldset class="row" style="margin-top: 10px;">
+                <legend>Warning Info</legend>
+                <ul class="list-unstyled">
+                    <li ng-repeat="m in messages" class="{{getClass(m)}} form-group"><span>{{m.message}}</span></li>
+                </ul>
+            </fieldset>
+        </div>
+    </div>
+    <div class="col-md-8 text-center" style="height: 100%" >
+        <iframe ng-if="!isZPL" id="print-preview" http-src="{{data}}" style="border:0px;width: 100%;min-height:100%">
+
+        </iframe>
+
+        <div ng-if="isZPL" class="col-md-8 text-center bordered">
+            <img http-src="{{data}}"  style=" border-color: gray;border-image-width: 1px;">
+        </div>
+    </div>
+</div>

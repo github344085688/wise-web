@@ -1,0 +1,30 @@
+<div class="grid-100" style="background-color: rgba(77, 127, 137, 0.4)">
+
+  <div class="grid-100" style=" line-height: 50px;background-color: rgba(255, 255, 255, 0.87);padding-top: 20px;padding-bottom: 20px">
+    <div class="grid-40" style="text-align:center;">
+      <h1 class="section-label pull-left" style="font-size:40px">Packing Station</h1>
+    </div>
+    <div class="grid-10">
+      &nbsp;
+    </div>
+    <div class="grid-20" style="text-align:center;font-size:30px">
+      {{user.firstName}} {{user.lastName}}
+    </div>
+  </div>
+
+  <div class="grid-100" style="text-align:center;line-height: 80px;margin-top:20px;margin-bottom:40px;padding-top: 10px;padding-bottom: 10px;background-color: rgba(255, 255, 255, 0.87);">
+
+    <div ng-repeat="line in lineList" ng-show="line.status === 'AVAILABLE'" style="margin-bottom: 10px;margin-top:10px;margin-left:1%;float: left;width: 24%;">
+      <waitting-btn type="button" btn-class="ripplelink " ng-click="click(line)" value="'ConveyorLine: '+line.name"></waitting-btn>
+      <div ng-show="line.isShow" style="position: absolute;z-index: 99;width: 23%">
+        <div ng-repeat="branch in line.branches" ng-show="branch.type === 'NORMAL' && branch.status === 'AVAILABLE'" style="width: 75%;margin: 0 auto;line-height: 60px">
+          <waitting-btn  type="button" btn-class="ripplelink button-font-backgroud" ng-click="export(branch.id)" value="'Branch: '+ branch.name + '&nbsp;&nbsp;&nbsp;' + ' StoreNo:'+ branch.occupiedBy + ' '"></waitting-btn>
+        </div>
+        <div ng-show="!line.branches" style="width: 75%;margin: 0 auto;line-height: 60px">
+          <waitting-btn type="button" btn-class="ripplelink button-font-backgroud" value="'No Branch'"></waitting-btn>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,71 @@
+<md-dialog flex="40">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{ title }}</h2>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content style="overflow: hidden; padding: 20px 0px;">
+
+        <form novalidate name="taskInfo" novalidate ng-submit="submitFacility()">
+            <div style="padding: 0px 20px;">
+                <div class="alert alert-danger display-hide" ng-show="isShowError" style="display: block;">
+                    <button class="close" data-close="alert" ></button> {{errorLabel}}
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-4">
+                        <label>Name</label>
+                        <input class="form-control" type="text" ng-model="company.basic.name" disabled/>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Facility <span style="color: red;">*</span></label>
+                      
+                        <ui-select name="facility" ng-model="facilityRelation.facility" class="form-control">
+                            <ui-select-match>
+                                <div ng-bind="$select.selected.basic.name"></div>
+                            </ui-select-match>
+                            <!--<ui-select-choices repeat="facility.id as facility in facilities | filter: $select.search.basic.name">-->
+                            <ui-select-choices repeat="facility in facilities | filter: $select.search">
+                                <div ng-bind="facility.basic.name"></div>
+                            </ui-select-choices>
+                        </ui-select>
+
+                    </div>
+
+                    <div class="col-md-2" style="margin-top:25px">
+                        <button type="button" class="btn green" ng-click="addFacilityItem()">ADD</button>
+                    </div>
+
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-12" style="padding:20px">
+                        <table class="table table-striped table-bordered table-hove">
+                            <thead>
+                                <tr class="uppercase">
+                                    <th>Company</th>
+                                    <th>Facility</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="relationship in relationShips track by $index">
+                                    <td>{{company.basic.name}}</td>
+                                    <td>{{relationship.basic.name}}</td>
+                                    <td>
+                                        <a href="#" ng-click="btnDel($index)"><b>Delete</b></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group form-self-actions" style="padding: 20px 75px 0px 0px; margin-top:20px; height: 50px; border-top: 1px solid #ddd;">
+                    <waitting-btn type="submit" btn-class="btn blue" value="submitLabel" is-loading="saving"></waitting-btn>
+                    <button type="button" class="btn default" ng-click="cancelDialog()">Cancel</button>
+                </div>
+            </div>
+        </form>
+
+    </md-dialog-content>
+</md-dialog>

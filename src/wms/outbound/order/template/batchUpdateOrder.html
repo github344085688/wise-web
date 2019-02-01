@@ -1,0 +1,287 @@
+<div class="portlet light bordered add-order-container" style="margin: 15px;" ng-if="orderIds">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold">Batch Order Update</span>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+
+        <div class="form-group">
+            <div class="col-md-12">
+                <b>
+                    Order ID
+                </b> :{{orderIds}}
+            </div>
+
+        </div>
+        <form novalidate name="addOrderForm" ng-submit="addOrderForm.$valid && submit()">
+            <div class="portlet-body form form-horizontal">
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label>Retailer</label>
+                        <organization-auto-complete name="retailer" ng-model="order.retailerId" tag="Retailer" allow-clear="true"></organization-auto-complete>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Carrier</label>
+                        <organization-auto-complete name="carrier" ng-model="order.carrierId" tag="Carrier" on-select="carrierChange(org)" customer-id="order.customerId"
+                            allow-clear="true"></organization-auto-complete>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Delivery Service</label>
+                        <ui-select name="deliveryService" ng-model="order.deliveryService">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in carrierServiceTypes | filter: $select.search">
+                                <div ng-bind="item"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Ship method</label>
+                        <ui-select name="deliveryService" ng-model="order.shipMethod">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in carrierShipMethods | filter: $select.search">
+                                <div ng-bind="item"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label>Freight Term</label>
+                        <ui-select name="freightTerm" ng-model="order.freightTerm">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in freightTermList | filter: $select.search" refresh="getFreightTermList($select.search)"
+                                refresh-delay="50">
+                                <div ng-bind="item"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Purchase Order No.</label>
+                        <input class="form-control" placeholder="Enter PO" ng-model="order.poNo" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Shipping Account No.</label>
+                        <input class="form-control" placeholder="Enter Shipping Account No" ng-model="order.shippingAccountNo" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Shipment Tracking Type</label>
+                        <input-validation-message field="shipmentTrackingType" form="addOrderForm"></input-validation-message>
+                        <ui-select name="shipmentTrackingType" ng-model="order.shipmentTrackingType">
+                            <ui-select-match>
+                                {{$select.selected}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in shipmentTrackingTypes | filter: $select.search">
+                                <div>{{item}}</div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label>Pro No.</label>
+                        <input type="text" class="form-control" ng-model="order.proNo" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Reference</label>
+                        <input class="form-control" placeholder="Enter Reference" ng-model="order.referenceNo" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Customer Sales Order No.</label>
+                        <lt-tags-input placeholder="Enter SO" ng-model="order.soNos"></lt-tags-input>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Total Pallets</label>
+                        <input type="number" class="form-control" ng-model="order.totalPallets" />
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label>Is Rush</label>
+                        <ui-select ng-model="order.isRush">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected.name"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="statu.dbName as statu in switchStatuses| filter: $select.search">
+                                {{statu.name}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Commitment Include WIP</label>
+                        <ui-select ng-model="order.commitmentIncludeWIP">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected.name"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="statu.dbName as statu in switchStatuses| filter: $select.search">
+                                {{statu.name}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-md-3">
+                        <label> Transload</label>
+                        <ui-select ng-model="order.isTransload">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected.name"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="statu.dbName as statu in switchStatuses| filter: $select.search">
+                                {{statu.name}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Enable Auto Commit</label>
+                        <ui-select ng-model="order.enableAutoCommit">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected.name"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="statu.dbName as statu in switchStatuses| filter: $select.search">
+                                {{statu.name}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+
+
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label>Is Allow Retry Commit</label>
+                        <ui-select ng-model="order.isAllowRetryCommit">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected.name"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="statu.dbName as statu in switchStatuses| filter: $select.search">
+                                {{statu.name}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Partial Lock Inventory</label>
+                        <ui-select ng-model="order.allowPartialLockInventory">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected.name"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="statu.dbName as statu in switchStatuses| filter: $select.search">
+                                {{statu.name}}
+                            </ui-select-choices>
+                        </ui-select>
+
+                    </div>
+                    <div class="col-md-3">
+                        <label>Long Haul No</label>
+                        <longhaul-auto-complete allow-clear="true" placeholder="Enter Long Haul" customer-id="order.customerId" store-no="order.shipToAddress.storeNo"
+                            ng-model="order.longHaulId"></longhaul-auto-complete>
+                    </div>
+                    <div class="col-xs-3">
+                        <label>Delivery Request Date</label>
+                        <lt-date-time value="order.mabd" date-format="yyyy-mm-dd" min-view="2" />
+                    </div>
+
+
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-3">
+                        <label>Schedule Date</label>
+                        <lt-date-time value="order.scheduleDate" date-format="yyyy-mm-dd" min-view="2" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Shipped Time</label>
+                        <lt-date-time value="order.shippedTime" date-format="yyyy-mm-dd hh:ii:ss" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Ship Not Before</label>
+                        <lt-date-time value="order.shipNotBefore" date-format="yyyy-mm-dd hh:ii:ss" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Ship Not Later</label>
+                        <lt-date-time value="order.shipNoLater" date-format="yyyy-mm-dd hh:ii:ss" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label>Ship From</label>
+                        <label lt-address-selection organization="{{order.customerId}}" lt-address-data="order.shipFromInfo" lt-address-model="order.shipFrom"
+                            lt-address-expression="{organizationName}\n{name}" style="float: right;">
+                            <a>Edit</a>
+                        </label>
+                        <textarea class="form-control" ng-model="order.shipFrom" disabled="true"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Ship To</label>
+                        <label address-select address-model="order.shipToAddress" address-data="order.shipTo" address-tag="ShipTo" style="float: right;">
+                            <a>Edit</a>
+                        </label>
+                        <textarea name="shipTo" class="form-control" ng-model="order.shipTo" disabled="true"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label>Sold To</label>
+                        <label address-select address-model="order.soldToAddress" address-data="order.soldTo" style="float: right;">
+                            <a>Edit</a>
+                        </label>
+                        <textarea name="soldTo" class="form-control" ng-model="order.soldTo" disabled="true"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Store</label>
+                        <label address-select address-model="order.storeAddress" address-data="order.store" address-tag="Store" organization-tag="Retailer"
+                            style="float: right;">
+                            <a>Edit</a>
+                        </label>
+                        <textarea name="storeAddress" class="form-control" ng-model="order.store" disabled="true"></textarea>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <label>Bill To</label>
+                        <label address-select address-model="order.billToAddress" address-tag="BillTo" address-data="order.billTo" style="float: right;">
+                            <a>Edit</a>
+                        </label>
+                        <textarea class="form-control" ng-model="order.billTo" disabled="true"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Pick Note</label>
+                        <textarea type="text" class="form-control" ng-model="order.pickNote"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label>Label Note</label>
+                        <textarea type="text" class="form-control" ng-model="order.labelNote"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Pack Note</label>
+                        <textarea type="text" class="form-control" ng-model="order.packNote"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label>Order Note</label>
+                        <textarea type="text" class="form-control" ng-model="order.orderNote"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label>BOL Note</label>
+                        <textarea type="text" class="form-control" ng-model="order.bolNote"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-actions right">
+                <waitting-btn type="submit" btn-class="btn blue" value="'Batch Update'" is-loading="isBatchUpdating"></waitting-btn>
+                <button type="button" class="btn default" ng-click="cancel(editForm)">Cancel</button>
+            </div>
+    </div>
+    </form>
+</div>
+</div>

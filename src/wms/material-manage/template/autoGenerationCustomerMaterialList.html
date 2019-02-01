@@ -1,0 +1,129 @@
+<div class="grid-100 row">
+  <div class="grid-content grid-100">
+    <div class="grid-parent grid-100 container">
+      <div class="grid-25">
+        <h1 class="section-label pull-left">Customer Material List</h1>
+      </div>
+      <div class="grid-60">
+        &nbsp;
+      </div>
+      <div class="grid-15">
+        <a ng-click="createOrUpdateAutoGenerationCustomerMaterial()"><b>Create Customer Material</b></a>&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+
+    <div class="grid-parent grid-100 container">
+      <div class="grid-25" style="margin-top: 6px;">
+        <label>Item</label>
+        <itemspec-auto-complete ng-model="searchInfo.itemSpecId" name="itemSpec" allow-clear="true" />
+      </div>
+      <div class="grid-25" style="margin-top: 6px;">
+        <label>Customer</label>
+        <organization-auto-complete ng-model="searchInfo.customerId" name="customer" tag="Customer" allow-clear="true"></organization-auto-complete>
+      </div>
+      <div class="grid-25" style="margin-top: 6px;">
+        <label>Order ID</label>
+        <input type="text" ng-model="searchInfo.orderId" input-auto-fill="DN-" ng-keyup="keyUpSearch($event)" />
+      </div>
+      <div class="grid-25" style="margin-top: 6px;">
+        <label>Receipt ID </label>
+        <input type="text" ng-model="searchInfo.receiptId" input-auto-fill="RN-" ng-keyup="keyUpSearch($event)" />
+      </div>
+    </div>
+
+    <div class="grid-parent grid-100 container">
+      <div class="grid-25" style="margin-top: 6px;">
+        <label>Shipment Ticket ID </label>
+        <input type="text" ng-model="searchInfo.shipmentTicketId" ng-keyup="keyUpSearch($event)" />
+      </div>
+      <div class="grid-25" style="margin-top: 6px;">
+        <label>MaterialUOM</label>
+        <ui-select name="uom" ng-model="searchInfo.materialUOM">
+          <ui-select-match allow-clear="true">
+            <div ng-bind="$select.selected"></div>
+          </ui-select-match>
+          <ui-select-choices repeat="uom in ['Pallet', 'CS', 'Order', 'Order Item Line', 'EA'] | filter: $select.search">
+            <div ng-bind="uom"></div>
+          </ui-select-choices>
+        </ui-select>
+      </div>
+      <div class="grid-25" style="margin-top: 6px;">
+        <label>MaterialType</label>
+        <ui-select name="type" ng-model="searchInfo.materialType">
+          <ui-select-match allow-clear="true">
+            <div ng-bind="$select.selected"></div>
+          </ui-select-match>
+          <ui-select-choices repeat="type in ['Inbound', 'Outbound'] | filter: $select.search">
+            <div ng-bind="type"></div>
+          </ui-select-choices>
+        </ui-select>
+      </div>
+      <div class="grid-25">
+        <label class="label-input">Status:</label>
+        <ui-select name="status" ng-model="searchInfo.status">
+          <ui-select-match allow-clear="true">
+            <div ng-bind="$select.selected"></div>
+          </ui-select-match>
+          <ui-select-choices repeat="status in ['Approve', 'Pending', 'Ignore'] | filter: $select.search">
+            <div ng-bind="status"></div>
+          </ui-select-choices>
+        </ui-select>
+      </div>
+    </div>
+
+    <div class="grid-parent grid-100 container">
+      <div class="grid-90">&nbsp;
+      </div>
+      <div class="grid-10 ">
+        <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="loading"></waitting-btn>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+<div class="grid-100 row">
+  <div class="grid-content grid-100">
+    <div class="grid-parent grid-100 container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Customer Name</th>
+            <th>Order Id</th>
+            <th>Receipt Id</th>
+            <th>shipment Ticket Id</th>
+            <th>MaterialType</th>
+            <th>MaterialUOM</th>
+            <th>Qty</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="autoGenerationMaterial in autoGenerationMaterialList track by $index">
+            <td>{{autoGenerationMaterial.itemSpecName}}</td>
+            <td>{{autoGenerationMaterial.customerName}}</td>
+            <td>{{autoGenerationMaterial.orderId}}</td>
+            <td>{{autoGenerationMaterial.receiptId}}</td>
+            <td>{{autoGenerationMaterial.shipmentTicketId}}</td>
+            <td>{{autoGenerationMaterial.materialType}} </td>
+            <td>{{autoGenerationMaterial.materialUOM}}</td>
+            <td>{{autoGenerationMaterial.qty}}</td>
+            <td>{{autoGenerationMaterial.status}}</td>
+            <td><a ng-click="approveAutoGenerationCustomerMaterial(autoGenerationMaterial.id)">Approve</a>&nbsp;|&nbsp;
+              <a ng-click="createOrUpdateAutoGenerationCustomerMaterial(autoGenerationMaterial.id)">Edit</a>&nbsp;|&nbsp;
+              <a ng-click="deleteAutoGenerationCustomerMaterial(autoGenerationMaterial.id)">Delete</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="grid-100">
+  <div class="grid-content grid-100">
+    <unis-pager total-count="paging.totalCount" current-page="paging.pageNo" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+  </div>
+</div>

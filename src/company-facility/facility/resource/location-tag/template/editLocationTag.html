@@ -1,0 +1,105 @@
+<div class="grid-content grid-100">
+    <form class="grid-100 grid-parent" novalidate name="editForm" ng-submit="editForm.$valid && submit()">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">{{formTitle}}
+            </h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Virtual Location Group Tag</label>
+                <input-validation-message field="name" form="editForm"></input-validation-message>
+                <input type="text" name="name" placeholder="Enter Virtual Location Group Tag" ng-model="locationTag.name" required />
+            </div>
+
+            <div class="grid-50">
+                <label class="label-input">Note</label>
+                <input type="text" class="form-control" ng-model="locationTag.desc" />
+            </div>
+
+
+        </div>
+
+        <div class="grid-parent grid-100 container" style="margin-top:30px;">
+         
+            <div class="grid-50 ">
+                &nbsp;
+            </div>
+            <div class="grid-20 ">
+                    <input type="text" class="form-control" ng-model="loctionName" ng-change="selectLocationName(loctionName)" placeholder="Search for location name"
+                    />
+                </div>
+            <div class="grid-10  ">
+                <button type="button" class="ripplelink " ng-click="selectLocation()">Add Location
+                </button>
+            </div>
+            <div class="grid-20 ">
+                <button type="button" class=" ripplelink " ng-click="deleteAllLocation()">Delete All Location
+                </button>
+            </div>
+
+
+        </div>
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr role="row">
+                        <th> Name</th>
+                        <th> Floor</th>
+                        <th> Parent Id</th>
+                        <th> Type</th>
+                        <th> Location Group</th>
+                        <th> Pick Strategy Weight</th>
+                        <th> Support Pick Type</th>
+                        <th> Support Equipments</th>
+                        <th> Sub Type</th>
+                        <th> Max Size</th>
+                        <th> Reserve Entry Id</th>
+                        <th> Occupy Entry Id</th>
+                        <th> Tenant </th>
+                        <th> Sequence </th>
+                        <th> Status</th>
+                        <th> Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="location in locationsView track by $index">
+                        <td>{{location.name}}</a>
+                        </td>
+                        <td>{{location.floor}}</td>
+                        <td>{{location.parentInfo.name}}</td>
+                        <td>{{location.type}}</td>
+                        <td>{{location.itemGroupName}}</td>
+                        <td>{{location.pickStrategyWeight}}</td>
+                        <td>{{location.supportPickType}}</td>
+                        <td>
+                            <span ng-repeat="supportEquipment in location.supportEquipments">
+                                {{supportEquipment}}&nbsp;
+                            </span>
+                        </td>
+                        <td>{{location.subType}}</td>
+                        <td>{{location.maxSize}}</td>
+                        <td>{{location.reserveEntryId}}</td>
+                        <td>{{location.occupyEntryId}}</td>
+                        <td>{{location.tenantName}}</td>
+                        <td>{{location.sequence}}</td>
+                        <td>{{location.status}}</td>
+                        <td>
+                            <a ng-click="delete(location.id)">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <unis-pager total-count="locations.length" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" permission-check="{{'facility::virtualLocationGroup_write'}}"
+                value="submitLabel" is-loading="loading"></waitting-btn>
+            <button type="button" class="grid-10 ripplelink pull-right cancel" ng-click="cancel(editForm)">Cancel</button>
+        </div>
+    </form>
+</div>

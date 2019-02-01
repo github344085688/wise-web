@@ -1,0 +1,96 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left"> Item Velocity Report</h1>
+        </div>
+        <form novalidate name="itemVelocityForm" ng-submit="itemVelocityForm.$valid && searchAndAnalysis(searchInfo)">
+
+        <div class="grid-parent  container">
+
+            <div class="grid-25">
+                <label class="label-input">Item</label>
+                <itemspec-auto-complete name="itemSpec" ng-model="searchInfo.itemSpecId" name="itemSpec" allow-clear="true" />
+            </div>
+
+            <!-- <div class="grid-25">
+                <label class="label-input">Status:</label>
+                <ui-select name="status" ng-model="searchInfo.status">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item  in  inventoryStatus| filter: $select.search">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div> -->
+
+            <div class="grid-25">
+                <label>Shipped Date From</label>
+                <input-validation-message field="shippedTimeFrom" form="itemVelocityForm"></input-validation-message>
+                <lt-date-time value="searchInfo.shippedTimeFrom" date-format="yyyy-mm-dd" min-view="2" required="true"></lt-date-time>
+            </div>
+
+            <div class="grid-25">
+                <label>Shipped Date To</label>
+                <input-validation-message field="shippedTimeTo" form="itemVelocityForm"></input-validation-message>
+                <lt-date-time name="shippedTimeTo" value="searchInfo.shippedTimeTo" date-format="yyyy-mm-dd" min-view="2" required="true"></lt-date-time>
+            </div>
+
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-50">&nbsp;</div>
+            <div class="grid-20">
+                &nbsp;
+                <!-- <waitting-btn type="button" is-loading="charting" btn-class="red" ng-click="chart()" value="'Chart'"></waitting-btn> -->
+            </div>
+            <div class="grid-15">
+                <waitting-btn type="button" is-loading="exporting" btn-class="ripplelink" ng-click="export()" value="'Export'"></waitting-btn>
+            </div>
+
+            <div class="grid-15">
+                <unis-waitting-btn ng-type="submit" btn-class="ripplelink" value="'Search'" is-loading="isLoading"></unis-waitting-btn>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <div class="grid-20" ng-repeat="item in itemVelocity.totalShippedWithMultipleUnit track by $index">
+                <b>Total {{item.unitName}} Count: </b> {{item.shippedQty}}
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Item</th>
+                        <th>Description</th>
+                        <th>ItemGroupName</th>
+                        <th>Shipped Qty</th>
+                        <th class="order-sorting" ng-click="sortClick('shippedQtyByBaseQty')"> Shipped Qty By Base Qty </th>
+
+                    </tr>
+                </thead>
+                <div ng-show="isLoading" class="grid-parent grid-100 text-center">
+                    <img src="assets/img/loading-spinner-grey.gif">
+                    <span>&nbsp;LOADING...</span>
+                </div>
+                <tbody ng-show="!isLoading">
+                    <tr ng-repeat="itemline in itemVelocity.baseUnitShippedQtyItemlines track by $index">
+                        <td>{{$index + 1}}</td>
+                        <td>{{itemline.itemSpecName}}</td>
+                        <td>{{itemline.itemSpecDesc}}</td>
+                        <td>{{itemline.itemGroupName}}</td>
+                        <td>{{itemline.shippedQtyDetail}}</td>
+                        <td>{{itemline.shippedQtyByBaseQty}}</td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+<form class="form-horizontal" novalidate name="forms.itemUomPickForm" ng-submit="forms.itemUomPickForm.$valid && saveOrUpdateItemUnitGroup()">
+    <div class="row form-group">
+        <div class="col-md-3">
+            <label>UOM Name</label>
+            <ui-select ng-model="itemUomPick.unitNames"  required>
+                <ui-select-match >
+                   {{$select.selected.name}}
+                </ui-select-match>
+                <ui-select-choices repeat="uom.name as uom in units | filter:$select.search">
+                    <div>{{uom.name}}</div>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="col-md-3">
+            <label>Pick Type:</label>
+            <ui-select ng-model="itemUomPick.pickType" style="border-radius: 4px;" required>
+                <ui-select-match>{{$select.selected}}</ui-select-match>
+                <ui-select-choices repeat=" pickType in pickTypes">
+                    {{pickType}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="col-md-2">
+            <label>Priority:</label>
+            <input type="number" class="form-control" ng-model="itemUomPick.weight" required/>
+        </div>
+        <div class="col-md-4">
+            <label>&nbsp;</label>
+            <div>
+                <waitting-btn type="submit" btn-class="btn blue" value="submitLabel" is-loading="loading"></waitting-btn>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="portlet light box-shadow-none" ng-show="itemUomPicks.length > 0 "
+    style="padding-left:0px; padding-right:0px;">
+   <div class="portlet-title">
+       <div class="caption">
+           <span class="caption-subject bold uppercase">Item UOM Pick</span>
+       </div>
+   </div>
+   <div class="portlet-body">
+       <div class="table-scrollable">
+           <table class="table table-striped table-bordered table-hover">
+               <thead>
+                   <tr>
+                       <th>UOM Name</th>
+                       <th>Pick Type</th>
+                       <th>Priority</th>
+                       <th permission-check="{{'item::itemSpec_write'}}">Action</th>
+                   </tr>
+               </thead>
+               <tbody>
+                   <tr ng-repeat="iup in itemUomPicks track by $index" ng-class="{'bg-light-green':hightLights[$index]}">
+                       <td>{{fomateUnitName(iup.unitNames)}}</td>
+                       <td>{{iup.pickType}}</td>
+                       <td>{{iup.weight}} </td>
+                       <td  permission-check="{{'item::itemSpec_write'}}"><a ng-click="editItemUnitGroup(iup,index)">Edit</a> | <a ng-click="deleteItemUnitGroup(iup.id)">Delete</a></td>
+                   </tr>
+               </tbody>
+           </table>
+       </div>
+   </div>
+</div>

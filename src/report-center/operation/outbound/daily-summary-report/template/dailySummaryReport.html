@@ -1,0 +1,36 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label">LongHaul Daily Summary Report</h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-50">
+                <label>Customer:</label>
+                <organization-auto-complete name="customer" ng-model="search.customerId" tag="Customer" required="true"></organization-auto-complete>
+            </div>
+            <!--<div class="grid-50">-->
+                <!--<label>Delivery Date:</label>-->
+
+                <!--<ui-select name="deliveryDate" ng-model="search.deliveryDate" required="true">-->
+                    <!--<ui-select-match>-->
+                        <!--<div ng-bind="$select.selected"></div>-->
+                    <!--</ui-select-match>-->
+                    <!--<ui-select-choices repeat="item in deliveryDate| filter: $select.search">-->
+                        <!--<div ng-bind="item"></div>-->
+                    <!--</ui-select-choices>-->
+                <!--</ui-select>-->
+            <!--</div>-->
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-80">&nbsp;</div>
+            <div class="grid-20">
+                <waitting-btn type="button" is-loading="exporting" btn-class="ripplelink" ng-click="export()" value="'Export'"></waitting-btn>
+            </div>
+        </div>
+
+        <div style="height: 200px;"></div>
+    </div>
+</div>

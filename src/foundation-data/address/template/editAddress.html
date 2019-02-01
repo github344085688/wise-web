@@ -1,0 +1,125 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">
+                <span ng-show="ctrl.isAddAction" class="caption-subject bold"> Add Address</span>
+                <span ng-show="!ctrl.isAddAction" class="caption-subject bold"> Edit Address </span>
+            </h1>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <form novalidate name="addressForm" ng-submit="addressForm.$valid && ctrl.addOrUpdateAddress()">
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-33">
+                        <label class="label-input">Organization:</label>
+                        <organization-auto-complete ng-model="ctrl.address.organizationId" name="organization" allow-clear="true" on-select="ctrl.onSelectOrganization(org)"></organization-auto-complete>
+                    </div>
+                    <div class="grid-33">
+                        <label class="label-input">Shorthand:</label>
+                        <input type="text" ng-model="ctrl.address.shorthand" name="shorthand" ></organization-auto-complete>
+                    </div>
+
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-33">
+                        <label class="label-input">Tags:</label>
+                        <ui-select name="tags" multiple ng-model="ctrl.address.tags">
+                            <ui-select-match>
+                                {{$item}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in ['BillTo', 'ShipTo', 'Store', 'PickFrom', 'EndUser']| filter: $select.search">
+                                {{item}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="grid-33">
+                        <label class="label-input">To Home:</label>
+                        <md-switch class="md-primary" aria-label="To Home" style="margin: 0px" ng-model="ctrl.address.toHome"></md-switch>
+                    </div>
+                    <div class="grid-33">
+                        <label class="label-input">Reference No.</label>
+                        <input type="text" name="referenceNo" ng-model="ctrl.address.referenceNo" class="form-control" placeholder="Enter text" />
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-33">
+                        <label class="label-input">Name</label>
+                        <input-validation-message field="name" form="addressForm"></input-validation-message>
+                        <input type="text" name="name" ng-model="ctrl.address.name" class="form-control" placeholder="Enter text" required />
+                    </div>
+                    <div class="grid-33">
+                        <label class="label-input">Country</label>
+                        <input-validation-message field="country" form="addressForm"></input-validation-message>
+                        <input type="text" name="country" ng-model="ctrl.address.country" class="form-control" placeholder="Enter text" required
+                        />
+                    </div>
+                    <div class="grid-33">
+                        <label class="label-input">Address1</label>
+                        <input type="text" name="address1" ng-model="ctrl.address.address1" class="form-control" placeholder="Enter text" />
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-33">
+                        <label class="label-input">Address2</label>
+                        <input type="text" name="address2" ng-model="ctrl.address.address2" class="form-control" placeholder="Enter text" />
+                    </div>
+                    <div class="grid-33">
+                        <label class="label-input">City</label>
+                        <input-validation-message field="city" form="addressForm"></input-validation-message>
+                        <input type="text" name="city" ng-model="ctrl.address.city" class="form-control" placeholder="Enter text" required />
+                    </div>
+                    <div class="grid-33">
+                        <label class="label-input">State</label>
+                        <input-validation-message field="state" form="addressForm"></input-validation-message>
+                        <input type="text" name="state" ng-model="ctrl.address.state" class="form-control" placeholder="Enter text" required />
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+
+                    <div class="grid-33">
+                        <label class="label-input">Zip Code</label>
+                        <input-validation-message field="zipCode" form="addressForm"></input-validation-message>
+                        <input type="text" name="zipCode" ng-model="ctrl.address.zipCode" class="form-control" placeholder="Enter text" required
+                        />
+                    </div>
+                    <div class="grid-33">
+                        <label class="label-input">Fax</label>
+                        <input type="text" name="fax" ng-model="ctrl.address.fax" class="form-control" placeholder="Enter text" />
+                    </div>
+                    <div class="grid-33">
+                        <label class="label-input">Store No.</label>
+                        <input type="text" name="storeNo" ng-model="ctrl.address.storeNo" class="form-control" placeholder="Enter text" />
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="second-title">Contact Info</div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-33">
+                        <label class="label-input">Contact</label>
+                        <input type="text" name="contact" ng-model="ctrl.address.contact" class="form-control" placeholder="Enter text" />
+                    </div>
+                    <div class="grid-33">
+                        <label class="label-input">Phone</label>
+                        <input type="text" name="phone" ng-model="ctrl.address.phone" class="form-control" placeholder="Enter text" />
+                    </div>
+                    <div class="grid-33">
+                        <label class="label-input">Extension</label>
+                        <input type="text" name="extension" ng-model="ctrl.address.extension" class="form-control" placeholder="Enter text" />
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-33">
+                        <label class="label-input">Email</label>
+                        <input type="text" name="email" ng-model="ctrl.address.email" class="form-control" placeholder="Enter text" />
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container" style="margin-top:50px;">
+                    <unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="submitLabel" is-loading="loading"></unis-waitting-btn>
+                    <button type="button" class="grid-10 pull-right cancel" ng-click="ctrl.cancelEditAddress()">Cancel</button>
+                   
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

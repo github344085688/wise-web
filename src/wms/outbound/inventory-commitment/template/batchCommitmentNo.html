@@ -1,0 +1,45 @@
+<md-dialog flex="40" ng-cloak>
+    <form novalidate name="priorityForm" class="form-horizontal">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Batch Commitment No</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" style="padding: 20px 30px 80px">
+                <div class="form-group" ng-if="isHasCollectLongHaulWhenCommit">
+                    <div class="col-md-6">
+                        <label>Long Haul No <span style="color: red;">*</span></label>
+                        <longhaul-auto-complete allow-clear="true" placeholder="Enter Long Haul" ng-model="batchCommitment.longHaulId"></longhaul-auto-complete>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Schedule Date</label>
+                        <lt-date-time value="batchCommitment.scheduleDate"></lt-date-time>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 25px;">
+                    <div class="col-md-6">
+                        <label class="control-label" style="margin-bottom: 5px;">
+                            Batch Commitment No:
+                            <span style="color: red;">*</span>
+                        </label>
+                        <input type="text" ng-model="batchCommitment.batchCommitmentNo" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    Selected Orders Count: {{selectedOrdersCount}}
+                </div>
+                <div class="form-group" style="color: red;">
+                    {{errorMesg}}
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <div style="margin-right: 50px">
+                <waitting-btn type="button" btn-class="btn blue" ng-click="submit()" value="'Submit'" is-loading="loading"></waitting-btn>
+
+                <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

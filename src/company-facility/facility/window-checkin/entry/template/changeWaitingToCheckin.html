@@ -1,0 +1,113 @@
+<md-dialog flex="60">
+    <form novalidate name="priorityForm" class="form-horizontal">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Check in</h2>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content style="padding: 20px 30px 200px">
+            <div class="row form-group form-horizontal">
+                <div style=" border-bottom: 1px solid #eee; display:-webkit-box; padding-bottom: 10px;">
+                    <label class="control-label col-md-1"><b>Entry:</b></label>
+                    <div style="padding-top: 7px;">
+                        <span>{{entryName}}</span>
+                    </div>
+                    <label class="control-label col-md-2"><b>On Time</b>:</label>
+                    <div class="col-md-1" style="padding-top: 7px;">
+                        <span>{{isOnTime?"Yes":"No"}}</span>
+                    </div>
+                    <label class="control-label col-md-3"> <b>Entry Dock</b>(<span>Select a dock to go first</span>):</label>
+                    <div class="col-md-4">
+                        <ui-select ng-model="entry.dockId" name="keyword" placeholder="Dock Id">
+                            <ui-select-match placeholder="Select a dock to go first">
+                                {{$select.selected.name}} : {{$select.selected.dockStatus}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="dock.id as dock in selectedTaskDocks">
+                                <div class="row select-load-receipt-head" ng-show="$index == 0" style="padding: 3px;">
+                                    <div class="col-md-6 bold">
+                                        Dock Name
+                                    </div>
+                                    <div class="col-md-6 bold">
+                                        Status
+                                    </div>
+                                </div>
+                                <div class="row form-group" style="padding: 0px; margin: 0px;">
+                                    <div class="col-md-6">
+                                        {{dock.name}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{dock.dockStatus}}
+                                    </div>
+                                </div>
+                            </ui-select-choices>
+                            <ui-select-no-choice>
+                                No Dock found !!!
+                            </ui-select-no-choice>
+                        </ui-select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row  form-group" ng-show="!isOnTime">
+                <b>Note</b>: Since the driver was not On Time, he/she need go back to window to do the check in.
+            </div>
+            <div class="row  form-group" ng-show="receiptTasks.length > 0" style="margin-bottom:15px;">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th class="col-md-3">Receipt Task ID</th>
+                            <th class="col-md-3">Assingee</th>
+                            <th class="col-md-6">Dock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="task in receiptTasks">
+                            <td style="vertical-align: inherit" class="col-md-3">{{task.id}}</td>
+                            <td style="vertical-align: inherit" class="col-md-3">{{task.assignee.firstName+" "+task.assignee.lastName}}</td>
+                            <td class="col-md-6">
+                                <dock-auto-complete ng-model="task.dockId" required="true" on-select="selectDock(dock, task)"></dock-auto-complete>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+            </div>
+            <div class="row" ng-show="loadTasks.length > 0">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Load Task ID</th>
+                            <th>Assingee</th>
+                            <th class="col-md-5">Dock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="task in loadTasks">
+                            <td style="vertical-align: inherit" class="col-md-3">{{task.id}}</td>
+                            <td style="vertical-align: inherit" class="col-md-3">{{task.assignee.firstName+" "+task.assignee.lastName}}</td>
+                            <td class="col-md-6">
+                                <dock-auto-complete ng-model="task.dockId" required="true" on-select="selectDock(dock, task)"></dock-auto-complete>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <div ng-show="isSelectDock" style="padding-right:100px">
+                <span style="color:red">
+                  {{labelInfo}}
+                </span>
+            </div>
+            <div style="margin-right: 50px">
+
+                <waitting-btn type="submit" btn-class="btn blue" ng-click="submit()" value="'Submit'" is-loading="checkinLoading"></waitting-btn>
+
+                <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -1,0 +1,94 @@
+<div class="row form-group" style="margin-top: 10px">
+    <div ng-if="activetab != 'itemSpec'" class="bold col-md-3"></div>
+    <div ng-if="activetab == 'itemSpec'" class="bold col-md-2"></div>
+    <div class="bold col-md-2">
+        Excel File Field
+    </div>
+    <div class="bold col-md-1"></div>
+    <div ng-if="activetab != 'itemSpec'" class="bold col-md-3">
+        DB Field
+    </div>
+
+    <div ng-if="activetab == 'itemSpec'" class="bold col-md-3">
+        Item Spec Field
+    </div>
+</div>
+<div ng-repeat="col in excelFields.itemSpec track by $index">
+    <div class="row form-group">
+        <div ng-if="activetab != 'itemSpec'" class="col-md-2"></div>
+        <div ng-if="activetab == 'itemSpec'" class="col-md-1"></div>
+        <div class="col-md-1">
+            <i ng-click="removeField($index, excelFields.itemSpec, fieldMatch)" class="material-icons adjustmentDeleteBtn" title="delete">delete_forever</i>
+        </div>
+        <div class="col-md-3" style="padding-top: 8px;">
+            <span>
+                                {{col}}
+                                </span>
+            <span style="float:right" ng-if="activetab == 'itemSpec'">
+                                    <input type="checkbox" id="mapvalue" ng-checked="mapValue[col]"
+                                           ng-click="checkMapValue(col)"/>
+                                    <label for="mapvalue">Value Mapping</label>
+                                </span>
+        </div>
+        <div class="col-md-3">
+            <ui-select ng-model="fieldMatch[col]" on-select="fieldMatchOnSelect(col, $select.selected)">
+                <ui-select-match allow-clear="true">
+                    <span ng-bind="$select.selected.fieldName"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="item.fieldName as item in importFields | filter: $select.search">
+                    <b>{{item.fieldName}}</b>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    No available item.
+                </ui-select-no-choice>
+            </ui-select>
+
+        </div>
+        <div class="col-md-3" ng-show="fieldMatch[col]=='dynamicField'">
+            <ui-select ng-model="dynamicFieldMatch[col]">
+                <ui-select-match allow-clear="true">
+                    <span ng-bind="$select.selected.name"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="item.id as item in dynamicProperties | filter: $select.search">
+                    <b>{{item.name}}</b>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    No available item.
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+
+    </div>
+    <div ng-show="mapValue[col]&&activetab == 'itemSpec'" style="padding: 15px 15px 5px;margin-bottom: 10px; background-color: rgba(93, 204, 214, 0.19);">
+        <div class="row form-group" ng-repeat="itemLine in matchItemLines[col] track by $index">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" ng-model="itemLine.name" />
+            </div>
+            <div class="col-md-3">
+                <ui-select ng-model="itemLine.itemSpecValue">
+                    <ui-select-match>
+                        <span ng-bind="$select.selected"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat=" item in itemSpecFieldsEnums[col]">
+                        <b>{{item}}</b>
+                    </ui-select-choices>
+                    <ui-select-no-choice>
+                        No available item.
+                    </ui-select-no-choice>
+                </ui-select>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn red" ng-click="removeItemSpecMappingValue(col,$index)">Remove</button>
+            </div>
+        </div>
+        <div  class="row form-group" >
+            <div class="col-md-8">
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn green" ng-click="addItemSpecMappingValue(col)">Add</button>
+            </div>
+        </div>
+    </div>
+</div>

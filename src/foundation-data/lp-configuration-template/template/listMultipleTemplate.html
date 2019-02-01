@@ -1,0 +1,92 @@
+<div class="row">
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="actions"  permission-check="{{'lpConfigurationTemplate_write'}}">
+                <a href="#/fd/lp-configuration-template/main/multiple-template-add">
+                    <b>Add LP Mixed Item Template</b>
+                </a>
+            </div>
+        </div>
+        <div class="portlet-body form form-horizontal">
+            <form>
+                <div class="row form-group" ng-keyup="ctrl.keyUpSearch($event)">
+                    <div class="col-md-3">
+                        <label>Name</label>
+                        <input class="form-control" ng-model="ctrl.searchInfo.name" placeholder="Enter Name" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Customer</label>
+                        <organization-auto-complete ng-model="ctrl.searchInfo.customerId" name="customer" allow-clear="true"
+                                                    tag="Customer"></organization-auto-complete>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Description</label>
+                        <input type="text"  ng-model="ctrl.searchInfo.description"
+                               class="form-control" placeholder="Type any text to search"/>
+                    </div>
+                </div>
+                <div class="form-actions right">
+                    <waitting-btn type="button" btn-class="btn blue"
+                                  ng-click="ctrl.search()"
+                                  value="'Search'" is-loading="!ctrl.searchCompleted"></waitting-btn>
+                </div>
+            </form>
+        </div>
+        <!-- TABLE -->
+        <div class="row">
+            <div class="portlet light box-shadow-none">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject bold"> Search Results</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div ng-show="!ctrl.searchCompleted" class="text-center">
+                        <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                    </div>
+
+                    <div ng-show="ctrl.searchCompleted" class="dataTables_wrapper no-footer">
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer"
+                                   id="sample_1" role="grid" aria-describedby="sample_1_info">
+                                <thead>
+                                <tr role="row">
+                                    <th> Name </th>
+                                    <th> Customer </th>
+                                    <th> Description</th>
+                                    <th> Carton Configuration</th>
+                                    <th> Item Configuration</th>
+                                    <th permission-check="{{'lpConfigurationTemplate_write'}}"> Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="lpConfigurationTemplate in ctrl.lpConfigurationTemplateView track by $index">
+                                    <td>{{lpConfigurationTemplate.name}}</td>
+                                    <td>{{lpConfigurationTemplate.customerName}}</td>
+                                    <td>{{lpConfigurationTemplate.description}}</td>
+                                    <td>
+                                        <span ng-repeat="packageLine in lpConfigurationTemplate.packageTypeItemLines">
+                                            {{packageLine.packageTypeItemName}} * {{packageLine.qty}} ;&nbsp;&nbsp;
+                                        </span>
+                                    </td>
+                                     <td>
+                                        <span ng-repeat="ItemLine in lpConfigurationTemplate.itemSpecLines">
+                                             {{ItemLine.itemSpecName}} *{{ItemLine.qty}} {{ItemLine.unit.name}}  ;&nbsp;&nbsp;
+                                        </span>
+                                    </td>
+                                    <td  permission-check="{{'lpConfigurationTemplate_write'}}">
+                                        <a ui-sref="fd.lpConfigurationTemplate.main.multipleTemplateEdit({lpConfigurationTemplateId:lpConfigurationTemplate.id})">Edit</a>
+                                        <!--| <a href="#" ng-click="ctrl.remove($index)">Delete</a>-->
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <pager total-count="ctrl.lpConfigurationTemplates.length" page-size="ctrl.pageSize"
+                               load-content="ctrl.loadContent(currentPage)"></pager>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

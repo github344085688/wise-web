@@ -1,0 +1,26 @@
+<md-dialog flex="60">
+  <md-toolbar>
+      <div class="md-toolbar-tools">
+          <h2>Update Task Assignee</h2>
+      </div>
+  </md-toolbar>
+  <md-dialog-content style="overflow: hidden; padding: 20px 0px;">
+      <form novalidate name="assigneeForm" novalidate ng-submit="assigneeForm.$valid && submit()">
+          <div style="padding: 0px 20px;">
+              <div class="row form-group" style="min-height:350px;">
+                  <div class="col-md-4" style="margin-left: 10px;padding-left: 10px;">
+                      <label>Assignee <span style="color: red;">*</span></label>
+                      <input-validation-message field="assignee" form="assigneeForm"></input-validation-message>
+                      <user-auto-complete name="assignee" required="true"
+                                          ng-model="task.assigneeUserId"></user-auto-complete>
+                  </div>
+              </div>
+          </div>
+          <div class="form-group form-self-actions" style="padding: 20px 75px 0px 0px; margin-top:20px; height: 50px; border-top: 1px solid #ddd;">
+              <waitting-btn type="submit" btn-class="btn blue" value="'Update'" is-loading="loading"></waitting-btn>
+              <button type="button" class="btn default" ng-click="closeDialog()">Cancel</button>
+          </div>
+      </form>
+
+  </md-dialog-content>
+</md-dialog>

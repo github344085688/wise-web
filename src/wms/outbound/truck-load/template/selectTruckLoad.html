@@ -1,0 +1,169 @@
+<div>
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <a href="#">WMS</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a href="#">Outbound</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a href="#">Select Load</a>
+            </li>
+        </ul>
+    </div>
+    <div class="container-fluid" style="margin:15px">
+        <div class="row">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject bold"> Search Load</span>
+                    </div>
+                </div>
+                <div class="portlet-body form form-horizontal">
+                    <form>
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <label>Load No.:</label>
+                                <lt-tags-input placeholder="add a Load No" ng-model="loadNos"></lt-tags-input>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <label>Reference No.:</label>
+                                <lt-tags-input placeholder="add a ReferenceNo" ng-model="load.referenceNo"></lt-tags-input>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-4">
+                                <label>Load Status</label>
+                                <ui-select class="action-item" ng-model="load.statuses" multiple on-select="" style="border-radius: 4px;">
+                                    <ui-select-match>
+                                        <div ng-bind="$item"></div>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item in avaibleStatuses">
+                                        <div ng-bind="item"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Carrier</label>
+                                <multiple-organization-auto-complete name="carrier" ng-model="load.carrierIds" tag="Carrier"></multiple-organization-auto-complete>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Load Type</label>
+                                <ui-select class="action-item" ng-model="load.type" on-select="" style="border-radius: 4px;">
+                                    <ui-select-match allow-clear="true">
+                                        <div ng-bind="$select.selected"></div>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item in avaibleTypes">
+                                        <div ng-bind="item"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="row form-actions">
+                            <div class="col-md-12">
+                                <button ng-click="search()" class="btn blue">Search</button>
+                                <button ng-click="reset()" class="btn blue">Reset</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="row">
+                    <div class="portlet light">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <span class="caption-subject bold"> Search Results</span>
+                            </div>
+                            <div class="actions">
+                                <a class="caption-subject bold" ng-click="selectAll()"> Select All</a> |
+                                <a class="caption-subject bold" ng-click="viewOrCloseDetail(viewOrClose)"> {{viewOrClose}} Details</a>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div ng-show="!isLoadingComplete" class="text-center">
+                                <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                            </div>
+                            <div class="panel panel-default bordered box-shadow-none" style="margin-left: 10px;" ng-repeat="load in loads">
+                                <div class="panel-heading" style="padding-bottom: 0;border-bottom:0;padding-top: 0px;">
+                                    <div class="portlet light box-shadow-none">
+                                        <div class="portlet-title" style="margin-bottom: 0;min-height: 32px;">
+                                            <div class="caption">
+                                                <span class="caption-subject bold">  <input ng-checked="isChecked(load)" ng-click="checkOrUncheck(load)" type="checkbox" style="padding-top:3px;">
+                                                    Load:{{load.loadNo}} </span>
+                                            </div>
+                                            <div class="actions" style="padding-bottom: 6px;">
+                                                <a href="javascript:;" ng-click="showIn($index)"> Show/Hide Load</a>
+                                            </div>
+                                        </div>
+                                        <div class="portlet-body" style="padding-left:20px;">
+                                            <div class="row form-group">
+                                                <div class="col-md-3">
+                                                    <span class="bold">Customer:</span>{{load.organizations[load.customerId].name}}
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <span class="bold">Carrier:</span>{{load.organizations[load.carrierId].name}}
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <span class="bold">Load Type:</span>{{load.type}}
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <span class="bold">appointment Time:</span>{{load.appointmentTime}}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <label class="bold">Orders:</label>
+                                                    <label>
+                                                        <ul class="list-unstyled list-inline" style="margin-bottom: 0px;">
+                                                            <li ng-repeat="order in load.orderLines">
+                                                                <label ng-hide="$index==0">|</label>
+                                                                <a href="#">{{order.orderId}}</a>
+                                                            </li>
+                                                        </ul>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="collapseThree" class="panel-collapse collapse {{getIn($index)}}">
+                                    <div class="panel-body">
+                                        <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" role="grid">
+                                            <thead>
+                                                <tr>
+                                                    <th>Order Id</th>
+                                                    <th>Customer</th>
+                                                    <th>Carrier</th>
+                                                    <th>Ship TO</th>
+                                                    <th>Freight Term</th>
+                                                    <th>Appointment Time</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="order in loadOrderLineMap[load.id]">
+                                                    <td>{{order.id}}</td>
+                                                    <td>{{load.organizations[order.customerId].name}}</td>
+                                                    <td>{{load.organizations[order.carrierId].name}}</td>
+                                                    <td>{{order.shipTo}}</td>
+                                                    <td>{{order.freightTerm}}</td>
+                                                    <td>{{order.appointmentTime}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-actions right">
+                                <button ng-click="add()" class="btn blue">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,102 @@
+<form class="form-horizontal" novalidate name="forms.lpconfForm" ng-submit="forms.lpconfForm.$valid && ctrl.saveOrUpdateLPConfig(forms.lpconfForm)">
+    <div class="form-group">
+        <div class="col-md-4">
+            <label>Name</label>
+            <input name="name" class="form-control" ng-model="lpconf.name" required size="5" />
+        </div>
+        <div class="col-md-4">
+            <label>Scene</label>
+            <ui-select name="type" ng-model="lpconf.scene">
+                <ui-select-match allow-clear="true">
+                    {{$select.selected}}
+                </ui-select-match>
+                <ui-select-choices repeat="scene in scenes| filter: $select.search">
+                    {{scene}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="col-md-4" ng-show="lpconf.scene != 'stock'">
+            <label>Retailer </label>
+            <organization-auto-complete ng-model="lpconf.retailerId" tag="Retailer" allow-clear="true"></organization-auto-complete>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4">
+            <label>UOM</label>
+            <ui-select ng-model="lpconf.unitId" style="border-radius: 4px;" required>
+                <ui-select-match allow-clear="true">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="unit.id as unit in item.units" refresh="ctrl.searchAvailableItemUnits()" refresh-delay="1000">
+                    {{unit.name}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="col-md-4">
+            <label>Configuration Template</label>
+            <ui-select ng-model="lpconf.lpConfigurationTemplateId" style="border-radius: 4px;" required>
+                <ui-select-match allow-clear="true">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="lpConfigurationTemplate.id as lpConfigurationTemplate in lpConfigurationTemplates | filter:$select.search" refresh="ctrl.getLpConfigurationTemplates()"
+                    refresh-delay="1000">
+                    {{lpConfigurationTemplate.name}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="col-md-4">
+            <label>Default</label>
+            <md-switch class="md-primary" aria-label="Default" ng-model="lpconf.isDefault" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4">
+            <label>Stack Factor</label>
+            <input type="number"  class="form-control" ng-model="lpconf.stackFactor">
+        </div>
+    </div>
+    <div style="text-align:right;" permission-check="{{'item::itemSpec_write'}}">
+        <waitting-btn type="submit" btn-class="btn blue" value="submitLabel"
+                      is-loading="loading"></waitting-btn>
+        <button ng-click="ctrl.resetLPConfig()" type="button" class="btn grey">Reset</button>
+    </div>
+</form>
+<div class="portlet light box-shadow-none" ng-show="lpConfigs.length > 0 " style="padding-left:0px; padding-right:0px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold uppercase">LP Configs</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="table-scrollable">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Scene</th>
+                        <!--<th>Customer</th>-->
+                        <th>Retailer</th>
+                        <th>Name</th>
+                        <th>Item UOM</th>
+                        <th>Configuration Template</th>
+                        <th> Is Default </th>
+                        <th> Status </th>
+                        <th> Stack Factor</th>
+                        <th permission-check="{{'item::itemSpec_write'}}">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="lpconf in lpConfigs track by $index" ng-class="{'bg-light-green':hightLights[$index]}">
+                        <td>{{lpconf.scene}}</td>
+                        <!--<td>{{organizationMap[lpconf.customerId].name}}</td>-->
+                        <td>{{organizationMap[lpconf.retailerId].name}}</td>
+                        <td>{{lpconf.name}}</td>
+                        <td>{{unitMap[lpconf.unitId].name}}</td>
+                        <td>{{lpTemplateMap[lpconf.lpConfigurationTemplateId].name}}</td>
+                        <td>{{lpconf.isDefault}}</td>
+                        <td>{{lpconf.status}}</td>
+                        <td>{{lpconf.stackFactor}}</td>
+                        <td  permission-check="{{'item::itemSpec_write'}}">
+                            <a ng-click="ctrl.editLPConfig($index)">Edit</a> | <a ng-click="lpconf.status==='DISABLE'?ctrl.enableLPConfig($index):ctrl.deleteLPConfig($index)">{{lpconf.status==='DISABLE'?'Enable':'Disable'}}</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

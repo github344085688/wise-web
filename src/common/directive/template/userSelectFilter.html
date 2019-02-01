@@ -1,0 +1,46 @@
+<div class="userSelect">
+        <input  class="form-control" type="text" ng-model="userKeyWord" ng-click="checkListOpen()" ng-change="changeAssign(userKeyWord)" />
+        <i class="caret pull-right"  style=" margin-top: -20px; margin-right: 10px;" role="button" tabindex="0"></i> 
+</div>
+
+<div class="userListContent" ng-show="isCheckListOpen">
+    <div class="userFilterContent">
+        <table>
+            <tr>
+                <td style="width: 50px; text-align: center;">Role</td>
+                <td>
+                    <ui-select ng-model="userRoleId" on-remove="searchUsers($select.selected, 'role')"
+                               on-select="searchUsers($select.selected, 'role')">
+                        <ui-select-match allow-clear="true" placeholder="Type to select user role to filter user">
+                            <div ng-bind="$select.selected.name"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="o.id as o in avaibleUserRoles">
+                            {{o.name}}
+                        </ui-select-choices>
+                    </ui-select>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 50px; text-align: center;">Tag</td>
+                <td>
+                    <ui-select ng-model="userTagId" on-remove="searchUsers($select.selected, 'tag')"
+                               on-select="searchUsers($select.selected, 'tag')">
+                        <ui-select-match allow-clear="true" placeholder="Type to select user tag to filter user">
+                            <div ng-bind="$select.selected.name"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="o.id as o in avaibleUserTags">
+                            {{o.name}}
+                        </ui-select-choices>
+                    </ui-select>
+                </td>
+            </tr>
+        </table>
+        <div style="padding: 5px;">User List:</div>
+    </div>
+    <div class="userItemsContent">
+        <div class="userItem col-md-6" ng-repeat="user in users" ng-click="selectUser(user)"
+             ng-class="{'userItemSel': selectedUser.idmUserId == user.idmUserId}">
+            {{ getUserName(user) }}
+        </div>
+    </div>
+</div>

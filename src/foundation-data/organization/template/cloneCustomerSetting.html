@@ -1,0 +1,50 @@
+<md-dialog id="unis" flex="30">
+    <form class="light-theme">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Clone Customer Setting</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" style="min-height: 230px;">
+                <div class="grid-100">
+                    <div class="grid-content">
+                        <div class="grid-100 grid-parent container">
+
+                            <div class="grid-20">
+                                <label class="control-label" style="line-height:30px; text-align: right; display: block">
+                                    Customer:
+                                </label>
+                            </div>
+                            <div class="grid-70">
+                                <organization-auto-complete name="customer" ng-model="cloneSettings.customerId" tag="Customer"></organization-auto-complete>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+
+
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-60">&nbsp;</div>
+                        <div class="grid-20">
+                            <button type="button" ng-click="clone()" class="ripplelink">&nbsp;OK&nbsp;</button>
+                        </div>
+                        <div class="grid-20">
+                            <button type="button" ng-click="cancel()" class="ripplelink">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>

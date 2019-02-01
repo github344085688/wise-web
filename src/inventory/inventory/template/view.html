@@ -1,0 +1,52 @@
+<div class="portlet light bordered" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold">InventoryId: {{inventory.id}}</span>
+        </div>
+
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <div class="view-container">
+            <div class="row">
+                <!--<span class="col-md-3"><b>Customer: </b>{{receipt.customer.name}}</span>-->
+                <!--<span class="col-md-3"><b>Carrier: </b>{{receipt.carrier.name}}</span>-->
+                <!--<span class="col-md-3"><b>Title: </b>{{receipt.title.name}}</span>-->
+                <!--<span class="col-md-3"><b>Container: </b>{{receipt.containerNo}}</span>-->
+            </div>
+            <div class="row">
+                <span class="col-md-3"><b>Purchase Order No.: </b>{{receipt.poNo}} </span>
+                <span class="col-md-3"><b>Reference: </b>{{receipt.referenceNo}}
+                <span class="col-md-3"><b>BOL: </b>
+                     <span  ng-repeat="bolNo in receipt.bolNos">
+                        {{bolNo}}&nbsp;
+                     </span>
+                </span>
+                <span class="col-md-3"><b>Seal: </b> {{receipt.sealNo}}</span>
+            </div>
+            <div class="row">
+                <span class="col-md-4"><b>ETA: </b>{{receipt.eta | amDateFormat:'YYYY-MM-DD HH:00'}}</span>
+                <span class="col-md-4"><b>Appointment Time: </b>{{receipt.appointmentTime | amDateFormat:'YYYY-MM-DD HH:00'}}</span>
+                <span class="col-md-4"><b>In Yard Time: </b>{{receipt.inYardTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</span>
+            </div>
+            <div class="row">
+                <span class="col-md-4"><b>Status: </b>{{receipt.status}}</span>
+                <span class="col-md-4"><b>Devanned Time: </b>{{receipt.devannedTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</span>
+                <span class="col-md-4"><b>Note: </b>{{receipt.note}}</span>
+            </div>
+            <div class="row">
+                <span class="col-md-12"><b>LP: </b>
+                    <span  ng-repeat="lp in receipt.lps track by $index" ng-show="receipt.status === 'Closed'">
+                        <a>{{lp}}</a>&nbsp;
+                    </span>
+                </span>
+            </div>
+            <div class="row">
+                <span class="col-md-12"><b>Pictures: </b></span>
+            </div>
+            <div class="row">
+                <span class="col-md-12">
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,254 @@
+[{
+    "title": "Inbound",
+    "state": "wms.inbound",
+    "icon": "local_shipping",
+    "url": "",
+    "subMenu": [{
+        "title": "Receipt",
+        "state": "wms.inbound.receipt.list",
+        "icon": "receipt",
+        "url": "/wms/inbound/receipt/list",
+        "permissions": "inbound::receipt_read"
+    }]
+},{
+    "title": "Outbound",
+    "state": "wms.outbound",
+    "icon": "local_shipping",
+    "iconClass": "wms-outbound-icon",
+    "url": "",
+    "subMenu": [{
+        "title": "Order",
+        "state": "wms.outbound.order.list",
+        "icon": "view_list",
+        "url": "/wms/outbound/order/list",
+        "permissions": "outbound::order_read"
+    }, {
+        "title": "Inventory Commitment",
+        "state": "wms.outbound.inventoryCommitment",
+        "icon": "dashboard",
+        "url": "/wms/outbound/inventory-commitment/commitmentReport",
+        "permissions": "outbound::commitment_read"
+    }, {
+        "title": "Order Plan",
+        "state": "wms.outbound.order-plan.list",
+        "icon": "dashboard",
+        "url": "/wms/outbound/order-plan/list",
+        "permissions": "outbound::orderPlan_read"
+    }, {
+        "title": "Pack",
+        "icon": "dashboard",
+        "state": "wms.pack",
+        "url": "",
+        "permissions": "outbound::packOrder_read",
+        "subMenu": [{
+            "title": "Select Order to Pack",
+            "state": "wms.outbound.pack.orderToPack",
+            "icon": "list",
+            "url": "/wms/outbound/pack/order-to-pack",
+            "permissions": "outbound::packOrder_read"
+        }]
+    }, {
+        "title": "Load",
+        "state": "wms.outbound.load.list",
+        "icon": "view_module",
+        "url":"/wms/outbound/load/list",
+        "permissions": "outbound::load_read"
+    },{
+        "title": "Shipment Ticket",
+        "state": "",
+        "icon": "dashboard",
+        "url": "",
+        "permissions": "outbound::shippmentTicket_read",
+        "subMenu": [{
+          "title": "Regular Shipment",
+          "state": "wms.outbound.shipmentTicket.list",
+          "icon": "list",
+          "url": "/wms/outbound/shipment-ticket/list",
+          "permissions": "outbound::shippmentTicket_read"
+        },{
+            "title": "Small Parcel Shipment",
+            "state": "wms.outbound.shipmentTicket.smallParcel",
+            "icon": "list",
+            "url": "/wms/outbound/shipment-ticket/smallParcel",
+            "permissions": "outbound::shippmentTicket_read"
+        }]
+    }]
+},{
+    "title": "Task",
+    "state": "wms.task",
+    "icon": "web_asset",
+    "url": "",
+    "subMenu": [{
+        "title": "General Task",
+        "state": "wms.task.generalTask.list",
+        "icon": "list",
+        "url": "/wms/task/general-task/list",
+        "permissions": "task::generalTask_read"
+    },
+    {
+        "title": "Receive Task",
+        "state": "wms.task.receiveTask.list",
+        "icon": "list",
+        "url": "/wms/task/receive-task/list",
+        "permissions": "task::receiveTask_read"
+    },
+    {
+        "title": "Pick Task",
+        "state": "wms.task.pickTask.list",
+        "icon": "list",
+        "url": "/wms/task/pick-task/list",
+        "permissions": "task::pickTask_read"
+    },
+    {
+        "title": "QC Task",
+        "state": "wms.task.qcTask.list",
+        "icon": "list",
+        "url": "/wms/task/qc-task/list",
+        "permissions": "task::qcTask_read"
+    },
+    {
+        "title": "Pack Task",
+        "state": "wms.task.packTask",
+        "icon": "list",
+        "url": "/wms/task/pack-task",
+        "permissions": "task::generalPackTask_read, task::parcelPackTask_read",
+        "subMenu": [{
+            "title": "General Pack Task",
+            "state": "wms.task.packTask.general.list",
+            "icon": "list",
+            "url": "/wms/task/pack-task/general/list",
+            "permissions": "task::generalPackTask_read"
+        },{
+            "title": "Parcel Pack Task",
+            "state": "wms.task.packTask.parcel.list",
+            "icon": "list",
+            "url": "/wms/task/pack-task/parcel/list",
+            "permissions": "task::parcelPackTask_read"
+        }]
+    },
+    {
+        "title": "Load Task",
+        "state": "wms.task.loadTask",
+        "icon": "list",
+        "url": "/wms/task/load-task",
+        "permissions": "task::generalLoadTask_read, task::parcelLoadTask_read",
+        "subMenu": [{
+            "title": "General Load Task",
+            "state": "wms.task.loadTask.general.list",
+            "icon": "list",
+            "url": "/wms/task/load-task/general/list",
+            "permissions": "task::generalLoadTask_read"
+        },{
+            "title": "Parcel Load Task",
+            "state": "wms.task.loadTask.parcel.list",
+            "icon": "list",
+            "url": "/wms/task/load-task/parcel/list",
+            "permissions": "task::parcelLoadTask_read"
+        }]
+    },
+    {
+        "title": "PutAway Task",
+        "state": "wms.task.putAwayTask.list",
+        "icon": "list",
+        "url": "/wms/task/putaway-task/list",
+        "permissions": "task::putAwayTask_read"
+    },{
+        "title": "Configuration Change Task",
+        "state": "wms.task.configurationChangeTask.list",
+        "icon": "view_list",
+        "url": "/wms/task/configuration-change-task/list",
+        "permissions": "task::configurationChangeTask_read"
+    },{
+        "title": "Replenishment Task",
+        "state": "wms.task.replenishmentTask.list",
+        "icon": "view_list",
+        "url": "/wms/task/replenishment-task/list",
+        "permissions": "task::replenishmentTask_read"
+    },{
+        "title": "Put Back Task",
+        "state": "wms.task.putBackTask.list",
+        "icon": "view_list",
+        "url": "/wms/task/put-back-task/list",
+        "permissions": "task::putBackTask_read"
+    },{
+        "title": "Transload Task",
+        "state": "wms.task.transloadTask.list",
+        "icon": "view_list",
+        "url": "/wms/task/transload-task/list",
+        "permissions": "task::transloadTask_read"
+    }
+    ,{
+        "title": "Inventory Movement Task",
+        "state": "wms.task.inventoryMovementTask.list",
+        "icon": "view_list",
+        "url": "/wms/task/inventory-movement-task/list",
+         "permissions": "task::inventoryMovementTask_read"
+     },
+    {
+        "title": "Plug in Step Into Task",
+        "state": "wms.task.pluginStepIntoTask.plugin",
+        "icon": "list",
+        "url": "/wms/task/plugin-step-into-task/plugin",
+        "permissions": "task::pluginStep_read"
+    },{
+        "title": "Unassigned Task",
+        "state": "wms.task.unassignTask.list",
+        "icon": "view_list",
+        "url": "/wms/task/unassigned-task/list",
+        "permissions": "task::unassigned_read"
+    }]
+},{
+    "title": "Material Line Management",
+    "state": "wms.material-manage.list",
+    "icon": "list",
+    "url": "/wms/material-manage/list",
+    "permissions": "materialManage_read"
+},{
+    "title": "Billing Record",
+    "state": "wms.billingRecord.list",
+    "icon": "list",
+    "url": "/wms/billing-record/list",
+    "permissions": "billingRecord_read"
+},{
+    "title": "Statistics",
+    "state": "wms.statistics",
+    "icon": "list",
+    "url": "",
+    "subMenu": [{
+        "title": "Order Itemline By Item",
+        "state": "wms.statistics.order-itemline.list",
+        "icon": "list",
+        "url": "/wms/statistics/order-itemline",
+        "permissions": "statistics::orderItemLineByItem_read"
+    },{
+        "title": "Order Itemline By Order",
+        "state": "wms.statistics.order-itemline.list",
+        "icon": "list",
+        "url": "/wms/statistics/itemline-order",
+        "permissions": "statistics::orderItemLineByOrder_read"
+    },{
+        "title": "Item Velocity",
+        "state": "wms.statistics.item-velocity.list",
+        "icon": "list",
+        "url": "/wms/statistics/item-velocity",
+        "permissions": "statistics::orderItemLineByOrder_read"
+    },{
+        "title": "Pick Task Statistics",
+        "state": "wms.statistics.order-itemline.list",
+        "icon": "list",
+        "url": "/wms/statistics/pick-task-statistics",
+        "permissions": "statistics::pickTask_read"
+    },{
+        "title": "Task Statistics",
+        "state": "wms.statistics.order-itemline.list",
+        "icon": "list",
+        "url": "/wms/statistics/task-statistics",
+        "permissions": "statistics::pickTask_read"
+    }]
+},{
+    "title": "EDI Log",
+    "state": "wms.edi.list",
+    "icon": "list",
+    "url": "/wms/edi/list",
+    "permissions": "edi::log_read"
+}]

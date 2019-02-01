@@ -1,0 +1,79 @@
+<div ng-show="isLoading" class="text-center">
+    <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+</div>
+<div  ng-show="!isLoading">
+    <div class="grid-100 grid-content row" style="overflow: hidden; padding-bottom: 50px;">
+        <div class="grid-parent grid-100 container">
+            <div class="grid-10"></div>
+            <h1 class="section-label pull-left">Movement Task: {{task.id}}</h1>
+            <div>
+                <button type="button" class="grid-15 ripplelink pull-right"
+                        permission-check="{{'task::movementTask_write'}}"
+                        ng-click="editTask(task.id)">Edit Task</button>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <span><b>Status: </b>{{task.status}}</span>
+            </div>
+            <div class="grid-25">
+                <span><b>Priority: </b>{{task.priority}}</span>
+            </div>
+            <div class="grid-25">
+                <span><b>Default Assignee: </b>{{task.assignee.firstName}} {{orderPlan.assignee.lastName}}</span>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25"><b>Item</b>:  <item-display item="task"></item-display></div>
+            <div class="grid-25"><b>QTY</b>: {{task.qty}}</div>
+            <div class="grid-25"><b>UOM</b>: {{task.unitName}}</div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25"><b>From LP</b>:  {{task.fromLPId}}</div>
+            <div class="grid-25"><b>To LP</b>: {{task.toLPId}}</div>
+            <div class="grid-25"><b>To Location</b>: {{task.toLocationName}}</div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25"><b>Create Time: </b>{{orderPlan.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                &nbsp;<span ng-show="orderPlan.createdBy">({{orderPlan.createdBy}})</span></div>
+            <div class="grid-25"><b>Update Time: </b>{{orderPlan.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                &nbsp;<span ng-show="orderPlan.updatedBy">({{orderPlan.updatedBy}})</span></div>
+        </div>
+    </div>
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 panel"  ng-repeat="step in task.steps">
+            <div class="grid-parent grid-100 container panel-heading">
+                <div style="display: block; float: left;line-height:34px;" class="panel-title"> STEP | {{step.name}}</div>
+                <div class="actions" style="text-align: right;">
+                    <button type="button" class="grid-10 ripplelink pull-right"
+                            update-step-assignees task-step="step"  is-unis="true"
+                            permission-check="{{'task::movementTask_write'}}">Edit Assignees</button>
+                </div>
+            </div>
+            <div class="grid-100" >
+                <ul class="nav-tabs">
+                    <li ng-class="{'active':activeTabs[step.id] == 'content'}">
+                        <a data-toggle="tab" ng-click="changeTab('content', step.id)"> Content </a>
+                    </li>
+                    <li ng-class="{'active':activeTabs[step.id] == 'stepException'}">
+                        <a data-toggle="tab" ng-click="changeTab('stepException', step.id)"> Exception </a>
+                    </li>
+                </ul>
+                <div  class="grid-100 tab-content active" style="padding-top: 20px; padding-bottom: 30px;">
+                    <div ng-class="{'active':activeTabs[step.id] == 'content'}" class="tab-pane ">
+                        <div ng-include="'wms/task/common/template/unisGenericStep.html'"></div>
+                    </div>
+                    <div ng-class="{'active':activeTabs[step.id] == 'stepException'}" class="tab-pane ">
+                        <div ng-include="'wms/task/common/template/stepException.html'"
+                            ng-repeat="exception in execptionGroupByStepId[step.stepId]">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

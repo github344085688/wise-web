@@ -1,0 +1,24 @@
+<header class="page-header navbar navbar-fixed-top"></header>
+<div class="clearfix"></div>
+
+<!-- BEGIN CONTAINER -->
+<div class="page-container">
+    <sidebar-menu module-name="{{moduleName}}" ng-if="isShowMenu()"
+                  keep-expanded="false" auto-scroll="true" slide-speed="200"></sidebar-menu>
+    <!-- BEGIN CONTENT -->
+    <div class="page-content-wrapper" ng-class="{'page-content-margin-left':isShowMenu()}">
+        <div class="page-content" ng-class="{'no-sidebar': moduleName === 'gis'}">
+            <!-- BEGIN ACTUAL CONTENT -->
+            <div ui-view>
+                <div class="xs-col-12" style="padding: 20px;min-height:500px;">
+                    <h1>Welcome!</h1>
+                </div>
+            </div>
+
+            <!-- END ACTUAL CONTENT -->
+        </div>
+    </div>
+    <!-- END CONTENT -->
+</div>
+<footer class="footer" ng-if="moduleName != 'gis'"></footer>
+<!-- END CONTAINER -->

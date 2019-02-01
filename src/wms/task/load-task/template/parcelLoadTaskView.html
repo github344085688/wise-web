@@ -1,0 +1,107 @@
+<div class="portlet light bordered" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold">Parcel Load Task: {{task.id}}</span>
+        </div>
+    </div>
+    <div class="portlet-body  form form-horizontal">
+        <div class="form-group">
+            <span class="col-md-3">
+                <b>Entry ID: </b>{{task.entryId}}</span>
+            <span class="col-md-3">
+                <b>Assignee: </b>{{task.assignee.firstName}}{{task.assignee.lastName}}</span>
+            <span class="col-md-3">
+                <b>Status: </b>{{task.status}}</span>
+            <span class="col-md-3">
+                <b>Priority: </b>{{task.priority}}</span>
+        </div>
+        <div class="form-group">
+            <span class="col-md-3">
+                <b>Location: </b>{{task.locationName}}</span>
+            <span class="col-md-3">
+                <b>Container NO: </b>{{task.containerNO}}</span>
+            <span class="col-md-3">
+                <b>Customer: </b>{{task.customerName}}</span>
+            <span class="col-md-3">
+                <b>Carrier: </b>{{task.carrierName}}</span>
+        </div>
+        <div class="form-group">
+            <span class="col-md-9">
+                <b>Description:</b> {{task.description}}
+            </span>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <b>Start Time:</b>
+                <span>{{task.startTime}}</span>
+            </div>
+            <div class="col-md-3">
+                <b>End Time:</b>
+                <span>{{task.endTime}}</span>
+            </div>
+            <span class="col-md-3">
+                <b>Created Time: </b>{{task.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}} &nbsp;
+                <span ng-show="task.createdBy">({{task.createdBy}})</span>
+            </span>
+            <span class="col-md-3">
+                <b>Updated Time: </b>{{task.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}} &nbsp;
+                <span ng-show="task.updatedBy">({{task.updatedBy}})</span>
+            </span>
+        </div>
+        <div class="panel panel-default"  ng-repeat="step in task.steps">
+            <div class="panel-heading">
+                <div class="panel-title" style="display:block;float:left;line-height:34px;"> STEP | {{step.name}}</div>
+                <div class="actions" style="text-align: right;">
+                    <button type="button" class="btn yellow" permission-check="{{'task::parcelLoadTask_write'}}" update-step-assignees task-step="step">Edit Assignees</button>
+                    <button type="button" class="btn blue" ng-click="reopenStep(step)"
+                            permission-check="{{'task::parcelLoadTask_write'}}"
+                            ng-disabled="step.status != 'Done' && step.status != 'Force Closed'">Reopen
+                    </button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="tabbable-custom" style="margin-bottom: 0px; overflow: visible">
+                    <ul class="nav nav-tabs">
+                        <li ng-class="{'active':activeTabs[step.id] == 'content'}">
+                            <a data-toggle="tab" ng-click="changeTab('content', step.id)"> Content </a>
+                        </li>
+                        <li ng-class="{'active':activeTabs[step.id] == 'stepException'}">
+                            <a data-toggle="tab" ng-click="changeTab('stepException', step.id)"> Exception </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" style="padding:15px;">
+                        <div ng-class="{'active':activeTabs[step.id] == 'content'}" class="tab-pane ">
+                            <div ng-include="'wms/task/common/template/genericStep.html'"></div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <b>SLP</b>:&nbsp;<span ng-repeat="slp in step.slps">{{slp}}<span ng-show="!$last">, &nbsp;</span></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <b>Tracking NOs</b>:&nbsp;<span ng-repeat="trackingNo in step.trackingNos">{{trackingNo}}<span ng-show="!$last">, &nbsp;</span></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <div><b>Photos</b>:&nbsp;</div>
+                                    <ul class="feeds" style="display: inline-block;">
+                                        <li ng-repeat="fileId in step.fileIds" style="display: inline-block; margin: 5px 5px;">
+                                            <img style="width:50px;height: 50px;" http-src="/file-app/file-download/{{fileId}}"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-class="{'active':activeTabs[step.id] == 'stepException'}" class="tab-pane">
+                            <div style="padding: 20px 20px;">
+                                {{step.forceCloseReason}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

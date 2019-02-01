@@ -1,0 +1,116 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Admin</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Service</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Item Import</a>
+        </li>
+    </ul>
+</div>
+
+<div class="container-fluid" style="margin:15px">
+    <div class="tabbable-custom" style="margin-top: 15px;">
+        <ul class="nav nav-tabs ">
+            <li ng-class="{'active':activetab == 'itemSpec'}">
+                <a data-toggle="tab" ng-click="changeTab('itemSpec')"> Import Item Spec & Item Unit </a>
+            </li>
+            <li ng-class="{'active':activetab == 'itemKitting'}">
+                <a ng-click="changeTab('itemKitting')" data-toggle="tab"> Import Item Kitting </a>
+            </li>
+            <li ng-class="{'active':activetab == 'importRecord'}">
+                <a ng-click="changeTab('importRecord')" data-toggle="tab"> Item Import Records </a>
+            </li>
+        </ul>
+        <div class="tab-content" style="padding:15px; min-height: 330px;">
+            <div ng-show="activetab != 'importRecord'" class="tab-pane active">
+                <div class="row form-group" ng-show="!isUploading">
+
+                    <label ng-if="activetab == 'itemSpec' " class="col-md-2 control-label" style="line-height:30px; text-align: right;">Is Default Mapping For All Customers:
+                    </label>
+                    <div class="col-md-1" ng-if="activetab == 'itemSpec' ">
+                        <md-switch class="md-primary" aria-label="Has Serial NumbeIs Default Mapping For All Customersr" ng-model="importMappingSearch.isCommonMapping"
+                            ng-change="changeCommonMapping(importMappingSearch.isCommonMapping)" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                    </div>
+                    <label class="bold col-md-2" style="padding-left: 20px; padding-top: 5px; text-align: right;">Excel Data File:</label>
+                    <div class="col-md-3">
+                        <input type="file" id="excelDataFile" name="excelDataFile" class="form-control" ng-model="excelDataFilePath" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+                            onchange="angular.element(this).scope().excelDataFileChange(this);" ng-readonly="true" />
+                    </div>
+
+
+
+                    <div class="col-md-3" ng-if="(activetab == 'itemSpec' && !importMappingSearch.isCommonMapping) || activetab == 'itemKitting' ">
+                        <div class="row form-group">
+                            <label class="col-md-4 control-label" style="line-height:30px; text-align: right;">
+                                Customer:
+                                <span style="color: red;">*</span>
+                            </label>
+                            <div class="col-md-8">
+                                <organization-auto-complete name="customer" ng-model="importMappingSearch.customerId" tag="Customer" on-select="onSelectMappingCustomer(org.id)"
+                                    required></organization-auto-complete>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-show="isUploading" class="text-center">
+                    <img src="assets/img/loading-spinner-grey.gif">
+                    <span>&nbsp;UPLOADING...</span>
+                </div>
+
+                <div ng-show="importUploadDataSimple.length > 0 && !isUploading">
+
+                    <div ng-include="'admin/service/item-import/config/template/excelDataRow.html'"></div>
+                    <pager total-count="importUploadData.length" page-size="pageSize" load-content="loadContent(currentPage)"></pager>
+
+                    <div ng-include="'admin/service/item-import/config/template/defaultValue.html'"></div>
+                    <div ng-include="'admin/service/item-import/config/template/excelFieldSplit.html'"></div>
+                    <div class="row form-group " style="margin: 10px 0px 0px 20px;">
+                        <div class="bold col-md-2">
+                            Data Field Match:
+                        </div>
+
+                        <div ng-if="activetab == 'itemSpec'" class="bold col-md-10 ">
+
+                            <button type="button" class="btn blue" ng-click="addAKA()" style="float:right">Add Item AKA</button>
+                            <button type="button" class="btn blue" ng-click="addUOM()" style="float:right;margin-right:10px;">Add Item UOM</button>
+
+                        </div>
+
+                    </div>
+
+                    <div ng-include="'admin/service/item-import/config/template/itemSpecMapping.html'"></div>
+
+                    <div ng-if="activetab == 'itemSpec'" ng-include="'admin/service/item-import/config/template/itemUOM.html'"></div>
+
+                    <div ng-if="activetab == 'itemSpec'" ng-include="'admin/service/item-import/config/template/itemAKA.html'"></div>
+
+
+                    <div class="row form-group" style="margin: 10px; padding: 10px; border-top: 1px solid #ddd;">
+
+                        <div ng-if="activetab == 'itemKitting'">
+                            <input type="checkbox" ng-model="data.kittingItemsIsOverWrite">
+                            <label>Is Over Write</label>
+                        </div>
+                        <div class="col-md-9" style="text-align: right; float:right">
+                            <waitting-btn type="submit" btn-class="btn blue" ng-click="submit()" value="submitLabel" is-loading="loading" ng-if="activetab == 'itemKitting'"></waitting-btn>
+                            <waitting-btn ng-if="activetab == 'itemSpec' || activetab == 'itemKitting'" type="submit" ng-click="submitMapping()" btn-class="btn green"
+                                value="submitMappingLabel" is-loading="mapLoading"></waitting-btn>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-if="activetab == 'importRecord'" class="tab-pane active">
+                <div ng-include="'admin/service/item-import/config/template/itemRecord.html'"></div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,176 @@
+<div class="grid-100 row">
+    <div class="grid-content" style="overflow: hidden">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Order Plan List</h1>
+            <a class="create-button" permission-check="{{'outbound::orderPlan_write'}}" ui-sref="wms.outbound.order-plan.add"><b>Create
+                    Order Plan</b></a>
+
+            <b style="float: right; margin: 0px 10px;">|</b>
+
+            <a class="create-button" permission-check="{{'outbound::orderPlan_write'}}" ui-sref="wms.outbound.order-plan.top"
+                target="_blank"><b>Get Top Order Items</b></a>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25" style="margin-top: 6px;">
+                <label>Customer</label>
+                <organization-auto-complete ng-model="orderPlan.customerId" name="customer" allow-clear="true" tag="Customer"></organization-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Pick Type:</label>
+                <ui-select name="pickType" ng-model="orderPlan.pickType">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="pickType in pickTypes | filter: $select.search" refresh="getPickTypes()"
+                        refresh-delay="50">
+                        <div ng-bind="pickType"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+
+
+            <div class="grid-25">
+                <label class="label-input">Pick Way:</label>
+                <ui-select name="pickWay" ng-model="orderPlan.pickWay">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="pickWay in pickWays  | filter: $select.search" refresh="getPickWays()"
+                        refresh-delay="50">
+                        <div ng-bind="pickWay"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Assignee</label>
+                <user-auto-complete ng-model="orderPlan.assigneeUserId" allow-clear="true"></user-auto-complete>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Status</label>
+                <ui-select name="status" ng-model="orderPlan.status">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in orderPlanStatuses| filter: $select.search">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Order Plan ID</label>
+                <input type="text" input-auto-fill="PLAN-" placeholder="Enter Order Plan ID" ng-model="orderPlan.id"
+                    ng-keyup="keyUpSearch($event)" />
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Order ID</label>
+                <lt-tags-input placeholder="Enter Order ID" ng-model="orderPlan.orderIds" fill="DN-" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Pick Task ID</label>
+                <lt-tags-input placeholder="Enter Pick Task ID" ng-model="orderPlan.pickTaskIds" fill="TASK-" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Configuration Change Task</label>
+                <lt-tags-input placeholder="Enter CC Task ID" ng-model="orderPlan.ccTaskIds" fill="TASK-" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Schedule Time From</label>
+                <lt-date-time value="orderPlan.scheduleTimeFrom" date-format="yyyy-mm-dd" min-view="2" />
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Schedule Time To</label>
+                <lt-date-time value="orderPlan.scheduleTimeTo" date-format="yyyy-mm-dd" min-view="2" />
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Enable Auto Group Pick Stragety:</label>
+                <ui-select name="pickType" ng-model="orderPlan.enableAutoGroupPickStragety">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in [true, false]">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-90">&nbsp;</div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="searchOrderPlans()" value="'Search'"
+                    is-loading="loading"></waitting-btn>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Pick Type</th>
+                        <th>Pick Way</th>
+                        <th>Schedule Time</th>
+                        <th>Assignee</th>
+                        <th>Status</th>
+                        <th>Customer</th>
+                        <th>Orders (Retailer)</th>
+                        <th>Pick Tasks</th>
+                        <th>Configuration Change Tasks</th>
+                        <th>Create Time</th>
+                        <th>Update Time</th>
+                        <th permission-check="{{'outbound::orderPlan_write'}}">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="orderPlan in orderPlanView track by $index">
+                        <td><a ng-href="{{'#/wms/outbound/order-plan/view/' + orderPlan.id}}" target="_blank">{{orderPlan.id}}</a></td>
+                        <td>{{orderPlan.pickType}}</td>
+                        <td>{{orderPlan.pickWay}}</td>
+                        <td>{{orderPlan.scheduleTime | amDateFormat:'YYYY-MM-DD'}}</td>
+                        <td>{{orderPlan.assignee.firstName}} {{orderPlan.assignee.lastName}}</td>
+                        <td>{{orderPlan.status}}</td>
+                        <td>{{orderPlan.customerName}}</td>
+                        <td>
+                            <span ng-repeat="orderRetailer in orderPlan.orderWithRetailers track by $index">
+                                
+                                    <a ng-href="{{'#/wms/outbound/order/' + orderRetailer.orderId}}" target="_blank">
+                                        {{orderRetailer.orderId }}</a> {{orderRetailer.retailer ? " ("+ orderRetailer.retailer +") ":''}}&nbsp;
+                            </span>
+                        </td>
+                        <td>
+                            <span ng-repeat="pickTaskId in orderPlan.pickTaskIds track by $index">
+                                <a ng-href="{{'#/wms/task/pick-task/' + pickTaskId}}" target="_blank">{{pickTaskId}}</a>
+
+                            </span>
+                        </td>
+                        <td>
+                            <span ng-repeat="ccTaskId in orderPlan.ccTaskIds track by $index">
+                                {{ccTaskId}}&nbsp;
+                            </span>
+                        </td>
+                        <td>{{orderPlan.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                        <td>{{orderPlan.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                        <td permission-check="{{'outbound::orderPlan_write'}}">
+                            <a ng-click="deleteOrderPlan(orderPlan.id)" title="Delete" ng-show="orderPlan.status == 'Building'">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+    </div>
+</div>

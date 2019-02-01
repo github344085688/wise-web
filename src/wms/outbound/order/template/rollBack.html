@@ -1,0 +1,55 @@
+<md-dialog flex="40">
+    <form novalidate name="editForm" class="form-horizontal">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Roll Back</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <i class="material-icons">close</i>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div class="row">
+                    <div class="portlet light bordered">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <span class="caption-subject bold" style="color: rgba(185, 57, 57, 0.56);">
+                                Please choose the status for this order to roll back to
+                                </span>
+                            </div>
+                        </div>
+                        <div class="portlet-body form form-horizontal">
+                            <form>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <label class="bold">Statuses:</label>
+                                        <md-radio-group name="status" ng-model="data.status" class="md-primary"
+                                        style="margin-left:15px;">
+                                            <md-radio-button ng-value="status" ng-disabled="disableArr[$index]"
+                                                             ng-repeat="status in statuses track by $index"
+                                                             style="display: inline-block; margin-right: 10px;">{{status}}</md-radio-button>
+                                        </md-radio-group>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-show="errorMessage">
+                                    <div class="col-md-12" style="color:red">{{errorMessage}}</div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <div style="margin-right: 50px">
+                <waitting-btn type="submit" btn-class="btn blue" ng-click="editForm.$valid && submit()"
+                              value="'Save'" is-loading="loading"></waitting-btn>
+                <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+
+<!--ng-cloak-->

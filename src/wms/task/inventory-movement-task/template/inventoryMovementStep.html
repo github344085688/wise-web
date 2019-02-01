@@ -1,0 +1,46 @@
+<div class="grid-parent grid-100 container">
+    <div class="col-md-3"><b>Assignee</b>:
+        <span style="margin:5px 5px" ng-repeat="user in step.assignees">{{user.firstName}} {{user.lastName}}</span>
+    </div>
+    <div class="col-md-3"><b>Status</b>: {{step.status}}</div>
+</div>
+<div class="grid-parent grid-100 container">
+    <div class="grid-25"><b>Start Time</b>:
+        {{step.startTime | amDateFormat:'YYYY-MM-DD HH:mm'}}
+    </div>
+    <div class="grid-25"><b>End Time</b>:
+        {{step.endTime | amDateFormat:'YYYY-MM-DD HH:mm'}}
+    </div>
+</div>
+<div class="grid-parent grid-100 container">
+    <div class="grid-100"><b>Process:</b></div>
+</div>
+<table class="table">
+    <thead>
+    <tr>
+        <th> Item </th>
+        <th> QTY </th>
+        <th> Unit </th>
+        <th> SN List </th>
+        <th> From LP </th>
+        <th> To LP </th>
+        <th ng-show="step.stepType == 'Inventory Movement Drop'"> To Location </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr  ng-repeat="process in processesGroupByStepId[step.id] track by $index">
+        <td><item-display item="process"></item-display></td>
+        <td>{{process.qty}}</td>
+        <td>{{process.unitName}}</td>
+        <td>
+            <span ng-repeat="sn in process.snList">
+                {{sn}}&nbsp;
+            </span>
+        </td>
+        <td>{{process.fromLPId}}</td>
+        <td>{{process.toLPId}}</td>
+        <td ng-show="step.stepType == 'Inventory Movement Drop'">{{process.toLp.locationObject.name}}</td>
+    </tr>
+    </tbody>
+</table>
+

@@ -1,0 +1,67 @@
+<div class="grid-100 row">
+        <div class="grid-content grid-100">
+            <div class="grid-parent grid-100 container">
+                <h1 class="section-label pull-left">Schedule Report View</h1>
+    
+            </div>
+           
+            <div class=" grid-parent grid-100 container">
+                <div class="grid-10 ">
+                    <waitting-btn type="button" btn-class="ripplelink" ng-click="getDownload()" value="'Export to XLS'" is-loading="loading"></waitting-btn>
+                </div>
+                <div class="grid-90 ">
+                    &nbsp;
+                </div>
+            </div>
+            <div class=" grid-parent grid-100 container">
+                <div class="grid-parent grid-100 container" style="overflow: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr style="font-size:11px">
+    
+                                <th ng-repeat="col in colDefs track by $index" class="{{getSortClass($index)}}" ng-click="sortClick($index)">
+                                    {{col.headerName}}
+                                </th>
+    
+                            </tr>
+                        </thead>
+                        <tbody style="font-size:11px">
+                            <tr ng-repeat="schedule in scheduleReportView">
+                                <th>{{schedule["CUSTOMER ID"]}}</th>
+                                <th>{{schedule["TITLE"]}}</th>
+                                <th>{{schedule["RECEIPT NO."]}}</th>
+                                <th>{{schedule["ITEM ID"]}}</th>
+                                <th>{{schedule["ITEM DESCRIPTION"]}}</th>
+                                <th>{{schedule["GRADE"]}}</th>
+                                <th>{{schedule["REFERENCE NO."]}}</th>
+                                <th>{{schedule["PO NO."]}}</th>
+                                <th>{{schedule["SOURCE"]}}</th>
+                                <th>{{schedule["CONTAINER SIZE"]}}</th>
+                                <th>{{schedule["APPOINTMENT DATE"]}}</th>
+                                <th>{{schedule["IN YARD DATE"]}}</th>
+                                <th>{{schedule["DEVANNED DATE"]}}</th>
+                                <th>{{schedule["CONTAINER NO."]}}</th>
+                                <th>{{schedule["STATUS"]}}</th>
+                                <th>{{schedule["EXPECTED QTY"]}}</th>
+                                <th>{{schedule["RECEIVED QTY"]}}</th>
+                                <th>{{schedule["PALLET QTY"]}}</th>
+                                <th>{{schedule["EXPECTED CFT"]}}</th>
+                                <th>{{schedule["RECEIVED CFT"]}}</th>
+                                <th>{{schedule["EXPECTED WEIGHT(lb.)"]}}</th>
+    
+                            </tr>
+    
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container">
+                <unis-pager total-count="scheduleReport.length" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+            </div>
+            <div class=" grid-parent grid-100 container">
+    
+                <button type="button" class="grid-10 pull-right cancel" ng-click="cancel()">Cancel</button>
+    
+            </div>
+        </div>
+    </div>

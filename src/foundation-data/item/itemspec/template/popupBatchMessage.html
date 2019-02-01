@@ -1,0 +1,38 @@
+<md-dialog flex="40" ng-cloak>
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Batch {{titleName}} Info</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <i class="material-icons">close</i>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content" style="max-height:400px;overflow:auto">
+
+            <div class="tab-content">
+                <div class="row  form-group" style="border-bottom: 1px solid #eee;">
+                    <div class="col-md-4" style="text-align:right">
+                        <label>Item Name</label>
+                    </div>
+                    <div class="col-md-6 ">
+                        <label>{{titleName}} Property</label>
+                    </div>
+                </div>
+                <div class="row  form-group" ng-repeat=" item in itemSpecInfo" style="border-bottom: 1px solid #eee;">
+                    <div class="col-md-4" style="text-align:right">
+                        {{item.name}} :
+                    </div>
+                    <div class="col-md-6 ">
+
+                        <label style="padding-right:10px" ng-repeat="specFieldId in item.filedIds">{{availablePropertiesMap[ItemSpecFieldIdMap[specFieldId].propertyId].name}}</label>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </md-dialog-content>
+</md-dialog>

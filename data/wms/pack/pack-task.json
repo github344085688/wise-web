@@ -1,0 +1,111 @@
+[{
+    "taskId": "task-001",
+    "assignee": "Bruce",
+    "startPeriod": "06/06/2016 08:08:45 ~ 06/07/2016 08:08:45",
+    "endPeriod": "06/07/2016 08:08:45 ~ 06/08/2016 08:08:45",
+    "note": "This is a test Data",
+    "orders": [
+        {
+        "orderId": "order-001",
+        "LP": ["LP-1", "LP-2", "LP-3"],
+        "pickWay": "Wave",
+        "pickType": "Bulk",
+        "items": [{
+            "itemId": "TV",
+            "qty": 200,
+            "unit": "Pallet",
+            "locations": [{
+                "location": "loc-1",
+                "qty": 140
+            },{
+                "location": "loc-2",
+                "qty": 60
+            }]
+        }, {
+            "itemId": "COKE",
+            "locations": [{
+                "location": "loc-1",
+                "qty": 140
+            }, {
+                "location": "loc-2",
+                "qty": 50
+            }, {
+                "location": "loc-3",
+                "qty": 10
+            }],
+            "qty": 200,
+            "unit": "Pallet"
+        }]
+    },
+        {
+        "orderId": "order-002",
+        "LP": ["LP-4", "LP-5"],
+        "pickWay": "Wave",
+        "pickType": "Bulk",
+        "items": [{
+            "itemId": "TV",
+            "locations": [{
+                "location": "loc-1",
+                "qty": 140
+            }, {
+                "location": "loc-2",
+                "qty": 50
+            }, {
+                "location": "loc-3",
+                "qty": 10
+            }],
+            "qty": 200,
+            "unit": "Case"
+        }, {
+            "itemId": "TV",
+            "locations": [{
+                "location": "loc-1",
+                "qty": 140
+            }, {
+                "location": "loc-2",
+                "qty": 50
+            }, {
+                "location": "loc-3",
+                "qty": 10
+            }],
+            "qty": 200,
+            "unit": "Pallet"
+        }]
+    },
+        {
+        "orderId": "order-003",
+        "LP": ["LP-6"],
+        "pickWay": "Wave",
+        "pickType": "Bulk",
+        "items": [{
+            "itemId": "TV",
+            "locations": [{
+                "location": "loc-1",
+                "qty": 140
+            }, {
+                "location": "loc-2",
+                "qty": 50
+            }, {
+                "location": "loc-3",
+                "qty": 10
+            }],
+            "qty": 200,
+            "unit": "Pallet"
+        }, {
+            "itemId": "TV",
+            "locations": [{
+                "location": "loc-1",
+                "qty": 140
+            }, {
+                "location": "loc-2",
+                "qty": 50
+            }, {
+                "location": "loc-3",
+                "qty": 10
+            }],
+            "qty": 200,
+            "unit": "Pallet"
+        }]
+    }]
+}
+]

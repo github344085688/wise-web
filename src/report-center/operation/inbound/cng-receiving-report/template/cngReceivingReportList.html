@@ -1,0 +1,87 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">CNG Receiving Report</h1>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <form name="editForm">
+                <div class="grid-parent grid-100 container">
+
+                    <div class="grid-33">
+                        <label class="label-input">Customer</label>
+                        <organization-auto-complete name="customer" allow-clear="true" ng-model="searchInfo.customerId" tag="Customer" on-select="onselectCustomer()" ></organization-auto-complete>
+                    </div>
+                    <div class="grid-33">
+                        <label class="label-input">Receipt ID</label>
+                        <lt-tags-input placeholder="Enter Receipt ID" fill="RN-" ng-model="searchInfo.receiptIds" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                    </div>
+
+                    <div class="grid-33">
+                        <label class="label-input">Status</label>
+                        <ui-select multiple name="status" ng-model="searchInfo.receiptStatuses">
+                            <ui-select-match>
+                                {{$item}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in statusList| filter: $select.search">
+                                {{item}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+
+                </div>
+                <div class="grid-parent grid-100 container" ng-if="isShowAka">
+                    <div class="grid-100">
+                        <label class="label-input">Aka</label>
+                        <lt-tags-input placeholder="Enter AKa" ng-model="searchInfo.akas" ng-keyup="keyUpSearch($event)" ></lt-tags-input>
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-100">
+                        <label class="label-input">Lot No</label>
+                        <lt-tags-input placeholder="Enter Lot No" ng-model="searchInfo.lotNos" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-80">
+                        &nbsp;
+                    </div>
+                    <div class="grid-10">
+                        <unis-waitting-btn ng-type="button" style="margin-left: 10px;" btn-class="yellow" ng-click="export()" value="'Export'"
+                            is-loading="exporting"></unis-waitting-btn>
+                    </div>
+                    <div class="grid-10">
+                        <unis-waitting-btn ng-type="button" btn-class=" blue " ng-click="searchCngRecevingReport()" value="'Search'" is-loading="searchLoading"></unis-waitting-btn>
+
+                    </div>
+
+
+                </div>
+            </form>
+        </div>
+
+        <div class=" grid-parent grid-100 container">
+            <div class="grid-parent grid-100 container table-scrollable">
+
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <td ng-repeat="head in reportHeads">{{head}}</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="report in cngRecevingReportsView">
+                            <td ng-repeat="head in reportHeads">
+                                {{report[head]}}
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <unis-pager total-count="cngRecevingReports.length" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+        </div>
+    </div>
+</div>

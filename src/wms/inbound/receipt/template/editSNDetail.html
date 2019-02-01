@@ -1,0 +1,79 @@
+<md-dialog flex="50">
+    <form novalidate name="addItemLineForm" class="form-horizontal">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Edit SN Detail</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content class="" style="padding: 16px 40px 30px 14px;">
+            <div class="form-group" style=" margin:8px auto 0 auto; padding-bottom: 8px; border-bottom: 1px solid #ddd;">
+                    <span ng-if="!isEditSNDetail" style="margin-left:21px;font-weight: bolder;"> Expected SN</span>
+                    <span ng-if="!isEditSNDetail" style="margin-left:87px;font-weight: bolder;"> Expected WEIGHT</span>
+                    <div class="col-md-5" ng-if="isEditSNDetail" style="line-height: 36px;">
+                        <span style="height: 36px;" >Expected SN</span>
+                    </div>
+                    <div class="col-md-5" ng-if="isEditSNDetail" style="line-height: 36px;">
+                        <span style="height: 36px;" >Expected WEIGHT</span>
+                    </div>
+                    <span style="margin-left:37px;font-weight: bolder;" ng-if="!isEditSNDetail"> Received SN</span>
+                    <span style="margin-left:73px;font-weight: bolder;" ng-if="!isEditSNDetail"> Received WEIGHT</span>
+            </div>
+            <div class="form-group" style=" margin:8px auto 0 auto; padding-bottom: 8px; border-bottom: 1px solid #ddd;"   ng-repeat="item in snDetails track by $index">
+                <div class="col-md-3" ng-if="!isEditSNDetail" style="line-height: 36px;">
+                        <span style="height: 36px;" >{{item.sn}}</span>
+                </div>
+
+                <div class="col-md-2" ng-if="!isEditSNDetail" style="line-height: 36px;  ">
+                        <span style="height: 36px;">{{item.weight}}</span>
+                </div>
+
+                <div class="col-md-5" ng-if="isEditSNDetail" style="line-height: 36px;">
+                    <input type="text" class="form-control"  min="1" ng-model="item.sn"/>
+                </div>
+                 <div class="col-md-5" ng-if="isEditSNDetail" style="line-height: 36px;  ">
+                    <input type="text" class="form-control"  min="1" ng-model="item.weight"/>
+                </div>
+
+                <div class="col-md-3" ng-if="!isEditSNDetail" style="line-height: 36px;">
+                    <span style="height: 36px;" ng-if="!isEditSNDetail">{{receivedList[item.sn].sn}}</span>
+               </div>
+
+               <div class="col-md-2" ng-if="!isEditSNDetail && !(receivedList[item.sn].weight && receivedList[item.sn].weight != item.weight)" style="line-height: 36px;">
+                   <span style="height: 36px;" ng-if="!isEditSNDetail">{{receivedList[item.sn].weight}}</span>
+               </div>
+               <div class="col-md-2" ng-if="!isEditSNDetail && receivedList[item.sn].weight && receivedList[item.sn].weight != item.weight" style="line-height: 36px;background-color: yellow;">
+                   <span style="height: 36px;" ng-if="!isEditSNDetail">{{receivedList[item.sn].weight}}</span>
+               </div>
+              
+                <div class="col-md-2" style="line-height: 36px; padding: 0; text-align: right">
+                    <button type="submit" class="btn red " style="width:75px;" ng-click="snDetails.splice( $index,1)" ng-if="isEditSNDetail" >Delete</button>
+                </div>
+            </div>
+
+            <div ng-show="!isEditSNDetail" class="form-group" style=" margin:8px auto 0 auto; padding-bottom: 8px; border-bottom: 1px solid #ddd; background-color: yellow;"   ng-repeat="receivedItem in receivedSNList track by $index">
+                <div class="col-md-3" style="line-height: 36px;">
+                </div>
+                <div class="col-md-2" style="line-height: 36px;">
+                </div>
+                <div class="col-md-3" style="line-height: 36px;">
+                 <span style="height: 36px;" ng-if="!isEditSNDetail">{{receivedItem.sn}}</span>
+               </div>
+               <div class="col-md-2" style="line-height: 36px;">
+                <span style="height: 36px;" ng-if="!isEditSNDetail">{{receivedItem.weight}}</span>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 30px;">
+                <button type="submit" class="btn blue " style="float: right; margin-right: 30px; margin-top: 10px;" ng-click="snDetails.push({sn:'',weight:'',isEdit:true })" ng-if="isEditSNDetail" >Add SN </button>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <div style="margin-right: 50px">
+                <waitting-btn type="submit" btn-class="btn blue" style="margin-right: 15px;"
+                              value="'Update'" is-loading="loading" ng-click="addItemLineForm.$valid && submit()" ng-if="isEditSNDetail"></waitting-btn>
+                <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+

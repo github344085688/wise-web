@@ -1,0 +1,44 @@
+<div class="grid-parent grid-100 container">
+    <h1 class="section-label pull-left">
+        <a ng-href="{{'#/wms/task/configuration-change-task/' + task.id}}" title="View" target="_blank">{{task.id}}</a>
+    </h1>
+    <button type="button" class="grid-10 ripplelink pull-right"
+            permission-check="{{'outbound::orderPlan_write'}}"
+            ng-show="orderPlan.status == 'Task Created' || orderPlan.status == 'Scheduled'"
+            ng-click="editCCTask(task.id)" style="margin-left: 15px;">Edit Task</button>
+</div>
+<div class="grid-parent grid-100 container">
+    <div class="grid-25"><b>Planned Assignee</b>: {{task.plannedAssignee.firstName}} {{task.plannedAssignee.lastName}}</div>
+    <div class="grid-25">
+        <b>Status:</b><label>{{task.status}}</label>
+    </div>
+    <div class="grid-25">
+        <b>Priority:</b>
+        <label>{{task.priority}}</label>
+    </div>
+</div>
+<div class="grid-parent grid-100 container">
+    <div class="grid-25"><b>Item</b>:
+        <item-display item="task"></item-display>
+    </div>
+    <div class="grid-25"><b>QTY</b>: {{task.itemCount}}</div>
+    <div class="grid-25"><b>UOM</b>: {{task.unitName}}</div>
+</div>
+
+<div class="grid-parent grid-100 container">
+    <div class="grid-25"><b>Package Type</b>: {{task.packagingTypeSpecName}}</div>
+    <div class="grid-50"><b>Package Type Product</b>:
+        <span ng-repeat="property in task.packagingTypeProduct.diverseProperties">
+             {{property.name}}: {{property.value}} {{property.unit}}&nbsp;
+         </span>
+    </div>
+</div>
+<div class="grid-parent grid-100 container">
+    <div class="grid-25"><b>LP Configuration Template</b>: {{task.lpTemplete.description}}</div>
+</div>
+<div class="grid-parent grid-100 container">
+    <div class="grid-25"><b>Start Time</b>:{{task.startTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</div>
+    <div class="grid-25"><b>End Time</b>: {{task.endTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</div>
+    <div class="grid-25"><b>Date Created</b>: {{task.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}<span ng-show="task.createdBy">({{task.createdBy}})</span></div>
+    <div class="grid-25"><b>Date Updated</b>: {{task.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}<span ng-show="task.updatedBy">({{task.updatedBy}})</span></div>
+</div>

@@ -1,0 +1,132 @@
+<div class="grid-100" style="background-color: rgba(77, 127, 137, 0.4)">
+
+    <div class="grid-100" style=" line-height: 50px;background-color: rgba(255, 255, 255, 0.87);padding-top: 20px;padding-bottom: 20px">
+        <div class="grid-30" style="text-align:center;">
+            <h1 class="section-label pull-left" style="font-size:40px">Packing Station</h1>
+        </div>
+        <div class="grid-20" style="text-align:center;font-size:30px">
+            {{user.firstName}} {{user.lastName}}
+        </div>
+        <form novalidate ng-submit="bindBranch()">
+            <div class="grid-40" style="text-align:center;font-size:30px;font-weight: bolder">
+                Branch:{{conveyorBranch.name}}
+                <span ng-show="isOccupy">(StoreNo:{{conveyorBranch.occupiedBy}})</span>
+                <input style="width:30%" name="store" placeholder="store" ng-show="!isOccupy" type="text" ng-model="occupiedNumber"
+                    required>
+            </div>
+            <div class="grid-10" style="text-align:center;">
+                <waitting-btn ng-show="isOccupy" type="button" is-loading="loading" btn-class="ripplelink" ng-click="releaseBranch()"
+                    value="'Release Branch'"></waitting-btn>
+                <waitting-btn ng-show="!isOccupy" is-loading="loading" btn-class="ripplelink" btn-type="submit" value="'Bind Branch'"></waitting-btn>
+            </div>
+        </form>
+
+    </div>
+
+    <div class="grid-100" style="margin-top:20px ;background-color: rgba(255, 255, 255, 0.87);margin-bottom: 30px">
+        <div class="grid-25">
+            <b style="font-size:20px">Num. of CLP Picked: </b><span style="font-size:20px">{{storeDetail.pickedCLPNum}}</span>
+        </div>
+        <div class="grid-25">
+            <b style="font-size:20px">Num. of CLP Packed: </b><span style="font-size:20px">{{storeDetail.packedCLPNum}}</span>
+        </div>
+        <div class="grid-25">
+            <b style="font-size:20px">Un-finished Pick Tasks: </b><span style="font-size:20px"><a ng-click="getUnFinishedPickTaskIds()">{{storeDetail.unfinishedPickTaskIds.length}}</a></span>
+        </div>
+    </div>
+
+    <div class="grid-100" style="margin-top:20px ;background-color: rgba(255, 255, 255, 0.87);margin-bottom: 30px">
+
+        <div class="grid-100" style="margin-top: 20px;margin-bottom:20px">
+            <div class="grid-10">
+                <input type="text" ng-model="param.searchClp" ng-keyup="enterEvent($event)" class="form-control"
+                    placeholder="CLP to search" />
+            </div>
+        </div>
+
+        <div class="grid-100" style="margin-bottom:20px">
+            <div class="grid-25">
+                <b style="font-size:20px">DN: </b><span style="font-size:20px">{{lpList.orderId}}</span>
+            </div>
+            <div class="grid-25">
+                <b style="font-size:20px">LongHaul No: </b><span style="font-size:20px">{{lpList.longHaulNo}}</span>
+            </div>
+            <div class="grid-50">
+                <b style="font-size:20px">Scheduled Delivery Date:</b> <span style="font-size:20px">{{lpList.scheduleDate}}</span>
+            </div>
+        </div>
+
+        <div class="grid-100" style="margin-bottom:50px">
+            <div class="grid-25">
+                <b style="font-size:20px">STORE: </b><span style="font-size:20px">{{lpList.store}}</span>
+            </div>
+            <div class="grid-25">
+                <b style="font-size:20px">Pack Task: </b><span style="font-size:20px">{{lpList.packTaskId}}</span>
+            </div>
+            <div ng-show="branchName && branchName != conveyorBranch.name" class="grid-25" style="background-color: yellow">
+                <b style="font-size:20px">Branch Assigned:</b><span style="font-size:20px">{{branchName}}</span>
+            </div>
+            <div ng-show="!(branchName && branchName != conveyorBranch.name)" class="grid-25">
+                <b style="font-size:20px">Branch Assigned:</b><span style="font-size:20px">{{branchName}}</span>
+            </div>
+            <div class="grid-25">
+                <b style="font-size:20px">Item QTY: </b><span style="font-size:20px">{{qtySum}} EA</span>
+            </div>
+        </div>
+
+        <div class="grid-100" style="margin-bottom:30px">
+            <div class="grid-85">
+                &nbsp;
+            </div>
+            <div class="grid-15" style="line-height: 50px;">
+                <waitting-btn type="button" is-loading="exporting" is-ready="branchName == conveyorBranch.name"
+                    btn-class="ripplelink" ng-click="Batch()" value="'Batch Complete'"></waitting-btn>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-100" style="background-color: rgba(255, 255, 255, 0.87);margin-bottom: 20px;">
+        <div class="grid-100" style="margin-top: 20px;margin-bottom: 20px;">
+            <label style="font-size:30px">LP Detail</label>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="font-size:24px">#</th>
+                        <th style="font-size:24px">Description</th>
+                        <th style="font-size:24px">Qty</th>
+                        <th style="font-size:24px">Status</th>
+                        <th style="font-size:24px">To SLP</th>
+                        <th style="font-size:24px">LP Template</th>
+                        <th style="font-size:24px">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-show="!isLoading" ng-repeat="lp in lpList.inventories track by $index">
+                        <td style="font-size:24px">{{$index + 1}}</td>
+                        <td style="font-size:24px">{{lp.itemSpec.name}}</td>
+                        <td style="font-size:24px">{{lp.qty}}{{lp.unit.name}}</td>
+                        <td style="font-size:24px">{{lp.status}}</td>
+                        <td style="font-size:24px"><input type="text" ng-disabled="branchName && branchName != conveyorBranch.name"
+                                ng-model="lp.toSlp"></td>
+                        <td style="font-size:24px;padding-top: 17px;">
+                            <ui-select name="lpTemplate" ng-model="lp.lpTemplateId" ng-disabled="branchName && branchName != conveyorBranch.name">
+                                <ui-select-match allow-clear="true">
+                                    <div ng-bind="$select.selected.lpTemplate.name"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="lpTemplate.lpConfigurationTemplateId as lpTemplate in lpTemplateListSearch[lp.itemSpecId] | filter: $select.search">
+                                    <div ng-bind="lpTemplate.lpTemplate.name"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </td>
+                        <td style="font-size:24px"><a ng-show="branchName && branchName == conveyorBranch.name"
+                                ng-click="packItem(lp)">pack</a></td>
+                    </tr>
+                    <div ng-show="isLoading" class="text-center">
+                        <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                    </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,20 @@
+<ui-select ng-model="$parent.ngModel" on-select="_onSelect($select.selected)"
+           required="{{required}}" name="{{name}}" ng-disabled="$parent.ngDisabled">
+    <ui-select-match allow-clear="{{allowClear}}">
+        <span ng-bind="$select.selected.name"></span>
+    </ui-select-match>
+    <ui-select-choices repeat="lpConfigurationTemplate.id as lpConfigurationTemplate in lpConfigurationTemplates | filter: $select.search"
+                       refresh="searchLpConfigurationTemplates($select.search)" refresh-delay="50">
+       {{lpConfigurationTemplate.name}}
+    </ui-select-choices>
+    <ui-select-no-choice>
+        No available Configuration Template.
+    </ui-select-no-choice>
+</ui-select>
+<!--<ui-select ng-model="lpconf.lpConfigurationTemplateId" style="border-radius: 4px;" required>-->
+    <!--<ui-select-match allow-clear="true">{{$select.selected.description}}</ui-select-match>-->
+    <!--<ui-select-choices repeat="lpConfigurationTemplate.id as lpConfigurationTemplate in lpConfigurationTemplates"-->
+                       <!--refresh="ctrl.getLpConfigurationTemplates()" refresh-delay="1000">-->
+        <!--{{lpConfigurationTemplate.description}}-->
+    <!--</ui-select-choices>-->
+<!--</ui-select>-->

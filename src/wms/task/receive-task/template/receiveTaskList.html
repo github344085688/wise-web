@@ -1,0 +1,129 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Task</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a>Receipt Task</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> Receive Task List</span>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <form>
+                    <div class="row form-group">
+                        <div class="col-md-3">
+                            <label>Entry ID</label>
+                            <input type="text" ng-model="ctrl.searchInfo.entryId" input-auto-fill="ET-" class="form-control" placeholder="Enter Entry ID" ng-keyup="keyUpSearch($event)"/>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Task ID</label>
+                            <lt-tags-input ng-model="ctrl.searchInfo.taskIds" placeholder="Enter Task ID" fill="TASK-" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Receipt ID</label>
+                            <input type="text" ng-model="ctrl.searchInfo.receiptId" input-auto-fill="RN-" class="form-control" placeholder="Enter Receipt ID" ng-keyup="keyUpSearch($event)"/>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Status</label>
+                            <task-status-auto-complete allow-clear="true" ng-model="ctrl.searchInfo.status"></task-status-auto-complete>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-3">
+                            <label>Assignee</label>
+                            <user-auto-complete name="assignee" allow-clear="true" ng-model="ctrl.searchInfo.assigneeUserId"></user-auto-complete>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-3">
+                            <label>Start Time</label>
+                            <lt-date-time placeholder="From" date-format="yyyy-mm-dd hh:ii" minute-step="60"
+                                          value="ctrl.searchInfo.startTimeFrom"></lt-date-time>
+                        </div>
+                        <div class="col-md-3" style="padding-top: 25px;">
+                            <lt-date-time placeholder="To" date-format="yyyy-mm-dd hh:ii" minute-step="60"
+                                          value="ctrl.searchInfo.startTimeTo"></lt-date-time>
+                        </div>
+                        <div class="col-md-3">
+                            <label>End Time</label>
+                            <lt-date-time placeholder="From" date-format="yyyy-mm-dd hh:ii" minute-step="60"
+                                          value="ctrl.searchInfo.endTimeFrom"></lt-date-time>
+                        </div>
+                        <div class="col-md-3" style="padding-top: 25px;">
+                            <lt-date-time placeholder="To" date-format="yyyy-mm-dd hh:ii" minute-step="60"
+                                          value="ctrl.searchInfo.endTimeTo"></lt-date-time>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row form-actions right">
+                            <button type="submit" class="btn blue" ng-click="ctrl.search()">Search</button>
+                        </div>
+                    </div>
+                </form>
+                <div ng-show="!ctrl.searchReceiveTaskCompleted" class="text-center">
+                    <img src="assets/img/loading-spinner-grey.gif" ><span >&nbsp;LOADING...</span>
+                </div>
+                <div ng-show="ctrl.searchReceiveTaskCompleted" class="dataTables_wrapper no-footer">
+                    <div class="table-scrollable">
+                        <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_1" role="grid" aria-describedby="sample_1_info">
+                            <thead>
+                            <tr role="row">
+                                <th> Task ID </th>
+                                <th> Receipt ID </th>
+                                <th> Status </th>
+                                <th> Assignee </th>
+                                <th> Enrty</th>
+                                <th> Dock </th>
+                                <th> Priority </th>
+                                <th> Start Time </th>
+                                <th> End Time </th>
+                                <!--<th> Action </th>-->
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr  ng-repeat="receiveTask in ctrl.receiveTasks track by $index">
+                                    <td>
+                                        <a ui-sref="wms.task.receiveTask.view({taskId:receiveTask.id})" target="_blank">{{receiveTask.id}}</a>
+                                    </td>
+                                    <td>
+                                        <span ng-repeat="receipt in receiveTask.receipts">
+                                            <a ng-href="{{'#/wms/inbound/receipt/' + receipt.id}}" target="_blank">{{receipt.id}}</a>&nbsp;
+                                         </span>
+                                    </td>
+                                    <td>
+                                        {{receiveTask.status}}
+                                        <span ng-if="receiveTask.status == 'In Progress'">&nbsp; {{receiveTask.progress * 100}}%</span>
+                                        <progress ng-if="receiveTask.status == 'In Progress'" value="{{receiveTask.progress * 100}}" max="100"></progress>
+                                    </td>
+                                    <td>{{receiveTask.assignee.firstName}} {{receiveTask.assignee.lastName}}</td>
+                                    <td>{{receiveTask.entryId}}</td>
+                                    <td>{{receiveTask.dock.name}}</td>
+                                    <td>{{receiveTask.priority}}</td>
+                                    <td>{{receiveTask.startTime | amDateFormat:'YYYY-MM-DD HH:mm'}}</td>
+                                    <td>{{receiveTask.endTime | amDateFormat:'YYYY-MM-DD HH:mm' }}</td>
+                                    <!--<td><a ui-sref="wms.inbound.receiveTask.view({taskId:receiveTask.id})" >View</a>  </td>-->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <pager total-count="ctrl.paging.totalCount" current-page ="ctrl.paging.pageNo"  page-size="ctrl.pageObj.pageSize"  load-content="ctrl.loadContent(currentPage)"></pager>
+                    <!--<pager total-count="ctrl.receiveTasks.length" page-size="ctrl.pageSize"  load-content="ctrl.loadContent(currentPage)" ></pager>-->
+                </div>
+            </div>
+            <!-- TABLE -->
+        </div>
+    </div>
+</div>

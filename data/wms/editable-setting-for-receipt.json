@@ -1,0 +1,173 @@
+{
+  "editReceipt": {
+    "isDisabled": true,
+    "status": [
+      "Closed",
+      "Force Closed",
+      "Cancelled"
+    ]
+  },
+  "closeReceipt": {
+    "isDisabled": false,
+    "status": [
+      "In Progress",
+      "Reopened",
+      "Task Completed",
+      "Exception"
+    ]
+  },
+  "cancelReceipt": {
+    "isDisabled": true,
+    "status": [
+      "Task Completed",
+      "Cancelled",
+      "Reopened",
+      "Closed",
+      "Force Closed"
+    ]
+  },
+  "reopenReceipt": {
+    "isDisabled": false,
+    "status": [
+      "Closed",
+      "Force Closed"
+    ]
+  },
+  "addItemLines": {
+    "isDisabled": false,
+    "status": [
+      "Imported",
+      "Open",
+      "Appointment Made",
+      "In Progress",
+      "In Yard"
+    ]
+  },
+  "deleteItemLines": {
+    "isDisabled": false,
+    "status": [
+      "Imported",
+      "Open",
+      "Appointment Made",
+      "In Progress",
+      "In Yard"
+    ]
+  },
+
+  "addMaterialLines": {
+    "isDisabled": true,
+    "status": [
+    ]
+  },
+  "editMaterialLines": {
+    "isDisabled": true,
+    "status": [
+    ]
+  },
+  "deleteMaterialLines": {
+    "isDisabled": true,
+    "status": [
+    ]
+  },
+  "itemSpec": {
+    "isDisabled": false,
+    "isItemLineProperty": true,
+    "status": [
+      "Imported",
+      "Open",
+      "Appointment Made",
+      "In Progress",
+      "In Yard"
+    ]
+  },
+  "supplier": {
+    "isDisabled": false,
+    "isItemLineProperty": true,
+    "status": [
+      "Imported",
+      "Open",
+      "Appointment Made",
+      "In Yard"
+    ]
+  },
+  "unit": {
+    "isDisabled": false,
+    "isItemLineProperty": true,
+    "status": [
+      "Imported",
+      "Open",
+      "Appointment Made",
+      "In Progress",
+      "In Yard"
+    ]
+  },
+  "qty": {
+    "isDisabled": false,
+    "isItemLineProperty": true,
+    "status": [
+      "Imported",
+      "Open",
+      "Appointment Made",
+      "In Progress",
+      "In Yard"
+    ]
+  },
+  "palletQty": {
+    "isDisabled": false,
+    "isItemLineProperty": true,
+    "status": [
+      "Imported",
+      "Open",
+      "Appointment Made",
+      "In Progress",
+      "In Yard"
+    ]
+  },
+  "snList": {
+    "isDisabled": false,
+    "isItemLineProperty": true,
+    "status": [
+      "Imported",
+      "Open",
+      "Appointment Made",
+      "In Progress",
+      "In Yard"
+    ]
+  },
+  "lotNo": {
+    "isDisabled": false,
+    "isItemLineProperty": true,
+    "status": [
+      "Imported",
+      "Open",
+      "Appointment Made",
+      "In Yard",
+      "In Progress"
+    ]
+  },
+  "dynamicProperties": {
+    "isDisabled": false,
+    "isItemLineProperty": true,
+    "status": [
+      "Imported",
+      "Open",
+      "Appointment Made",
+      "In Yard",
+      "In Progress",
+      "Reopened"
+    ]
+  },
+
+  "note": {
+    "isDisabled": false,
+    "isItemLineProperty": true,
+    "status": [
+      "Imported",
+      "Open",
+      "Appointment Made",
+      "In Yard",
+      "In Progress",
+      "Reopened"
+    ]
+  }
+}

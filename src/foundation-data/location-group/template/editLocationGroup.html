@@ -1,0 +1,86 @@
+<div class="grid-100 row">
+        <div class="grid-content grid-100">
+            <div class="grid-parent grid-100 container">
+                <h1 class="section-label pull-left">
+                        <span ng-show="isAddAction" class="caption-subject bold"> Add Location Group</span>
+                        <span ng-show="!isAddAction" class="caption-subject bold"> Edit Location  Group</span>
+                </h1>
+            </div>
+            <div class="grid-parent grid-100 container">
+                    <form novalidate name="locationGroupForm" ng-submit="locationGroupForm.$valid && addOrUpdateLocation()">
+                    <div class="grid-parent grid-100 container">
+                        <div class="grid-33">
+                                <label class="label-input">Name</label>
+                                <input-validation-message field="name" form="locationGroupForm"></input-validation-message>
+                                <input type="text" name="name" ng-model="locationGroup.name" class="form-control" placeholder="Enter name" required />
+                        </div>
+                        <div class="grid-33">
+                                <label class="label-input">Parent Group</label>
+                                <!--<input type="text" name="status" ng-model="ctrl.location.status" class="form-control" placeholder="Enter status" required />-->
+                                <ui-select name="parentGroup" ng-model="locationGroup.parentId"
+                                           on-select="onSelectParentGroup($select.selected)">
+                                    <ui-select-match allow-clear="true">
+                                        {{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item.id as item in locationGroups| filter: $select.search">
+                                        {{item.name}}
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+    
+                    </div>
+                
+                    <div class="grid-parent grid-100 container">
+                            <div class="grid-33">
+                                    <label class="label-input">Location Group Type</label>
+                                    <!--<input type="text" name="status" ng-model="locationGroup.status" class="form-control" placeholder="Enter status" required />-->
+                                    <ui-select name="locationGroupType" ng-model="locationGroup.locationGroupType"   on-select="onSelect('locationGroupType')">
+                                        <ui-select-match allow-clear="true">
+                                            {{$select.selected}}
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="status in LocationGroupTypes| filter: $select.search">
+                                            {{status}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <div class="grid-33">
+                                    <label class="label-input">Support Pick Type</label>
+                                    <!--<input type="text" name="status" ng-model="locationGroup.status" class="form-control" placeholder="Enter status" required />-->
+                                    <ui-select name="supportPickType" ng-model="locationGroup.supportPickType"  on-select="onSelect('supportPickType')">
+                                        <ui-select-match allow-clear="true">
+                                            {{$select.selected}}
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="pickType in pickTypes | filter: $select.search"
+                                                           refresh="getPickTypes()" refresh-delay="50">
+                                            <div ng-bind="pickType"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <div class="grid-33">
+                                    <label class="label-input">Support Equipments</label>
+                                    <ui-select multiple name="supportEquipment" ng-model="locationGroup.supportEquipments">
+                                        <ui-select-match allow-clear="true">
+                                            <div ng-bind="$item"></div>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="supportEquipment in supportEquipments | filter: $select.search">
+                                            {{supportEquipment}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+    
+                    </div>
+    
+
+                    <div class="grid-parent grid-100 container" style="margin-top:50px;">
+                        <unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="submitLabel" is-loading="loading"></unis-waitting-btn>
+                        <button type="button" class="grid-10 pull-right cancel" ng-click="cancelEditLocation()" >Cancel</button>
+                    </div>
+                </form>
+            </div>
+    
+        </div>
+    </div>
+
+
+
+

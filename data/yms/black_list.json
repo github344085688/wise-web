@@ -1,0 +1,42 @@
+[
+  {
+    "type": "Driver Name",
+    "value": "tian tian",
+    "effectiveDate":"2016-06-08 10:00:00",
+    "expiredDate":"2016-06-08 15:00:00",
+    "imgs":["./assets/img/entry/car1.jpg",
+                    "./assets/img/entry/car2.jpg",
+                    "./assets/img/entry/car3.jpg"]
+
+  },
+  {
+    "type": "Driver Name",
+    "value": "tian tian3",
+    "effectiveDate":"2016-06-05 10:00:00",
+    "expiredDate":"2016-06-05 15:00:00",
+    "imgs":["./assets/img/entry/car1.jpg",
+                    "./assets/img/entry/car2.jpg",
+                    "./assets/img/entry/car3.jpg"]
+
+  },
+  {
+    "type": "Driver License",
+    "value": "fdsfdsfdsfd",
+    "effectiveDate":"2016-06-04 10:00:00",
+    "expiredDate":"2016-06-04 15:00:00",
+    "imgs":["./assets/img/entry/car1.jpg",
+                    "./assets/img/entry/car2.jpg",
+                    "./assets/img/entry/car3.jpg"]
+
+  },
+  {
+    "type": "MC/Dot",
+    "value": "MC001",
+    "effectiveDate":"2016-06-07 10:00:00",
+    "expiredDate":"2016-06-07 15:00:00",
+    "imgs":["./assets/img/entry/car1.jpg",
+                    "./assets/img/entry/car2.jpg",
+                    "./assets/img/entry/car3.jpg"]
+
+  }
+]

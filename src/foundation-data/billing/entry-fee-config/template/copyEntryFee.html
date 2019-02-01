@@ -1,0 +1,176 @@
+<div class="container-fluid">
+	<div class="form">
+        <div class="row">
+            <form name="copyFromForm" class="form-horizontal col-md-5" style="border: 1px solid #e1e5ec">
+                <div class="portlet-header" style="margin-top: -10px;">Copy From</div>
+                <div class="form-body">
+                    <div class="form-group">
+                        <label class="col-md-5 control-label">Type:</label>
+                        <div class="col-md-7">
+                            <ui-select ng-model="copyFrom.type" class="form-control" on-select="onTypeSelect($item)">
+                                <ui-select-match>
+                                    {{$select.selected}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in typeList">
+                                    {{item}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-5 control-label">Facility:</label>
+                        <div class="col-md-7">
+                            <ui-select ng-model="copyFrom.facility" class="form-control">
+                                <ui-select-match>
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in copyFromFacilityList">
+                                    {{item.name}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-5 control-label">Customer:</label>
+                        <div class="col-md-7">
+                            <ui-select ng-model="copyFrom.customer" class="form-control">
+                                <ui-select-match>
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in customerList">
+                                    {{item.name}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-5 control-label">Supplier:</label>
+                        <div class="col-md-7">
+                            <ui-select ng-model="copyFrom.supplier" class="form-control">
+                                <ui-select-match>
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in supplierList">
+                                    {{item.name}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-5 control-label">Shipping Account:</label>
+                        <div class="col-md-7">
+                            <ui-select ng-model="copyFrom.shippingAccount" class="form-control">
+                                <ui-select-match>
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in shippingAccountList">
+                                    {{item.name}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-5 control-label">Bill to:</label>
+                        <div class="col-md-7">
+                            <ui-select ng-model="copyFrom.billTo" class="form-control">
+                                <ui-select-match>
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in billToList">
+                                    {{item.name}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-5 control-label">Service Item:</label>
+                        <div class="col-md-7">
+                            <ui-select ng-model="copyFrom.serviceItem" class="form-control" on-select="onServiceItemSelect($item)">
+                                <ui-select-match>
+                                    {{$select.selected}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in serviceItemList">
+                                    {{item}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="col-md-1" style="text-align: center; padding-top: 100px;">
+                <i class="material-icons" style="font-size: 40px;">content_copy</i>
+            </div>
+            <form name="copyToForm" class="form-horizontal col-md-6" style="border: 1px solid #e1e5ec">
+                <div class="portlet-header" style="margin-top: -10px;">Copy To</div>
+                <div class="form-body">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Facility:</label>
+                        <div class="col-md-6">
+                            <ui-select ng-model="copyTo.facility" class="form-control">
+                                <ui-select-match>
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in copyToFacilityList">
+                                    {{item.name}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div class="radio-list" style="margin-left: 30px;">
+                            <label class="radio-inline">
+                                <div class="radio">
+                                    <input type="radio" name="copyToType" ng-model="copyTo.type" value="customer"> Customer
+                                </div> 
+                            </label>
+                            <label class="radio-inline">
+                                <div class="radio">
+                                    <input type="radio" name="copyToType" ng-model="copyTo.type" value="supplier"> Supplier 
+                                </div>
+                            </label>
+                            <label class="radio-inline">
+                                <div class="radio">
+                                    <input type="radio" name="copyToType" ng-model="copyTo.type" value="shippingAccount"> Shipping Account 
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12"  style="margin-left: -5px;">
+                        <ui-select multiple name="customer" ng-model="copyTo.customers" class="form-control" ng-class="{'ng-hide': copyTo.type !== 'customer'}">
+                            <ui-select-match>
+                                <span ng-bind="$item.name"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in copyToCustomerList" refresh="getCustomerList($select.search)" refresh-delay="0">
+                                <div ng-bind="item.name"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                        <ui-select multiple name="supplier" ng-model="copyTo.suppliers" class="form-control" ng-class="{'ng-hide': copyTo.type !== 'supplier'}">
+                            <ui-select-match>
+                                <span ng-bind="$item.name"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in copyToSupplierList" refresh="getSupplierList($select.search)" refresh-delay="0">
+                                <div ng-bind="item.name"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                        <ui-select multiple name="shippingAccount" ng-model="copyTo.shippingAccounts" class="form-control" ng-class="{'ng-hide': copyTo.type !== 'shippingAccount'}">
+                            <ui-select-match>
+                                <span ng-bind="$item.name"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in copyToShippingAccountList" refresh="getShippingAccountList($select.search)" refresh-delay="0">
+                                <div ng-bind="item.name"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-12" style="text-align: right">
+                    <button type="submit" ng-click="submit()" class="btn blue">Submit</button>
+                    <button class="btn default" ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>

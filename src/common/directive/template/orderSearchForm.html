@@ -1,0 +1,240 @@
+<form name="editForm">
+    <div class="form-group" ng-show="!isAdvanced">
+        <div class="col-md-5">
+            <input class="form-control" placeholder="ID /Pro# /PO# /Reference# /SO# /Batch"
+                   ng-model="order.keyword" ng-keyup="keyUpSearch($event)"/>
+        </div>
+        <waitting-btn type="button" btn-class="btn blue" ng-click="_searchOrders()" value="'Search'" is-loading="isLoading"></waitting-btn>
+        <waitting-btn ng-show="needExport" type="button" btn-class="btn yellow" ng-click="_exportOrder()"
+            value="'Export'" is-loading="isExporting"></waitting-btn>
+        <waitting-btn ng-show="needBatchClose" type="button" btn-class="btn red"  ng-click="_batchCloseOrder()"
+                      value="'Batch Close Order'" is-loading="isBatchClose"></waitting-btn>
+    </div>
+    <div style="margin:15px 0px 20px 0px;">
+        <a ng-click="isAdvanced = !isAdvanced" style="font-weight:600;">
+            <span ng-show="!isAdvanced">Advanced</span>
+            <span ng-show="isAdvanced">Keyword</span> Search
+        </a>
+    </div>
+    <div ng-if="isAdvanced">
+        <div class="form-group">
+            <div class="col-md-3">
+                <label>Order ID</label>
+                <lt-tags-input placeholder="Enter Order ID" ng-model="order.orderIds" fill="DN-" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+            <div class="col-md-3">
+                <label>Status</label>
+                <ui-select multiple name="status" ng-model="order.statuses">
+                    <ui-select-match>
+                        {{$item}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item  in statusList| filter: $select.search" refresh="getStatusList($select.search)" refresh-delay="50">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-md-3">
+                <label>Customer</label>
+                <organization-auto-complete ng-model="order.customerId" name="customer" allow-clear="true" on-select="customerChange(org)"  tag="Customer"></organization-auto-complete>
+            </div>
+            <div class="col-md-3">
+                <label>Carrier</label>
+                <multiple-organization-auto-complete ng-model="order.carrierIds" name="carrier" tag="Carrier" on-select="carrierChange()"  on-remove = "carrierChange()"></multiple-organization-auto-complete>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <label>Delivery Service</label>
+                <ui-select multiple name="deliveryService" ng-model="order.deliveryServices" ng-disabled="!order.carrierIds || order.carrierIds.length==0">
+                    <ui-select-match >
+                        {{$item}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in carrierServiceTypes | filter: $select.search">
+                          {{item}}
+                    </ui-select-choices>
+                    </ui-select>
+            </div>
+            <div class="col-md-3">
+                <label>Item:</label>
+                <itemspec-auto-complete name="itemSpec" customer-id="order.customerId"  ng-model="order.itemSpecId" name="itemSpec" allow-clear="true" />
+            </div>
+            <div class="col-md-3">
+                <label>Purchase Order No</label>
+                <lt-tags-input placeholder="Enter PO" ng-model="order.poNos" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+            <div class="col-md-3">
+                <label>Customer Sales Order No</label>
+                <lt-tags-input placeholder="Enter SO" ng-model="order.soNos" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <label>Entry ID</label>
+                <input class="form-control" input-auto-fill="ET-" placeholder="Enter Entry ID" ng-model="order.entryId" ng-keyup="keyUpSearch($event)"
+                />
+            </div>
+            <div class="col-md-3">
+                <label class="label-input">Order Type</label>
+                <ui-select ng-model="order.orderType">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in orderTypeOptions | filter: $select.search">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-md-3">
+                    <label>Confirmed LH flag</label>
+                    <md-switch class="md-primary" ng-model="order.confirmedLH" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+            </div>
+            <div class="col-md-3">
+                    <label>Is Rush</label>
+                    <md-switch class="md-primary" ng-model="order.isRush" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <label>Item Group</label>
+                <ui-select multiple ng-model="order.itemGroupIds">
+                        <ui-select-match >
+                                {{$item.name}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="group.id as group in availableGroups" refresh="searchAvailableGroups($select.search)">
+                            {{group.name}}
+                        </ui-select-choices>
+                    </ui-select>
+            </div>
+            <div class="col-md-3">
+                <label>Item Label</label>
+                <lt-tags-input  enable-multiple-tag-input="true" placeholder="Enter Item Label" ng-model="order.itemLabels" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+            <div class="col-md-3">
+                <label class="label-input">Order Plan ID</label>
+                <input class="form-control" input-auto-fill="PLAN-" placeholder="Enter Order Plan ID"
+                       ng-model="order.orderPlanId" ng-keyup="keyUpSearch($event)"/>
+            </div>
+            <div class="col-md-3">
+                <label class="label-input">Store No</label>
+                <input class="form-control" placeholder="Enter Order Store No" ng-model="order.storeNo" ng-keyup="keyUpSearch($event)" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <label>Appointment Time From:</label>
+                <lt-date-time value="order.appointmentTimeFrom"></lt-date-time>
+            </div>
+            <div class="col-md-3">
+                <label>Appointment Time To:</label>
+                <lt-date-time value="order.appointmentTimeTo"></lt-date-time>
+            </div>
+            <div class="col-md-3">
+                <label class="label-input">Batch Commitment No</label>
+                <ui-select name="batchCommitmentNo" ng-model="order.batchCommitmentNo">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in batchCommitmentNos | filter: $select.search" refresh="getBatchCommitmentNos($select.search)"
+                        refresh-delay="50">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-md-3">
+                <label>Reference</label>
+                <lt-tags-input placeholder="Enter Reference" ng-model="order.referenceNos" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-6">
+                <label>SN List</label>
+                <lt-tags-input  enable-multiple-tag-input="true" placeholder="Enter SN List" ng-model="order.snList" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+            <div class="col-md-6">
+                <label>Long Haul</label>
+                <multiple-longhaul-auto-complete placeholder="Enter Long Haul" ng-model="order.longHaul"></multiple-longhaul-auto-complete>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <label>Date Created From:</label>
+                <lt-date-time value="order.createdWhenFrom"></lt-date-time>
+            </div>
+            <div class="col-md-3">
+                <label>Date Created To:</label>
+                <lt-date-time value="order.createdWhenTo"></lt-date-time>
+            </div>
+            <div class="col-md-3">
+                <label class="label-input">Load NO.</label>
+                <lt-tags-input placeholder="Enter Load Nos" ng-model="order.loadNos" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+            <div class="col-md-3">
+                <label>Retailer</label>
+                <organization-auto-complete ng-model="order.retailerId" name="retailer" allow-clear="true" tag="Retailer"></organization-auto-complete>
+            </div>
+        </div>
+
+        <div class="form-group">
+                <div class="col-md-3">
+                    <label>Attempted Commit Date From:</label>
+                    <lt-date-time value="order.attemptedCommitDateFrom"></lt-date-time>
+                </div>
+                <div class="col-md-3">
+                    <label>Attempted Commit Date To:</label>
+                    <lt-date-time value="order.attemptedCommitDateTo"></lt-date-time>
+                </div>
+                <div class="col-md-3">
+                    <label>Shipped Date From:</label>
+                    <lt-date-time value="order.shippedTimeFrom"></lt-date-time>
+                </div>
+                <div class="col-md-3">
+                    <label>Shipped Date To:</label>
+                    <lt-date-time value="order.shippedTimeTo"></lt-date-time>
+                </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                    <label>Delivery Request Date From</label>
+                    <lt-date-time value="order.mabdFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+            <div class="col-md-3">
+                    <label>Delivery Request Date To</label>
+                    <lt-date-time value="order.mabdTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+            <div class="col-md-3">
+                <label>Freight Term</label>
+                <ui-select name="freightTerm" ng-model="order.freightTerm">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in freightTermList | filter: $select.search" refresh="getFreightTermList($select.search)"
+                        refresh-delay="50">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-md-3">
+                <label class="label-input">Created By</label>
+                <ui-select ng-model="order.createdBy">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="getUserName($select.selected)"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="user.username as user in users | filter: $select.search" refresh="getUsers($select.search)" refresh-delay="50">
+                        <div ng-bind="getUserName(user)"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12" style="text-align: right;">
+                <waitting-btn type="button" btn-class="btn blue" ng-click="_searchOrders()" value="'Search'" is-loading="isLoading"></waitting-btn>
+                <waitting-btn type="button" ng-show="needExport" btn-class="btn yellow" ng-click="_exportOrder()" value="'Export'" is-loading="isExporting"></waitting-btn>
+                <waitting-btn ng-show="needBatchClose" type="button" btn-class="btn red" ng-click="_batchCloseOrder()"
+                              value="'Batch Close Order'" is-loading="isBatchClose"></waitting-btn>
+            </div>
+        </div>
+        
+    </div>
+</form>

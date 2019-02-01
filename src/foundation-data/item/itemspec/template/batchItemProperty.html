@@ -1,0 +1,233 @@
+<md-dialog flex="60" ng-cloak>
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Item Property Batch Add/Update</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <i class="material-icons">close</i>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content" style="padding:20px 0px 0px 24px">
+            <div class="alert alert-danger display-hide" ng-show="isShowError" style="display: block; margin: 0px 10px 10px">
+                <button class=" close " data-close="alert " ng-click="closeAlert()"></button> {{errorLabel}}
+            </div>
+            <div class="tab-content">
+
+                <div class="form-group ">
+                    <div class="col-md-2 ">
+                        <!--<table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer " role="grid ">
+                            <thead>
+                                <tr role="row ">
+                                    <th>Item Name</th>
+                                </tr>
+                            </thead>
+                            <div>
+                                <tbody style="max-height: 440px;overflow: auto;display: block;">
+                                    <tr ng-repeat="item in itemList track by $index ">
+                                        <td>{{item.name}}</td>
+                                    </tr>
+                                </tbody>
+                            </div>
+                        </table>-->
+                        <div style="border:1px solid #ddd;text-align: center;line-height: 30px;">
+                            <div><b>Item Name</b></div>
+                            <div style="max-height: 440px;overflow: auto;">
+                                <div ng-repeat="item in itemList track by $index " style="border-top:1px solid #ddd">
+                                    {{item.name}}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-10 tabbable-custom ">
+                        <ul class="nav nav-tabs ">
+                            <li ng-class="{ 'active':activeTab_line=='updateProperty' } ">
+                                <a data-toggle="tab " ng-click="changeTab_line( 'updateProperty') "> Update Property </a>
+                            </li>
+                            <li ng-class="{ 'active':activeTab_line=='inactiveProperty' } ">
+                                <a data-toggle="tab " ng-click="changeTab_line( 'inactiveProperty') "> Inactive Property </a>
+                            </li>
+                            <li ng-class="{ 'active':activeTab_line=='addpProperty' } ">
+                                <a data-toggle="tab " ng-click="changeTab_line( 'addpProperty') "> Add Property </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content " style="padding:15px; max-height: 440px; min-height:300px; overflow: auto; ">
+                            <div ng-class="{ 'active':activeTab_line=='updateProperty' } " class="tab-pane ">
+                                <div class="row " style="margin: 10px; ">
+                                    <div class="col-md-4 " style="text-align:left ">
+                                        <label class="control-label ">Property Name</label>
+                                        <div style="border-bottom: 1px solid #eee;"></div>
+                                    </div>
+                                    <div class="col-md-8 " style="text-align:left ">
+                                        <label>Value  <span style="font-size:12px;color:#a94442"> (Leave it blank meaning not to update it )<span></label>
+                                        <div style="border-bottom: 1px solid #eee; "></div>
+                                    </div>
+                                </div>
+                                <div class="row form-group form-horizontal " style="margin:0px 10px 5px" ng-repeat="property in filterPropertys track by $index ">
+
+                                    <label class="col-md-4 control-label " style="text-align:right " ng-bind="availablePropertiesMap[property.propertyId].name "></label>
+
+                                    <div class="col-md-8 " style="padding-left:0px ">
+
+                                        <div class="col-md-8 " ng-if="availablePropertiesMap[property.propertyId].type==='Text' ">
+                                            <input type="text " class="form-control " ng-model="property.value ">
+                                        </div>
+
+                                        <div class="col-md-8 " ng-if="availablePropertiesMap[property.propertyId].type==='Date' ">
+                                            <lt-date-time date-format="yyyy-MM-dd " ng-model="property.value " value="property.value " style="padding-left: 0px; "></lt-date-time>
+                                        </div>
+                                        <div class="col-md-8 " ng-if="availablePropertiesMap[property.propertyId].type=='Number' ">
+                                            <input type="text " class="form-control " ng-model="property.value" name="{{availablePropertiesMap[property.propertyId].name}} ">
+                                        </div>
+                                        <div class="col-md-3 " style="padding:0px; " ng-if="availablePropertiesMap[property.propertyId].type==='Number'&& availablePropertiesMap[property.propertyId].unitType && availablePropertiesMap[property.propertyId].unitType!='' ">
+                                            <select ng-model="property.unit " ng-options="o for o in fieldUnits[availablePropertiesMap[property.propertyId].unitType] "
+                                                class="form-control "></select>
+                                        </div>
+                                        <div class="col-md-8 " ng-if="availablePropertiesMap[property.propertyId].type==='Select' ">
+                                            <ui-select ng-model="property.value " style="border-radius: 4px; ">
+                                                <ui-select-match>
+                                                    <div ng-bind="$select.selected "></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="option in availablePropertiesMap[property.propertyId].options ">
+                                                    {{option}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div ng-class="{ 'active':activeTab_line=='inactiveProperty' } " class="tab-pane ">
+
+
+                                <div class="row " style="margin: 10px; ">
+                                    <div class="col-md-5 ">
+                                        <div class="col-md-8 " style="text-align:left ">
+                                            <label class="control-label ">Property</label>
+                                            <div style="border-bottom: 1px solid #eee; "></div>
+                                        </div>
+                                        <div class="col-md-4 ">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-5 " style="text-align:left ">
+                                        <label class="control-label ">Properties will be inactive </label>
+                                        <div style="border-bottom: 1px solid #eee; "></div>
+                                    </div>
+                                </div>
+                                <div class="row form-group form-horizontal " style="margin:0px 10px 5px ">
+                                    <div class="col-md-5 ">
+                                        <div class="form-group " ng-repeat="property in filterPropertys track by $index ">
+                                            <label class="col-md-8 control-label " style="text-align:right" ng-bind="availablePropertiesMap[property.propertyId].name "></label>
+                                            <div class="col-md-4 ">
+                                                <button type="button " ng-class="{ 'btn red':!classList[$index],'btn blue': classList[$index]==true} " ng-click="removeUpadateProperty(property,$index) ">{{btnInfo[$index]?btnInfo[$index]:'Inactive'}}</button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 ">
+                                        <table class="table table-striped table-bordered table-hover table-checkable order-column no-footer " role="grid ">
+                                            <thead>
+
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="id in inactivePropertyIds track by $index ">
+                                                    <td>{{availablePropertiesMap[id].name}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div ng-class="{ 'active':activeTab_line=='addpProperty' } " class="tab-pane ">
+
+
+                                <div class="row " style="margin: 10px; ">
+                                    <div class="col-md-3 " style="text-align: left; ">
+                                        <label>Property</label>
+                                        <div style="border-bottom: 1px solid #eee; "></div>
+                                    </div>
+                                    <div class="col-md-7 " style="text-align: left; ">
+                                        <label>Value</label>
+                                        <div style="border-bottom: 1px solid #eee; "></div>
+                                    </div>
+
+
+                                </div>
+                                <div class="row form-group " style="margin:0px 10px 5px " ng-repeat="field in propertyfields track by $index ">
+                                    <div class="col-md-3 ">
+                                        <ui-select ng-model="property.propertyId " style="border-radius: 4px;" required on-select="itemPropertyOnSelect($select.selected, $index) ">
+                                            <ui-select-match>
+                                                <div ng-bind="$select.selected.name "></div>
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="pro.id as pro in availableProperties | filter:$select.search ">
+                                                <div ng-bind="pro.name "></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                    <div class="col-md-7 " style="padding-left:0px ">
+                                        <div class="col-md-7 " ng-if="field.itemProperty.type==='Text' ">
+                                            <input type="text " class="form-control " ng-model="field.value ">
+                                        </div>
+
+                                        <div class="col-md-11 " ng-if="field.itemProperty.type==='Date' ">
+                                            <lt-date-time date-format="yyyy-MM-dd " ng-model="field.value " value="field.value" style="padding-left: 0px; "></lt-date-time>
+                                        </div>
+                                        <div class="col-md-7 " ng-if="field.itemProperty.type=='Number' ">
+                                            <input type="text " class="form-control " ng-model="field.value" name="{{field.itemProperty.name}} ">
+                                        </div>
+                                        <div class="col-md-4 " style="padding:0px; " ng-if="field.itemProperty.type==='Number' && field.itemProperty.unitType && field.itemProperty.unitType !='' ">
+                                            <select ng-model="field.unit " ng-options="o for o in fieldUnits[field.itemProperty.unitType]" class="form-control "></select>
+                                        </div>
+                                        <div class="col-md-7 " ng-if="field.itemProperty.type==='Select' ">
+                                            <ui-select ng-model="field.value " style="border-radius: 4px; ">
+                                                <ui-select-match>
+                                                    <div ng-bind="$select.selected "></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="option in field.itemProperty.options ">
+                                                    {{option}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2 ">
+                                        <button type="button " class="btn red " ng-click="removeProperty($index) ">Remove</button>
+                                    </div>
+                                </div>
+                                <div class="row form-group ">
+                                    <div class="col-md-3 ">
+                                    </div>
+                                    <div class="col-md-7 ">
+                                    </div>
+                                    <div class="col-md-2 ">
+                                        <button type="button " class="btn green " ng-click="addProperty() ">Add</button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row ">
+        <div style="margin-right: 50px ">
+            <waitting-btn type="button" btn-class="btn blue" ng-click="confirm()" value="submitName" is-loading="isLoading"></waitting-btn>
+            <!--<button type="button " ng-click="confirm() " class="btn blue " style="margin-right: 10px; ">{{submitName}}</button>-->
+            <button type="button " ng-click="cancel() " class="btn default ">Cancel</button>
+        </div>
+    </md-dialog-actions>
+
+</md-dialog>

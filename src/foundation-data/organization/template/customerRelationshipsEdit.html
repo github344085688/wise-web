@@ -1,0 +1,89 @@
+<form novalidate name="customerRelationshipsForm">
+    <div class="grid-100">
+        <div class="grid-parent grid-100">
+            <div class="grid-15">
+                <ul class="ver-inline-menu tabbable margin-bottom-10">
+                    <li ng-class="{'active':ctrl.relationshipsRole === 'Title'}">
+                        <a ng-click="ctrl.changeTab('Title')" data-toggle="tab" aria-expanded="true"><i
+                                class="fa fa-briefcase"></i> Title </a>
+                        <span class="after"> </span>
+                    </li>
+                    <li ng-class="{'active':ctrl.relationshipsRole === 'Supplier'}">
+                        <a ng-click="ctrl.changeTab('Supplier')" data-toggle="tab" aria-expanded="false"><i
+                                class="fa fa-group"></i> Supplier </a>
+                    </li>
+                    <li ng-class="{'active':ctrl.relationshipsRole === 'Brand'}">
+                        <a ng-click="ctrl.changeTab('Brand')" data-toggle="tab" aria-expanded="false"><i
+                                class="fa fa-leaf"></i> Brand </a>
+                    </li>
+                    <li ng-class="{'active':ctrl.relationshipsRole === 'Retailer'}">
+                        <a ng-click="ctrl.changeTab('Retailer')" data-toggle="tab" aria-expanded="true"><i
+                                class="fa fa-info-circle"></i> Retailer </a>
+                    </li>
+                    <li ng-class="{'active':ctrl.relationshipsRole === 'Carrier'}">
+                        <a ng-click="ctrl.changeTab('Carrier')" data-toggle="tab" aria-expanded="true"><i
+                                class="fa fa-tint"></i> Carrier </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="grid-85">
+                <div style="border: 1px solid #e7ecf1; padding: 5px 20px 30px 20px;">
+                    <div class="second-title" style="color:rgba(77, 127, 137, 0.87);
+                    padding-top: 15px; padding-bottom: 15px; border-bottom: 1px solid #e7ecf1;"> {{ctrl.relationshipsRole}}</div>
+                    <div class="grid-100" style="margin-top: 20px;">
+                        <div class="grid-parent grid-100">
+                            <label class="label-input">Organization</label>
+                        </div>
+                        <div class="grid-parent grid-100 container">
+                            <div class="grid-40" ng-if="ctrl.relationshipsRole==='Title'">
+                                <organization-auto-complete name="customer" ng-model="ctrl.searchInfo.organization" on-select="ctrl.search()" tag="{{ctrl.relationshipsRole}}"
+                                                            allow-clear="true"></organization-auto-complete>
+                            </div>
+                            <div class="grid-40" ng-if="ctrl.relationshipsRole==='Supplier'">
+                                <organization-auto-complete name="customer" ng-model="ctrl.searchInfo.organization" on-select="ctrl.search()" tag="{{ctrl.relationshipsRole}}"
+                                                            allow-clear="true"></organization-auto-complete>
+                            </div>
+                            <div class="grid-40" ng-if="ctrl.relationshipsRole==='Brand'">
+                                <organization-auto-complete name="customer" ng-model="ctrl.searchInfo.organization" on-select="ctrl.search()" tag="{{ctrl.relationshipsRole}}"
+                                                            allow-clear="true"></organization-auto-complete>
+                            </div>
+                            <div class="grid-40" ng-if="ctrl.relationshipsRole==='Retailer'">
+                                <organization-auto-complete name="customer" ng-model="ctrl.searchInfo.organization" on-select="ctrl.search()" tag="{{ctrl.relationshipsRole}}"
+                                                            allow-clear="true"></organization-auto-complete>
+                            </div>
+                            <div class="grid-40" ng-if="ctrl.relationshipsRole==='Carrier'">
+                                <organization-auto-complete name="customer" ng-model="ctrl.searchInfo.organization" on-select="ctrl.search()" tag="{{ctrl.relationshipsRole}}"
+                                                            allow-clear="true"></organization-auto-complete>
+                            </div>
+                            <unis-waitting-btn ng-type="submit" btn-class="ripplelink grid-10" ng-click="ctrl.btnSearch()" value="'Search'" is-loading="searchLoading"></unis-waitting-btn>
+                            <div permission-check="{{'organizationUpdate_write'}}">
+                                <unis-waitting-btn ng-type="submit" btn-class="ripplelink add grid-10  button-between" ng-click="ctrl.btnAdd()" value="'Add'"
+                                                   is-loading="addLoading"></unis-waitting-btn>
+                            </div>
+                        </div>
+                        <table class="table">
+                            <thead>
+                            <tr class="uppercase">
+                                <th> Name</th>
+                                <th> Note</th>
+                                <th> Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="organization in ctrl.organizatioRelationshipsView track by $index">
+                                <td>{{organization.basic.name}}</td>
+                                <td>{{ctrl.relationshipsRole==='Carrier'?ctrl.carrierNoteMap[organization.basic.id]:
+                                    organization.extend.note}}
+                                </td>
+                                <td>
+                                    <a href="#" ng-click="ctrl.btnDel($index)" permission-check="{{'organizationUpdate_write'}}"><b>Delete</b></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

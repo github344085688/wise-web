@@ -1,0 +1,85 @@
+
+<div class="portlet light bordered" style="margin: 15px">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-gift"></i>{{formTitle}} Configuration Change Task
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <form name="editForm" novalidate ng-submit="editForm.$valid && submit()">
+            <div class="form-group">
+                <div class="col-md-4">
+                    <label>Item:</label>
+                    <input-validation-message field="itemSpec" form="editForm"></input-validation-message>
+                    <itemspec-auto-complete name="itemSpec" ng-model="task.itemSpecId" name="itemSpec" required="true"
+                                            on-select="itemSpecIdOnSelect(itemSpec.id)" allow-clear="true"/>
+                </div>
+                <div class="col-md-2">
+                    <label>Count:</label>
+                    <input-validation-message field="itemCount" form="editForm"></input-validation-message>
+                    <input type="number" name="packageCount" class="form-control" ng-model="task.itemCount" REQUIRED="true"/>
+                </div>
+                <div class="col-md-2">
+                    <label>UOM:</label>
+                    <input-validation-message field="unit" form="editForm"></input-validation-message>
+                    <ui-select ng-model="task.unitId" name="unit" required="true">
+                        <ui-select-match>
+                            <span ng-bind="$select.selected.name"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="unit.id as unit in itemSpecUnits | filter: $select.search">
+                            <span ng-bind="unit.name"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-4">
+                    <label>LP Configuration Template:</label>
+                    <input-validation-message field="singleLPTemplateId" form="editForm"></input-validation-message>
+                    <lp-configuration-template-auto-complete name="singleLPTemplateId" ng-model="task.singleLPTemplateId"> </lp-configuration-template-auto-complete>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-4">
+                    <label>Assignee:</label>
+                    <user-auto-complete name="assignee" allow-clear="true" ng-model="task.assigneeUserId"></user-auto-complete>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-4">
+                    <label>Apply Assignee To All Task Steps:</label>
+                    <md-switch class="md-primary" style="margin: 0px" ng-model="task.isUpdateStepAssignee"
+                               aria-label="Apply Assignee To All Task Steps"></md-switch>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-4">
+                    <label>Task Way:</label>
+                    <input-validation-message field="taskWay" form="editForm"></input-validation-message>
+                    <ui-select ng-model="task.taskWay" name="taskWay" required="true">
+                        <ui-select-match>
+                            <span ng-bind="$select.selected"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in ['Batch Configuration Change', 'Traditional'] | filter: $select.search">
+                            <span ng-bind="item"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-4">
+                    <label>Priority</label>
+                    <task-priority-auto-complete ng-model="task.priority"></task-priority-auto-complete>
+                </div>
+            </div>
+
+            <div class="form-group form-actions right" >
+                <waitting-btn type="submit" btn-class="btn blue"
+                              value="submitLabel" is-loading="loading"></waitting-btn>
+                <button type="button" class="btn default" ng-click="cancel(editForm)">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,198 @@
+<div class="container-fluid">
+    <div class="portlet box default" style="border: 1px solid #e1e5ec">
+        <div class="portlet-title">
+            <div class="caption"><span ng-bind="isNew? 'New': 'Edit'"></span> Entry Fee</div>
+        </div>
+        <div class="portlet-body form">
+            <form name="editForm" novalidate class="form-horizontal">
+                <div class="form-body">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Type:</label>
+                        <div class="col-md-3">
+                            <ui-select ng-model="currentItem.type" class="form-control" on-select="onTypeSelect($item)">
+                                <ui-select-match>
+                                    {{$select.selected}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in typeList">
+                                    {{item}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Facility:</label>
+                        <div class="col-md-3">
+                            <ui-select ng-model="currentItem.facility" class="form-control">
+                                <ui-select-match>
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in facilityList">
+                                    {{item.name}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Customer:</label>
+                        <div class="col-md-3">
+                            <organization-auto-complete tag="Customer" ng-model="currentItem.customer"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Supplier:</label>
+                        <div class="col-md-3">
+                            <organization-auto-complete tag="Supplier" ng-model="currentItem.supplier"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Shipping Account:</label>
+                        <div class="col-md-3">
+                            <ui-select ng-model="currentItem.shippingAccount" class="form-control">
+                                <ui-select-match>
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in shippingAccountList">
+                                    {{item.name}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Bill to:</label>
+                        <div class="col-md-3">
+                            <ui-select ng-model="currentItem.billTo" class="form-control">
+                                <ui-select-match>
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in billToList">
+                                    {{item.name}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Product:</label>
+                        <div class="col-md-3">
+                            <ui-select ng-model="currentItem.product" class="form-control" on-select="onProductSelect($item)">
+                                <ui-select-match>
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in productList">
+                                    {{item.name}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-3" ng-if="currentItem.product.id=='singleItem'">
+                            <ui-select ng-model="currentItem.item" class="form-control">
+                                <ui-select-match placeholder="Select an item">
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in itemList">
+                                    {{item.name}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-3" ng-if="currentItem.product.id=='itemGroup'">
+                            <ui-select ng-model="currentItem.itemGroup" class="form-control">
+                                <ui-select-match placeholder="Select an item group">
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in itemGroupList">
+                                    {{item.name}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Service Item:</label>
+                        <div class="col-md-3">
+                            <ui-select ng-model="currentItem.serviceItem" class="form-control" on-select="onServiceItemSelect($item)">
+                                <ui-select-match>
+                                    {{$select.selected}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in serviceItemList">
+                                    {{item}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Unit:</label>
+                        <div class="col-md-3">
+                            <ui-select ng-model="currentItem.unit" class="form-control" on-select="onUnitSelect($item)">
+                                <ui-select-match>
+                                    {{$select.selected}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in unitList">
+                                    {{item}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-3" ng-if="unitTypeList">
+                            <ui-select ng-model="currentItem.unitType" class="form-control">
+                                <ui-select-match>
+                                    {{$select.selected}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in unitTypeList">
+                                    {{item}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="currentItem.type == 'Storage'">
+                        <label class="col-md-4 control-label">Frequency:</label>
+                        <div class="col-md-3">
+                            <ui-select ng-model="currentItem.frequency" class="form-control">
+                                <ui-select-match>
+                                    {{$select.selected}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in frequencyList">
+                                    {{item}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Rate:</label>
+                        <div class="col-md-3">
+                            <input type="number" class="form-control" ng-model="currentItem.rate">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Cost:</label>
+                        <div class="col-md-3">
+                            <input type="number" class="form-control" ng-model="currentItem.cost">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Margin:</label>
+                        <div class="col-md-3">
+                            <input type="number" class="form-control" ng-model="currentItem.margin">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Description:</label>
+                        <div class="col-md-3">
+                            <textarea class="form-control" ng-model="currentItem.description"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="isNew">
+                        <div class="col-md-8 col-md-offset-4">
+                            <label><input type="checkbox" ng-click="onCreateAnotherClick()"> Create Another</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <div class="row">
+                        <div class="col-md-8" style="text-align: right">
+                            <waitting-btn type="submit" btn-class="btn blue"  ng-click="submit()"
+                                          value="'Submit'" is-loading="loading"></waitting-btn>
+                            <!--<button type="submit" validation-submit="editForm" class="btn blue"></button>-->
+                            <button class="btn default" ng-click="cancel()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

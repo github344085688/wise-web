@@ -1,0 +1,32 @@
+<md-dialog id="unis" flex="30" ng-cloak>
+    <form class="light-theme"  novalidate name="editForm" ng-submit="editForm.$valid && submit()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Schedule</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content >
+            <div class="form-horizontal">
+                <div class="grid-100 grid-content" >
+                    <div class="grid-parent grid-100 container">
+                        <label>Schedule Time</label>
+                        <input-validation-message field="time" form="editScheduleForm"></input-validation-message>
+                        <lt-date-time name="time" value="scheduleInfo.scheduleTime" date-format="yyyy-mm-dd hh:ii" minute-step="60"></lt-date-time>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+            <div class="grid-100 grid-content">
+                <div class="grid-100 grid-parent container">
+                    <unis-waitting-btn ng-type="submit" value="'Save'" is-loading="saving"
+                                       btn-class="grid-10 ripplelink pull-right button-between" ></unis-waitting-btn>
+                    <button type="button" class="grid-15 cancel pull-right" style="padding-right:10px;"
+                            ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

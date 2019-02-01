@@ -1,0 +1,133 @@
+<div class="grid-content grid-100" >
+    <form class="grid-100 grid-parent" novalidate name="editForm" ng-submit="editForm.$valid && submit()">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">{{formTitle}}<span ng-show="orderPlan.id">: {{orderPlan.id}}</span></h1>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label class="label-input">Default Pick Way</label>
+                    <input-validation-message field="pickWay" form="editForm"></input-validation-message>
+                    <ui-select name="pickWay" ng-model="orderPlan.pickWay" required="true"
+                               ng-disabled="orderPlan.status == 'Released'">
+                        <ui-select-match allow-clear="true">
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in pickWays  | filter: $select.search"
+                                           refresh="getPickWays()" refresh-delay="50">
+                            <div ng-bind="item"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Default Assignee</label>
+                    <input-validation-message field="assigne" form="editForm"></input-validation-message>
+                    <user-auto-complete name="assigne" ng-model="orderPlan.assigneeUserId" if-disabled="orderPlan.status == 'Released'"
+                                        allow-clear="true" required="true"></user-auto-complete>
+                </div>
+                <div class="grid-25" ng-show="orderPlan.id">
+                    <label class="label-input">Status</label>
+                    <ui-select name="status" ng-model="orderPlan.status" disabled="true">
+                        <ui-select-match allow-clear="true">
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in ['Building', 'Scheduled', 'Released',
+                         'Completed', 'Cannelled']| filter: $select.search">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Default Pick Type</label>
+                    <ui-select name="pickType" ng-model="orderPlan.pickType" ng-disabled="orderPlan.status == 'Released'" >
+                        <ui-select-match allow-clear="true">
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in pickTypes | filter: $select.search"
+                                           refresh="getPickTypes()" refresh-delay="50">
+                            <div ng-bind="item"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Enable Auto Group Pick Stragety</label>
+                <md-switch class="md-primary" ng-model="orderPlan.enableAutoGroupPickStragety"
+                           aria-label="Enable Auto Group Pick Stragety" style="margin-top:0px;"></md-switch>
+            </div>
+            <div class="grid-50" ng-if="orderPlan.enableAutoGroupPickStragety">
+                <label class="label-input"> Auto Group Fields </label>
+                <ui-select multiple ng-model="orderPlan.groupingFields">
+                    <ui-select-match allow-clear="true">
+                        {{$item.label}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="field.name as field in autoGroupFieldSelectOptions | filter: $select.search">
+                        <div ng-bind="field.label"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container" style="margin-top:30px;">
+            <button type="button" class="grid-10 ripplelink pull-right" ng-disabled="orderPlan.status == 'Released'"
+                    ng-click="selectOrders()">Add Orders
+            </button>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Entry</th>
+                        <th>Status</th>
+                        <th>Load</th>
+                        <th>Customer</th>
+                        <th>Ship To</th>
+                        <th>Reference</th>
+                        <th>Purchase Order No.</th>
+                        <th>Customer Sales Order No.</th>
+                        <th>Delivery Request Date</th>
+                        <th>Carrier</th>
+                        <th>Freight Term</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in orderView">
+                        <td><a ng-href="{{'#/wms/outbound/order/' + item.id}}" target="_blank">{{item.id}}</a> </td>
+                        <td>{{item.entryId}}</td>
+                        <td ng-class="{'font-red':item.status == 'Commit Blocked'}">
+                            {{item.status}}
+                        </td>
+                        <td><a ng-href="{{'#/wms/outbound/load/' + item.loadId}}" target="_blank">{{item.loadNo}}</a></td>
+                        <td>{{item.customerName}}</td>
+                        <td>{{item.shipToAddressStr}}</td>
+                        <td>{{item.referenceNo}}</td>
+                        <td>{{item.poNo}}</td>
+                        <td><span ng-repeat="soNo in item.soNos">
+                            {{soNo}}&nbsp;
+                             </span></td>
+                        <td>{{item.mabd | amDateFormat:'YYYY-MM-DD HH:00'}}</td>
+                        <td>{{item.carrierName}}</td>
+                        <td>{{item.freightTerm}}</td>
+                        <td >
+                            <a ng-click="deleteOrder(item.id)" title="Delete">Delete</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+        </div>
+         <div class="grid-parent grid-100 container">
+             <unis-pager total-count="orders.length" page-size="pageSize" load-content="loadContent_orders(currentPage)"></unis-pager>
+         </div>
+
+        <div class="grid-parent grid-100 container">
+            <waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between"
+                          value="submitLabel" is-loading="loading"></waitting-btn>
+            <button type="button" class="grid-10 ripplelink pull-right cancel" ng-click="cancel(editForm)">Cancel</button>
+        </div>
+    </form>
+</div>
+
+

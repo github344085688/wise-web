@@ -1,0 +1,64 @@
+<div class="row form-group">
+    <div class="bold col-md-6">
+        Import Data List
+    </div>
+
+    <div class="col-md-6">
+        <button type="button" class="btn red" style="float: right;" ng-click="clearRecord()">Clear
+            Record
+        </button>
+        <button type="submit" class="btn blue" style="float: right; margin-right: 10px;" ng-click="batchRevert()">Batch Revert
+        </button>
+    </div>
+</div>
+
+<div class="row form-group" style="margin-top: 5px;padding-top: 10px;border-top: 1px solid #ddd;">
+    <div class="bold col-md-6">
+        <label class="col-md-1 control-label" style="line-height:30px; text-align: right;">
+            Customer:
+        </label>
+        <div class="col-md-6">
+            <organization-auto-complete name="customer" ng-model="importRecordSearch.customerId" tag="Customer" on-select="onSelectMappingCustomer(org.id)"
+                required></organization-auto-complete>
+        </div>
+             <waitting-btn type="submit" btn-class="btn blue" ng-click="search()" style="float:left;"
+                                      value="'Search'" is-loading="btnLoading"></waitting-btn>
+    </div>
+
+   
+</div>
+  <div ng-if="recordLoading" class="text-center">
+                    <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;UPLOADING...</span>
+                </div>
+<div  ng-if="recordImportShow" class="table-scrollable item-list-continer">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="width: 20px;"></th>
+                <th>
+                    <input id="selAll" type="checkbox" ng-checked="isCheckAll" ng-click="checkAll()" />
+                    <label for="selAll">check all (Item spec name)</label>
+                </th>
+                <th>Is has kitting</th>
+                <th>Import date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in importRecordSimple track by $index">
+                <td>{{ $index + 1 }}</td>
+                <td>
+                    <input id="{{item.id}}" type="checkbox" ng-checked="isChecked(item.id)" ng-click="checkOrUnCheck(item.id)" />
+                    <label for="{{item.id}}">{{item.id}}</label>
+                </td>
+                <td ng-if="item.bundle">{{item.bundle}}</td>
+                <td ng-if="!item.bundle"></td>
+                <td>{{item.importWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                <td>
+                    <a ng-click="revertItemImport(item.id)" style="color: red;" title="Delete">Revert</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<pager total-count="importRecord.length" page-size="pageRecordSize" load-content="loadRecordContent(currentPage)"></pager>

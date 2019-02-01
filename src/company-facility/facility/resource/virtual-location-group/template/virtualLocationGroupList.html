@@ -1,0 +1,97 @@
+<div class="grid-100 row">
+    <div class=" grid-100 grid-content">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Virtual Location Group List</h1>
+
+            <a class="create-button" permission-check="{{'facility::virtualLocationGroup_write'}}" ui-sref="cf.facility.resource.virtualLocationGroup.groupManagement.update"
+                target="_blank">
+                <b>Work Group Configuration</b>
+            </a>
+            <a class="create-button" permission-check="{{'facility::virtualLocationGroup_write'}}" ui-sref="cf.facility.resource.virtualLocationGroup.replenishGroup">
+                <b>Replenish Group to Group Setting</b>&nbsp;|&nbsp;</a>
+            <a class="create-button" permission-check="{{'facility::virtualLocationGroup_write'}}" ui-sref="cf.facility.resource.virtualLocationGroup.groupManagement.add">
+                <b>Create Virtual Location Group</b>&nbsp;|&nbsp;</a>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Virtual Location Group Name</label>
+                <input type="text" placeholder="Enter Virtual Location Group Name" ng-model="searchParam.regexName" />
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Select Group Type</label>
+                <ui-select ng-model="searchParam.virtualLocationGroupType" name="groupType">
+                    <ui-select-match allow-clear="true">
+                        <span ng-bind="$select.selected"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="type in ['Weight', 'Zone','Replenish'] | filter: $select.search">
+                        <div>{{type}}</div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-50">
+                <label class="label-input">Tags</label>
+                <ui-select multiple name="tags" ng-model="searchParam.tagIds" class="form-control">
+                    <ui-select-match>
+                        <span ng-bind="$item.name"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item.id as item in virturalTags  | filter: $select.search" refresh="getVirturalTags($select.search)"
+                        refresh-delay="50">
+                        <div ng-bind="item.name"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-90">&nbsp;</div>
+            <div class="grid-10">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Tag</th>
+                        <th>Allow Auto Assign Task</th>
+                        <th>Pick Strategy Weight</th>
+                        <th permission-check="{{'facility::virtualLocationGroup_write'}}">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="virtualGroup  in virtualLoacationGroupView  track by $index">
+                        <td>
+                            <a ng-href="{{'#/cf/facility/resource/virtualLocationGroup/groupManagement/edit/' + virtualGroup.id}}" target="_blank">{{virtualGroup.name}}</a>
+                        </td>
+                        <td>{{virtualGroup.virtualLocationGroupType}}</td>
+                        <td>
+                            <span style="background-color:#f6f3e8; margin: 5px 5px;padding: 5px 10px;border-radius: 3px;" ng-repeat="tagId in virtualGroup.tagIds ">
+                                {{LocationTagsMap[tagId].name}}
+                            </span>
+                        </td>
+                        <td>{{virtualGroup.allowAutoAssign}}</td>
+                        <td>{{virtualGroup.pickStrategyWeight}}</td>
+                        <td permission-check="{{'facility::virtualLocationGroup_write'}}">
+                            <a ng-click="delete(virtualGroup.id)" title="Delete">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="virtualLocationGroups.length" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+    </div>
+</div>

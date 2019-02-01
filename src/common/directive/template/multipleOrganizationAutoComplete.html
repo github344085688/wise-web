@@ -1,0 +1,14 @@
+<ui-select name="{{name}}" ng-model="$parent.ngModel" required="{{required}}"
+           on-select="_onSelect($select.selected)"
+           on-remove="_onRemove($select.selected)" multiple>
+    <ui-select-match>
+        {{$item.name}}
+    </ui-select-match>
+    <ui-select-choices repeat="org.id as org in orgs | filter: $select.search.name"
+                       refresh="getOrganizations($select.search)" refresh-delay="50">
+        <div>{{org.name}}<span ng-if="tag === 'Carrier'">{{org.scac? (' ('+org.scac +')') :"" }}</span></div>
+    </ui-select-choices>
+    <ui-select-no-choice>
+        No available option.
+    </ui-select-no-choice>
+</ui-select>

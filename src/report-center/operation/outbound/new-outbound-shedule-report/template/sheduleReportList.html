@@ -1,0 +1,107 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Routing Report</h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+
+            <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label>Customer:</label>
+                    <organization-auto-complete name="customer" ng-model="search.customerId" tag="Customer" allow-clear="true"></organization-auto-complete>
+                </div>
+
+                <div class="grid-25">
+                    <label>Search Tracking Number</label>
+                    <input type="text" name="tracking No" ng-model="search.trackingNo" class="form-control" />
+                </div>
+                <div class="grid-25">
+                    <label> Load No </label>
+                    <input type="text" name="Load No" ng-model="search.loadNo" class="form-control" />
+                </div>
+
+            </div>
+            <div class="grid-parent grid-100 container">
+                <div class="grid-100">
+                    <label>Status</label>
+                    <ui-select name="orderStatuses" multiple ng-model="search.statuses">
+                        <ui-select-match allow-clear="true">
+                            <div ng-bind="$item.dbName"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item.dbName as item  in orderStatuses | filter: $select.search">
+                            <div ng-bind="item.name"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container" >
+
+                <div class="grid-25">
+                    <label>Scheduled Date From:</label>
+                    <lt-date-time value="search.scheduleDateFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                </div>
+                <div class="grid-25">
+                    <label>Scheduled Date To:</label>
+                    <lt-date-time value="search.scheduleDateTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                </div>
+                <div class="grid-25">
+                    <label>Ordered Date From:</label>
+                    <lt-date-time value="search.orderedDateFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                </div>
+                <div class="grid-25">
+                    <label>Ordered Date To:</label>
+                    <lt-date-time value="search.orderedDateTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-60">&nbsp;</div>
+            <div class="grid-20">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="exportAsVizioFormat()" value="'Export As Vizio Format'" is-loading="exportAsVizioFormatting"></waitting-btn>
+            </div>
+            <div class="grid-10 ">
+                <button type="button" btn-class="btn yellow" class="export-link" style="position: relative">Export
+                    <div class="ball-pulse" style="display:inline-block;" ng-show="exporting">
+                        <div style="width:6px; height:6px;"></div>
+                        <div style="width:6px; height:6px;"></div>
+                        <div style="width:6px; height:6px;"></div>
+                    </div>
+                    <div class="dis-bl"style="display: none;position: absolute; background:#4D7F89;right: 0; left:0;  top: 28px;z-index: 1;">
+                        <waitting-btn type="button" btn-class="ripplelink" ng-click="export('Order Level')" value="'Order Level'" ></waitting-btn>
+                        <waitting-btn type="button" btn-class="ripplelink" ng-click="export('Item Level')" value="'Item Level'" ></waitting-btn>
+
+                    </div>
+                </button>
+            </div>
+
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="searchReports()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+
+        </div>
+
+        <div class=" grid-parent grid-100 container">
+            <div class="grid-parent grid-100 container">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th ng-repeat="head in reportHead"> {{head}} </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="report in reportData">
+                        <td ng-repeat="head in reportHead"> {{report[head]}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+        </div>
+    </div>
+</div>

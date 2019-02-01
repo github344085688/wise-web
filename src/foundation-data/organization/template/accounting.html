@@ -1,0 +1,104 @@
+<div class="portlet-body form form-horizontal">
+    <div class="row form-group">
+        <div class="grid-80">
+
+            <div class="row form-group">
+                <div class="col-md-5">
+                    <label>BillType:</label>
+                    <ui-select ng-model="billType">
+                        <ui-select-match allow-clear="true">
+                            {{$select.selected}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in billTypes">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+
+                <div class="col-md-5">
+                    <label>Credit Limit</label>
+                    <input type="number"/>
+                </div>
+
+            </div>
+
+            <div class="row form-group" style="text-align: left;">
+                <div class="col-md-4">
+                    <label>Bill Frequency:</label>
+                    <ui-select ng-model="requency" on-select="requencyChange($select.selected)">
+                        <ui-select-match allow-clear="true">
+                            {{$select.selected}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in frequencys">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+
+                <div class="col-md-3" ng-if="showDate">
+                    <label>Date:</label>
+                    <lt-date-time date-format="yyyy-mm-dd" minute-step="60"></lt-date-time>
+                </div>
+
+                <div class="col-md-3" ng-if="showDate2">
+                    <label>Date2:</label>
+                    <lt-date-time date-format="yyyy-mm-dd" minute-step="60"></lt-date-time>
+                </div>
+
+                <div class="col-md-3" ng-if="showTime">
+                    <label>Time:</label>
+                    <lt-date-time date-format="yyyy-mm-dd hh:ii"></lt-date-time>
+                </div>
+
+                <div class="col-md-3" ng-if="showWeak">
+                    <label>Weak:</label>
+                    <ui-select ng-model="weakDay">
+                        <ui-select-match allow-clear="true">
+                            {{$select.selected}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in weak">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+
+            </div>
+
+            <div class="row form-group">
+                <div class="col-md-3">
+                    <input type="checkbox" id="approve">
+                    <label class="checkbox" for="approve">
+                        <span class="text">Auto Approve </span>
+                    </label>
+                </div>
+
+                <div class="col-md-3">
+                    <input type="checkbox" id="credit">
+                    <label class="checkbox" for="credit">
+                        <span class="text">Credit Hold</span>
+                    </label>
+                </div>
+
+                <label class="col-md-3">
+                    Last Billed Date:
+                    <span style="color: #0e76a8;">2017-07-27</span>
+                </label>
+                <label class="col-md-3">
+                    Last Invoice:
+                    <span style="color: #0e76a8;">2107546</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="grid-20">
+            <label>Bill Category:</label>
+            <div class="grid-parent grid-100" ng-repeat="property in categorys track by $index">
+                <input type="checkbox" id="{{property}}">
+                <label class="checkbox" for="{{property}}">
+                    <span class="text">{{property}} </span>
+                </label>
+            </div>
+        </div>
+
+    </div>
+</div>

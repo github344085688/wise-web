@@ -1,0 +1,86 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label">Pick Task Statistics</h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-80">&nbsp;</div>
+            <div class="grid-20">
+                <waitting-btn type="button" is-loading="exporting" btn-class="ripplelink" ng-click="export()" value="'Export'"></waitting-btn>
+            </div>
+        </div>
+
+  
+
+        <div class="grid-parent grid-100 container">
+
+            <div class="grid-25">
+                <b>Total Task Count</b>: {{taskData.taskCount}}
+            </div>
+            <div class="grid-25">
+                <b>Total ItemLine Count</b>: {{taskData.totalItemLineCount}}
+            </div>
+            <div class="grid-25">
+                <b>Progress Task Count</b>: {{taskData.progressTaskCount}}
+            </div>
+            <div class="grid-25">
+                <b>Open Task Count</b>: {{taskData.openTaskCount}}
+            </div>
+
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <b>Auto Assignment Remaining Task Count</b>: {{taskData.autoAssignmentTaskQty}}
+            </div>
+        </div>
+        <div ng-show="isLoading" class="grid-parent grid-100 text-center">
+            <img src="assets/img/loading-spinner-grey.gif">
+            <span>&nbsp;LOADING...</span>
+        </div>
+        <div class="grid-parent grid-100 container"  ng-show="!isLoading" style="overflow-x: scroll">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th style="max-width: 160px;">Picker</th>
+                    <th style="max-width: 160px;">Zone</th>
+                    <th style="max-width: 160px;" class="order-sorting" ng-click="sortClick('progressTaskCount')">Progress Task</th>
+                    <th style="max-width: 200px;" class="order-sorting" ng-click="sortClick('progressTaskItemLine')">Progress Task ItemLine</th>
+                    <th style="max-width: 200px;" class="order-sorting" ng-click="sortClick('openTaskCount')">Open Task</th>
+                    <th style="max-width: 160px;" class="order-sorting" ng-click="sortClick('openTaskItemLine')">Open Task ItemLine</th>
+                    <th style="max-width: 160px;" class="order-sorting" ng-click="sortClick('taskCount')">Task Count</th>
+                    <th ng-repeat="count in createRange(maxOpenTaskCountForPicker + 1 )" style="width: 200px;"> Queue #{{count}}</th>
+                </tr>
+                </thead>
+          
+                <tbody >
+                <tr ng-if="line.isOnline || line.taskCount > 0" ng-repeat="line in taskData.pickerList track by $index" ng-class="{'case-high-light':line.highLight}">
+                    <td>{{$index + 1}}</td>
+                    <td ng-class="{'fontred': !line.isOnline && line.taskCount >0,'font-green':line.isOnline && line.taskCount == 0}">{{line.picker}}</td>
+                    <td>{{line.virtualLocationName}}</td>
+                    <td>{{line.progressTaskCount}}</td>
+                    <td>{{line.progressTaskItemLine}}</td>
+                    <td>{{line.openTaskCount}}</td>
+                    <td>{{line.openTaskItemLine}}</td>
+                    <td>{{line.taskCount}}</td>
+                    <td ng-repeat="openTask in line.openTasks">
+                        <b>LH#</b>:
+                        <span ng-repeat="longHaulNo in openTask.longHaulNos">{{longHaulNo}} </span>
+                        <br/>
+                        <b>Order#</b>:
+                        <span ng-repeat="orderId in openTask.orderIds">{{orderId}} </span>
+                        <br/>
+                        <b>Task</b>:{{openTask.id}}
+                        <br/>
+                        <b>Assign Time</b>: {{openTask.lastAssignedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                    </td>
+                    <td ng-repeat="emptyCount in createRange(maxOpenTaskCountForPicker - line.openTaskCount + 1)"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

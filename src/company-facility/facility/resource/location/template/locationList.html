@@ -1,0 +1,185 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Facility</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Location</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> Location</span>
+                </div>
+                <div class="actions"  permission-check="{{'facility::location_write'}}">
+                    <button type="button" class="btn red" style="margin-right:30px" ng-click="ctrl.resetPickStrategyWeight()">Reset Pick Strategy Weight</button>
+                    <a ng-click="ctrl.quickAddByName()"><b>Quick Add By Name </b></a> |
+                    <a ng-click="ctrl.quickAdd()"><b>Quick Add By Pattern </b></a> |
+                    <a ui-sref="cf.facility.resource.location.add"><b>Add Location</b></a>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <form>
+                    <div class="row form-group">
+                        <div class="col-md-3">
+                            <label>Location Type</label>
+                            <ui-select multiple name="types" ng-model="ctrl.searchInfo.types">
+                                <ui-select-match>
+                                    {{$item}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="type in locationTypes| filter: $select.search">
+                                    {{type}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Location Group</label>
+                            <ui-select name="locationGroupName" ng-model="ctrl.searchInfo.locationGroupId">
+                                <ui-select-match allow-clear="true">
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="locationGroup.id as locationGroup in locationGroups| filter: $select.search">
+                                    {{locationGroup.name}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Parent</label>
+                            <ui-select name="type" ng-model="ctrl.searchInfo.parentId">
+                                <ui-select-match allow-clear="true">
+                                    <div ng-bind="$select.selected.name"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="zone.id as zone in zones | filter: $select.search">
+                                    {{zone.name}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Content</label>
+                            <input type="text" ng-model="ctrl.searchInfo.regexName" class="form-control"
+                                   placeholder="Type any text to search"/>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-3">
+                            <label>Support Pick Type</label>
+                            <ui-select name="supportPickType" ng-model="ctrl.searchInfo.supportPickType">
+                                <ui-select-match allow-clear="true">
+                                    {{$select.selected}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="pickType in pickTypes | filter: $select.search"
+                                                   refresh="getPickTypes()" refresh-delay="50">
+                                    <div ng-bind="pickType"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Tenant</label>
+                            <organization-auto-complete ng-model="ctrl.searchInfo.tenantId" name="tenant" allow-clear="true"
+                                                        tag="Customer"></organization-auto-complete>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label>Entry ID</label>
+                            <lt-tags-input placeholder="Enter Entry ID" ng-model="ctrl.searchInfo.entryIds" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Name</label>
+                            <input type="text" ng-model="ctrl.searchInfo.name"  class="form-control" ng-keyup="keyUpSearch($event)">
+                        </div>
+                    </div>
+                    <div class="row form-actions right">
+                        <waitting-btn type="submit" btn-class="btn blue" ng-click="ctrl.search()"
+                                      value="'Search'" is-loading="!ctrl.searchLocationCompleted"></waitting-btn>
+
+                        <waitting-btn type="button" btn-class="btn yellow" ng-click="ctrl.export()"
+                                      value="'Export'" is-loading="ctrl.exporting"></waitting-btn>
+                         <button type="button" class="btn yellow" style="float:left" ng-click="batchTenant()" permission-check="{{'facility::location_write'}}">Batch Assign Tenant</button>              
+                    </div>
+                </form>
+            </div>
+            <!-- TABLE -->
+            <div class="row">
+                <div class="portlet light box-shadow-none">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject bold"> Search Results</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div ng-show="!ctrl.searchLocationCompleted" class="text-center">
+                            <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                        </div>
+                        <div ng-show="ctrl.searchLocationCompleted" class="dataTables_wrapper no-footer">
+                            <div class="table-scrollable">
+                                <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_1"
+                                    role="grid" aria-describedby="sample_1_info">
+                                    <thead>
+                                        <tr role="row">
+                                            <th><input type="checkbox" ng-checked="selectAll" ng-click="checkAllLocations()" name="selectAll"></th>
+
+                                            <th> Name</th>
+                                            <th> Floor</th>
+                                            <th> Parent ID</th>
+                                            <th> Type</th>
+                                            <th> Tag </th>
+                                            <th> Location Group</th>
+                                            <th> Support Pick Type</th>
+                                            <th> Pick Strategy Weight</th>
+                                            <th> Support Equipment</th>
+                                            <th> Capacity </th>
+                                            <th> Sub Type</th>
+                                            <th> Max Size</th>
+                                            <th> Reserve Entry ID</th>
+                                            <th> Occupy Entry ID</th>
+                                            <th> Tenant </th>
+                                            <th> Sequence </th>
+                                            <th> Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="location in ctrl.locations track by $index">
+                                            <td>
+                                                <input type="checkbox" ng-checked="isChecked(location) " ng-click="checkLocation(location)">
+                                            </td>
+                                            <td><a ui-sref="cf.facility.resource.location.edit({locationId:location.id})">{{location.name}}</a></td>
+                                            <td>{{location.floor}}</td>
+                                            <td>{{location.parentInfo.name}}</td>
+                                            <td>{{location.type}}</td>
+                                            <td>{{location.tagName}}</td>
+                                            <th>{{location.itemGroupName}}</th>
+                                            <th>{{location.supportPickType}}</th>
+                                            <th>{{location.pickStrategyWeight}}</th>
+                                            <th>
+                                              <span ng-repeat="supportEquipment in location.supportEquipments">
+                                                     {{supportEquipment}}&nbsp;
+                                              </span>
+                                            </th>
+                                            <td>{{location.capacity.qty}} &nbsp;{{location.capacity.type}}</td>
+                                            <td>{{location.subType}}</td>
+                                            <td>{{location.maxSize}}</td>
+                                            <td>{{location.reserveEntryId}}</td>
+                                            <td>{{location.occupyEntryId}}</td>
+                                            <th>  <span ng-repeat="tenantName in location.tenantNames" style="background-color:#f6f3e8; margin: 5px 5px;padding: 5px 10px;border-radius: 3px;">
+                                                    {{tenantName}}&nbsp;
+                                                  </span> 
+                                            </th>
+                                            <td>{{location.sequence}}</td>
+                                            <td>{{location.status}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <pager total-count="ctrl.paging.totalCount" current-page ="ctrl.paging.pageNo" page-size="ctrl.pageSize" load-content="ctrl.loadContent(currentPage)"></pager>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

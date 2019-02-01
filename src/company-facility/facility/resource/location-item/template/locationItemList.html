@@ -1,0 +1,185 @@
+<div class="grid-100 row">
+    <div class=" grid-100 grid-content">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left"> Location & Item List</h1>
+            <a class="create-button" permission-check="{{'facility::locationItem_write'}}" ui-sref="cf.facility.resource.locationItem.add">
+                <b>Add Location & Item</b>
+            </a>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <a ng-click="advanced()" style="font-weight:600;">
+                <span ng-show="!isAdvanced">Advanced</span>
+                <span ng-show="isAdvanced">Keyword</span> Search
+            </a>
+        </div>
+        <div class="grid-parent grid-100 container" ng-show="!isAdvanced">
+            <div class="grid-50">
+                <label class="label-input">Keyword</label>
+                <input type="text" placeholder=" Item / UPC" ng-model="searchParam.keyword" ng-keyup="keyUpSearch($event)" />
+            </div>
+            <div class="grid-10">
+                <label class="label-input">Only Show Fixed</label>
+                <ui-select name="locationGroupName" ng-model="searchParam.onlyShowFixed">
+                    <ui-select-match allow-clear="true">
+                        {{$select.selected.name}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item.dbName as item in onlyShowFixeds| filter: $select.search">
+                        {{item.name}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-10">
+                <label class="label-input">&nbsp;</label>
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+            <div class="grid-10">
+                <label class="label-input">&nbsp;</label>
+                <unis-waitting-btn ng-type="button" btn-class="yellow" ng-click="export()" value="'Export'" is-loading="exporting"></unis-waitting-btn>
+            </div>
+        </div>
+        <div class="grid-parent grid-100" ng-show="isAdvanced">
+            <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label class="label-input">Tenant</label>
+                    <organization-auto-complete ng-model="searchParam.tenantId" name="tenant" allow-clear="true" tag="Customer"></organization-auto-complete>
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Location Group</label>
+                    <ui-select name="locationGroupName" ng-model="searchParam.locationGroupId">
+                        <ui-select-match allow-clear="true">
+                            {{$select.selected.name}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="locationGroup.id as locationGroup in locationGroups| filter: $select.search">
+                            {{locationGroup.name}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Scenario</label>
+                    <ui-select ng-model="searchParam.searchScenario">
+                        <ui-select-match allow-clear="true">
+                            <div ng-bind="$select.selected.name"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="sce.dbName as sce in scenarios| filter: $select.search">
+                            {{sce.name}}
+                        </ui-select-choices>
+                    </ui-select>
+
+                </div>
+            </div>
+
+            <div class="grid-parent grid-100 container">
+                <div class="grid-80">&nbsp;</div>
+                <div class="grid-10 ">
+                    <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="loading"></waitting-btn>
+                </div>
+                <div class="grid-10">
+                    <unis-waitting-btn ng-type="button" btn-class=" yellow" ng-click="export()" value="'Export'"
+                        is-loading="exporting"></unis-waitting-btn>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <div class="grid-10">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="expandOrShrinkAll()" value="expandOrStrinkName"></waitting-btn>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container" style="overflow:auto">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Location</th>
+                        <th>Type</th>
+                        <th>Item #</th>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="(location,items) in locationItems track by $index" ng-init="expandLine[$index] = false;$pIndex =$index;">
+                    <tr>
+                        <td>
+
+                            <i class="fa fa-plus-circle" ng-if="!expandLine[$pIndex]" style="color:#337ab7;padding: 0 10px;"
+                                ng-click="expand($pIndex)"></i>
+                            <i class="fa fa-minus-circle" ng-if="expandLine[$pIndex]" style="color:#337ab7;padding: 0 10px;"
+                                ng-click="expand($pIndex)"></i>
+                            {{location}}
+                        </td>
+                        <td>
+                            {{items[0]['Type']}}
+                        </td>
+                        <td style="width:80%;
+                        word-break: break-word;">
+                            {{getItems(items)}}
+                        </td>
+                    </tr>
+                    <tr class="child-table-total" ng-if="expandLine[$pIndex]">
+                        <td colspan="3">
+                            <div class="child">
+                                <table class="child-table" style="width: 90%;margin: 0 5%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Item #</th>
+                                            <th>Item Description</th>
+                                            <th>Location Qty</th>
+                                            <th>Uom</th>
+                                            <th>Is Fixed</th>
+                                            <th permission-check="{{'facility::locationItem_write'}}">Actions</th>
+                                        </tr>
+
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in items track by $index">
+                                            <td>
+                                                {{item['Item#']}}
+                                            </td>
+                                            <td>
+                                                {{item['Item Description']}}
+                                            </td>
+                                            <td>
+                                                {{item['Location Qty']}}
+                                            </td>
+                                            <td>
+                                                {{item['UOM']}}
+                                            </td>
+                                            <td>
+                                                {{item['isFixed'] === 'Y' ?'Yes': 'No'}}
+                                            </td>
+                                            <td permission-check="{{'facility::locationItem_write'}}">
+                                             <span ng-if="item['isFixed'] === 'Y'">
+                                                    <unis-waitting-btn ng-type="button" btn-class="btn red" ng-click="deleteRelation(item)"
+                                                    value="'UnFixed'"></unis-waitting-btn>
+                                             </span>
+                                             <span ng-if="item['isFixed'] === 'N'">
+                                                    <unis-waitting-btn ng-type="button" btn-class="btn" ng-click="createRelation(item)"
+                                                    value="'Fixed'"></unis-waitting-btn>
+                                             </span>
+                                             
+                                               
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="totalCount" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+    </div>
+</div>

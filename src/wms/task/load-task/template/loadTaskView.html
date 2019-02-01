@@ -1,0 +1,178 @@
+<div class="portlet light bordered" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold">General Load Task: {{task.id}}</span>
+        </div>
+        <div class="actions" permission-check="{{'task::generalLoadTask_write'}}">
+            <button type="button" class="btn blue" ng-click="editTask()" ng-disabled="">Edit Load Task</button>
+        </div>
+    </div>
+    <div class="portlet-body  form form-horizontal">
+        <div class="form-group">
+            <span class="col-md-3">
+                <b>Entry ID: </b>{{task.entryId}}</span>
+            <span class="col-md-3">
+                <b>Assignee: </b>{{task.assignee.firstName}}{{task.assignee.lastName}}</span>
+            <span class="col-md-3">
+                <b>Status: </b>{{task.status}}</span>
+            <span class="col-md-3">
+                <b>Priority: </b>{{task.priority}}</span>
+        </div>
+        <div class="form-group">
+            <span class="col-md-3">
+                <b>Dock: </b>{{task.dockId}}</span>
+            <span class="col-md-3">
+                <b>Seal#: </b>
+                    <span>{{task.seal.sealNo}}</span>
+            </span>
+            <span class="col-md-6">
+                <b>Description:</b> {{task.description}}
+            </span>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <b>Start Time:</b>
+                <span>{{task.startTime}}</span>
+            </div>
+            <div class="col-md-3">
+                <b>End Time:</b>
+                <span>{{task.endTime}}</span>
+            </div>
+            <span class="col-md-3">
+                <b>Created Time: </b>{{task.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}} &nbsp;
+                <span ng-show="task.createdBy">({{task.createdBy}})</span>
+            </span>
+            <span class="col-md-3">
+                <b>Updated Time: </b>{{task.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}} &nbsp;
+                <span ng-show="task.updatedBy">({{task.updatedBy}})</span>
+            </span>
+        </div>
+        <div class="form-group" style="margin-bottom: 20px;">
+            <span class="col-md-3">
+                <b>Loads: </b>
+                <span ng-repeat="load in task.loads">
+                    <a ng-href="{{'#/wms/outbound/load/' + load.id}}" target="_blank">{{load.id}}</a>
+                </span>
+            </span>
+        </div>
+        <div class="tabbable-custom" style="margin-bottom: 0px; overflow: visible; margin-top:20px;">
+            <ul class="nav nav-tabs">
+                <li ng-class="{'active':activeMainTab == 'steps'}">
+                    <a data-toggle="tab" ng-click="changeMainTab('steps')"> Steps </a>
+                </li>
+                <li ng-class="{'active':activeMainTab == 'materialLine'}">
+                    <a data-toggle="tab" ng-click="changeMainTab('materialLine')"> Material Line </a>
+                </li>
+                <li ng-class="{'active':activeMainTab == 'photos'}">
+                    <a data-toggle="tab" ng-click="changeMainTab('photos')"> Photos </a>
+                </li>
+            </ul>
+            <div class="tab-content" style="padding:15px;">
+                <div ng-class="{'active':activeMainTab == 'steps'}" class="tab-pane ">
+                    <div class="panel panel-default" ng-repeat="step in task.steps">
+                        <div class="panel-heading">
+                            <div class="panel-title" style="display: block; float: left;line-height:34px;"> STEP | {{step.name}}</div>
+                            <div class="actions" style="text-align: right;">
+                                <button type="button" class="btn blue" ng-click="reopenStep(step)" ng-if="step.status==='Skipped' || step.status === 'Done' || step.status === 'Force Closed'">Reopen
+                                </button>
+                                <button type="button" class="btn yellow" permission-check="{{'task::generalLoadTask_write'}}" update-step-assignees task-step="step">Edit Assignees</button>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="tabbable-custom" style="margin-bottom: 0px; overflow: visible">
+                                <ul class="nav nav-tabs">
+                                    <li ng-class="{'active':activeTabs[step.id] == 'content'}">
+                                        <a data-toggle="tab" ng-click="changeTab('content', step.id)"> Content </a>
+                                    </li>
+                                    <li ng-class="{'active':activeTabs[step.id] == 'stepException'}">
+                                        <a data-toggle="tab" ng-click="changeTab('stepException', step.id)"> Exception </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" style="padding:15px;">
+                                    <div ng-class="{'active':activeTabs[step.id] == 'content'}" class="tab-pane ">
+                                        <div ng-include="'wms/task/common/template/genericStep.html'"></div>
+                                        <div class="row" ng-repeat="snCollection in step.snCollections track by $index" style="padding: 10px 0px;" ng-if="step.name==='SN Collection'">
+                                            <div class="col-md-3">
+                                                <b>ITEM</b>:{{snCollection.itemSpecName}} ( {{snCollection.itemSpecDesc}})</div>
+                                            <div class="col-md-2">
+                                                <b>LP ID</b>: {{snCollection.lpId}}</div>
+                                            <div class="col-md-2">
+                                                <b>Order ID</b>: {{snCollection.orderId}}</div>
+                                            <div class="col-md-5">
+                                                <b class="col-md-1">SN:</b>
+                                                <span class="col-md-11" style="word-break: break-word;">
+                                                    {{formateArray(snCollection.snList)}}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row" ng-repeat="loadResult in step.loadResults track by $index" style="padding: 10px 0px;" ng-if="step.name==='Loading'">
+                                            <div class="col-md-2">
+                                                <b>Load ID</b>:{{loadResult.loadId}}
+                                            </div>
+                                            <div class="col-md-2">
+                                                <b>Order ID</b>: {{loadResult.orderId}}
+                                            </div>
+                                            <div class="col-md-4">
+                                                <b >Loaded Pallet Labels:</b>
+                                                {{formateArray(loadResult.loadedPalletLabels)}}
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <b>Loaded SLP ID:</b>
+                                                {{formateArray(loadResult.loadedSlpIds)}}
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div ng-class="{'active':activeTabs[step.id] == 'stepException'}" class="tab-pane ">
+                                        <div class="row form-group" ng-include="'wms/task/common/template/stepException.html'" ng-repeat="exception in execptionGroupByStepId[step.stepId]">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-class="{'active':activeMainTab == 'materialLine'}" class="tab-pane ">
+                    <material-lines search-param="materialLinesSearchParam"></material-lines>
+                </div>
+                <div ng-class="{'active':activeMainTab == 'photos'}" class="tab-pane ">
+                    <div class="panel panel-default" ng-repeat=" (key,value) in groupByLoadId">
+                        <div class="panel-heading" style="height: 50px;">
+                            <div class="panel-title" style="display: block; float: left;line-height:34px;"> Load | {{key}}</div>
+
+                        </div>
+                        <div class="panel-body">
+                            <div class="tabbable-custom" style="margin-bottom: 0px; overflow: visible">
+                                <div style="padding:15px;">
+                                    <ul class="list-unstyled">
+                                        <li style="margin-bottom: 15px;">
+                                            <ul class="list-inline">
+                                                <div style="width:100px; display: inline-block;">Seal:</div>
+                                                     <li ng-repeat="photo in task.seal.photos">
+                                                        <img style="width:50px;height: 50px;" http-src="/file-app/file-download/{{photo}}"/>
+                                                     </li>
+                                            </ul>
+                                        </li>
+                                        <li style="margin-bottom: 15px;" ng-repeat="val in value">
+                                            <ul class="list-inline">
+                                                <div style="width:100px; display: inline-block;">{{val.orderId}}:</div>
+                                                <li ng-repeat="photo in photosGroupByTags[task.id+','+key+','+val.orderId]">
+
+                                                    <img style="width:50px;height: 50px;" http-src="/file-app/file-download/{{photo.fileId}}" title="{{photo.fileType}}: {{formatTime(photo.createTime)}}"
+                                                    />
+                                                </li>
+                                                <upload-btn ng-model="fileIds" type="Photo" step-id="step.id" order-id="val.orderId" load-id="key" module='load' save-picture="savePicture(param)"></upload-btn>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>

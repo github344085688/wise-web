@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Packing Station",
+    "state": "cl.packingStation.list",
+    "icon": "receipt",
+    "url": "/cl/packingStation/list"
+  },
+  {
+    "title": "Exceptional Handling",
+    "state": "cl.exceptionalHandling.list",
+    "icon": "receipt",
+    "url": "/cl/exceptionalHandling/list"
+  },
+  {
+    "title": "Conveyor Dashboard",
+    "state": "cl.conveyorDashboard.list",
+    "icon": "receipt",
+    "url": "/cl/conveyorDashboard/list"
+  },
+  {
+    "title": "Small Parcel Station",
+    "state": "cl.smallParcelStation",
+    "icon": "receipt",
+    "url": "/cl/smallParcelStation"
+  }
+]

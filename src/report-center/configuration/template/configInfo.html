@@ -1,0 +1,176 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">
+                <span class="caption-subject bold"> {{title}} </span>
+            </h1>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label>Report Level<span style="color: red;">*</span></label>
+                    <ui-select ng-model="configuration.reportLevel" on-select="levelChange($select.selected)">
+                        <ui-select-match>
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in reportLevel | filter: $select.search">
+                            <div ng-bind="item"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="grid-25" ng-if="configuration.reportLevel == 'Customer Level'">
+                    <label class="label-input">
+                        Customer:<span style="color: red;">*</span>
+                    </label>
+                    <organization-auto-complete name="customer" ng-model="configuration.customerId" is-search-all-facilities="true"
+                                                tag="Customer" on-select="customerChange(org)" required="true"></organization-auto-complete>
+                </div>
+                <div class="grid-25">
+                    <label>Facility<span style="color: red;">*</span></label>
+                    <ui-select ng-model="configuration.facilityId" required="rue">
+                        <ui-select-match>
+                            <div ng-bind="$select.selected.name"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item.id as item in activatedFacilities | filter: $select.search">
+                            <div ng-bind="item.name"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label>Report Type<span style="color: red;">*</span></label>
+                    <ui-select ng-model="configuration.reportType" required="rue">
+                        <ui-select-match>
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in reportTypes | filter: $select.search">
+                            <div ng-bind="item"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="grid-25">
+                    <label>Schedule Type<span style="color: red;">*</span></label>
+                    <ui-select ng-model="configuration.scheduleType" required="rue"  >
+                        <ui-select-match>
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in scheduleTypes | filter: $select.search">
+                            <div ng-bind="item"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="grid-25">
+                    <label>Time Span Of Data</label>
+                    <ui-select ng-model="configuration.timeSpanOfData">
+                        <ui-select-match allow-clear="true">
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in timeSpans | filter: $select.search">
+                            <div ng-bind="item"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="grid-25" ng-if="isShowSchedule('DailyReport')">
+                    <label>End of Day</label>
+                    <input type="number" ng-model="configuration.endOfDay" class="form-control" placeholder="enter 0 to 24" />
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container" ng-if="configuration.scheduleType != null">
+                <div class="grid-25" ng-if="isShowSchedule('WeekDay')">
+                    <label>Schedule WeekDay</label>
+                    <ui-select ng-model="configuration.scheduleWeekDay">
+                        <ui-select-match allow-clear="true">
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in weekDays | filter: $select.search">
+                            <div ng-bind="item"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="grid-25" ng-if="isShowSchedule('Day')">
+                    <label class="label-input">Schedule Day</label>
+                    <input type="number" ng-model="configuration.scheduleDay" class="form-control" placeholder="Enter Number Day" />
+                </div>
+                <div class="grid-25" ng-if="isShowSchedule('Hour')">
+                    <label class="label-input">Schedule Hour</label>
+                    <input type="number" ng-model="configuration.scheduleHour" class="form-control" placeholder="Enter Hour" />
+                </div>
+                <div class="grid-25" ng-if="isShowSchedule('Minute')">
+                    <label class="label-input">Schedule Minute</label>
+                    <input type="number" ng-model="configuration.scheduleMinute" class="form-control" placeholder="Enter Minute" />
+                </div>
+
+            </div>
+            <div class="grid-parent grid-100 container">
+                <div class="grid-100">
+                    <label class="label-input">Report Param</label>
+                    <textarea rows="3" ng-model="configuration.reportParam" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container">
+                <div class="grid-20">
+                    <label>Report Media<span style="color: red;">*</span></label>
+                    <ui-select ng-model="configuration.reportMedia" on-select="mediaChange($select.selected)">
+                        <ui-select-match>
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in reportMedia | filter: $select.search">
+                            <div ng-bind="item"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div ng-if="configuration.reportMedia == 'Email'" class="grid-40">
+                    <label class="label-input">Email To<span style="color: red;">*</span></label>
+                    <input type="text" ng-model="configuration.consigneeTo" class="form-control" placeholder="Enter Email" />
+                </div>
+                <div ng-if="configuration.reportMedia == 'Email'" class="grid-40">
+                    <label class="label-input">Copy To</label>
+                    <input type="text" ng-model="configuration.consigneeCC" class="form-control" placeholder="Enter Email" />
+                </div>
+                <div ng-if="configuration.reportMedia == 'FTP'" class="grid-25">
+                    <label class="label-input">Ftp Host<span style="color: red;">*</span></label>
+                    <input type="text" ng-model="configuration.ftpHost" class="form-control" placeholder="Ftp Host" />
+                </div>
+                <div ng-if="configuration.reportMedia == 'FTP'" class="grid-10">
+                    <label class="label-input">Ftp Port<span style="color: red;">*</span></label>
+                    <input type="text" ng-model="configuration.ftpPort" class="form-control" placeholder="Ftp Port" />
+                </div>
+            </div>
+            <div ng-if="configuration.reportMedia == 'FTP'" class="grid-parent grid-100 container">
+                <div class="grid-20">
+                    <label class="label-input">Ftp User<span style="color: red;">*</span></label>
+                    <input type="text" ng-model="configuration.ftpUser" class="form-control" placeholder="Ftp User" />
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Ftp Password<span style="color: red;">*</span></label>
+                    <input type="text" ng-model="configuration.ftpPassword" class="form-control" placeholder="Ftp Password" />
+                </div>
+                <div class="grid-40">
+                    <label class="label-input">Ftp File Path<span style="color: red;">*</span></label>
+                    <input type="text" ng-model="configuration.ftpFilePath" class="form-control" placeholder="Ftp File Path" />
+                </div>
+            </div>
+
+            <div class="grid-parent grid-100 container">
+                <div class="grid-100">
+                    <label class="label-input">Report Title</label>
+                    <input type="text" ng-model="configuration.reportTitle" class="form-control" placeholder="Enter Report Title" />
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container">
+                <div class="grid-100">
+                    <label class="label-input">Report Body</label>
+                    <textarea rows="3" ng-model="configuration.reportBody" class="form-control" >
+                    </textarea>
+                </div>
+            </div>
+
+            <div class="grid-parent grid-100 container" style="margin-top:50px;">
+                <unis-waitting-btn btn-type="submit" ng-click="save()" btn-class="grid-10 ripplelink pull-right button-between" value="submitLabel" is-loading="loading"></unis-waitting-btn>
+                <button type="button" class="grid-10 pull-right cancel" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>

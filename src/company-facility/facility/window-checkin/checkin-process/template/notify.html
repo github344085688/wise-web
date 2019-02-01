@@ -1,0 +1,91 @@
+<md-dialog flex="50" ng-cloak>
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Notify Page</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <i class="material-icons">close</i>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div class="portlet light box-shadow-none" style="padding: 0;margin-bottom: 0">
+                    <div class="portlet-title">
+                        <div class="row form-group">
+                            <div class="col-md-4">
+                                <label class="bold">Task:</label>
+                                <label>{{task.id}}</label>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="bold">Status:</label>
+                                <label>{{task.status}}</label>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="bold">Dock Status:</label>
+                                <label>{{task.dock.status}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portlet-body form form-horizontal" style="padding-bottom: 0;margin-bottom: 0">
+                        <div class="row form-group">
+                            <div class="col-md-2">
+                                <label>User role</label>
+                            </div>
+                            <div class="col-md-10">
+                                <ui-select multiple ng-model="userFilter.roleIds" on-select="searchUsers()" on-remove="searchUsers()">
+                                    <ui-select-match placeholder="Type to select user role to filter user">
+                                        {{$item.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="o.id as o in avaibleUserRoles">
+                                        {{o.name}}
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-2">
+                                <label>User Tag </label>
+                            </div>
+                            <div class="col-md-10">
+                                <ui-select multiple ng-model="userFilter.tagIds" on-select="searchUsers()" on-remove="searchUsers()">
+                                    <ui-select-match placeholder="Type to select user tag to filter user">
+                                        {{$item.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="o.id as o in avaibleUserTags">
+                                        {{o.name}}
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-2"> Users</div>
+                            <div class="col-md-10">
+                                <ul class="list-unstyled" >
+                                    <li ng-repeat="user in users" ng-click="userCheckOrUncheck(user)" style="display: inline-block;margin-left: 10px;margin-top: 5px;">
+                                        <input type="checkbox" ng-checked="userChecked(user)">
+                                        <label>{{getUserName(user)}}</label>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-2">
+                                <label>Task Note</label>
+                            </div>
+                            <div class="col-md-10">
+                                <textarea class="form-control" ng-model="notify.taskNotes"></textarea>
+                            </div>
+                        </div>
+                        <div class="row form-actions right">
+                            <button type=" button " ng-click="save() " class="btn blue ">&nbsp;OK&nbsp;</button>
+                            <button type="button " ng-click="cancel() " class="btn default ">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

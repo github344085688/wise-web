@@ -1,0 +1,61 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">
+                <span ng-show="isAddAction" class="caption-subject bold"> Add  Template Management</span>
+                <span ng-show="!isAddAction" class="caption-subject bold"> Edit Template Management</span>
+            </h1>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <form novalidate name="templateManageForm" ng-submit="templateManageForm.$valid && addOrUpdateTemplateManagement()">
+                <div class="grid-parent grid-100 container">
+                    <label class="label-input grid-10">Template File:</label>
+                    <div class="grid-60">
+
+                        <input-validation-message field="templateFile" form="templateManageForm"></input-validation-message>
+                        <input style="display:block" type="file" id="templateFile" name="templateFile" class="form-control" ng-model="templateFilePath" onchange="angular.element(this).scope().excelDataFileChange(this)"
+                            ng-readonly="true" required>
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+
+                    <label class="label-input grid-10">Tags:</label>
+                    <div class="grid-60">
+                        <input-validation-message field="tags" form="templateManageForm"></input-validation-message>
+                        <lt-tags-input name="tags" placeholder="Enter tags" ng-model="templateManage.tags" required></lt-tags-input>
+                    </div>
+
+                </div>
+                <div class="grid-parent grid-100 container">
+
+                    <label class="label-input grid-10">Template:</label>
+                    <div class="grid-60">
+                        <input-validation-message field="fileCategory" form="templateManageForm"></input-validation-message>
+                        <ui-select name="fileCategory" ng-model="templateManage.fileCategory" class="form-control" required="true">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="type in fileCategory | filter: $select.search">
+                                <div ng-bind="type"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+
+
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="submitLabel" is-loading="loading"></unis-waitting-btn>
+                    <button type="button" class="grid-10 pull-right cancel" ng-click="cancelEditLocation()">Cancel</button>
+
+
+
+
+                </div>
+
+        </div>
+        </form>
+    </div>
+</div>
+
+

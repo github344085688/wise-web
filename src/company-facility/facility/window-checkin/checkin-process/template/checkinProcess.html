@@ -1,0 +1,72 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Facility</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Window Check In</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Check In Process</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> Check In Process </span>
+                </div>
+                <div class="actions">
+                    <span class="caption-subject bold" > <a ng-click="entryPhotos($event)"> Entry Photos</a> </span>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <form novalidate>
+                    <div class="mt-element-step">
+                        <div class="row step-thin">
+                            <a href="javascript:;" ng-disabled="isSkiped('Step1')" ng-click="goToCarrierInfo()">
+                                <div class="col-lg-4 bg-grey mt-step-col {{carrierInfoClass}}">
+                                    <div class=" mt-step-number first bg-white font-grey">1</div>
+                                    <div class="mt-step-title uppercase font-grey-cascade" style="margin-top: 4px;">
+                                        Carrier Info
+                                        <div ng-show="carrierInfoClass == 'done'" class="fa-item right-icon">
+                                            <i class="fa fa-check-circle large-icon"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:;" ng-disabled="isSkiped('Step2')" ng-click="goToActivity()">
+                                <div class="col-lg-4 bg-grey mt-step-col {{activityClass}}">
+                                    <div class="mt-step-number bg-white font-grey">2</div>
+                                    <div class="mt-step-title uppercase font-grey-cascade" style="margin-top: 4px;">
+                                        Activity
+                                        <div ng-show="activityClass == 'done'" class="fa-item right-icon">
+                                            <i class="fa fa-check-circle large-icon"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:;" ng-disabled="isSkiped('Step3')" ng-click="goToTasks()">
+                                <div class="col-lg-4 bg-grey mt-step-col {{tasksClass}}">
+                                    <div class="mt-step-number bg-white font-grey">3</div>
+                                    <div class="mt-step-title uppercase font-grey-cascade" style="margin-top: 4px;">
+                                        <span ng-show="!isTransload">Tasks</span>
+                                        <span ng-show="isTransload">Transload Task</span>
+                                        <div ng-show="tasksClass == 'done'" class="fa-item right-icon">
+                                            <i class="fa fa-check-circle large-icon"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+                <div ui-view></div>
+            </div>
+        </div>
+    </div>
+</div>

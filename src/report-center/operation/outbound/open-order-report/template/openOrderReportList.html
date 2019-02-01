@@ -1,0 +1,78 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Order Item Report </h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+
+            <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label>Customer:</label>
+                    <organization-auto-complete name="customer" ng-model="search.customerId" tag="Customer" allow-clear="true"></organization-auto-complete>
+                </div>
+                <div class="grid-25">
+                    <label>Status:</label>
+                    <ui-select multiple name="status" ng-model="search.statuses">
+                        <ui-select-match>
+                            {{$item}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="item  in ['Imported', 'Open', 'Partial Committed','Commit Blocked', 'Commit Failed',
+                         'Committed', 'Planned', 'Picking', 'Picked', 'Packing', 'Packed', 'Staged', 'Loading', 'Loaded', 'Shipped',
+                         'Partial Shipped', 'Short Shipped', 'Reopen', 'Cancelled']| filter: $select.search"
+                            refresh-delay="50">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="grid-25">
+                    <label>Appointment Date From:</label>
+                    <lt-date-time value="search.appointmentTimeFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                </div>
+                <div class="grid-25">
+                    <label>Appointment Date To:</label>
+                    <lt-date-time value="search.appointmentTimeTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label>Load No:</label>
+                    <input type="text" ng-model="search.loadNo">
+                </div>
+            </div>
+
+
+            <div class="grid-parent grid-100 container">
+                <div class="grid-80">&nbsp;</div>
+                <div class="grid-10 ">
+                    <waitting-btn type="button" btn-class="ripplelink" ng-click="export()" value="'Export'" is-loading="exporting"></waitting-btn>
+                </div>
+
+                <div class="grid-10 ">
+                    <waitting-btn type="button" btn-class="ripplelink" ng-click="searchReports()" value="'Search'"
+                        is-loading="loading"></waitting-btn>
+                </div>
+
+            </div>
+            <div class="grid-parent grid-100 container" style="width: 100%; overflow-x: auto;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th ng-repeat="head in reportHead"> {{head}} </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="report in reportData">
+                            <td ng-repeat="head in reportHead"> {{report[head]}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="grid-parent grid-100 container">
+                <unis-pager total-count="paging.totalCount" current-page="paging.pageNo" page-size="pageSize"
+                    load-content="loadContent(currentPage)"> </unis-pager>
+            </div>
+        </div>
+    </div>

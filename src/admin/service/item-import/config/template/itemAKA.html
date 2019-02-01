@@ -1,0 +1,84 @@
+<div class="row form-group" ng-if="activetab == 'itemSpec'" ng-repeat="itemAKAMatch in itemAKAs track by $index" ng-init="akaIndex = $index" style=" padding-bottom: 130px;">
+    <hr/>
+    <div class="row form-group" style="margin: 10px 0px;">
+        <div ng-if="activetab != 'itemSpec'" class="bold col-md-3"></div>
+        <div ng-if="activetab == 'itemSpec'" class="bold col-md-2"></div>
+        <div class="bold col-md-2">
+            Excel File Field
+        </div>
+        <div ng-if="activetab != 'itemSpec'" class="bold col-md-3">
+            DB Field
+        </div>
+
+        <div ng-if="activetab == 'itemSpec'" class="bold col-md-3">
+            AKA Field
+        </div>
+        <div class="col-md-5" style="float:right">
+            <button type="button" class="btn red" ng-click="removeAKA(akaIndex)" style="float:right">Remove</button>
+        </div>
+    </div>
+    <div ng-repeat="col in excelFields.itemAKA track by $index">
+        <div class="row form-group" style="margin:5px 0px">
+            <div ng-if="activetab == 'itemSpec'" class="col-md-1"></div>
+            <div class="col-md-1">
+                <i ng-click="removeField($index, excelFields.itemAKA, itemAKAMatch)" class="material-icons adjustmentDeleteBtn" title="delete">delete_forever</i>
+            </div>
+            <div class="col-md-3" style="padding-top: 8px;">
+                {{col}}
+                <span style="float:right" ng-if="activetab == 'itemSpec'">
+                                    <input type="checkbox" id="mapakavalue{{akaIndex}}" ng-checked="mapAkaValue[col+akaIndex]"
+                                           ng-click="checkAkaMapValue(col,akaIndex)"/>
+                                    <label for="mapakavalue{{akaIndex}}">Value Mapping</label>
+                                </span>
+            </div>
+            <div class="col-md-3">
+                <ui-select ng-model="itemAKAMatch[col]" on-select="fieldAKAMatchOnSelect(col, $select.selected,akaIndex)">
+                    <ui-select-match allow-clear="true">
+                        <span ng-bind="$select.selected.fieldName"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item.fieldName as item in itemAKAImportFields | filter: $select.search">
+                        <b>{{item.fieldName}}</b>
+                    </ui-select-choices>
+                    <ui-select-no-choice>
+                        No available item.
+                    </ui-select-no-choice>
+                </ui-select>
+            </div>
+        </div>
+        <div ng-show="mapAkaValue[col+akaIndex]" style="padding: 15px 15px 5px;margin-bottom: 10px; background-color: rgba(93, 204, 214, 0.19);">
+            <div class="row form-group" ng-repeat="itemAka in matchAkaLines[akaIndex][col] track by $index">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" ng-model="itemAka.name" />
+                </div>
+
+                <div class="col-md-3">
+                    <ui-select ng-model="itemAka.itemSpecValue">
+                        <ui-select-match>
+                            <span ng-bind="$select.selected"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat=" item in itemAkaFieldsEnums[col]">
+                            <b>{{item}}</b>
+                        </ui-select-choices>
+                        <ui-select-no-choice>
+                            No available item.
+                        </ui-select-no-choice>
+                    </ui-select>
+                </div>
+
+                <div class="col-md-2">
+                    <button type="button" class="btn red" ng-click="removeAkaMappingValue(matchAkaLines[akaIndex][col],$index)">Remove</button>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-8">
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn green" ng-click="addAkaMappingValue(matchAkaLines[akaIndex][col])">Add</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

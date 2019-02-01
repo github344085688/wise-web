@@ -1,0 +1,21 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Shortage Report</h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container" style="padding-bottom: 100px;">
+            <div class="grid-30">
+                <label class="label-input">Customer</label>
+                <organization-auto-complete name="customer" ng-model="param.customerId" tag="Customer"
+                                            required="true" allow-clear="true"></organization-auto-complete>
+            </div>
+            <div class="grid-20">
+                <label class="label-input">&nbsp;</label>
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="export()"
+                              value="'Export to EXCEL'" is-loading="exporting"></waitting-btn>
+            </div>
+        </div>
+    </div>
+</div>

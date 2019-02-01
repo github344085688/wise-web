@@ -1,0 +1,331 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">
+                <span ng-if="isAddAction" class="caption-subject bold"> Add User</span>
+                <span ng-if="!isAddAction" class="caption-subject bold"> Edit User </span>
+            </h1>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <form novalidate name="userInfoForm" ng-submit="userInfoForm.$valid && addOrUpdateUser()">
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-65">
+                        <div class="grid-parent grid-100 container">
+                            <div class="grid-50">
+                                <label class="label-input">Username:</label>
+                                <input-validation-message field="name" form="userInfoForm"></input-validation-message>
+                                <input type="text" name="name" ng-model="currentUser.username" class="form-control"
+                                       placeholder="Enter user name" required/>
+                            </div>
+
+                            <div class="grid-50">
+                                <label class="label-input" style="float:left">SSO User Name:
+                                    <span style="color:green;" ng-if="ssoValidate=='OK'">
+                                             <i class="fa fa-check-circle" style=" font-size:25px;"></i>
+                                         </span>
+                                    <span style="color:#9d9d07;" ng-if="ssoValidate=='Fail'">
+                                           </i>Warnings: Failed to map this sso username.
+                                        </span>
+                                </label>
+                                <span ng-if="isValidateloading" class="text-center" style="float: left;
+                            padding-left: 30px;">
+                                         <img src="assets/img/loading-spinner-grey.gif">
+                                         <span>&nbsp;Validate...</span>
+                                    </span>
+                                <input-validation-message field="password"
+                                                          form="userInfoForm"></input-validation-message>
+                                <input type="text" ng-blur="verifySsoUserName(currentUser.ssoUsername)"
+                                       class="form-control" name="password" ng-model="currentUser.ssoUsername"
+                                       required="isNew"/>
+                            </div>
+                        </div>
+                        <div class="grid-parent grid-100 container">
+                            <div class="grid-50">
+                                <label class="label-input">First Name:</label>
+                                <input-validation-message field="firstName"
+                                                          form="userInfoForm"></input-validation-message>
+                                <input type="text" name="firstName" ng-model="currentUser.firstName"
+                                       class="form-control" placeholder="Enter user name"
+                                       ng-required="!currentUser.isLoginByWindowsAD"
+                                />
+                            </div>
+                            <div class="grid-50">
+                                <label class="label-input">Last Name:</label>
+                                <input-validation-message field="lastName"
+                                                          form="userInfoForm"></input-validation-message>
+                                <input type="text" name="lastName" ng-model="currentUser.lastName" class="form-control"
+                                       placeholder="Enter user name" ng-required="!currentUser.isLoginByWindowsAD"
+                                />
+                            </div>
+                        </div>
+                        <div class="grid-parent grid-100 container">
+                            <div class="grid-50">
+                                <label class="label-input">Role</label>
+                                <ui-select multiple name="roles" ng-model="currentUser.roles"
+                                           on-select="onSelectRole($select.selected)"
+                                           on-remove="onSelectRole($select.selected)"
+                                           class="form-control">
+                                    <ui-select-match>
+                                        <span ng-bind="$item.name"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item in roles | filter: $select.search">
+                                        <div ng-bind="item.name"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="grid-50">
+                                <label class="label-input">Tags:</label>
+                                <ui-select multiple name="tags" ng-model="currentUser.tags " class="form-control">
+                                    <ui-select-match>
+                                        <span ng-bind="$item.name"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item in tags  | filter: $select.search">
+                                        <div ng-bind="item.name"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="grid-parent grid-100 container">
+                            <div class="grid-50">
+                                <label class="label-input">Report</label>
+                                <user-auto-complete name="report"
+                                                    ng-model="currentUser.directReportToUserId"></user-auto-complete>
+                            </div>
+                            <div class="grid-50">
+                                <label class="label-input">Active</label>
+                                <ui-select name="active" ng-model="currentUser.status">
+                                    <ui-select-match allow-clear="true">
+                                        <div ng-bind="$select.selected"></div>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item in statusList | filter: $select.search"
+                                                       refresh="getFreightTermList($select.search)" refresh-delay="50">
+                                        <div ng-bind="item"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="grid-parent grid-100 container">
+                            <div class="grid-50">
+                                <label class="label-input">Default Company & Facility:</label>
+                                <ui-select name="defaultCompany" ng-model="currentUser.defaultCompanyFacility"
+                                           class="form-control">
+                                    <ui-select-match>
+                                        <div>{{$select.selected.company.name}} & {{$select.selected.facility.name}}
+                                        </div>
+                                    </ui-select-match>
+                                    <ui-select-choices
+                                            repeat="cf in currentUser.assignedCompanyFacilities | filter: $select.search.name">
+                                        <div>{{cf.company.name}} & {{cf.facility.name}}</div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="grid-parent grid-100 container">
+                            <div class="grid-100">
+                                <label class="label-input">Company & Facility</label>
+                                <div class="grid-40" style="padding-left: 0;">
+                                    <input-validation-message field="warehouse"
+                                                              form="userInfoForm"></input-validation-message>
+                                    <ui-select name="searchCompany" ng-model="currentUser.searchCompany"
+                                               class="form-control"
+                                               on-select="onSelectSearchCompany($select.selected.id)">
+                                        <ui-select-match placeholder="Company">
+                                            <div ng-bind="$select.selected.name"></div>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="company in companies | filter: $select.search.name">
+                                            <div ng-bind="company.name"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <div class="grid-40">
+                                    <input-validation-message field="warehouse"
+                                                              form="userInfoForm"></input-validation-message>
+
+                                    <ui-select name="searchFacility" ng-model="currentUser.searchFacility"
+                                               class="form-control">
+                                        <ui-select-match placeholder="Facility">
+                                            <div ng-bind="$select.selected.name"></div>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="facility in facilities | filter: $select.search">
+                                            <div ng-bind="facility.name"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <div class="grid-10">
+                                    <button type="button" class="btn green" ng-click="saveCompanyFacility()">Add
+                                    </button>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="grid-parent grid-100 container">
+                            <div class="grid-100">
+                                <div ng-repeat="item in currentUser.assignedCompanyFacilities track by $index"
+                                     style="display: inline-block; padding-bottom: 10px;">
+                            <span class="label label-default text-transform-none "
+                                  style="background-color: #2b884c; padding: 3px;">
+                                {{item.company.name}} & {{item.facility.name}}
+                                <i class="material-icons" style="font-size: 10px;"
+                                   ng-click="removeCompanyFacility($index)">clear</i>
+                            </span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-35">
+                        <div class="caption" style="background: #e1e5ec; ">
+                            <span class="caption-subject bold"
+                                  style=" height: 45px; padding-left: 15px; box-sizing: border-box; line-height: 45px; border-bottom: 1px solid #fff; display: block"> For Client Portal Account </span>
+                            <div style="padding: 20px 15px;box-sizing: border-box; ">
+                                <div class="grid-parent grid-100 container">
+                                    <div class="grid-100">
+                                        <label class="label-input">Belong to Customer </label>
+                                        <multiple-organization-auto-complete name="customer"
+                                                                             ng-model="currentUser.relatedCustomerId"
+                                                                             tag="Customer"/>
+                                    </div>
+                                </div>
+
+                                <div class="grid-parent grid-100 container">
+                                    <div class="grid-100">
+                                        <label class="label-input">Related WMS Company ID (Invoice)</label>
+                                        <lt-tags-input ng-model="wiseCompanyIds"
+                                                       placeholder="Enter WISE Company Id"></lt-tags-input>
+
+                                    </div>
+                                </div>
+                                <div class="grid-parent grid-100 container">
+                                    <div class="grid-100">
+                                        <label class="label-input">Related TMS Company ID (Invoice)</label>
+                                        <lt-tags-input ng-model="tmsCompanyIds"
+                                                       placeholder="Enter TMS Company Id"></lt-tags-input>
+                                    </div>
+                                </div>
+                                <div class="grid-parent grid-100 container">
+                                    <div class="grid-100">
+                                        <label class="label-input">Related Invoice Customer </label>
+                                        <invoice-customer-complete name="invoiceCustomer"  tmscompanys="{{tmsCompanyIds}}" ng-model="currentUser.invoiceCustomerIds" ></invoice-customer-complete>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <div class="grid-parent grid-100 container" style="padding-top:20px;border-bottom: 1px solid #d0c6c6;">
+
+                    <div class="second-title">Permissions (From Selected Roles)：</div>
+
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-50">
+                        <div class="second-title" style="text-align: center;">Other Permission List</div>
+                    </div>
+                    <div class="grid-10">
+
+                    </div>
+                    <div class="grid-50">
+                        <div class="second-title" style="text-align: center;">Foundation Data Permission List</div>
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-50">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th> Module</th>
+                                <th> Permission</th>
+                                <th> Read</th>
+                                <th> Write</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="permissions in permissionsMapByCommonName['common']">
+                                <td>{{capitalAndAddSpaceBetweenCamelCase(permissions.module)}}</td>
+                                <td>{{capitalAndAddSpaceBetweenCamelCase(permissions.commonName)}}</td>
+                                <td style="text-align: center; vertical-align: middle;">
+                                            <span ng-if="permissions.hasRead">
+                                                <i ng-if="permissions.read" class="fa font-blue fa-check ng-hide"></i>
+                                                <i ng-if="!permissions.read" class="fa font-red fa-close"></i>
+                                            </span>
+                                    <span ng-if="!permissions.hasRead">
+                                                N/A
+                                            </span>
+                                </td>
+                                <td style="text-align: center; vertical-align: middle;">
+                                            <span ng-if="permissions.hasWrite">
+                                                <i ng-if="permissions.write" class="fa font-blue fa-check ng-hide"></i>
+                                                <i ng-if="!permissions.write" class="fa font-red fa-close"></i>
+
+                                            </span>
+                                    <span ng-if="!permissions.hasWrite">
+                                                N/A
+                                            </span>
+                                </td>
+
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="grid-10">
+
+                    </div>
+                    <div class="grid-50">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th> Module</th>
+                                <th> Permission Short Name</th>
+                                <th> Read</th>
+                                <th> Write</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="permissions in permissionsMapByCommonName['fd']">
+                                <td>{{capitalAndAddSpaceBetweenCamelCase(permissions.module)}}</td>
+                                <td>{{capitalAndAddSpaceBetweenCamelCase(permissions.commonName)}}</td>
+                                <td style="text-align: center; vertical-align: middle;">
+                                            <span ng-if="permissions.hasRead">
+                                                <i ng-if="permissions.read" class="fa font-blue fa-check ng-hide"></i>
+                                                <i ng-if="!permissions.read" class="fa font-red fa-close"></i>
+                                            </span>
+                                    <span ng-if="!permissions.hasRead">
+                                                N/A
+                                            </span>
+                                </td>
+                                <td style="text-align: center; vertical-align: middle;">
+                                            <span ng-if="permissions.hasWrite">
+                                                <i ng-if="permissions.write" class="fa font-blue fa-check ng-hide"></i>
+                                                <i ng-if="!permissions.write" class="fa font-red fa-close"></i>
+                                            </span>
+                                    <span ng-if="!permissions.hasWrite">
+                                                N/A
+                                            </span>
+                                </td>
+
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="grid-parent grid-100 container" style="margin-top:50px;">
+                    <unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between"
+                                       value="submitLabel" is-loading="loading"></unis-waitting-btn>
+                    <button type="button" class="grid-10 pull-right cancel" ng-click="cancelEditUser()">Cancel</button>
+
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

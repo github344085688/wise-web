@@ -1,0 +1,70 @@
+<form class="form-horizontal" novalidate name="forms.retailerCodeForm"
+      ng-submit="forms.retailerCodeForm.$valid && ctrl.saveOrUpdateBundle()">
+    <div class="form-group">
+        <label class="col-md-2 control-label">Item Name:</label>
+        <label class="col-md-10 control-label" style="text-align: left;">{{item.name}}</label>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">Packaging Type:</label>
+        <div class="col-md-6">
+            <itemspec-auto-complete ng-model="itemBundle.lpTypeId" tags=['Material'] allow-clear="true"></itemspec-auto-complete>
+        </div>
+    </div>
+
+    <div class="form-group" ng-repeat="bi in itemBundle.items track by $index">
+        <label class="col-md-2 control-label">Kid Item:</label>
+        <div class="col-md-10">
+            <div class="form-group">
+                <div class="col-md-4">
+                    <input-validation-message field="bi{{$index}}itemSpecId" form="forms.retailerCodeForm"></input-validation-message>
+                    <itemspec-auto-complete name="bi{{$index}}itemSpecId" ng-model="bi.itemSpecId"  required="true"
+                                            on-select-param="bi" customer-id="itemCustomerId"
+                                            on-select="ctrl.biKidItemOnSelect(itemSpec, param)"></itemspec-auto-complete>
+
+                </div>
+                <label class="col-md-1 control-label">QTY:</label>
+                <div class="col-md-2">
+                    <input-validation-message field="bi{{$index}}qty" form="forms.retailerCodeForm"></input-validation-message>
+                    <input class="form-control" name="bi{{$index}}qty" ng-model="bi.qty" required="true"/>
+                </div>
+
+                <label class="col-md-1 control-label">UOM:</label>
+                <div class="col-md-2">
+                    <input-validation-message field="bi{{$index}}uom" form="forms.retailerCodeForm"></input-validation-message>
+                    <ui-select ng-model="bi.unitId" name="bi{{$index}}uom" required="true">
+                        <ui-select-match>
+                            <span ng-bind="$select.selected.name"></span>
+                        </ui-select-match>
+                        <ui-select-choices
+                                repeat="unit.id as unit in bi.itemSpecUnits | filter: $select.search">
+                            <span ng-bind="unit.name"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn red"
+                            ng-click="ctrl.removeBundleItem($index)">
+                        Remove
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-2"></div>
+        <div class="col-md-10" style="padding:0px;">
+            <div class="col-md-offset-10">
+                <button type="button" class="btn green" style="margin-left: 15px;"
+                        ng-click="ctrl.addBundleItem($index)">Add
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row form-actions right">
+        <waitting-btn type="submit" btn-class="btn blue"  permission-check="{{'item::itemSpec_write'}}"
+                      value="submitLabel" is-loading="loading"></waitting-btn>
+        <button type="button" class="btn default" ng-click="ctrl.cancelBundle()">Cancel</button>
+    </div>
+</form>
+
+

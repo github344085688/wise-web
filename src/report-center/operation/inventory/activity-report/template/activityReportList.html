@@ -1,0 +1,86 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Activity Report</h1>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <form novalidate name="editForm" style="padding-bottom: 170px;">
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-25">
+                        <label class="label-input">Customer</label>
+                        <div class="input-icon right" ng-show="editForm.customer.$invalid && (editForm.$submitted || editForm.customer.$touched)">
+                            <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                <span class="lt-tooltip-text">Required.</span>
+                            </i>
+                        </div>
+                        <organization-auto-complete name="customer" allow-clear="true" ng-model="searchInfo.customerId"
+                            tag="Customer" required="true"></organization-auto-complete>
+                    </div>
+                    <div class="grid-25">
+                        <label class="label-input">Supplier:</label>
+                        <organization-auto-complete ng-model="searchInfo.supplierId" allow-clear="true" tag="Supplier"></organization-auto-complete>
+                    </div>
+                    <div class="grid-25">
+                        <label class="label-input">Title:</label>
+                        <organization-auto-complete ng-model="searchInfo.titleId" allow-clear="true" tag="Title"></organization-auto-complete>
+                    </div>
+
+                </div>
+
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-25">
+                        <label>Task Start Date:</label>
+                        <lt-date-time value="searchInfo.timeFrom" date-format="yyyy-mm-dd" min-view="2" ></lt-date-time>
+                    </div>
+                    <div class="grid-25">
+                        <label>Task End Date:</label>
+                        <lt-date-time value="searchInfo.timeTo" date-format="yyyy-mm-dd" min-view="2" ></lt-date-time>
+                    </div>
+                    <div class="grid-25">
+                        <label>Received Time From:</label>
+                        <lt-date-time value="searchInfo.receivedTimeFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                    </div>
+                    <div class="grid-25">
+                        <label>Received Time To:</label>
+                        <lt-date-time value="searchInfo.receivedTimeTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                    </div>
+                </div>
+
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-25">
+                        <label>Shipped Time From:</label>
+                        <lt-date-time value="searchInfo.shippedTimeFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                    </div>
+                    <div class="grid-25">
+                        <label>Shipped Time To:</label>
+                        <lt-date-time value="searchInfo.shippedTimeTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                    </div>
+                    <div class="grid-25">
+                            <label class="label-input">Item:</label>
+                            <itemspec-auto-complete ng-model="searchInfo.itemSpecId" name="itemSpec" customer-id="searchInfo.customerId" allow-clear="true"/>
+                    </div>
+                    <div class="grid-25">
+                        <label>LP:</label>
+                        <input type="text" class="form-control" ng-pattern="/^[T,H,I,C,S]{0,1}LP-[0-9]*$/" ng-model="searchInfo.lpId" placeholder="Enter LP ID (LP-1)" />
+                    </div>
+                </div>
+
+
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-90">
+                        &nbsp;
+                    </div>
+                    <div class="grid-10">
+                        <unis-waitting-btn ng-type="button" style="margin-left: 10px;" btn-class="yellow" ng-click="editForm.$valid && export()"
+                            value="'Export'" is-loading="exporting"></unis-waitting-btn>
+                    </div>
+
+
+
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

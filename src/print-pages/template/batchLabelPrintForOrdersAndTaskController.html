@@ -1,0 +1,103 @@
+<md-dialog id="unis" flex="60" ng-cloak>
+    <form class="light-theme" novalidate name="printForm" ng-submit="printForm.$valid && batchPrint()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Label Batch Print </h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" style="min-height:200px">
+                <div class="grid-100">
+                    <div class="grid-content">
+                        <div class="grid-100 grid-parent container">
+                            <div class="grid-100 grid-content" style="background-color: rgba(198, 228, 230, 0.36);">
+
+                                <div class="grid-50">
+                                    <label class="label-input" > ZPL Printer</label>
+                                    <input-validation-message field="zplprinterName" form="printForm"></input-validation-message>
+                                    <printer-auto-complete name="zplprinterName" ng-model="zplPrinterName" on-select="ZplPrinterSelect(printer)" types="['ZPL','RAW']" required="true" ></printer-auto-complete>
+                                </div>
+
+                                <div class="grid-50">
+                                    <label class="label-input"> PDF Printer </label>
+                                    <input-validation-message field="pdfPrinterName" form="printForm"></input-validation-message>
+                                    <printer-auto-complete name="pdfPrinterName" ng-model="pdfPrinterName" on-select="PdfPrinterSelect(printer)" types="['PDF']"
+                                                           required="true"></printer-auto-complete>
+                                </div>
+
+                            </div>
+                            <div class="grid-100 grid-content" style="background-color: rgba(198, 228, 230, 0.36);margin-bottom: 20px;padding:12px 0">
+
+                                <div class="grid-25">
+                                    <input type="checkbox" id="printPalletLabel" name="printPalletLabel" ng-click="onPrintLabelChecked('palletLabel')" ng-checked="printLabelSelection.palletLabel">
+                                    <label class="checkbox" for="printPalletLabel">
+                                        <span class="text" style="font-size: 0.75rem">Print Pallet Label</span>
+                                    </label>
+                                </div>
+                                <div class="grid-25">
+                                    <input type="checkbox" id="printUCCLabel" name="printUCCLabel" ng-click="onPrintLabelChecked('uccLabel')"  ng-checked="printLabelSelection.uccLabel">
+                                    <label class="checkbox" for="printUCCLabel">
+                                        <span class="text" style="font-size: 0.75rem">Print UCC Label</span>
+                                    </label>
+                                </div>
+                                <div class="grid-25">
+                                    <input type="checkbox" id="printPackingList" name="printPackingList"  ng-click="onPrintLabelChecked('packingList')"  ng-checked="printLabelSelection.packingList">
+                                    <label class="checkbox" for="printPackingList">
+                                        <span class="text" style="font-size: 0.75rem">Print Packing List</span>
+                                    </label>
+                                </div>
+                                <div class="grid-25">
+                                    <input type="checkbox" id="printPickTicket" name="printPickTicket" ng-click="onPrintLabelChecked('pickTicket')" ng-checked="printLabelSelection.pickTicket">
+                                    <label class="checkbox" for="printPickTicket">
+                                        <span class="text" style="font-size: 0.75rem">Print Pick Ticket</span>
+                                    </label>
+                                </div>
+
+
+
+                            </div>
+                            <div class="grid-100 grid-parent container">
+                                <div class="grid-90"  style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap">
+                                    <span >Orders : <span title="{{orderIds}}">{{orderIds}}</span> </span>
+                                </div>
+
+                            </div>
+                            <div class="grid-100 grid-parent container">
+                                <div class="grid-90"  style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap">
+                                    <span >Tasks : <span title="{{pickTaskIds}}">{{pickTaskIds}}</span> </span>
+                                </div>
+
+                            </div>
+
+                            <div class="grid-100 grid-parent container">
+                                <div class="grid-75">
+                                    &nbsp;
+                                </div>
+                                <div style="float:right">
+                                    <waitting-btn type="submit" btn-class="btn blue"  value="'Batch Print'"
+                                                  is-loading="isPrinting"></waitting-btn>
+                                </div>
+                            </div>
+                            <div>Print Information:</div>
+                            <div class="grid-100 grid-parent container" style="overflow: auto; min-height: 400px;border: 1px solid #eee; max-height: 450px">
+                                <div class="grid-100 Valley" style=" font-size: 15px;padding: 20px 10px;line-height: 30px;font-weight: 300">
+
+                                        <div style="border-bottom: 1px solid #c4baba; " ng-repeat="(orderId, logData) in logger track by $index">
+                                            <div><b>{{orderId}}: </b></b></div>
+                                            <div style="padding: 10px 10px 10px 20px" ng-repeat="log in logData" track by $index>
+                                                [{{log.labelName}}] <span ng-class="{'adjustQtyError': log.errorMessage,  'font-green': !log.errorMessage}"> {{log.pickTaskId? log.pickTaskId + " " : "" }} {{log.errorMessage? "Print Failed. " : "Print Successful."}} {{log.errorMessage}}</span>
+                                            </div>
+                                        </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

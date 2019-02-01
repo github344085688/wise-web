@@ -1,0 +1,35 @@
+[{
+    "id":"1235",
+    "name":"Via Baron",
+    "descript":"-- warehouse descript & info --",
+    "contact" : {
+       "address" : "19914 S. Via Baron, Rancho Dominguez, CA 90220",
+       "phone" : "310-747-7388 ext:2515",
+       "email" : "andy.lim@logisticsteam.com",
+       "area" : "300,000 ft²"
+    },
+    "layout" : {
+       "Zone" : 24,
+       "Location" : 786,
+       "Staging" : 50,
+       "Dock" : 42,
+       "Parking" : 72
+    }
+},{
+    "id":"1236",
+    "name":"Turnbull",
+    "descript":"-- warehouse descript & info --",
+    "contact" : {
+       "address" : "900 Turnbull Canyon Rd, City of Industry, CA 91745",
+       "phone" : "626-926-0325",
+       "email" : "Janet.ho@logisticsteam.com",
+       "area" : "250,000 ft²"
+    },
+    "layout" : {
+       "Zone" : 27,
+       "Location" : 630,
+       "Staging" : 46,
+       "Dock" : 38,
+       "Parking" : 76
+    }
+}]

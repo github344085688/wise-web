@@ -1,0 +1,212 @@
+<form name="editForm">
+    <div class="grid-parent grid-100 container" ng-show="!isAdvanced">
+        <div class="grid-50">
+            <input type="text" placeholder="ID /Pro# /PO# /Reference# /SO# /batch#" ng-model="order.keyword" ng-keyup="keyUpSearch($event)" />
+        </div>
+        <unis-waitting-btn ng-type="button" btn-class="grid-10 ripplelink pull-right" ng-click="_searchOrders()" value="'Search'"
+            is-loading="isLoading"></unis-waitting-btn>
+    </div>
+    <div class="grid-parent grid-100 container">
+        <a ng-click="isAdvanced = !isAdvanced" style="font-weight:600;">
+            <span ng-show="!isAdvanced">Advanced</span>
+            <span ng-show="isAdvanced">Keyword</span> Search
+        </a>
+    </div>
+    <div class="grid-parent grid-100 container" ng-show="isAdvanced">
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Order ID</label>
+                <lt-tags-input placeholder="Enter Order ID" ng-model="order.orderIds" fill="DN-" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Status</label>
+                <ui-select multiple name="status" ng-model="order.statuses">
+                    <ui-select-match>
+                        {{$item}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item  in statusList| filter: $select.search" refresh="getStatusList($select.search)"
+                        refresh-delay="50">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Customer</label>
+                <organization-auto-complete ng-model="order.customerId" on-select="customerChange(org)" allow-clear="true"
+                    name="customer" tag="Customer"></organization-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Carrier</label>
+                <multiple-organization-auto-complete ng-model="order.carrierIds" name="carrier" tag="Carrier"  on-select="carrierChange()"  on-remove = "carrierChange()"></multiple-organization-auto-complete>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                        <label>Delivery Service</label>
+                        <ui-select multiple name="deliveryService" ng-model="order.deliveryServices" ng-disabled="!order.carrierIds || order.carrierIds.length==0">
+                            <ui-select-match >
+                                {{$item}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in carrierServiceTypes | filter: $select.search">
+                                  {{item}}
+                            </ui-select-choices>
+                            </ui-select>
+            </div>
+            <div class="grid-25">
+                <label>Order Type:</label>
+                <ui-select name="orderType" ng-model="order.orderType" style="margin-top: 8px;">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in orderTypeOptions | filter: $select.search">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Freight Term</label>
+                <ui-select name="freightTerm" ng-model="order.freightTerm">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in freightTermList | filter: $select.search" refresh="getFreightTermList($select.search)"
+                        refresh-delay="50">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                    <label>Load No.: </label>
+                    <lt-tags-input placeholder="Enter load Nos" ng-model="order.loadNos" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+            
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Delivery Request Date From</label>
+                <lt-date-time value="order.mabdFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Delivery Request Date To</label>
+                <lt-date-time value="order.mabdTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Batch Commitment No</label>
+                <input type="text" name="Batch Commitment No" placeholder="Enter Batch Commitment No" ng-model="order.batchCommitmentNo"
+                    ng-keyup="keyUpSearch($event)" />
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Customer Sales Order No.</label>
+                <lt-tags-input placeholder="Enter SO" ng-model="order.soNos" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Appointment Time From:</label>
+                <lt-date-time value="order.appointmentTimeFrom"></lt-date-time>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Appointment Time To:</label>
+                <lt-date-time value="order.appointmentTimeTo"></lt-date-time>
+            </div>
+            <div class="grid-50">
+                    <label class="label-input">Retailer:</label>
+                 <multiple-organization-auto-complete ng-model="order.retailerIds" name="retailer" tag="Retailer" ></multiple-organization-auto-complete>
+            </div>
+          
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Purchase Order No.</label>
+                <lt-tags-input placeholder="Enter PO" ng-model="order.poNos"></lt-tags-input>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Reference</label>
+                <lt-tags-input placeholder="Enter Reference" ng-model="order.referenceNos" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Long Haul</label>
+                <!--<longhaul-auto-complete placeholder="Enter Long Haul" allow-clear="true" customer-id="order.customerId"-->
+                <!--on-select="selectLongHaul(longHaul)" ng-model="order.longHaulId"></longhaul-auto-complete>-->
+                <multiple-longhaul-auto-complete placeholder="Enter Long Haul" customer-id="order.customerId"
+                                                 ng-model="order.longHaul"></multiple-longhaul-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label>Confirmed LH flag</label>
+                <md-switch class="md-primary" ng-model="order.confirmedLH"
+                           style="margin-top: 0;margin-bottom: 0;"></md-switch>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+
+                <div class="grid-25">
+                    <label>Item Line Count: </label>
+                    <div>
+                        <div class="grid-50" style="padding-left:0px">
+                            <ui-select name="typeype" ng-model="order.selectItemLineCountType"  on-select="typeOnSelectItemCount()">
+                                <ui-select-match >
+                                    <div ng-bind="$select.selected"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in ['Equal To','Greater Than'] | filter: $select.search">
+                                    <div ng-bind="item"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="grid-50" style="padding-left:0px">
+                            <input ng-if="order.selectItemLineCountType === 'Equal To'|| !order.selectItemLineCountType "
+                                type="number" ng-model="order.eqItemLineCount" />
+                            <input ng-if="order.selectItemLineCountType === 'Greater Than'" type="number" ng-model="order.gtItemLineCount" />
+    
+                        </div>
+    
+                    </div>
+    
+                </div>
+                <div class="grid-25">
+                    <label>Item Line Qty: </label>
+                    <div>
+                        <div class="grid-50" style="padding-left:0px">
+                            <ui-select name="typeype" ng-model="order.selectItemQtyType" on-select="typeOnSelectItemQty()">
+                                <ui-select-match >
+                                    <div ng-bind="$select.selected"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in ['Equal To','Greater Than'] | filter: $select.search">
+                                    <div ng-bind="item"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="grid-50" style="padding-left:0px">
+                            <input ng-if="order.selectItemQtyType === 'Equal To'|| !order.selectItemQtyType " type="number" ng-model="order.eqItemLineTotalQty" />
+                            <input ng-if="order.selectItemQtyType === 'Greater Than'" type="number" ng-model="order.gtItemLineTotalQty" />
+    
+                        </div>
+    
+                    </div>
+                  
+                </div>
+                <div class="grid-25">
+                        <label>Date Created From:</label>
+                        <lt-date-time value="order.createdWhenFrom"></lt-date-time>
+                    </div>
+                    <div class="grid-25">
+                        <label>Date Created To:</label>
+                        <lt-date-time value="order.createdWhenTo"></lt-date-time>
+                    </div>
+               
+        </div>
+        <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label class="label-input">Attempted Commit Date From:</label>
+                    <lt-date-time value="order.attemptedCommitDateFrom"></lt-date-time>
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Attempted Commit Date To:</label>
+                    <lt-date-time value="order.attemptedCommitDateTo"></lt-date-time>
+                </div>
+         </div>
+        <div class="grid-parent grid-100 container">
+            <unis-waitting-btn ng-type="button" btn-class="grid-10 ripplelink pull-right" ng-click="_searchOrders()"
+                value="'Search'" is-loading="isLoading"></unis-waitting-btn>
+        </div>
+    </div>
+</form>

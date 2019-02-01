@@ -1,0 +1,178 @@
+<!-- BEGIN HEADER INNER -->
+<div class="page-header-inner" style="position: relative">
+    <!-- BEGIN LOGO -->
+    <div class="page-logo">
+        <div ng-show="isShowMenuBtn()" ng-click="showMenu()" class="menu-toggler sidebar-toggler">
+            <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
+        </div>
+
+        <i ng-show="isShowCloseMenuBtn()" ng-click="hideMenu()" class="material-icons icon-hover"
+           style="font-size: 24px; margin-top: 10px; float: left; color: white; cursor: pointer;">clear</i>
+
+        <a href="#/home" style="margin-left: 15px;">
+            <img src="assets/img/logo.png" alt="logo" class="logo-default" />
+        </a>
+    </div>
+    <div   class="hor-menu hor-menu-light hidden-sm hidden-xs favorite" style=" position: absolute; top: 0; ; height: 46px; width: 400px; left: 250px;">
+        <ul class="nav navbar-nav" style="width: 400px;">
+            <!-- DOC: Remove data-hover="megamenu-dropdown" and data-close-others="true" attributes below to disable the horizontal opening on mouse hover -->
+            <li class="mega-menu-dropdown">
+                <a href="javascript:;" style="color: #fff"; class="dropdown-toggle hover-initialized" data-hover="megamenu-dropdown" data-close-others="true">
+                    My Favorite
+                    <i class="fa fa-angle-down" style="margin-left: 5px;"></i>
+                </a>
+                <ul class="dropdown-menu" style="min-width: 168px; top: 46px" ng-show="$favoritesMenu.length>0" >
+                    <li>
+                        <!-- Content container to add padding -->
+                        <div class="mega-menu-content">
+                            <div class="row">
+                                <div>
+                                    <ul class="mega-menu-submenu">
+                                        <li ng-repeat="favorite in $favoritesMenu track by $index" class="display-flex">
+                                            <a  href="#{{favorite.url}}" style="white-space:nowrap; -webkit-box-flex: 1; -ms-flex: 1; flex: 1;">{{favorite.name}}</a>
+                                            <div  style="cursor: pointer; width: 25px; text-align: center; "ng-click="removeFavorite(favorite,$index)" >
+                                                <i class="glyphicon glyphicon-remove "></i>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+    <div class="hor-menu hor-menu-light hidden-sm hidden-xs">
+        <div style="float: left; margin-top: 12px; width: 2px; height: 25px; background: #f5f5f5;"></div>
+        <ul class="nav navbar-nav">
+            <!-- DOC: Remove data-hover="megamenu-dropdown" and data-close-others="true" attributes below to disable the horizontal opening on mouse hover -->
+
+            <li class="mega-menu-dropdown" style="min-width: 165px;">
+                <a href="javascript:;" class="dropdown-toggle hover-initialized" data-hover="megamenu-dropdown" data-close-others="true">
+                    {{menuName()}}
+                    <i class="fa fa-angle-down"></i>
+                </a>
+                <ul class="dropdown-menu" style="min-width: 165px; margin-top: 46px">
+                    <li>
+                        <!-- Content container to add padding -->
+                        <div class="mega-menu-content">
+                            <div class="row">
+                                <div>
+                                    <ul class="mega-menu-submenu">
+                                        <li ng-repeat="module in modules">
+                                            <a href="#{{module.entryUrl}}">{{module.label}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+    <!-- END LOGO -->
+    <!-- BEGIN TOP NAVIGATION MENU -->
+    <div class="top-menu">
+
+        <!-- END HEADER SEARCH BOX -->
+        <ul class="nav navbar-nav pull-right">
+            <!-- BEGIN USER LOGIN DROPDOWN -->
+            <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+            <li class="dropdown dropdown-user dropdown-cf " ng-show="cfShowLabel == 'companyfacility'">
+                <span class="dropdown-toggle" dropdown-menu-hover data-toggle="dropdown" style="cursor: pointer; display: block;"
+                   data-close-others="true">
+                    <span style="color:white;" ng-show="currentCompanyFacility">
+                        <span>Company：</span><span class="header-cf-font">{{currentCompanyFacility.company.name}}</span>
+                        <span style="padding-left:25px;">Facility：</span>
+                            <span class="header-cf-font">
+                                <a target="_blank" style="display: inline;"
+                                   ui-sref="cf.facility.facility-management.edit({facilityId: currentCompanyFacility.facility.id})">
+                                    {{currentCompanyFacility.facility.name}}&nbsp;
+                                    ({{currentCompanyFacility.facility.addressCity}}, {{currentCompanyFacility.facility.addressState}})
+                                </a>
+                            </span>
+                    </span>
+                    <i class="fa fa-angle-down"></i>
+                </span>
+                <ul class="dropdown-menu" role="menu" style="width:auto; ">
+                    <li class="menu-li-top">
+                        <div class="menu-li-content">Company</div>
+                        <div class="menu-li-content">Facility</div>
+                    </li>
+                    <li ng-repeat="cf in companyFacilities track by $index">
+                        <a ng-click="onClickCompanyFacility(cf)" style="padding:5px 0px;">
+                            <div class="menu-li-content" >{{cf.company.name}}</div>
+                            <div class="menu-li-content" style="text-align: left" >{{cf.facility.name}}&nbsp;({{cf.facility.addressCity}}, {{cf.facility.addressState}})</div>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="dropdown dropdown-user dropdown-cf"  ng-show="cfShowLabel == 'facility'">
+                <span class="dropdown-toggle" dropdown-menu-hover data-toggle="dropdown" data-close-others="true"
+                      style="cursor: pointer; display: block;">
+                    <span style="color:white;" ng-show="currentCompanyFacility">
+                        <span>Facility：</span><span class="header-cf-font">
+                           <a target="_blank" style="display: inline;"
+                              ui-sref="cf.facility.facility-management.edit({facilityId: currentCompanyFacility.facility.id})">
+                              {{currentCompanyFacility.facility.name}}
+                            &nbsp; ({{currentCompanyFacility.facility.addressCity}}, {{currentCompanyFacility.facility.addressState}})
+                           </a></span>
+                    </span>
+                    <i class="fa fa-angle-down"></i>
+                </span>
+                <ul class="dropdown-menu" role="menu" style="text-align: center; width:auto;  min-width: 300px;">
+                    <li class="menu-li-top">Facility</li>
+                    <li ng-repeat="cf in companyFacilities track by $index">
+                        <a ng-click="onClickCompanyFacility(cf)"  style="width:100%; padding:5px 0px;">
+                            {{cf.facility.name}}&nbsp;({{cf.facility.addressCity}}, {{cf.facility.addressState}})
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="dropdown dropdown-user dropdown-cf"  ng-show="cfShowLabel == 'company'">
+                <a href="#" class="dropdown-toggle" dropdown-menu-hover data-toggle="dropdown"
+                   data-close-others="true">
+                    <span style="color:white;" ng-show="currentCompanyFacility">
+                        <span>Company：</span><span class="header-cf-font">{{currentCompanyFacility.company.name}}</span>
+                    </span>
+                    <i class="fa fa-angle-down"></i>
+                </a>
+                <ul class="dropdown-menu" role="menu" style="text-align: center; width:auto;  min-width: 300px;">
+                    <li class="menu-li-top">
+                        Company
+                    </li>
+                    <li ng-repeat="cf in companyFacilities track by $index">
+                        <a ng-click="onClickCompanyFacility(cf)" style="width:100%; padding:5px 0px;">
+                            {{cf.company.name}}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="dropdown dropdown-user">
+                <a href="#" class="dropdown-toggle" dropdown-menu-hover data-toggle="dropdown" data-close-others="true">
+                    <img alt="" class="img-circle" src="assets/img/avatar.png" />
+                    <span class="username username-hide-on-mobile"> {{user.firstName}} {{user.lastName}}</span>
+                    <i class="fa fa-angle-down"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="divider" style="margin-bottom: 0px;"> </li>
+                    <li>
+                        <a ng-click="signOut()" style="padding-bottom:30px;">
+                            <i class="material-icons" style="font-size: 20px; color: red; float: left; margin-left: 10px;">power_settings_new</i>
+                            <span style="float: left; margin-left: 10px;">Log Out</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <!-- END TOP NAVIGATION MENU -->
+</div>
+<!-- END HEADER INNER -->

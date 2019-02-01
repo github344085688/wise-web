@@ -1,0 +1,618 @@
+<!-- warehouse list start -->
+<!-- <div ng-if="autoInfo.warehouses"> -->
+    <!-- <div>
+        <h4>Warehouses</h4>
+    </div> -->
+    <div ng-if="autoInfo.warehouses" ng-repeat="wh in autoInfo.warehouses" ng-if="wh._inMap" ng-click="changeWarehouse(wh)" class="hover-floralwhite">
+       <p style="color: sienna; margin: 5px 0;"><b>{{wh.name}}</b></p>
+       <div ng-if="wh.contact">
+	       <div ng-if="wh.contact.address">
+	           <div style="float:left; padding-right: 8px;">
+		           <i class="material-icons" style="font-size: 16px; color: forestgreen;">account_balance</i>
+	           </div>
+	           <span>{{wh.contact.address}}</span>
+	       </div>
+	       <div ng-if="wh.contact.area">
+               <span>
+                   <i class="material-icons" style="font-size: 16px; color: forestgreen;">crop_free</i>
+               </span>
+               <span>{{wh.contact.area}}</span>
+           </div>
+	       <div ng-if="wh.contact.phone">
+	           <span>
+	               <i class="material-icons" style="font-size: 16px; color: forestgreen;">phone</i>
+	           </span>
+	           <span>{{wh.contact.phone}}</span>
+	       </div>
+	       <div ng-if="wh.contact.email">
+		       <span>
+		           <i class="material-icons" style="font-size: 16px; color: forestgreen;">mail_outline</i>
+		       </span>
+	           <span>{{wh.contact.email}}</span>
+	       </div>
+       </div>
+       <div ng-if="wh.layout">
+           <table style="width: 100%; text-align: center; color: olive;">
+               <tr>
+                   <td ng-repeat="(key, val) in wh.layout track by $index">{{key}}</td>
+               </tr>
+               <tr>
+                   <td ng-repeat="(key, val) in wh.layout track by $index">{{val}}</td>
+               </tr>
+           </table>
+       </div>
+       <!-- <hr> -->
+    </div>
+<!-- </div> -->
+<!-- warehouse list over -->
+
+<div ng-if="autoInfo.parking_occupy" class="dz-content">
+    <div>
+        <h4>Parking Occupy</h4>
+    </div>
+    <div>
+        <p style="margin: 5px 0;">Occupy Locs : <b style="color: green;">{{autoInfo.parking_occupy.occupy_total}}</b>/{{autoInfo.parking_occupy.total}}</p>
+        <div ng-if="autoInfo.parking_occupy.list">
+           <table class="table-striped table-hover" style="width: 100%; color: #6e7071;">
+               <tr style="border-bottom: 1px #e6e6e2 solid;">
+                   <td>Location</td>
+                   <td>Entry ID</td>
+                   <td>CTN#</td>
+                   <td>Full/Empty</td>
+               </tr>
+               <tr ng-repeat="row in autoInfo.parking_occupy.list track by $index">
+                   <td>{{row.locName}}</td>
+                   <td>{{row.entryId}}</td>
+                   <td>{{row.ctn}}</td>
+                   <td style="{{row.full ? 'color: #FF2222;' : 'color: #FF8C00;'}}">{{row.full ? "Full" : "Empty"}}</td>
+               </tr>
+           </table>
+       </div>
+    </div>
+</div>
+<div ng-if="autoInfo.dock_occupy"class="dz-content">
+    <div>
+        <h4>Dock Occupy</h4>
+    </div>
+    <div>
+        <p style="margin: 5px 0;">Occupy Locs : <b style="color: green;">{{autoInfo.dock_occupy.occupy_total}}</b>/{{autoInfo.dock_occupy.total}}</p>
+        <div ng-if="autoInfo.dock_occupy.list">
+           <table class="table-striped table-hover" style="width: 100%; color: #6e7071;">
+               <tr style="border-bottom: 1px #e6e6e2 solid;">
+                   <td>Location</td>
+                   <td>Entry ID</td>
+                   <td>CTN#</td>
+                   <td>DN/RN</td>
+               </tr>
+               <tr ng-repeat="row in autoInfo.dock_occupy.list track by $index">
+                   <td>{{row.locName}}</td>
+                   <td>{{row.entryId}}</td>
+                   <td>{{row.ctn}}</td>
+                   <td style="{{row.order ? 'color: #FF2222;' : 'color: #FF8C00;'}}">{{row.orderOrReceipt || ""}}</td>
+               </tr>
+           </table>
+       </div>
+    </div>
+</div>
+<div ng-if="isMenuChecked('currentInv')" class="part">
+	<div>
+	    <div>
+	        <span class="h4">Inventory</span>
+	        <span class="text-danger pull-right" ng-if="autoInfo.currentInventoryLoc">Loc: {{autoInfo.currentInventoryLoc.name}}</span>
+	    </div>
+	    <hr/>
+	    <div layout="column">
+	        <div layout="row" class="form-group form-group-sm">
+	           <ui-select flex ng-model="autoInfo.filter.inventory_titleId">
+	               <ui-select-match allow-clear="true" placeholder="Title">
+	                   <span ng-bind="$select.selected.name"></span>
+	               </ui-select-match>
+	               <ui-select-choices repeat="item.id as item in baseData.invStatistics.titles | filter: $select.search">
+	                   <b>{{item.name}}</b>
+	               </ui-select-choices>
+	               <ui-select-no-choice>
+	                   No available item.
+	               </ui-select-no-choice>
+	           </ui-select>
+	           <ui-select flex ng-model="autoInfo.filter.inventory_customerId">
+	               <ui-select-match allow-clear="true" placeholder="Customer">
+	                   <span ng-bind="$select.selected.name"></span>
+	               </ui-select-match>
+	               <ui-select-choices repeat="item.id as item in baseData.invStatistics.customers | filter: $select.search">
+	                   <b>{{item.name}}</b>
+	               </ui-select-choices>
+	               <ui-select-no-choice>
+	                   No available item.
+	               </ui-select-no-choice>
+	           </ui-select>
+	        </div>
+	        <div layout="row" class="form-group form-group-sm">
+               <ui-select flex ng-model="autoInfo.filter.inventory_itemSpecId">
+                   <ui-select-match allow-clear="true" placeholder="Item">
+                       <span ng-bind="$select.selected.name"></span>
+                   </ui-select-match>
+                   <ui-select-choices repeat="item.id as item in baseData.invStatistics.itemSpecs | filter: $select.search">
+                       <b>{{item.name}}</b>
+                   </ui-select-choices>
+                   <ui-select-no-choice>
+                       No available item.
+                   </ui-select-no-choice>
+               </ui-select>
+	        </div>
+	        <div layout="row" class="form-group">
+		        <md-checkbox flex="50" md-no-ink aria-label="ghost" ng-model="autoInfo.filter.inventory_ghost" class="md-primary">Ghost</md-checkbox>
+	        </div>
+	        <div layout="row">
+		        <input type="button" class="btn btn-sm btn-primary" flex="30" value="Search" ng-click="showLocationWithInventory()">
+		        <input type="button" class="btn btn-sm btn-success" flex="20" flex-offset="50" value="3D" ng-click="inventory_3d()">
+	        </div>
+	    </div>
+    </div>
+    <div class="part-lg" ng-if="autoInfo.inventory">
+        <!-- 
+        <p style="margin: 5px 0;">Occupy Locs: <b style="color: green;">{{autoInfo.inventory.locs_total}}</b>/{{autoInfo.inventory.total}}</p>
+         -->
+        <table class="table-striped table-hover" style="width: 100%; color: #6e7071;">
+            <tr style="border-bottom: 1px #e6e6e2 solid;">
+                <td style="width: 20%;">Item</td>
+                <td style="width: 20%;">Desc</td>
+                <td style="width: 20%;">Title</td>
+                <td style="width: 20%;">Customer</td>
+                <td style="text-align: right;">Qty</td>
+            </tr>
+            <tr ng-repeat="row in autoInfo.inventory.curr_list track by $index" ng-click="showInventoryItemDetail(row)"
+            	ng-class="{'text-success': row==autoInfo.inventoryDetail.item}">
+                <td>
+                	<div class="inventory-cell">{{row.itemSpecName}}</div>
+                </td>
+                <td>
+                	<div class="inventory-cell" title="{{row.itemSpecDesc}}">{{row.itemSpecDesc}}</div>
+                </td>
+                <td>
+                	<div class="inventory-cell">{{row.titleName}}</div>
+                </td>
+                <td>
+                	<div class="inventory-cell">{{row.customerName}}</div>
+                </td>
+                <td style="color: blue; text-align: right;">
+                	<div class="inventory-cell">{{row.baseQty}} {{row.unitName || "EA"}}</div>
+                </td>
+            </tr>
+            <tr ng-if="autoInfo.inventory.curr_list.length == 0">
+                <td colspan="5" style="text-align: center;">No record</td>
+            </tr>
+        </table>
+        <span class="text-danger" style="margin-top: 10px; float: right;">
+        	<span ng-show="autoInventoryDisable" ng-click="unpinInventory()">
+				Pin
+				<i class="fa fa-thumb-tack"></i>
+        	</span>
+        	<span ng-show="!autoInventoryDisable" ng-click="pinInventory()">
+        		Unpin
+        		<i class="glyphicon glyphicon-pushpin"></i>
+        	</span>
+        </span>
+        <div ng-if="autoInfo.inventory.page_total > 1" style="text-align: left; margin-top: 10px; font-size: smaller;">
+            <span ng-click="refreshDataPage(autoInfo.inventory, -1);" class="glyphicon glyphicon-menu-left"></span>
+            <span style="font-size: initial;">{{autoInfo.inventory.curr_page}}/{{autoInfo.inventory.page_total}}</span>
+            <span ng-click="refreshDataPage(autoInfo.inventory);" class="glyphicon glyphicon-menu-right"></span>
+        </div>
+    </div>
+    <div ng-if="autoInfo.inventoryDetail" class="">
+		<div>
+			<div class="bg-success form-group">
+		        <span style="float: right;">Total Qty: {{autoInfo.inventoryDetail.totalQty}}</span>
+				<div>Item: {{autoInfo.inventoryDetail.item.itemSpecName}}</div>
+				<div>Desc: {{autoInfo.inventoryDetail.item.itemSpecDesc}}</div>
+			</div>
+			<table class="table-striped table-hover" style="width: 100%; color: #6e7071;">
+				<tr>
+					<td style="width: 33%">Location</td>
+					<td style="width: 33%">Qty</td>
+					<td>UOM</td>
+				</tr>
+				<tr ng-repeat="loc in autoInfo.inventoryDetail.curr_list track by $index">
+					<td>{{loc.locationName}}</td>
+					<td>{{loc.baseQty}}</td>
+					<td>{{loc.unitName || "EA"}}</td>
+				</tr>
+			</table>
+			<div ng-if="autoInfo.inventoryDetail.page_total > 1" style="text-align: left; margin-top: 10px; font-size: smaller;">
+	            <span ng-click="refreshDataPage(autoInfo.inventoryDetail, -1);" class="glyphicon glyphicon-menu-left"></span>
+	            <span style="font-size: initial;">{{autoInfo.inventoryDetail.curr_page}}/{{autoInfo.inventoryDetail.page_total}}</span>
+	            <span ng-click="refreshDataPage(autoInfo.inventoryDetail);" class="glyphicon glyphicon-menu-right"></span>
+	        </div>
+	    </div>
+    </div>
+    <div class="item-picture" ng-if="itemPictures[autoInfo.inventoryDetail.item.itemSpecId] && itemPictures[autoInfo.inventoryDetail.item.itemSpecId].length > 0">
+		<img ng-repeat="pic in itemPictures[autoInfo.inventoryDetail.item.itemSpecId] track by $index" 
+			http-src="/file-app/file-download/{{pic.id}}"/>
+    </div>
+</div>
+<div ng-if="autoInfo.inventoryHis" class="part">
+	<div class="part-sm">
+	    <div>
+	        <h4>Inventory Playback</h4>
+	    </div>
+	    <hr>
+	    <div>
+	        <span>0</span>
+	        <span style="float: right;">{{autoInfo.inventoryHis.maxQty / 1000}}k</span>
+	        <div style="height: 20px; 
+	            background-image: -webkit-linear-gradient(left, {{autoInfo.inventoryHis.colorRange.min}}, {{autoInfo.inventoryHis.colorRange.max}});
+	            background-image: -moz-linear-gradient(left, {{autoInfo.inventoryHis.colorRange.min}}, {{autoInfo.inventoryHis.colorRange.max}});">
+	        </div>
+	    </div>
+	    <div class="md-block" style="position: relative;">
+	        <label style="float: left; margin-bottom: 10px;">{{autoInfo.inventoryHis.date}}</label>
+	        <md-slider style="width : 85%;" ng-change="playInventoryHistory(true)" ng-model="autoInfo.inventoryHis.index" 
+	            min="0" max="{{autoInfo.inventoryHis.list.length-1}}" step="1" class="md-primary" aria-label="history"></md-slider>
+	        <span 
+	            style="position: absolute; right: 0px; top:20px; font-size: 22px; color: green;" 
+	            class="glyphicon glyphicon-{{autoInfo.inventoryHis.pause ? 'play' : 'pause'}}" 
+	            ng-click="autoInfo.inventoryHis.pause = !autoInfo.inventoryHis.pause; playInventoryHistory();"></span>
+		</div>
+		<div >
+			<md-input-container class="md-block col-md-6" style="padding-left: 2px" >
+				<label>Customer</label>
+				<md-select ng-model="autoInfo.selectCustomer">
+					<md-option ng-repeat="status in ['Vizio']" value="{{status}}">{{status}}</md-option>
+				</md-select>
+			</md-input-container>
+			
+			<md-input-container class="md-block col-md-6" style="padding-left: 2px" >
+				<label>Warehouse</label>
+				<md-select ng-model="autoInfo.selectWarehouse" ng-change="changeWarehouseInventory()">
+					<md-option ng-repeat="status in ['All','Valley','Walnut']" value="{{status}}">{{status}}</md-option>
+				</md-select>
+			</md-input-container>
+		</div>
+	
+    </div>
+    <div>
+        <table class="table-striped table-hover" style="width: 100%; color: #6e7071;">
+		    <tr style="border-bottom: 1px #e6e6e2 solid;">
+		
+				<td style="width: 20%;" ng-if="autoInfo.selectWarehouse === 'All'">State</td>
+				<td style="width: 20%;" ng-if="autoInfo.selectWarehouse != 'All'">Location</td>
+		        <!-- <td>Receipts</td> -->
+		        <td>Receipts Qty</td>
+		        <!-- <td>Orders</td> -->
+		        <td>Order Qty</td>
+		        <td>Inventory Qty</td>
+		    </tr>
+		    <tr ng-repeat="row in autoInfo.inventoryHis.current track by $index" ng-if=" autoInfo.selectWarehouse == 'All' || showSelectedLocation(row)">
+				<td ng-if="autoInfo.selectWarehouse === 'All'">{{row.state}}</td>
+				<td ng-if="autoInfo.selectWarehouse != 'All'">{{row.location}}</td>
+		        <!-- <td>{{row.receipt_count}}</td> -->
+		        <td>{{row.receipt_qty}}</td>
+		        <!-- <td>{{row.order_count}}</td> -->
+		        <td>{{row.order_qty}}</td>
+		        <td style="color: blue;">{{row.qty}}</td>
+		    </tr>
+		</table>
+    </div>
+</div>
+<div ng-if="autoInfo.demand" class="part">
+	<div class="part-sm">
+	    <div>
+	        <h4>Demand</h4>
+	    </div>
+	     <hr>
+	    <div>
+	        <span>0</span>
+	        <span style="float: right;">{{autoInfo.demand.maxQty / 1000}}k</span>
+	        <div style="height: 20px; 
+	            background-image: -webkit-linear-gradient(left, {{autoInfo.demand.colorRange.min}}, {{autoInfo.demand.colorRange.max}});
+	            background-image: -moz-linear-gradient(left, {{autoInfo.demand.colorRange.min}}, {{autoInfo.demand.colorRange.max}});">
+	        </div>
+	    </div>
+	    <br>
+	    <div class="dropdown">
+	        <button class="btn btn-default dropdown-toggle" type="button" id="customerList" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	            Vizio 
+	            <span class="caret"></span>
+	        </button>
+	        <ul class="dropdown-menu" aria-labelledby="customerList">
+	            <li><a href="#">Vizio</a></li>
+	        </ul>
+	    </div>
+        <br>
+    </div>
+    <div>
+        <table class="table-striped table-hover" style="width: 100%; color: #6e7071;">
+            <tr style="border-bottom: 1px #e6e6e2 solid;">
+                <td style="width: 50%;">State</td>
+                <td>Demand Qty</td>
+            </tr>
+            <tr ng-repeat="row in autoInfo.demand.curr_list track by $index">
+                <td>{{row.state}}</td>
+                <td>{{row.qty}}</td>
+            </tr>
+        </table>
+        <div ng-if="autoInfo.demand.page_total > 1" style="text-align: left; margin-top: 10px; font-size: smaller;">
+            <span ng-click="refreshDataPage(autoInfo.demand, -1);" class="glyphicon glyphicon-menu-left"></span>
+            <span style="font-size: initial;">{{autoInfo.demand.curr_page}}/{{autoInfo.demand.page_total}}</span>
+            <span ng-click="refreshDataPage(autoInfo.demand);" class="glyphicon glyphicon-menu-right"></span>
+        </div>
+    </div>
+</div>
+<div ng-if="autoInfo.truck" class="part">
+	<div class="part-sm">
+	    <div>
+	        <h4>Trucks</h4>
+	    </div>
+	    <hr>
+	    <div layout="row" class="form-group-sm">
+	        <div flex="65">
+	            <input list="truck_search" ng-model="autoInfo.filter.truck_search" placeholder="License plate/Driver name" class="form-control">
+		        <datalist id="truck_search">
+		            <option ng-repeat="item in autoInfo.list.truck_search track by $index" value="{{item}}" ng-if="autoInfo.filter.truck_search">
+		        </datalist>
+	        </div>
+	        <input flex type="button" class="btn btn-xs" value="Search" ng-click="filterTruck(true)" style="margin: 2px 0 2px 10px;">
+	    </div>
+	    <div>
+	        <span>Total : {{autoInfo.truck.list.length}}</span>
+	    </div>
+		<div ng-if="loadingTrucks">searching......</div>
+    </div>
+    <div>
+        <table class="table-striped table-hover" style="width: 100%; color: #6e7071;">
+		    <tr style="border-bottom: 1px #e6e6e2 solid;">
+		        <td style="width: 35%;">License plate</td>
+		        <td style="width: 45%;">Driver name</td>
+		        <td style="width: 20%;">Playback</td>
+		    </tr>
+		    <tr ng-repeat="row in autoInfo.truck.curr_list track by $index">
+		        <td>{{row.license_plate}}</td>
+		        <td>{{row.driver_name}}</td>
+		        <td style="text-align: center; color: {{row == autoInfo.truckPlayback.truck ? 'coral':'green'}}; font-size: smaller;">
+		          <span class="glyphicon glyphicon-play" ng-click="truckPlayback.init(row)"></span>
+		        </td>
+		    </tr>
+		</table>
+		<div ng-if="autoInfo.truck.page_total > 1" style="text-align: left; margin-top: 10px; font-size: smaller;">
+            <span ng-click="refreshDataPage(autoInfo.truck, -1);" class="glyphicon glyphicon-menu-left"></span>
+            <span style="font-size: initial;">{{autoInfo.truck.curr_page}}/{{autoInfo.truck.page_total}}</span>
+            <span ng-click="refreshDataPage(autoInfo.truck);" class="glyphicon glyphicon-menu-right"></span>
+        </div>
+    </div>
+    <div ng-if="autoInfo.truckPlayback" style="position: relative;">
+        <div class="form-group">
+            <span class="h4">Playback</span>
+            <span class="badge" style="background-color: lightcoral;">{{autoInfo.truckPlayback.truck.license_plate}}</span>
+            <span style="position: absolute; top: 5px; right: 5px;" class="glyphicon glyphicon-remove hover-red" ng-click="setAutoInfo.truckPlayback()"></span>
+        </div>
+	    <div class="row form-group">
+	        <span class="col-sm-2" style="margin: 5px 0;">From</span>
+	        <lt-date-time class="col-sm-10" small-view="true"
+	           value="autoInfo.truckPlayback.startTime"
+	           minute-step="5" picker-position="top-left"></lt-date-time>
+		</div> 
+	    <div class="row form-group">
+	        <span class="col-sm-2" style="margin: 5px 0;">To</span>
+	        <lt-date-time class="col-sm-10" small-view="true"
+	           value="autoInfo.truckPlayback.endTime" 
+	           minute-step="5" picker-position="top-left"></lt-date-time>
+		</div> 
+		<div layout="row form-group" layout-align="space-between">
+		    <div flex="80">
+				<span ng-if="loadingTruckPoint">searching......</span>
+		        <span ng-show="autoInfo.truckPlayback.points">Found <span style="color: coral;">{{autoInfo.truckPlayback.points.length || 0}}</span> records</span>
+		    </div>
+		    <input flex type="button" class="btn btn-xs" value="Query" ng-click="truckPlayback.query()"/>
+		</div>
+		<div class="md-block" style="position: relative;">
+            <md-slider style="width : 85%;" ng-model="autoInfo.truckPlayback.current" ng-disabled="true"
+                min="0" max="{{autoInfo.truckPlayback.points.length-1}}" step="1" class="md-primary" aria-label="truck-playback"></md-slider>
+            <span 
+                style="position: absolute; right: 0px; top:20px; font-size: 22px; color: green;" 
+                class="glyphicon glyphicon-{{autoInfo.truckPlayback.pause ? 'play' : 'pause'}}" 
+                ng-click="truckPlayback.play()"></span>
+        </div>
+		<!-- 
+	    <div class="row input-group input-group-sm">
+			<input class="form-control" value="{{autoInfo.truckPlayback.startTime | date:'yyyy-MM-dd hh:mm'}}" readonly /> 
+			<span class="input-group-addon">--</span>
+			<input class="form-control" value="{{autoInfo.truckPlayback.endTime | date:'yyyy-MM-dd hh:mm'}}" readonly /> 
+		</div> 
+		 -->
+    </div>
+</div>
+<div ng-if="autoInfo.loadStatus.list" class="part">
+    <div class="part-sm">
+	    <div>
+	        <h4>Load Status</h4>
+	    </div>
+	    <hr>
+	    <div layout="row" class="form-group-sm">
+	        <input flex="70" list="loadStatus_loadNo" ng-model="autoInfo.filter.loadStatus_loadNo" placeholder="Load No." class="form-control">
+	        <datalist id="loadStatus_loadNo">
+	            <option ng-repeat="item in autoInfo.list.loadStatus_loadNo" value="{{item}}" ng-if="autoInfo.filter.loadStatus_loadNo">
+	        </datalist>
+	        <input flex type="button" class="btn btn-xs" value="Search" ng-click="showLoadStatus()" style="margin-left: 10px;">
+	    </div>
+	    <div>
+	        <span>Total : {{autoInfo.loadStatus.list.length}}</span>
+	    </div>
+    </div>
+    <div>
+        <table class="table-striped table-hover" style="width: 100%; color: #6e7071;">
+		    <tr style="border-bottom: 1px #e6e6e2 solid;">
+		        <td style="width: 25%;">Load No.</td>
+		        <td style="width: 25%;">Customer</td>
+		        <td style="width: 20%;">From</td>
+		        <td>To</td>
+		    </tr>
+		    <tr ng-repeat="row in autoInfo.loadStatus.curr_list track by $index">
+				<td>{{row.OrderNo}}</td>
+				<td>{{row.CustomerID}}</td>
+				<td>{{row.AccountID}}</td>
+				<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 90px;">
+					{{row.ShipToCity}}
+				</td>
+		        <!--<td>{{row.loadNo}}</td>-->
+		        <!--<td>{{row.customer}}</td>-->
+		        <!--<td>{{row.from}}</td>-->
+		        <!--<td title="{{row.to_name}} [{{row.address}}]" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 90px;">-->
+		          <!--{{row.to_name}}-->
+		        <!--</td>-->
+		    </tr>
+		</table>
+		<div ng-if="autoInfo.loadStatus.page_total > 1" style="text-align: left; margin-top: 10px; font-size: smaller;">
+            <span ng-click="refreshDataPage(autoInfo.loadStatus, -1);" class="glyphicon glyphicon-menu-left"></span>
+            <span style="font-size: initial;">{{autoInfo.loadStatus.curr_page}}/{{autoInfo.loadStatus.page_total}}</span>
+            <span ng-click="refreshDataPage(autoInfo.loadStatus);" class="glyphicon glyphicon-menu-right"></span>
+        </div>
+    </div>
+</div>
+
+<div ng-if="autoInfo.serviceStatus.list" class="part">
+    <div class="part-lg">
+        <table class="table-striped table-hover" style="width: 100%; color: #6e7071;">
+		    <tr style="border-bottom: 1px #e6e6e2 solid;">
+		        <td style="width: 25%;">RMA</td>
+		        <td style="width: 20%;">Model</td>
+		        <td style="width: 55%;">Status</td>
+		    </tr>
+		    <tr ng-repeat="row in autoInfo.serviceStatus.curr_list track by $index">
+		        <td>{{row.rma}}</td>
+		        <td>{{row.model_name}}</td>
+		        <td>{{row.status}}</td>
+		    </tr>
+		</table>
+		<div ng-if="autoInfo.serviceStatus.page_total > 1" style="text-align: left; margin-top: 10px; font-size: smaller;">
+            <span ng-click="refreshDataPage(autoInfo.serviceStatus, -1);" class="glyphicon glyphicon-menu-left"></span>
+            <span style="font-size: initial;">{{autoInfo.serviceStatus.curr_page}}/{{autoInfo.serviceStatus.page_total}}</span>
+            <span ng-click="refreshDataPage(autoInfo.serviceStatus);" class="glyphicon glyphicon-menu-right"></span>
+        </div>
+    </div>
+</div>
+
+<div ng-if="autoInfo.locUtilization.list">
+    <div>
+	    <div>
+	        <h4>Utilization rate</h4>
+	    </div>
+	    <table class="table-striped table-hover" style="width: 100%; color: #6e7071;">
+            <tr style="border-bottom: 1px #e6e6e2 solid;">
+                <td style="width: 25%;">Zone</td>
+                <td>Utilization rate</td>
+            </tr>
+            <tr ng-repeat="row in autoInfo.locUtilization.curr_list track by $index">
+                <td>{{row.name}}</td>
+                <td>
+                    <div style="width: 85%; float: left; margin-top: 8px;">
+	                    <md-progress-linear class="{{row.utilizationRate > 80 ? 'md-warn' : (row.utilizationRate > 60 ? 'md-accent' : 'md-primary')}}" 
+	                           md-mode='determinate' value="{{row.utilizationRate}}"></md-progress-linear>
+                    </div>
+                    <span style="float: right;">{{row.utilizationRate}}%</span>
+                </td>
+            </tr>
+        </table>
+        <div ng-if="autoInfo.locUtilization.page_total > 1" style="text-align: left; margin-top: 10px; font-size: smaller;">
+            <span ng-click="refreshDataPage(autoInfo.locUtilization, -1);" class="glyphicon glyphicon-menu-left"></span>
+            <span style="font-size: initial;">{{autoInfo.locUtilization.curr_page}}/{{autoInfo.locUtilization.page_total}}</span>
+            <span ng-click="refreshDataPage(autoInfo.locUtilization);" class="glyphicon glyphicon-menu-right"></span>
+        </div>
+    </div>
+</div>
+<div ng-if="autoInfo.display.asset" class="part">
+    <div>
+        <div>
+            <span class="h4">Display</span>
+            <span style="float: right;">{{autoInfo.display.asset.name || ""}}</span>
+        </div>
+        <hr/>
+        <md-radio-group class="form-group" ng-model="_displayType" layout="row" ng-init="_displayType = 'IMG'">
+           <md-radio-button flex="30" value="IMG" class="md-primary">Image</md-radio-button>
+           <md-radio-button flex="30" value="PDF" class="md-primary">PDF</md-radio-button>
+        </md-radio-group>
+        <div layout="row">
+            <input flex="70" ng-model="_displaySource" class="form-control input-sm" placeholder="Resource"/>
+            <input flex="25" flex-offset="5" type="button" class="btn btn-xs btn-primary" value="Add" ng-click="displayCtrl.addResource(_displayType, _displaySource); _displaySource='';">
+        </div>
+        <div style="overflow-y: auto; height: 107px; margin-top: 5px;">
+	        <div ng-repeat="res in autoInfo.display.playList track by $index" style="margin:10px 0; position: relative;" class="auto-box">
+	            <div style="width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{res.url}}</div>
+	            <i ng-click="displayCtrl.removeResource($index)" class="material-icons auto-hidden hover-red" style="position: absolute; top: 0; right: 0; font-size: large; cursor: pointer;">clear</i>
+	        </div>
+        </div>
+    </div>
+</div>
+<div ng-repeat="res in autoInfo.display.playList track by $index" class="part auto-box" style="position: relative;">
+    <img ng-src="{{res.url}}" ng-if="res.type=='IMG'" style="height: 100%; margin: 0;"/>
+    <canvas id='displayPdfView{{res._id}}' ng-if="res.type=='PDF'" style="margin: 0;"></canvas>
+    <div ng-if="res.type=='PDF'" style="height: 90%; position: absolute; margin: 0;">
+        <div style="font-size: 30px;">PDF</div>
+        <div style="word-wrap: break-word;">{{res.url}}</div>
+        <div style="position: absolute; bottom: 0;" ng-if="res.playing">
+            <span class="badge" ng-repeat="page in [1, 2, 3, 4, 5] track by $index" ng-click="displayCtrl.pushMsg(res, page)" style="margin-right: 10px;">{{page}}</span>
+        </div>
+    </div>
+    <i ng-click="displayCtrl.pushMsg(res)" class="material-icons auto-hidden airplay-mark" ng-class="{'airplay-mark-playing': res.playing}" style="font-size: 20px; margin: 0 10px;">airplay</i>
+</div>
+
+<div ng-if="autoInfo.pickTask" style="width: 500px;">
+	<div>
+		<h4>Pick Task | {{autoInfo.pickTask.list.length}} tasks</h4>
+	</div>
+	<div>
+		<div ng-if="autoInfo.pickTask.list">
+			<table class="table-striped table-hover" style="width: 100%; color: #6e7071;">
+				<tr style="border-bottom: 1px #e6e6e2 solid;">
+					<td>TASK ID</td>
+					<!--<td>CREATE BY</td>-->
+					<td>PICK TYPE</td>
+					<td>PICK WAY</td>
+					<td>STATUS</td>
+					<!--<td>CREATE WHEN</td>-->
+				</tr>
+				<tr ng-repeat="row in autoInfo.pickTask.curr_list track by $index" ng-click="showPickRoad(row.id)"
+					ng-class="{'gisTaskSel':selTaskId == row.id}">
+					<td>{{row.id}}</td>
+					<!--<td>{{row.createdBy}}</td>-->
+					<td>{{row.pickType}}</td>
+					<td>{{row.pickWay}}</td>
+					<td>{{row.status}}</td>
+					<!--<td>{{row.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>-->
+				</tr>
+			</table>
+
+			<div ng-if="autoInfo.pickTask.page_total > 1" style="text-align: left; margin-top: 10px; font-size: smaller;">
+				<span ng-click="refreshDataPage(autoInfo.pickTask, -1);" class="glyphicon glyphicon-menu-left"></span>
+				<span style="font-size: initial;">{{autoInfo.pickTask.curr_page}}/{{autoInfo.pickTask.page_total}}</span>
+				<span ng-click="refreshDataPage(autoInfo.pickTask);" class="glyphicon glyphicon-menu-right"></span>
+			</div>
+		</div>
+	</div>
+</div>
+<div ng-if="autoInfo.pickHeatData" style="width: 500px;">
+	<div>
+		<h4>Pick Location Times | {{autoInfo.pickHeatData.list.length}} locations</h4>
+	</div>
+	<div>
+		<div ng-if="autoInfo.pickHeatData.list">
+			<table class="table-striped table-hover" style="width: 100%; color: #6e7071;">
+				<tr style="border-bottom: 1px #e6e6e2 solid;">
+					<td>INDEX</td>
+					<td>LOCATION NAME</td>
+					<td>PICK TIMES</td>
+				</tr>
+				<tr ng-repeat="row in autoInfo.pickHeatData.curr_list track by $index" ng-click="showHeatLocation(row.location.id)"
+					ng-class="{'gisTaskSel':selHeatLocationId == row.location.id}">
+					<td>{{$index + 1}}</td>
+					<td>{{row.location.name}}</td>
+					<td>{{row.count}}</td>
+				</tr>
+			</table>
+
+			<div ng-if="autoInfo.pickHeatData.page_total > 1" style="text-align: left; margin-top: 10px; font-size: smaller;">
+				<span ng-click="refreshDataPage(autoInfo.pickHeatData, -1);" class="glyphicon glyphicon-menu-left"></span>
+				<span style="font-size: initial;">{{autoInfo.pickHeatData.curr_page}}/{{autoInfo.pickHeatData.page_total}}</span>
+				<span ng-click="refreshDataPage(autoInfo.pickHeatData);" class="glyphicon glyphicon-menu-right"></span>
+			</div>
+		</div>
+	</div>
+</div>

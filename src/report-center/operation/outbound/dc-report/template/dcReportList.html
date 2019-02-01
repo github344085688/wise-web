@@ -1,0 +1,50 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">DC Report</h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <unis-order-search-form is-loading="isLoading"  search-orders="searchOrders(searchParam)"></unis-order-search-form>
+        </div>
+
+        <div class=" grid-parent grid-100 container">
+            <div class="grid-parent grid-100 container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Batch Commitment No.</th>
+                            <th>Purchase Order No.</th>
+                            <th>Ship From</th>
+                            <th>Ship To</th>
+                            <th>Status</th>
+                            <th>DC</th>
+                            <th>DC File Name</th>
+                            <th>ReferenceNo#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="order in orders">
+                            <td>{{order.id}}</td>
+                            <td>{{order.batchCommitmentNo}}</td>
+                            <td>{{order.poNo}}</td>
+                            <td>{{order.shipFrom}}</td>
+                            <td>{{order.shipToAddressStr}}</td>
+                            <td>
+                                {{order.status}}
+                            </td>
+                            <td>{{order.dcStatus}}</td>
+                            <td>{{order.dcFileName}}</td>
+                            <td>{{order.referenceNo}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+        </div>
+    </div>
+</div>

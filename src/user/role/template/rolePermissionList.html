@@ -1,0 +1,128 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">User</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Role Permission</a>
+        </li>
+    </ul>
+</div>
+<div id="user-tags" class="portlet light bordered" style="margin: 15px">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-gift"></i>Role Permission
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div ng-show="!searchCompleted" class="text-center">
+            <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+        </div>
+        <div ng-show="searchCompleted">
+            <div class="tabbable-custom" style="margin-bottom: 15px; overflow: visible;">
+                <ul class="nav nav-tabs">
+                    <li ng-repeat="role in roles" ng-class="{'active top-blue-color':currentRolePermission.roleId == role.id}" >
+                        <a href="{{role.id}}" data-toggle="tab" ng-click="editRolePermission(role.id)">{{role.name}}</a>
+                    </li>
+                </ul>
+                <div class="tab-content" style="padding:15px;">
+                    <div class="tab-pane active">
+                        <div ng-show="currentRolePermissionLoading" class="text-center">
+                            <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                        </div>
+                        <div class="row form-group" ng-show="!currentRolePermissionLoading">
+                            <div class="col-md-8">
+                                <div class="row" style="background-color: rgba(198, 228, 230, 0.36); margin:0px;">
+                                    <div style="margin:8px 0px;">
+                                        <md-checkbox name="common_permission_cb"
+                                                     ng-click="toggleAll('Other')"
+                                                     ng-checked="selectAllIsChecked('Other')"
+                                                     aria-label="Select All Foundation Data Permission"
+                                                     class="light-blue"
+                                                     style="margin-bottom: 0px; margin-left: 15px;">
+                                        </md-checkbox>
+                                        <span style="font-weight: 600; color:#739a9c;">Common Permissions</span>
+                                    </div>
+                                    <div ng-repeat="(commonName, permissions) in permissionsMapByCommonName['Other']" class="col-md-6"
+                                         style="padding: 8px 0px;  margin-bottom: 4px;">
+                                        <div class="col-md-5">{{capitalAndAddSpaceBetweenCamelCase(commonName)}}</div>
+                                        <div class="col-md-3" ng-init="commonReadPermission = getPermissionByType(permissions, '_read')">
+                                            <md-checkbox name="permission_{{commonReadPermission.id}}_read"
+                                                         ng-click="togglePermission(commonReadPermission, 'Other')"
+                                                         ng-checked="isChecked(commonReadPermission, 'Other')"
+                                                         aria-label="Select Permission {{commonReadPermission.name}}"
+                                                         class="light-blue"
+                                                         style="margin-bottom: 0px;"
+                                                         ng-if="commonReadPermission">
+                                                Read
+                                            </md-checkbox>
+                                        </div>
+                                        <div class="col-md-3"  ng-init="commonWritePermission = getPermissionByType(permissions, '_write')">
+                                            <md-checkbox name="permission_{{commonWritePermission.id}}_write"
+                                                         ng-click="togglePermission(commonWritePermission, 'Other')"
+                                                         ng-checked="isChecked(commonWritePermission, 'Other')"
+                                                         aria-label="Select Permission {{commonWritePermission.name}}"
+                                                         class="light-blue"
+                                                         style="margin-bottom: 0px;"
+                                                         ng-if="commonWritePermission">
+                                                Write
+                                            </md-checkbox>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-4" style="background-color: rgba(198, 228, 230, 0.36);">
+                                <div style="margin:8px 0px;">
+                                    <md-checkbox name="common_permission_cb"
+                                                 ng-click="toggleAll('Foundation Data')"
+                                                 ng-checked="selectAllIsChecked('Foundation Data')"
+                                                 aria-label="Select All Foundation Data Permission"
+                                                 class="light-blue"
+                                                 style="margin-bottom: 0px;">
+                                    </md-checkbox>
+                                    <span style="font-weight: 600; color:#739a9c;">Foundation Data Permissions</span>
+                                </div>
+
+                                <div ng-repeat="(commonName, permissions) in permissionsMapByCommonName['Foundation Data']" class="row form-group" style="padding: 8px 0px; margin-bottom: 4px; ">
+                                    <div class="col-md-5">{{capitalAndAddSpaceBetweenCamelCase(commonName)}}</div>
+                                    <div class="col-md-3" ng-init="fdReadPermission = getPermissionByType(permissions, '_read')">
+                                        <md-checkbox name="permission_{{fdReadPermission.id}}_read"
+                                                     ng-click="togglePermission(fdReadPermission, 'Foundation Data')"
+                                                     ng-checked="isChecked(fdReadPermission, 'Foundation Data')"
+                                                     aria-label="Select Permission {{fdReadPermission.name}}"
+                                                     class="light-blue"
+                                                     style="margin-bottom: 0px;"
+                                                     ng-if="fdReadPermission">
+                                            Read
+                                        </md-checkbox>
+                                    </div>
+                                    <div class="col-md-3" ng-init="fdWritePermission = getPermissionByType(permissions, '_write')">
+                                        <md-checkbox name="permission_{{fdWritePermission.id}}_write"
+                                                     ng-click="togglePermission(fdWritePermission, 'Foundation Data')"
+                                                     ng-checked="isChecked(fdWritePermission, 'Foundation Data')"
+                                                     aria-label="Select Permission {{fdWritePermission.name}}"
+                                                     class="light-blue"
+                                                     style="margin-bottom: 0px;"
+                                                     ng-if="fdWritePermission">
+                                            Write
+                                        </md-checkbox>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="form-group" style="text-align: right; margin-top: 30px;">
+                <waitting-btn type="button" btn-class="btn blue" value="'Save'" permission-check="{{'user::rolePermission_write'}}" is-loading="loading"
+                              ng-click="saveRolePermission()"></waitting-btn>
+                <button type="button" class="btn default" permission-check="{{'user::rolePermission_write'}}" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
+     </div>
+</div>

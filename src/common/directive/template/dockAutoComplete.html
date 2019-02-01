@@ -1,0 +1,26 @@
+<ui-select ng-model="$parent.ngModel" required="{{required}}" on-select="_onSelect($select.selected)" ng-disabled="ngDisabled">
+    <ui-select-match allow-clear="true">
+        {{$select.selected.name}} : {{$select.selected.dockStatus}} {{ $select.selected.entryId?'( '+$select.selected.entryId+' )':""}}
+    </ui-select-match>
+    <ui-select-choices repeat="dock.id as dock in docks |orderBy:'suggest'" refresh="getDocks($select.search)">
+        <div class="row select-load-receipt-head" ng-show="$index == 0" style="padding: 3px;">
+            <div class="col-md-6 bold">
+                Dock Name
+            </div>
+            <div class="col-md-6 bold">
+                Status
+            </div>
+        </div>
+        <div class="row form-group" style="padding: 0px; margin: 0px;">
+            <div class="col-md-6">
+                {{dock.name}}
+            </div>
+            <div class="col-md-6">
+                {{dock.dockStatus}}&nbsp&nbsp{{ dock.entryId?'( '+dock.entryId+' )':""}}
+            </div>
+        </div>
+    </ui-select-choices>
+    <ui-select-no-choice>
+        No available option.
+    </ui-select-no-choice>
+</ui-select>

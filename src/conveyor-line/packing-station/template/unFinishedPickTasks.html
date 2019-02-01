@@ -1,0 +1,26 @@
+<md-dialog flex="50">
+
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>un-finished Pick Tasks</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="cancel()">
+        <i class="material-icons">close</i>
+      </md-button>
+    </div>
+  </md-toolbar>
+
+  <md-dialog-content>
+    <div class="col-md-12" style="min-height: 200px;">
+      <h3>{{storeDetail.unfinishedPickTaskIds}}</h3>
+    </div>
+  </md-dialog-content>
+
+  <md-dialog-actions>
+    <div class="form-group">
+      <div class="col-md-12" style="text-align: right;">
+        <button class="btn default" ng-click="cancel()">Cancel</button>
+      </div>
+    </div>
+  </md-dialog-actions>
+</md-dialog>

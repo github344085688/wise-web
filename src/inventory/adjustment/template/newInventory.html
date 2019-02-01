@@ -1,0 +1,67 @@
+<form>
+    <div class="row form-group">
+        <div class="col-md-3">
+            <label>Customer <span style="color: red;">*</span></label>
+            <organization-auto-complete name="customer" tag="Customer" ng-model="newInventory.customerId"
+                                        required></organization-auto-complete>
+        </div>
+        <div class="col-md-3">
+            <label>Title <span style="color: red;">*</span></label>
+            <organization-auto-complete name="Title" tag="Title" ng-model="newInventory.titleId"></organization-auto-complete>
+        </div>
+        <div class="col-md-3">
+            <label>Supplier</label>
+            <organization-auto-complete name="Supplier" tag="Supplier" ng-model="newInventory.supplierId"></organization-auto-complete>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-3">
+            <label>Item <span style="color: red;">*</span></label>
+            <itemspec-auto-complete ng-model="newInventory.itemSpecId" customer-id="newInventory.customerId" ng-disabled="newInventory.customerId == null"
+                                    on-select="adjustToItemChange(itemSpec)" required></itemspec-auto-complete>
+        </div>
+        <div class="col-md-3">
+            <label>UOM <span style="color: red;">*</span></label>
+            <ui-select ng-model="newInventory.unitId" required>
+                <ui-select-match>
+                    <span ng-bind="$select.selected.name"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="item.id as item in newInventory.itemUnits | filter: $select.search">
+                    <b>{{item.name}}</b>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    No available item.
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="col-md-3">
+            <label>Diverse</label>
+            <ui-select ng-model="newInventory.productId">
+                <ui-select-match>
+                    <span ng-bind="$select.selected.name"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="item.productId as item in newInventory.itemDiverses | filter: $select.search">
+                    <b title="{{item.name}}">{{item.name}}</b>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    No available item.
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-3">
+            <label>LP <span style="color: red;">*</span></label>
+            <input type="text" class="form-control" ng-pattern="/^[T,H,I,C,S]{0,1}LP-[0-9]*$/" placeholder="Enter LP ID (LP-1)"
+                   required ng-model="newInventory.lpId" />
+        </div>
+        <div class="col-md-3">
+            <label>QTY <span style="color: red;">*</span></label>
+            <input type="text" class="form-control" ng-pattern="/^[0-9]*$/" required ng-model="newInventory.adjustTo" placeholder="Enter Number" />
+        </div>
+        <div class="col-md-3">
+            <label>SN</label>
+            <input type="text" class="form-control" required ng-model="newInventory.sn" placeholder="Enter SN" />
+        </div>
+    </div>
+</form>

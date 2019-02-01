@@ -1,0 +1,73 @@
+<div class="grid-100 row">
+    <div class=" grid-100 grid-content">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Title Virtual Location Group List</h1>
+            <a class="create-button" permission-check="{{'facility::virtualLocationGroup_write'}}" ui-sref="cf.facility.resource.virtualLocationGroup.titleVlgMapping.add">
+                <b>Create Title Virtual Location Group</b></a>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label>Customer</label>
+                <organization-auto-complete name="customer" ng-model="searchInfo.customerId"
+                                            allow-clear="true" on-select="customerChange(org)" tag="Customer"
+                                           ></organization-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label>Title</label>
+                <organization-auto-complete name="title" ng-model="searchInfo.titleId" tag="Title"
+                                            custom-ctrl="titleCustomCtrl" allow-clear="true"></organization-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label>Virtual Location Group</label>
+                <location-virtual-group-auto-complete ng-model="searchInfo.virtualLocationGroupId"
+                                            allow-clear="true"></location-virtual-group-auto-complete>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-90">&nbsp;</div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Title</th>
+                        <th>Virtual Location Group</th>
+                        <th>Create When</th>
+                        <th permission-check="{{'facility::virtualLocationGroup_write'}}">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="group in groupsView  track by $index">
+                        <td>{{group.customerName}}</td>
+                        <td>{{group.titleName}}</td>
+                        <td>{{group.VLGName}}</td>
+                        <td>{{group.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                            <span ng-show="group.createdBy">({{group.createdBy}})</span></td>
+                        <td permission-check="{{'facility::virtualLocationGroup_write'}}">
+                            <a ng-href="{{'#/cf/facility/resource/virtualLocationGroup/titleVlgMapping/edit/' + group.id}}" target="_blank"  title="Update">Update</a> &nbsp;| &nbsp;
+                            <a ng-click="delete(group.id)" title="Delete">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="groups.length" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+    </div>
+</div>

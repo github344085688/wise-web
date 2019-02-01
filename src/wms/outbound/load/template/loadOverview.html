@@ -1,0 +1,177 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Outbound</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Load</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Load Overview</a>
+        </li>
+    </ul>
+</div>
+<div class="portlet light bordered" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold"> Load: {{load.loadNo}} </span>
+        </div>
+        <div class="actions" permission-check="{{'outbound::load_write'}}">
+            <!--<button type="button" class="btn blue" ng-click="editOrder(order.id)"  ng-disabled="order.status == 'Closed'">Edit Order</button>-->
+            <button type="button" class="btn blue" ng-click="editLoad(load.id)" ng-disabled="load.status == 'Shipped'">Edit Load</button>
+            <waitting-btn type="button" btn-class="btn gray print-btn" icon-class="glyphicon glyphicon-print" value="'Print BOL By ORDER'"
+                is-loading="isOrderLoading" ng-click="print(load.id)">
+            </waitting-btn>
+            <waitting-btn type="button" btn-class="btn gray print-btn" icon-class="glyphicon glyphicon-print" value="'Print BOL By LOAD'"
+                is-loading="isMasterLoading" ng-click="printMasterBOL(load.id)">
+            </waitting-btn>
+            <waitting-btn type="button" btn-class="btn gray print-btn" icon-class="glyphicon glyphicon-print" value="'Print BOL By Ship To'"
+                is-loading="isShipLoading" ng-click="printShipToBol(load.id)">
+            </waitting-btn>
+            <waitting-btn type="button" btn-class="btn gray print-btn" icon-class="glyphicon glyphicon-print" value="'Print Master Loading Ticket'"
+                          is-loading="isMLTLoading" ng-click="printMasterLoadingTicket(load.id)">
+            </waitting-btn>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <div class="tabbable-line">
+            <ul class="nav nav-tabs">
+                <li ng-class="{'active': activeTab == 'info'}">
+                    <a ng-click="changeTab('info')" data-toggle="tab" aria-expanded="false">Info</a>
+                </li>
+                <li ng-class="{'active': activeTab == 'photo'}">
+                    <a ng-click="changeTab('photo')" data-toggle="tab" aria-expanded="false">Photos</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane" ng-class="{'active': activeTab == 'info'}" id="info">
+                    <div class="view-container">
+                        <div class="row">
+                            <span class="col-md-4">
+                                <b>Carrier: </b>{{load.carrierName}}</span>
+                            <span class="col-md-4">
+                                <b>Customer: </b>{{load.customerName}}</span>
+                            <span class="col-md-4">
+                                <b>Load Type: </b>{{load.type}}</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-4">
+                                <b>Entry: </b>
+                                <span ng-repeat="entryId in load.entryIds">
+                                    {{entryId}}&nbsp;
+                                </span>
+                            </span>
+                            <span class="col-md-4">
+                                <b>Status: </b>{{load.status}}</span>
+                            <span class="col-md-4">
+                                <b>MBOL:</b> {{load.masterBolNo}}</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-4">
+                                <b>FreightTerm:</b> {{load.freightTerm}}</span>
+                            <span class="col-md-4">
+                                <b>Pallet Qty : </b>{{load.palletQty}}</span>
+                            <span class="col-md-4">
+                                <b>Appointment Time: </b>{{load.appointmentTime  | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-4">
+                                <b>Long Haul:</b> {{load.longHaulNo}}</span>
+                            <span class="col-md-8">
+                                <b>Load Task Ids:</b>
+                                <a ng-repeat="loadTaskId in load.loadTaskIds" ng-href="{{'#/wms/task/load-task/general/' + loadTaskId + '/view'}}" target="_blank">{{loadTaskId}}&nbsp;</a></span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-4">
+                                <b>In Yard Time: </b>{{load.orderLines[0].inYardTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</span>
+                            <span class="col-md-4">
+                                <b>Create Time: </b>{{load.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                                <span ng-show="load.createdBy ">({{load.createdBy}})</span>
+                            </span>
+                            <span class="col-md-4">
+                                <b>Updated Time: </b>{{load.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                                <span ng-show="load.updatedBy">({{load.updatedBy}})</span>
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-12">
+                                <b>Ship From: </b>{{load.shipFrom}}</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-12">
+                                <b>Ship To: </b>{{getAddressInfo(load.shipToAddress)}}</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-12">
+                                <b>Bill To: </b>{{getAddressInfo(load.billToAddress)}}</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-12 text-pre-line" style="display: flex;">
+                                <b>Note: </b>{{load.note}}</span>
+                        </div>
+                    </div>
+                    <div class="alert alert-danger" ng-if="warningMessage">
+                        Warning: {{warningMessage}}
+                    </div>
+                    <div class="list-container">
+                        <div class="table-scrollable">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Order</th>
+                                        <th>Customer</th>
+                                        <th>Destination</th>
+                                        <th>Reference</th>
+                                        <th>Delivery Request Date</th>
+                                        <th>Status</th>
+                                        <th>Sequence</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="order in load.orderLines">
+                                        <td>{{$index + 1}}</td>
+                                        <td>
+                                            <a ng-href="{{'#/wms/outbound/order/' + order.id}}" target="_blank">{{order.id}}</a>
+                                        </td>
+                                        <td>{{order.customerName}}</td>
+                                        <td>{{order.shipToAddress.name}}</td>
+                                        <td>
+                                            <span>{{order.referenceNo}}&nbsp; </span>
+                                        </td>
+                                        <td>{{order.mabd}}</td>
+                                        <td>{{order.status}}</td>
+                                        <th>{{order.sequence}}</th>
+                                        <td style="text-align: center;">
+                                            <button ng-show="isValidUCC(order.shipTo)" ng-click="printUCCLabel(order.id, order.shipTo)" class="btn gray right">
+                                                <span class="glyphicon glyphicon-print" aria-hidden="true"></span> UCC Label
+                                            </button>
+                                            <button ng-if="order.status==='Shipped'||order.status==='Partial Shipped'||order.status==='Short Shipped'" ng-click="printPackingListPrint(load.id, order.id)"
+                                                class="btn gray right">
+                                                <span class="glyphicon glyphicon-print" aria-hidden="true"></span> Packing List Print
+                                            </button>
+                                            <button ng-click="printOrderBol(load.id, order.id)" class="btn gray right">
+                                                <span class="glyphicon glyphicon-print" aria-hidden="true"></span> Order BOL
+                                            </button>
+                                            <button type="button" class="demo-loading-btn btn red" ng-click="loadOrderFile(order)"> Download
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" ng-class="{'active': activeTab == 'photo'}" id="photo" ng-include="'wms/outbound/load/template/loadPhoto.html'">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

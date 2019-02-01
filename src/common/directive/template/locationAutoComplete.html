@@ -1,0 +1,13 @@
+<ui-select name="{{name}}" ng-model="$parent.ngModel" required="{{required}}" ng-disabled="ifDisabled"
+           on-select="_onSelect($select.selected)">
+    <ui-select-match allow-clear="{{allowClear}}">
+        <div ng-bind="$select.selected.name"></div>
+    </ui-select-match>
+    <ui-select-choices repeat="location.id as location in locations | filter: $select.search.name"
+                       refresh="getLocations($select.search)" refresh-delay="50">
+        <div ng-bind="location.name"></div>
+    </ui-select-choices>
+    <ui-select-no-choice>
+        No available option.
+    </ui-select-no-choice>
+</ui-select>

@@ -1,0 +1,607 @@
+<div id="docManager" class="row">
+    <div class="grid-100">
+        <div class="grid-content">
+            <div class="grid-parent grid-100 container">
+                <h1 class="section-label pull-left">Entry</h1>
+                <button type="button" class="grid-10 ripplelink pull-right"
+                        permission-check="{{'facility::checkinEntry_write'}}"
+                        ng-click="createEntry(event)">Create Entry
+                </button>
+                <hr>
+            </div>
+
+            <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label class="label-input">Entry ID</label>
+                    <input type="text" ng-model="search.fuzzyEntryId" ng-keyup="keyUpSearch($event)">
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Carrier</label>
+                    <organization-auto-complete name="carrier" tag="Carrier" ng-model="search.carrierId" allow-clear="true"></organization-auto-complete>
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Driver</label>
+                    <input type="text" ng-model="search.driverName">
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Driver License</label>
+                    <input type="text" ng-model="search.driverLicense">
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label class="label-input">Tractor</label>
+                    <input type="text" ng-model="search.tractor">
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Trailer</label>
+                    <input type="text" ng-model="search.trailer">
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Container</label>
+                    <input type="text" ng-model="search.containerNO">
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Status</label>
+                    <ui-select multiple ng-model="search.statuses" style="border-radius: 4px;">
+                        <ui-select-match>
+                            <div ng-bind="$item"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="status in entryStatuses">
+                            {{status}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label class="label-input">Customer</label>
+                    <multiple-organization-auto-complete  ng-model="search.customerIds" name="customer" allow-clear="true" tag="Customer"></multiple-organization-auto-complete>
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Load ID</label>
+                    <input type="text"  placeholder="Enter Load ID" ng-model="search.loadId" input-auto-fill="LOAD-" ng-keyup="keyUpSearch($event)"/>
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Receipt ID</label>
+                    <input type="text"  placeholder="Enter Receipt ID" input-auto-fill="RN-" ng-model="search.receiptId" ng-keyup="keyUpSearch($event)"/>
+
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Load No</label>
+                    <input type="text" ng-model="search.loadNo">
+                </div>
+
+            </div>
+            <div class="grid-parent grid-100 container">
+                    <div class="grid-25">
+                        <label class="label-input">Gate Check In From</label>
+                        <lt-date-time value="search.gateCheckInTimeFrom"></lt-date-time>
+                    </div>
+                    <div class="grid-25">
+                        <label class="label-input">Gate Check In To</label>
+                        <lt-date-time value="search.gateCheckInTimeTo"></lt-date-time>
+                    </div>
+                    <div class="grid-25">
+                        <label class="label-input">Window Check In From</label>
+                        <lt-date-time value="search.windowCheckInTimeFrom"></lt-date-time>
+                    </div>
+                    <div class="grid-25">
+                        <label class="label-input">Window Check In To</label>
+                        <lt-date-time value="search.windowCheckInTimeTo"></lt-date-time>
+                    </div>
+                </div>
+            <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label class="label-input">Dock Check In From</label>
+                    <lt-date-time value="search.dockCheckInTimeFrom"></lt-date-time>
+                </div>
+                <div class="grid-25">
+                    <label class="label-input">Dock Check In To</label>
+                    <lt-date-time value="search.dockCheckInTimeTo"></lt-date-time>
+                </div>
+
+            </div>
+
+            <div class="grid-parent grid-100 container">
+                <div class="grid-80">&nbsp;</div>
+                <div class="grid-10 ">
+                    <waitting-btn type="button" btn-class="ripplelink" ng-click="searchEntries(1)"
+                                  value="'Search'" is-loading="!searchCompleted"></waitting-btn>
+                </div>
+                <div class="grid-10">
+                    <button type="button" class="ripplelink" ng-click="reset()"> Reset</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="grid-100">
+        <div class="grid-content" style="position: relative ; height: 100%;">
+            <div class="grid-parent grid-100 container">
+                <div class="views-container">
+                     <h1 class="section-label" style="text-align: right; margin-right: 150px;"> Switch View Mode: </h1>
+                    <div class="list-card-view-tab view-active">
+                       
+                        <ul>
+                            <li class="view-type" ng-class="{'active':viewSetting.entryList.showAsList}" data-view-type="list" ng-click="switchViewMode(true)">
+                                <img src="assets/svg/light/list-view-icon-light.svg" alt="list" class="list-view-icon view-type-icon" ng-class="{'active':viewSetting.entryList.showAsList}">List
+                            </li>
+                            <li class="view-type" ng-class="{'active':!viewSetting.entryList.showAsList}" data-view-type="card" ng-click="switchViewMode(false)">
+                                <img src="assets/svg/light/card-view-icon-light.svg" alt="card" class="card-view-icon view-type-icon" ng-class="{'active':!viewSetting.entryList.showAsList}">Card
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" ng-repeat="entry in entries track by $index">
+    <div class="grid-100">
+        <div class="grid-content" style="position: relative ; height: 100%;">
+            <div class="grid-parent grid-100 container">
+                <div class="views-container">
+                    <h1 class="section-label">{{entry.id}} ({{entry.status}})&nbsp;&nbsp;<span ng-if="entry.dock.name">(Dock:
+                            {{entry.dock.name}})</span></h1>
+                    <div class="list-card-view-tab view-active">
+                        <ul>
+                            <li class="view-type" ng-class="{'active':entryView[entry.id].showAsList}" data-view-type="list" ng-click="showAsList(entry.id, true)">
+                                <img src="assets/svg/light/list-view-icon-light.svg" alt="list" class="list-view-icon view-type-icon" ng-class="{'active':entryView[entry.id].showAsList}">List
+                            </li>
+                            <li class="view-type" ng-class="{'active':!entryView[entry.id].showAsList}" data-view-type="card" ng-click="showAsList(entry.id, false)">
+                                <img src="assets/svg/light/card-view-icon-light.svg" alt="card" class="card-view-icon view-type-icon" ng-class="{'active':!entryView[entry.id].showAsList}">Card
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-parent grid-100 card-container-expand" ng-show="!entryView[entry.id].showAsList">
+                <div class="card-expand">
+                    <span ng-click="toggleAllCards(entry)">
+                        <img src="assets/svg/dark/icon-keyboard-arrow-down-dark.svg" alt="expand"
+                             ng-class="{'active':cardExpand[entry.id].allExpanded}"> <span>{{cardExpand[entry.id].allExpanded?"Minimize":"Expand"}}</span>                    <img src="assets/svg/dark/icon-keyboard-arrow-down-dark.svg" ng-class="{'active':cardExpand[entry.id].allExpanded}"
+                        alt="expand">
+                    </span>
+                    <button type="button" class="ripplelink grid-10"
+                            ng-mouseenter="showEntryActions(entry.id)" ng-mouseleave="hideEntryActions(entry.id)">Actions
+                    </button>
+
+                </div>
+            </div>
+
+            <div class="card-view-actions" ng-show="entryView[entry.id].showActions" ng-mouseenter="showEntryActions(entry.id)" ng-mouseleave="hideEntryActions(entry.id)">
+                <ul>
+                    <a ng-show="entry.status !== 'Checked Out'" ng-click="editEntryPurpose(entry)"
+                       href="javascript:;"  permission-check="{{'facility::checkinEntry_write'}}">
+                        <li> Edit Entry Type</li>
+                    </a>
+                    <a ng-click="entryPhoto(entry)" href="javascript:;" >
+                        <li>Photo</li>
+                    </a>
+                    <a ng-click="entryDocument(entry)" href="javascript:;"  >
+                        <li>Documents</li>
+                    </a>
+                    <a ng-click="toWindow(entry.id)" href="javascript:;"   permission-check="{{'facility::checkinEntry_write'}}">
+                        <li>Window</li>
+                    </a>
+                    <a ng-click="reportException(entry,$index)" href="javascript:;">
+                        <li>Report Exception</li>
+                    </a>
+
+                </ul>
+            </div>
+
+            <div class="grid-parent grid-100 container card-view" id="list_view" ng-show="entryView[entry.id].showAsList">
+                <div class="grid-parent grid-100  container">
+                    <div class="grid-25 tablet-grid-25">
+
+
+                        <div class="grid-parent grid-100  container">
+                            <p class="card-label-input">Equitment Type: <span>{{entry.checkInData.equipmentType}}</span></p>
+                            <p class="card-label-input">Tractor: <span> {{entry.checkInData.tractor}}</span></p>
+                            <p class="card-label-input">Container: <span> {{entry.checkInData.containerNo}}</span></p>
+                        </div>
+                    </div>
+
+                    <div class="grid-25 tablet-grid-25">
+                        <div class="grid-parent grid-100  container">
+
+                            <p class="card-label-input">Carrier: <span> {{entry.checkInData.carrierName}}</span></p>
+                            <p class="card-label-input">MC/DOT: <span> {{entry.checkInData.mcDot}}</span></p>
+                        </div>
+                    </div>
+
+                    <div class="grid-25 tablet-grid-25">
+                        <div class="grid-parent grid-100  container">
+                            <p class="card-label-input">Driver: <span> {{entry.checkInData.driverName}}</span></p>
+                            <p class="card-label-input">Driver License: <span> {{entry.checkInData.driverLicense}}</span></p>
+                        </div>
+                    </div>
+
+                    <div class="grid-25 tablet-grid-25">
+                        <div class="grid-parent grid-100  container">
+                            <p class="card-label-input">Window Check-In: <span ng-repeat="timeLine in entry.timeline['Window Checkin'] track by $index">
+                                {{formatTime(timeLine.createdWhen)}}({{timeLine.createdBy}}) {{$last?"":" | "}}
+                            </span></p>
+                            <p class="card-label-input">Gate Check-In: <span ng-repeat="timeLine in entry.timeline['Gate Checkin']">
+                               {{formatTime(timeLine.createdWhen)}} ({{timeLine.createdBy}})
+                            </span></p>
+                            <p class="card-label-input">Gate Check-Out: <span ng-repeat="timeLine in entry.timeline['Gate Checkout']">
+                               {{formatTime(timeLine.createdWhen)}}({{timeLine.createdBy}})
+                            </span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-parent grid-100  container">
+                    <div class="card-tab-container grid-100">
+                        <div class="grid-parent grid-40">
+                            <label> </label>
+                            <ul>
+                                <li ng-class="{'active':!boundView[entry.id].showBound}" ng-show="entry.receipts.length > 0" data-tab-number="table1_1" ng-click="showOutboundOrInbound(entry.id,false)">
+                                    <p>INBOUND</p>
+                                </li>
+                                <li data-tab-number="table1_2" ng-show="entry.loads.length > 0" ng-class="{'active':boundView[entry.id].showBound||(entry.loads.length > 0&&!entry.receipts.length > 0)}"
+                                    ng-click="showOutboundOrInbound(entry.id,true)">
+                                    <p>OUTBOUND</p>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                        <div class="grid-parent grid-60">
+                            <div class="grid-20 "  ng-show="entry.status !== 'Dock Checked Out'"   permission-check="{{'facility::checkinEntry_write'}}">
+                                <button type="button" class="ripplelink btn_logs"  ng-click="editEntryPurpose(entry)">Edit Entry Type</button>
+                            </div>
+
+                            <div class="grid-20 "   permission-check="{{'facility::checkinEntry_write'}}">
+                                <button type="button" class="ripplelink btn_logs" ng-click="toWindow(entry.id)">Window</button>
+                            </div>
+
+                            <div class="grid-20 ">
+                                <button type="button" class="ripplelink btn_logs" ng-click="entrySummary(entry)">Summary</button>
+                            </div>
+
+                            <div class="grid-20 ">
+                                <button type="button" class="ripplelink btn_documents" ng-click="entryDocument(entry)">Documents</button>
+                            </div>
+
+                            <div class="grid-20">
+                                <button type="button" class="ripplelink btn_photos" ng-click="entryPhoto(entry)">Photos</button>
+                            </div>
+                        </div>
+
+                        <table class="card-table card-table1 active" ng-show="entry.receipts.length > 0" ng-class="{'active':!boundView[entry.id].showBound}"
+                            id="table1_1">
+                            <thead>
+                                <tr>
+                                    <th>Receipt ID</th>
+                                    <th>Status</th>
+                                    <th>Company</th>
+                                    <th>Customer</th>
+                                    <th>Title</th>
+                                    <th>Carrier</th>
+                                    <th>CTNR</th>
+                                    <th>BOL</th>
+                                    <th>Reference</th>
+                                    <th>Purchase Order No.</th>
+                                    <th>Seal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="receipt in entry.receipts track by $index">
+                                    <td>{{receipt.id}}</td>
+                                    <td>{{receipt.status}}</td>
+                                    <td>{{receipt.companyName}}</td>
+                                    <td>{{receipt.customerName}}</td>
+                                    <td>{{receipt.titleName}}</td>
+                                    <td>{{receipt.carrierName}}</td>
+                                    <td>{{receipt.containerNo}}</td>
+                                    <td>
+                                        {{receipt.bolNo}}
+                                    </td>
+                                    <td>{{receipt.referenceNo}}</td>
+                                    <td>
+                                        {{receipt.poNo}}
+                                    </td>
+                                    <td>{{receipt.sealNo}}</td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+
+                        <table class="card-table card-table1" ng-show="entry.loads.length > 0" id="table1_2" ng-class="{'active':boundView[entry.id].showBound||(entry.loads.length > 0&&!entry.receipts.length > 0)}">
+                            <thead>
+                                <tr>
+                                    <th>Load</th>
+                                    <th>Status</th>
+                                    <th>MBOL</th>
+                                    <th>Company</th>
+                                    <th>Customer</th>
+                                    <th>Carrier</th>
+                                    <th>Load Type</th>
+                                    <th>Freight Term</th>
+                                    <th>Appointment Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="load in entry.loads track by $index">
+                                    <td>{{load.loadNo}}</td>
+                                    <td>{{load.status}}</td>
+                                    <td>{{load.masterBolNo}}</td>
+                                    <td>{{load.companyName}}</td>
+                                    <td>{{load.customername}}</td>
+                                    <td>{{load.carrierName}}</td>
+                                    <td>{{load.type}}</td>
+                                    <td>{{load.freightTerm}}</td>
+                                    <td>{{load.appointmentTime}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="grid-parent grid-100 card-row" id="card_view" ng-style="cardExpand[entry.id].overall" ng-show="!entryView[entry.id].showAsList">
+
+                <div class="card" ng-style="cardExpand[entry.id]['checkInAndOut']">
+                    <h1>Check In/Check Out</h1>
+                    <div class="grid-100 container label-input-card" ng-style="cardExpand[entry.id]['checkInAndOut']">
+                        <p><span>Gate Check In: </span>
+                            <span ng-repeat="timeLine in entry.timeline['Gate Checkin']">
+                                {{formatTime(timeLine.createdWhen)}} ({{timeLine.createdBy}})
+                            </span>
+                        </p>
+                        <p><span>Window Check In: </span>
+                            <span ng-show="entry.timeline['Window Checkin'].length > 0">
+                               {{formatTime(entry.timeline['Window Checkin'][0].createdWhen)}} ({{entry.timeline['Window Checkin'][0].createdBy}})
+                            </span>
+                        </p>
+                        <p><span>Gate Check Out: </span>
+                            <span ng-repeat="timeLine in entry.timeline['Gate Checkout'] track by $index">
+                               {{formatTime(timeLine.createdWhen)}} ({{timeLine.createdBy}})
+                            </span>
+                        </p>
+                    </div>
+
+                    <p class="show-card-details" ng-class="{'expanded':cardExpand[entry.id].checkInAndOut}" ng-click="toggleCard(entry, 'checkInAndOut')"><img src="assets/svg/dark/expand-dots-dark.svg"></p>
+                </div>
+
+                <div class="card" ng-style="cardExpand[entry.id].equipment">
+                    <h1>Equipment</h1>
+
+                    <div class="grid-100 container label-input-card" ng-style="cardExpand[entry.id].equipment">
+                        <p><span>Type:</span> {{entry.checkInData.equipmentType}}</p>
+                        <p><span>Tractor:</span> {{entry.checkInData.tractor}}</p>
+                        <p><span>Container:</span> <span ng-repeat="containerNo in entry.checkInData.containerNOs">{{containerNo}}&nbsp; </span>
+                        </p>
+                    </div>
+
+                    <p class="show-card-details" ng-class="{'expanded':cardExpand[entry.id].equipment}" ng-click="toggleCard(entry, 'equipment')">
+                        <img src="assets/svg/dark/expand-dots-dark.svg">
+                    </p>
+                </div>
+
+                <div class="card" ng-style="cardExpand[entry.id].driver">
+                    <h1>Driver Information</h1>
+
+                    <div class="grid-100 container label-input-card" ng-style="cardExpand[entry.id].driver">
+                        <p><span>Driver Name:</span> {{entry.checkInData.driverName}}</p>
+                        <p><span>Driver License:</span> {{entry.checkInData.driverLicense}}</p>
+                        <p><span>Carrier:</span> {{entry.checkInData.carrierName}}</p>
+                        <p><span>MC/DOT:</span> {{entry.checkInData.mcDot}}</p>
+                    </div>
+
+                    <p class="show-card-details" ng-class="{'expanded':cardExpand[entry.id].driver}" ng-click="toggleCard(entry ,'driver')"><img src="assets/svg/dark/expand-dots-dark.svg"></p>
+                </div>
+
+                <div class="card pull-right" ng-style="cardExpand[entry.id].log">
+                    <h1>Summary</h1>
+
+                    <div class="grid-100 container label-input-card" ng-style="cardExpand[entry.id].log">
+                        <ul class="timeline">
+                            <li class="timeline-item">
+                                <div class="timeline-info">
+                                    <span>Gate Check In</span>
+                                </div>
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <h3 class="timeline-title">
+                                        <span ng-repeat="timeLine in entry.timeline['Gate Checkin']">
+                                              {{formatTime(timeLine.createdWhen)}} ({{timeLine.createdBy}})
+                                           </span> {{entry.timeline['Gate Checkin']?"":"N/A"}}
+                                    </h3>
+                                    <div><span>Driver Name:</span> {{entry.checkInData.driverName}}</div>
+                                    <div><span>Driver License:</span> {{entry.checkInData.driverLicense}}</div>
+                                    <div><span>Carrier:</span> {{entry.checkInData.carrierName}}</div>
+                                    <div><span>MC/DOT:</span> {{entry.checkInData.mcDot}}</div>
+                                    <div><span>Type:</span> {{entry.checkInData.equipmentType}}</div>
+                                    <div><span>Tractor:</span> {{entry.checkInData.tractor}}</div>
+                                    <div><span>Container:</span> <span ng-repeat="containerNo in entry.checkInData.containerNOs">{{containerNo}}&nbsp; </span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="timeline-item">
+                                <div class="timeline-info">
+                                    <span>Window Check In</span>
+                                </div>
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <h3 class="timeline-title">
+                                        <span ng-show="entry.timeline['Window Checkin'].length > 0">
+                                                {{formatTime(entry.timeline['Window Checkin'][0].createdWhen)}} ({{entry.timeline['Window Checkin'][0].createdBy}})
+                                        </span> {{entry.timeline['Window Checkin']?"":"N/A"}}
+                                    </h3>
+                                    <div class="timeline-content-block" ng-show="entry.receipts.length > 0">
+                                        <div class="timeline-li-title">Inbound</div>
+                                        <div class="timeline-title timeline-li-content">
+                                            <div ng-repeat="(customerName, receipts) in entry.receiptsGroupByCustomer track by $index">
+                                                <span>{{customerName}}:
+                                                             <a ng-repeat="receipt in receipts track by $index"
+                                                                href="javascript:void(0)"
+                                                                ng-click="showReceipt(receipt.id)">
+                                                                {{receipt.id}}
+                                                            </a>
+                                                        </span></div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="timeline-content-block" ng-show="entry.loads.length > 0">
+                                        <div class="timeline-li-title">Outbound</div>
+                                        <div class="timeline-title timeline-li-content">
+                                            <div ng-repeat="(customerName, loads) in entry.loadsGroupByCustomer track by $index">
+                                                <span>{{customerName}}:
+                                                             <a ng-repeat="load in loads track by $index"
+                                                                href="javascript:void(0)" ng-click="showLoad(load.id)">
+                                                                {{load.loadNo}}
+                                                            </a>
+                                                        </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </li>
+
+                            <li class="timeline-item" ng-repeat="receiveTask in entry.receiveTasks">
+                                <div class="timeline-info">
+                                    <span>Receive <a target="_blank" ui-sref="wms.task.receiveTask.view({taskId: receiveTask.id})">{{receiveTask.id}}</a></span>
+                                </div>
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <h3 class="timeline-title">Assignee: {{receiveTask.assignee.firstName}} {{receiveTask.assignee.lastName}} </h3>
+                                    <h3 class="timeline-title">Dock: {{receiveTask.dockName}} </h3>
+                                    <h3 class="timeline-title">Dock Check In:
+                                        <span ng-repeat="timeLine in entry.timeline['Dock Checkin_' + receiveTask.id]">
+                                              {{formatTime(timeLine.createdWhen)}} ({{timeLine.createdBy}})
+                                           </span></h3>
+                                    <h3 class="timeline-title">Dock Checkout:
+                                        <span ng-repeat="timeLine in entry.timeline['Dock Checkout_' + receiveTask.id]">
+                                              {{formatTime(timeLine.createdWhen)}} ({{timeLine.createdBy}})
+                                           </span></h3>
+                                    <p>
+                                        <ul>
+                                            <li ng-repeat="step in receiveTask.steps" class="timeline-content-block">
+                                                <div class="timeline-li-title">Step: {{step.name}} ({{step.status}})</div>
+                                                <div class="timeline-title timeline-li-content">
+                                                    <div>Assignee: <span ng-repeat="user in step.assignees track by $index">{{user.firstName}} {{user.lastName}} </span>
+                                                    </div>
+                                                    <div>Start: {{step.startTime | date: 'yyyy-MM-dd HH:mm:ss'}}</div>
+                                                    <div>End: {{step.endTime | date: 'yyyy-MM-dd HH:mm:ss'}}</div>
+                                                </div>
+
+                                            </li>
+                                        </ul>
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="timeline-item" ng-repeat="loadTask in entry.loadTasks">
+                                <div class="timeline-info">
+                                    <span>Load <a target="_blank" ui-sref="wms.task.loadTask.view({taskId: loadTask.id})">{{loadTask.id}}</a></span>
+                                </div>
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <h3 class="timeline-title">Assignee: {{loadTask.assignee.firstName}} {{loadTask.assignee.lastName}} </h3>
+                                    <h3 class="timeline-title">Dock: {{loadTask.dockName}} </h3>
+                                    <h3 class="timeline-title">Dock Check In:
+                                        <span ng-repeat="timeLine in entry.timeline['Dock Checkin_' + loadTask.id]">
+                                              {{formatTime(timeLine.createdWhen)}} ({{timeLine.createdBy}})
+                                           </span></h3>
+                                    <h3 class="timeline-title">Dock Checkout:
+                                        <span ng-repeat="timeLine in entry.timeline['Dock Checkout_' + loadTask.id]">
+                                              {{formatTime(timeLine.createdWhen)}} ({{timeLine.createdBy}})
+                                           </span></h3>
+                                    <p>
+                                        <p>
+                                            <ul>
+                                                <li ng-repeat="step in loadTask.steps" class="timeline-content-block">
+                                                    <div class="timeline-li-title">Step: {{step.name}} ({{step.status}})</div>
+                                                    <div class="timeline-title timeline-li-content">
+                                                        <div>Assignee: <span ng-repeat="user in step.assignees track by $index">{{user.firstName}} {{user.lastName}} </span>
+                                                        </div>
+                                                        <div>Start: {{step.startTime | date: 'yyyy-MM-dd HH:mm:ss'}}</div>
+                                                        <div>End: {{step.endTime | date: 'yyyy-MM-dd HH:mm:ss'}}</div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </p>
+                                </div>
+                            </li>
+                            <li class="timeline-item" ng-if="entry.timeline['Reject'] && entry.timeline['Reject'].length > 0">
+                                <div class="timeline-info">
+                                    <span>Reject</span>
+                                </div>
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <div ng-repeat="timeLine in entry.timeline['Reject']" style="padding-bottom: 20px;">
+                                        <h3 class="timeline-title">
+                                            <span>
+                                                {{formatTime(timeLine.createdWhen)}} ({{timeLine.createdBy}})
+                                            </span> {{entry.timeline['Reject']?"":"N/A"}}
+                                        </h3>
+                                        <div><span>Comment:</span> {{timeLine.comment}}</div>
+                                        <div><span style="display:block">Photos:</span> 
+                                            <img ng-repeat="fileId in timeLine.photoFileIds" style="width:50px;height: 50px;margin: 5px;" http-src="/file-app/file-download/{{fileId}}">
+                                        </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <p class="show-card-details" ng-class="{'expanded':cardExpand[entry.id].log}" ng-click="toggleCard(entry, 'log')">
+                        <img src="assets/svg/dark/expand-dots-dark.svg">
+                    </p>
+
+                </div>
+
+                <div class="card" ng-repeat="receipt in entry.receipts track by $index" ng-style="cardExpand[entry.id][receipt.id]">
+                    <h1>Receipt: <a href="javascript:void(0)" ng-click="showReceipt(receipt.id)">{{receipt.id}}</a></h1>
+                    <div class="grid-100 container label-input-card" ng-style="cardExpand[entry.id][receipt.id]">
+                        <p><span>Status:</span> {{receipt.status}}</p>
+                        <p><span>Customer:</span> {{receipt.customerName}}</p>
+                        <p><span>Title:</span> {{receipt.titleName}}</p>
+                        <p><span>Carrier:</span> {{receipt.carrierName}}</p>
+                        <p><span>Referecence No.:</span> {{receipt.referenceNo}}</p>
+                        <p><span>Serial No.:</span> {{receipt.sealNo}}</p>
+                        <p><span>Container No.:</span> {{receipt.containerNo}}</p>
+                        <p><span>Purchase Order No.:</span> {{receipt.poNo}}</p>
+                        <p><span>BOL:</span> {{receipt.bolNo}}</p>
+                        <p><span>Company:</span> {{receipt.companyName}}</p>
+                    </div>
+
+                    <p class="show-card-details" ng-class="{'expanded':cardExpand[entry.id][receipt.id]}" ng-click="toggleCard(entry, receipt.id)"><img src="assets/svg/dark/expand-dots-dark.svg"></p>
+
+                </div>
+
+                <div class="card" ng-repeat="load in entry.loads track by $index" ng-style="cardExpand[entry.id][load.id]">
+                    <h1>Load: <a href="javascript:void(0)" ng-click="showLoad(load.id)">{{load.loadNo}}</a></h1>
+                    <div class="grid-100 container label-input-card" ng-style="cardExpand[entry.id][load.id]">
+                        <p><span>Status:</span> {{load.status}}</p>
+                        <p><span>MBOL:</span> {{load.masterBolNo}}</p>
+                        <p><span>Company:</span> {{load.companyName}}</p>
+                        <p><span>Customer:</span> {{load.customerName}}</p>
+                        <p><span>Carrier:</span> {{load.carrierName}}</p>
+                        <p><span>Load Type:</span> {{load.type}}</p>
+                        <p><span>Freight Term.:</span> {{load.freightTerm}}</p>
+                        <p><span>Appointment Time:</span> {{load.appointmentTime}}</p>
+                    </div>
+                    <p class="show-card-details" ng-class="{'expanded':cardExpand[entry.id][load.id]}" ng-click="toggleCard(entry,load.id)">
+                        <img src="assets/svg/dark/expand-dots-dark.svg"></p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid-100 grid-content">
+    <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageSize" load-content="searchEntries(currentPage)"></unis-pager>
+</div>

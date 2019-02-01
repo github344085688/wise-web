@@ -1,0 +1,41 @@
+<div class="form-group">
+    <div class="col-md-3"><b>Status</b>: {{step.status}}</div>
+    <div class="col-md-3"><b>Assignee</b>:
+        <span style="margin:5px 5px" ng-repeat="user in step.assignees">{{user.firstName}} {{user.lastName}}</span>
+    </div>
+</div>
+<div style="font-size: 15px; margin-top: 30px; color: rgba(11, 139, 156, 0.99);">Replenishment Process:</div>
+<div class="table-scrollable">
+    <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_1" role="grid" aria-describedby="sample_1_info">
+        <thead>
+        <tr role="row">
+            <th> Status </th>
+            <th> Item </th>
+            <th> QTY </th>
+            <th> SN List </th>
+            <th> From Unit </th>
+            <th> To Unit</th>
+            <th> From LP </th>
+            <th> To LP </th>
+            <th> To Location </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr  ng-repeat=" replenishmentProcess in replenishmentProcessesGroupByStepId[step.id] track by $index">
+            <td>{{replenishmentProcess.replenishStatus}}</td>
+            <td><item-display item="replenishmentProcess"></item-display></td>
+            <td>{{replenishmentProcess.qty}}</td>
+            <td>
+                <span ng-repeat="sn in replenishmentProcess.snList">
+                    {{sn}}&nbsp;
+                </span>
+            </td>
+            <td>{{replenishmentProcess.fromUnitName}}</td>
+            <td>{{replenishmentProcess.toUnitName}}</td>
+            <td>{{replenishmentProcess.fromLPId}}</td>
+            <td>{{replenishmentProcess.toLPId}}</td>
+            <td>{{replenishmentProcess.toLocationName}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,80 @@
+<div class="grid-100 row">
+        <div class="grid-content grid-100">
+            <div class="grid-parent grid-100 container">
+                <h1 class="section-label pull-left">
+                        <span ng-show="isAddAction" class="caption-subject bold"> Add Billing Code</span>
+                        <span ng-show="!isAddAction" class="caption-subject bold"> Edit Billing Code </span>
+                </h1>
+            </div>
+            <div class="grid-parent grid-100 container">
+                    <form novalidate name="editForm" ng-submit="editForm.$valid && submitBillingCode()">
+                    <div class="grid-parent grid-100 container">
+                      
+                            <div class="grid-25">
+                                    <label class="label-input">Code</label>
+                                    <input-validation-message field="id" form="editForm"></input-validation-message>
+                                    <input type="text" name="id" ng-model="billingCode.id" class="form-control"
+                                           required="true" placeholder="Enter ID"
+                                           ng-disabled="!isAddAction"/>
+                                </div>
+                                <div class="grid-25">
+                                    <label class="label-input">Customer</label>
+                                    <input-validation-message field="customer" form="editForm"></input-validation-message>
+                                    <organization-auto-complete name="customer" ng-model="billingCode.customerId"
+                                                                tag="Customer"
+                                                                required="true"></organization-auto-complete>
+                                </div>
+                                <div class="grid-25">
+                                    <label class="label-input">Type</label>
+                                    <input-validation-message field="type" form="editForm"></input-validation-message>
+                                    <ui-select name="type" ng-model="billingCode.type" required="true">
+                                        <ui-select-match>
+                                            <div ng-bind="$select.selected"></div>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="item  in ['PIEA', 'PICS', 'RVCT20', 'RVCT40', 'PKMX',
+                                         'CCPL']| filter: $select.search">
+                                            {{item}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <div class="grid-25">
+                                    <label class="label-input">Unit Price</label>
+                                    <input-validation-message field="unitPrice" form="editForm"></input-validation-message>
+                                    <input type="number" class="form-control" name="unitPrice" ng-model="billingCode.unitPrice" required="true"/>
+                                </div>
+    
+                    </div>
+                
+                    <div class="grid-parent grid-100 container">
+                               <div class="grid-50">
+                                    <label class="label-input">Summary</label>
+                                    <textarea type="text" ng-model="billingCode.summary" class="form-control" placeholder="Enter Summary"/>
+                                </div>
+                                <div class="grid-50">
+                                    <label class="label-input">Description</label>
+                                    <textarea type="text" ng-model="billingCode.description" class="form-control" placeholder="Enter Description"/>
+                                </div>
+    
+                    </div>
+    
+
+                    <div class="grid-parent grid-100 container" style="margin-top:50px;">
+                      
+                        <unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="submitLabel" is-loading="loading"></unis-waitting-btn>
+                        <button type="button" class="grid-10 pull-right cancel" ng-click="cancel()" >Cancel</button>
+                    </div>
+                </form>
+            </div>
+    
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+

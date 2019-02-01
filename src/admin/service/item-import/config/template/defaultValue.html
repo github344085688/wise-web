@@ -1,0 +1,122 @@
+<div ng-if="importFields.length > 0" style="border-bottom: 1px solid #ddd;">
+    <div class="row form-group" style="margin: 10px 0px 0px 20px;">
+        <div class="bold col-md-2">
+            DB Fields:
+            <span ng-if="!isShowDown">...</span>
+        </div>
+        <div class="col-md-8"></div>
+        <div class="col-md-2">
+            <div class="iconBtnBox" ng-click="showUpOrDown()">
+                <i ng-if="isShowDown" class="fa fa-angle-double-up" title="double up"></i>
+                <i ng-if="!isShowDown" class="fa fa-angle-double-down" title="double down"></i>
+            </div>
+        </div>
+    </div>
+    <div ng-show="isShowDown">
+        <div ng-if="importListFields.length > 0" class="row form-group">
+            <div class="col-md-1"></div>
+            <div class="col-md-11">
+                <b> List Type Fields (you can match multiple columns): </b>
+                <span ng-repeat="col in importListFields track by $index">
+                                        {{ (importListFields.length-1==$index? col.fieldName:col.fieldName+",")}}
+                                    </span>
+            </div>
+
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-1"></div>
+            <div class="col-md-11">
+                You can set default value here:
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div ng-if="activetab != 'itemSpec'" class="col-md-3"></div>
+            <div ng-if="activetab == 'itemSpec'" class="col-md-2"></div>
+            <div class="col-md-5">
+                <div ng-if="activetab == 'itemSpec'" class="row form-group">
+                    <div class="bold col-md-6">
+                        Item Spec Field:
+                    </div>
+                </div>
+                <div ng-repeat="col in importFields track by $index">
+                    <!-- <div ng-if="activetab == 'itemSpec'">
+                        <div class="row form-group" ng-if="availableFieldName(col.fieldName)">
+                            <div class="col-md-6">
+                                {{col.fieldName}}
+                            </div>
+                            <div class="col-md-6" ng-if="col.fieldName.indexOf('.') < 0">
+                               
+                                <organization-auto-complete name="customer" ng-if="col.fieldName == 'customerId'" ng-model="fieldDefaultVal[col.fieldName]"
+                                    tag="Customer" on-select="onSelectCustomer(org.id)" required></organization-auto-complete>
+
+
+                                <ui-select ng-if="col.fieldName == 'groupId'" ng-model="fieldDefaultVal[col.fieldName]" style="border-radius:4px;">
+                                    <ui-select-match allow-clear="true">
+                                        <div ng-bind="$select.selected.name"></div>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="group.id as group in availableGroups" refresh="searchAvailableGroups($select.search)">
+                                        <div ng-bind="group.name"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+
+                                <multiple-organization-auto-complete ng-if="col.fieldName == 'titleIds'" name="title" tag="Title" ng-model="fieldDefaultVal[col.fieldName]"></multiple-organization-auto-complete>
+
+                                <multiple-organization-auto-complete ng-if="col.fieldName == 'supplierIds'" name="supplier" tag="Supplier" ng-model="fieldDefaultVal[col.fieldName]"></multiple-organization-auto-complete>
+
+                                <organization-auto-complete ng-if="col.fieldName == 'brandId'" name="brand" tag="Brand" allow-clear="true" ng-model="fieldDefaultVal[col.fieldName]"></organization-auto-complete>
+                                <ui-select ng-if="col.fieldName == 'tags'" ng-model="fieldDefaultVal[col.fieldName]">
+                                    <ui-select-match allow-clear="true">
+                                        <span ng-bind="$select.selected"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="unitType in ['Product', 'Material'] | filter: $select.search">
+                                        <div>{{unitType}}</div>
+                                    </ui-select-choices>
+                                </ui-select>
+
+
+                            </div>
+                        </div>
+                    </div> -->
+                    <div ng-if="activetab == 'itemKitting'">
+                        <div class="row form-group" ng-if="col.fieldName == 'customerId'" ng-show="false">
+                            <div class="col-md-6">
+                                {{col.fieldName}}
+                            </div>
+                            <div class="col-md-6">
+                                <organization-auto-complete name="customer" ng-model="fieldDefaultVal[col.fieldName]" tag="Customer" required></organization-auto-complete>
+                            </div>
+
+                        </div>
+                        <div class="row form-group" ng-if="col.fieldName != 'customerId' && col.fieldName != 'isOverwrite'">
+                            <div class="col-md-6">
+                                {{col.fieldName}}
+                            </div>
+
+                            <div class="col-md-6" ng-if="col.fieldName.indexOf('.') < 0">
+                                <input type="text" ng-if="isItemFieldInput(col.fieldName)" class="form-control" ng-model="fieldDefaultVal[col.fieldName]"/>
+                            </div>
+                        </div>
+                        <div class="row form-group" ng-if="col.fieldName == 'isOverwrite'">
+                            <div class="col-md-6">
+                                {{col.fieldName}}
+                            </div>
+
+                            <div class="col-md-6" ng-if="col.fieldName.indexOf('.') < 0">
+                                <ui-select ng-model="fieldDefaultVal[col.fieldName]" class="no-border">
+                                    <ui-select-match >{{$select.selected}}</ui-select-match>
+                                    <ui-select-choices repeat="isOverwrite in [true,false] | filter: $select.search">
+                                        <div ng-bind="isOverwrite"></div>
+                                    </ui-select-choices>
+                                    <ui-select-no-choice>No available option.</ui-select-no-choice>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

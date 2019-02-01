@@ -1,0 +1,110 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Location Group</h1>
+            <a class="create-button" ui-sref="fd.location-group.add" permission-check="{{'locationGroup_write'}}">
+                <b>Add Location Group</b>
+            </a>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container" ng-keyup="keyUpSearch($event)">
+            <div class="grid-25">
+                    <label class="label-input">Location Group Name</label>
+                    <input type="text" ng-model="searchInfo.nameRegex" class="form-control" placeholder=" Enter Location Group Name " />
+            </div>
+            <div class="grid-25">
+                    <label class="label-input">Location Group Type</label>
+                    <ui-select name="types" ng-model="searchInfo.locationGroupType">
+                        <ui-select-match allow-clear="true">
+                            {{$select.selected}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="type in LocationGroupTypes| filter: $select.search">
+                            {{type}}
+                        </ui-select-choices>
+                    </ui-select>
+            </div>
+            <div class="grid-25">
+                    <label class="label-input">Support Pick Type</label>
+                    <ui-select name="supportPickType" ng-model="searchInfo.supportPickType">
+                        <ui-select-match allow-clear="true">
+                            {{$select.selected}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="pickType in pickTypes | filter: $select.search" refresh="getPickTypes()" refresh-delay="50">
+                            <div ng-bind="pickType"></div>
+                        </ui-select-choices>
+                    </ui-select>
+            </div>
+            <div class="grid-25">
+                    <label class="label-input">Support Equipments</label>
+                    <ui-select multiple name="supportEquipment" ng-model="searchInfo.supportEquipments">
+                        <ui-select-match allow-clear="true">
+                            {{$item}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="supportEquipment in supportEquipments| filter: $select.search">
+                            {{supportEquipment}}
+                        </ui-select-choices>
+                    </ui-select>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-90">&nbsp;</div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="!searchLocationCompleted"></waitting-btn>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                    <thead>
+                            <tr role="row">
+                                <th> Name</th>
+                                <th> Location Group Type</th>
+                                <th> Support Pick Type</th>
+                                <th> Support Equipments</th>
+                                <th> Status</th>
+                                <th permission-check="{{'locationGroup_write'}}"> Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="locationGroup in locationGroupView track by $index">
+                                <!--<td><a ui-sref="fd.location.edit({locationId:location.id})">{{location.name}}</a></td>-->
+
+                                <td>{{locationGroup.name}}</td>
+                                <td>{{locationGroup.locationGroupType}}</td>
+                                <td>{{locationGroup.supportPickType}}</td>
+                                <td>
+                                    <li ng-repeat="supportEquipment in locationGroup.supportEquipments" style="background-color:#f6f3e8; display:inline-block;margin: 5px 5px;padding: 5px 10px;border-radius: 3px;">
+                                        <span>{{supportEquipment}}</span>
+
+                                    </li>
+
+                                </td>
+                                <td>
+                                    <div class="caption entry-status" style="padding-top:8px; padding-left: 20px;">
+                                        <span class="label" ng-class="{
+                                                                        'label-default': locationGroupIsMap[locationGroup.id].length>0,
+                                                                        'label-info': locationGroupIsMap[locationGroup.id].length==0
+                                                                        }">
+                                        <span ng-show="locationGroupIsMap[locationGroup.id].length>0">Used</span>
+                                        <span ng-show="locationGroupIsMap[locationGroup.id].length==0">New</span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td permission-check="{{'locationGroup_write'}}">
+                                    <a ui-sref="fd.location-group.edit({locationGroupId:locationGroup.id})">Edit</a>
+                                    <a ng-show="!locationGroupIsMap[locationGroup.id]" ng-click="remove(locationGroup)"> | Delete</a>
+                                </td>
+                            </tr>
+                        </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="locationGroups.length" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+    </div>
+</div>

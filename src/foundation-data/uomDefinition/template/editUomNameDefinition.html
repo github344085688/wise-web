@@ -1,0 +1,53 @@
+<md-dialog id="unis" flex="50" ng-cloak>
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h1>UOM Definition</h1>
+            <span flex></span>
+            <i class="fa fa-times" ng-click="cancel()"></i>
+        </div>
+    </md-toolbar>
+    <form novalidate class="light-theme"  name="uomDefinitionForms" ng-submit="uomDefinitionForms.$valid &&submit()">
+        <md-dialog-content style="min-height: 290px;">
+            <div class="md-dialog-content">
+                <div class="grid-100">
+                    <div class="grid-content">
+                        <div class="grid-100 grid-parent container">
+
+                            <div class="grid-50">
+                                <label class="label-input">Organization</label>
+                                <multiple-organization-auto-complete ng-model="uomDefinition.customerIds" name="customer" tag="Customer"></multiple-organization-auto-complete>
+                            </div>
+
+                            <div class="grid-50">
+                                <label class="label-input">Name</label>
+                                <input-validation-message field="name" form="uomDefinitionForms"></input-validation-message>
+                                <input type="text" name="name" ng-model="uomDefinition.name" class="form-control" placeholder="Enter Name" required />
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-60">&nbsp;</div>
+                        <div class="grid-20">
+                            <unis-waitting-btn btn-type="submit" btn-class="ripplelink pull-right button-between" value="submitLabel" is-loading="loading"></unis-waitting-btn>
+                            <!-- <button type="button" ng-click="submit()" class="ripplelink">{{submitLabel}}</button> -->
+                        </div>
+                        <div class="grid-20">
+                            <button type="button" ng-click="cancel()" class="ripplelink">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>

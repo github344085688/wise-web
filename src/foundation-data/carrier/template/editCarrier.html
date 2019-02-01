@@ -1,0 +1,75 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">
+                <span ng-show="isAddAction" class="caption-subject bold"> Add Carrier</span>
+                <span ng-show="!isAddAction" class="caption-subject bold"> Edit Carrier </span>
+            </h1>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <form novalidate name="carrierForm" ng-submit="carrierForm.$valid && addOrUpdateCarrier()">
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-50">
+                        <label>Name</label>
+                        <input-validation-message field="orgName" form="carrierForm"></input-validation-message>
+                        <input class="form-control" type="text" name="orgName" ng-model="carrier.basic.name" ng-required="true" ng-disabled="!isAddAction"
+                            placeholder="Enter text" />
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="second-title">Contact Info</div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-30">
+                        <label class="label-input">Shipping Methods:</label>
+                        <ui-select multiple name="shippingMethods" ng-model="carrier.shippingMethods">
+                            <ui-select-match>
+                                {{$item}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in shippingMethods| filter: $select.search">
+                                {{item}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="grid-30">
+                        <label class="label-input">Default Shipping Method:</label>
+                        <ui-select name="defaultShippingMethod" ng-model="carrier.defaultShippingMethod">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="defaultShippingMethod in carrier.shippingMethods | filter: $select.search">
+                                <div ng-bind="defaultShippingMethod"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="grid-30">
+                        <label class="label-input">service Types</label>
+                        <lt-tags-input placeholder="service Types" ng-model="carrier.serviceTypes" fill="" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-30">
+                        <label class="label-input">SCAC</label>
+                        <input-validation-message field="scac" form="carrierForm"></input-validation-message>
+                        <input type="text" name="scac" ng-model="carrier.scac" class="form-control" placeholder="Enter text" required="true"/>
+                    </div>
+                    <div class="grid-30">
+                        <label class="label-input">McDOT</label>
+                        <input type="text" ng-model="carrier.mcDot" class="form-control" placeholder="Enter text" />
+                    </div>
+                    <div class="grid-30">
+                        <label class="label-input">Note</label>
+                        <input type="text" ng-model="carrier.note" class="form-control" placeholder="Enter text" />
+                    </div>
+                </div>
+
+
+                <div class="grid-parent grid-100 container" style="margin-top:50px;">
+                    <unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="submitLabel" is-loading="loading"></unis-waitting-btn>
+                    <button type="button" class="grid-10 pull-right cancel" ng-click="cancelEditOrganization()" >Cancel</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

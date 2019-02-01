@@ -1,0 +1,80 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Outbound</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Truck Load Search</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> Truck Load Search </span>
+                </div>
+                <div class="actions">
+                    <a ui-sref="wms.outbound.truckLoad.build"><b>Add Truck Load</b></a>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <form>
+                    <div class="row form-group">
+                        <div class="col-md-6">
+                            <label>Truck Load No:</label>
+                            <lt-tags-input placeholder="Truck Load No" ng-model="search.truckLoadNos"></lt-tags-input>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Load No:</label>
+                            <lt-tags-input placeholder="input a Load No" ng-model="search.loadNos"></lt-tags-input>
+                        </div>
+                    </div>
+                    <div class="form-actions right">
+                        <button ng-click="search()" class="btn blue">Search</button>
+                    </div>
+                </form>
+                <div class="panel non-border non-gutter bottom portlet box-shadow-none">
+                    <div class="portlet light box-shadow-none">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <span class="caption-subject bold">Search Results</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="table-scrollable">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Truck Load No</th>
+                                            <th>Load Nos</th>
+                                            <th>Carrier</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="truckLoad in truckLoads">
+                                            <td>{{truckLoad.truckLoadNo}}</td>
+                                            <td>{{getLoadNos(truckLoad)}}</td>
+                                            <td>{{getOrganization(truckLoad.carrierId)}}</td>
+                                            <td>
+                                                <a ng-click="edit(truckLoad)">Edit</a> |
+                                                <a ng-click="delete($index)">Delete</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

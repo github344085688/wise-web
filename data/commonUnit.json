@@ -1,0 +1,18 @@
+{
+	"Linear":[
+		"CM",
+		"M",
+		"INCH"
+	],
+	"Weight": [
+		"G",
+		"KG",
+		"Pound"
+		],
+	"Currency": [
+		"USD",
+		"EUR",
+		"CNY"
+	]
+}
+

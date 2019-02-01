@@ -1,0 +1,216 @@
+<div ui-view>
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <a href="#">WMS</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a href="#">Outbound</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a href="#">Load</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a href="#">Build Load</a>
+            </li>
+        </ul>
+    </div>
+    <div class="container-fluid" style="margin:15px;">
+        <div class="row">
+            <div class="portlet light bloaded">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject bold"> {{formTitle}}
+                             <span ng-show="!isNew">:{{load.id}}</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="portlet-body form form-horizontal">
+                    <form name="editForm" novalidate ng-submit="editForm.$valid && save()">
+                        <div class="row form-group">
+                            <div class="col-md-3">
+                                <label>Load NO</label>
+                                <input-validation-message field="loadNo" form="editForm"></input-validation-message>
+                                <input type="text" name="loadNo" ng-model="load.loadNo" class="form-control"
+                                       required="true">
+                            </div>
+                            <div class="col-md-3">
+                                <label>Customer</label>
+                                <input-validation-message field="customer" form="editForm"></input-validation-message>
+                                <organization-auto-complete name="customer" tag="Customer" ng-model="load.customerId"
+                                                            on-select="customerChange(org)"
+                                                            required="true"></organization-auto-complete>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Carrier</label>
+                                <organization-auto-complete name="carrier" tag="Carrier"
+                                                            ng-disabled="!load.customerId"
+                                                            custom-ctrl="carrierCustomCtrl"
+                                                            ng-model="load.carrierId" allow-clear="true" on-select="selectCarrier(org)"></organization-auto-complete>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Freight Term</label>
+                                <ui-select name="freightTerm" ng-model="load.freightTerm" on-select="selectFreightTerm($select.selected)">
+                                    <ui-select-match allow-clear="true">
+                                        <div ng-bind="$select.selected"></div>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item in freightTermList | filter: $select.search"
+                                                       refresh="getFreightTermList($select.search)" refresh-delay="50">
+                                        <div ng-bind="item"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-3">
+                                <label>Load Type</label>
+                                <ui-select name="loadTypes" ng-model="load.type" on-select="selectLoadTypes($select.selected)">
+                                    <ui-select-match allow-clear="true">
+                                        <div ng-bind="$select.selected"></div>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item in typeList" refresh="getTypeList($select.selected)"
+                                                       refresh-delay="50">
+                                        <div ng-bind="item"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Appointment Time</label>
+                                <lt-date-time value="load.appointmentTime"></lt-date-time>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Long Haul:</label>
+                                <longhaul-auto-complete allow-clear="true" on-select="selectLongHaul(longHaul)"
+                                                        customer-id="load.customerId" placeholder="Enter Long Haul" ng-model="load.longHaulId"></longhaul-auto-complete>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-6">
+                                <label>Ship From</label>
+                                <label lt-address-selection organization="{{load.customerId}}"
+                                       lt-address-data="load.shipFromInfo" lt-address-model="load.shipFrom"
+                                       style="float: right;"><a>Edit</a></label>
+                                <textarea class="form-control" ng-model="load.shipFrom" disabled="true"></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Ship To</label>
+                                <label style="float: right;">
+                                    <a address-select address-data="load.shipTo" address-tag="ShipTo"
+                                       address-model="load.shipToAddress" organization-tag="Retailer" >Edit</a>
+                                    | <a ng-click="clear('shipTo')">Clear</a>
+                                </label>
+                                <textarea class="form-control" name="shipTo" ng-model="load.shipTo" disabled="true"></textarea>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-6">
+                                <label>Bill To</label>
+                                <label address-select address-data="load.billTo" address-tag="BillTo"
+                                       address-model="load.billToAddress" style="float: right;"><a>Edit</a></label>
+                                <textarea class="form-control" ng-model="load.billTo" disabled="true"></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Note</label>
+                                <div>
+                                    <textarea class="form-control" ng-model="load.note"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel non-bload non-gutter bottom portlet box-shadow-none">
+                            <div class="portlet light box-shadow-none" style="margin-bottom: 0px;">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <span class="caption-subject bold">Order Line</span>
+                                    </div>
+                                    <div class="actions">
+                                        <button type="button" ng-click="extractOrderBOLNote()" class="btn blue">extract order BOL note
+                                        </button>
+                                        <button type="button" ng-click="importOrders()" class="btn blue">Import Orders
+                                        </button>
+                                        <button type="button" ng-click="refillLoadInfo()" class="btn blue">
+                                            Refill Load Info
+                                        </button>
+                                        <button type="button" ng-click="addOrderLine()" class="btn blue" ng-disabled="!load.customerId">Add
+                                            OrderLines
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="alert alert-danger" ng-if="warningMessage">
+                                        Warning: {{warningMessage}}
+                                    </div>
+                                    <div class="col-md-12">
+                                            <div style="float:right">
+                                                <label style="top: -13px;position: relative;">Enable Load Sequence:</label>
+                                                <md-switch class="md-primary" style="display: inline-block;padding-left: 15px; margin: 0" aria-label="" ng-disabled= "load.longHaulId" ng-model="loadParam.enableLoadSequence" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                            </div>
+                                     </div>
+                                    <div class="table-scrollable">
+                                        <table class="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th ng-if="orderLinesView.length>0">
+                                                    <input type="checkbox" ng-checked="selectAll" ng-click="checkAllOrder()" name="selectAll">
+                                                </th>
+                                                <th>Sequence</th>
+                                                <th>Order NO</th>
+                                                <th>Customer</th>
+                                                <th>Reference NO</th>
+                                                <th>Purchase Order No.</th>
+                                                <th>Ship TO</th>
+                                                <th>Delivery Request Date</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tr ng-if="orderLinesView.length>0">
+                                                <td colspan="10">
+                                                    <label>Pro NO:</label>
+                                                      <input type="text" name="proNO" ng-model="load.orderListProNo" class="form-control" style="width: 40%;"></td>
+                                            </tr>
+                                                <tr ng-repeat="order in orderLinesView track by $index">
+                                                    <td ng-if="orderLinesView.length>0">
+                                                        <input type="checkbox" ng-checked="isChecked(order) " ng-click="checkLoad(order)">
+                                                    </td>
+                                                    <td ng-if="load.longHaulId || !loadParam.enableLoadSequence">{{order.sequence}}</td>
+                                                    <td style="width:70px;text-align:center;line-height:30px" ng-if="loadParam.enableLoadSequence && !load.longHaulId">
+                                                            {{$index+1}}
+                                                            <div style="width: 16px;float: right;" ng-if= " orderLinesView.length > 1">
+                                                                <a ng-if="$index == 0" style="float:right;height:16px;width:14px"> </a>
+                                                                <a ng-if="$index > 0" style="float:right" class="expand-a expand" ng-click="changeAheadSequence($index)"> </a>
+                                                                <a style="float:right" ng-if="$index+1 != orderLinesView.length" class="expand-a collapse" ng-click="changeBehindSequence($index)"> </a>
+                                                            </div>
+                                                    </td>
+                                                    <td style="vertical-align:middle"><a ng-href="{{'#/wms/outbound/order/' + order.id}}" target="_blank">{{order.id}}</a> </td>
+                                                    <!--<td>{{order.id}}</td>-->
+                                                    <td style="vertical-align:middle">{{order.customerName}}</td>
+                                                    <td style="vertical-align:middle">{{order.referenceNo}}</td>
+                                                    <td style="vertical-align:middle">{{order.poNos}}</td>
+                                                    <td style="vertical-align:middle">{{getAddressInfo(order.shipToAddress)}}</td>
+                                                    <td style="vertical-align:middle">{{order.mabd}}</td>
+                                                    <td style="vertical-align:middle">{{order.status}}</td>
+                                                    <td style="vertical-align:middle"><a ng-click="remove(order.id)">Remove</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <pager total-count="load.orderLines.length" page-size="pager.pageSize"  load-content="loadContent(currentPage)"></pager>
+                            </div>
+                        </div>
+
+                        <div class="form-actions right">
+                            
+                            <waitting-btn type="submit" btn-class="btn blue"
+                                          value="submitLabel" is-loading="loading"></waitting-btn>
+                            <button type="button" ng-click="cancel()" class="btn grey">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

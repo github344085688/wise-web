@@ -1,0 +1,9 @@
+<div ng-repeat="group in menuGroups track by $index">
+    <hr ng-if="$index > 0" style="margin: 5px 0;"/>
+    <div ng-repeat="k in group track by $index" ng-if="menus[k].fontIcon" ng-class="{'disable' : menus[k].disabled}" style="padding: 3px 0;">
+        <div id="menu-{{k}}" class="hover-blue" ng-class="{'blue' : menus[k].checked}"
+        	 ng-mouseenter="mouseInSimpleMenu(k)" ng-click="clickMenu(k)">	<!-- ng-click="clickMenu(k)" -->
+	       <i class="material-icons" style="font-size: 20px; margin: 0 10px;">{{menus[k].fontIcon}}</i>
+        </div>
+    </div>
+</div>

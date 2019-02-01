@@ -1,0 +1,118 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Task</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a ui-sref="wms.task.receiveTask.view({taskId:task.id})">Receipt Task View</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <form name="editForm" novalidate ng-submit="editForm.$valid && submit()">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject bold"> Edit Offload: ({{task.id}})  </span>
+                    </div>
+                </div>
+                <div class="portlet-body form form-horizontal">
+                    <div class="row form-group" style="margin-top:25px;">
+                        <div class="col-md-3"><b>Status</b>: {{task.offload.status}}</div>
+                        <div class="col-md-3"><b>Assignee</b>: <span style="margin:5px 5px" ng-repeat="user in task.offload.assignees">{{user.firstName}} {{user.lastName}}</span></div>
+                        <div class="col-md-6">
+                            <div class="col-md-2">
+                                <b>Offload Type</b>:
+                            </div>
+                            <div class="col-md-6" style=" margin-top: -10px;    padding-left: 0px;">
+                                <ui-select name="offloadType" ng-model="task.offload.offloadType">
+                                    <ui-select-match>
+                                        <div ng-bind="$select.selected"></div>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item in offloadTypes">
+                                        {{item}}
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div style="display:block; float:left; padding-left:15px; padding-top:10px;">
+                            <b>Seal: </b>
+                        </div>
+                        <div class="col-md-11">
+                            <li ng-repeat="sealCheck in task.offload.sealChecks" style="background-color: #c0edf1;
+                                                 display:inline-block;margin: 5px 5px;padding: 5px 10px;border-radius: 3px;">
+                                <span style="float:left; padding-top:4px;">{{sealCheck.text}}</span>
+                                <md-switch class="md-primary" aria-label="Seal If match" ng-model="sealCheck.isMatch" style="margin-top: 0;margin-bottom: 0; float:left;"></md-switch>
+                            </li>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div style="display:block; float:left; padding-left:15px; padding-top:10px;">
+                            <b>Container: </b>
+                        </div>
+                        <div class="col-md-10">
+                            <li ng-repeat="cn in task.offload.containerNoChecks" style="background-color: #c0edf1;
+                                                 display:inline-block;margin: 5px 5px;padding: 5px 10px;border-radius: 3px;">
+                                <span style="float:left; padding-top:4px;">{{cn.text}}</span>
+                                <md-switch class="md-primary" aria-label="Container If match" ng-model="cn.isMatch" style="margin-top: 0;margin-bottom: 0; float:left;"></md-switch>
+                            </li>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-12"><b>Item Lines:</b>
+                            <div class="table-scrollable">
+                                <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_1"
+                                    role="grid" aria-describedby="sample_1_info">
+                                    <thead>
+                                        <tr role="row">
+                                            <th> Item </th>
+                                            <th> UOM </th>
+                                            <th> Expected QTY </th>
+                                            <th> Note </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="itemline in task.offload.itemLines track by $index">
+                                            <td>
+                                                <item-display item="itemline"></item-display>
+                                            </td>
+                                            <td>{{itemline.unitName}}</td>
+                                            <td>{{itemline.qty}}</td>
+                                            <td>{{itemline.note}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-12"><b>Photos</b>:
+                            <ul class="feeds" ng-repeat="pg in task.offload.photoGroups" style="display: inline-block">
+                                <li ng-repeat="p in pg.photoIds" style="display: inline-block; margin: 5px 5px;">
+                                    <img style="width:50px;height: 50px;" http-src="/file-app/file-download/{{p}}" title="{{getPhotoType(pg.type)}}: {{task.offload.photoMap[p].createdWhen}}"
+                                    />
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="text-align: right;">
+                        <waitting-btn type="submit" btn-class="btn blue" value="buttonName" is-loading="loading"></waitting-btn>
+                        <button type="button" class="btn default" ng-click="cancel(editForm)">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

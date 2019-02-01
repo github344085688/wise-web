@@ -1,0 +1,82 @@
+<div id="gis_main" class="gis gis-map-full">
+	<div id="menu" class="gis-menu-static">
+		<span id="map-zoom"></span>
+        <!--
+		<br/>
+        <input ng-model="color_test" style="width:70px;"/>
+		<div style="float:right; width:120px; height:40px; background-color: {{color_test}};">{{color_test}}</div>
+		 -->
+		<div  class="auto-box">
+		    <!-- <h5 class="glyphicon glyphicon-plus-sign auto-hidden" aria-hidden="true" style="float:right; font-size: 18px; color: green;"></h5> -->
+		    <div style="float:right; ">
+			    <md-menu md-offset="20 30">
+		            <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)">
+		                <!-- <md-icon md-menu-origin md-svg-icon="call:ring-volume"></md-icon> -->
+		                <h5 class="glyphicon glyphicon-plus-sign auto-hidden" aria-hidden="true" style="font-size: 18px; color: green;"></h5>
+		            </md-button>
+		            <md-menu-content>
+		                <md-menu-item ng-if="!wh.coordsys" ng-repeat="wh in gisWarehouses track by $index">
+		                    <md-button ng-click="createWarehouse(wh)"> <span md-menu-align-target>{{wh.name}}</span></md-button>
+		                </md-menu-item>
+		            </md-menu-content>
+		        </md-menu>
+		    </div>
+		    
+			<h3>Warehouses</h3>
+			<div>
+                <span class="btn"
+	                style="margin: 5px; padding: 5px; background-color: {{currentWh.id== wh.id? '#7ED2F9;': '#FFFFFF;'}}"
+	                ng-if="wh.coordsys"
+	                ng-repeat="wh in gisWarehouses track by $index"
+	                ng-click="changeWarehouse(wh)">{{wh.name}}</span>
+			</div>
+		</div>
+		<hr/>
+		<div class="auto-box">
+			<div>
+				<!--<h5 class="glyphicon glyphicon-refresh auto-hidden" aria-hidden="true" style="float:right; font-size: 18px; color: green;"></h5>-->
+				<i class="material-icons auto-hidden" title="Export" ng-if="currentWh != null && !isPdfLoading" ng-click="exportWarehouse()" style="float: right;cursor: pointer; color: #2196F3;">picture_as_pdf</i>
+				<i class="material-icons auto-hidden" title="Loading..." ng-if="currentWh != null && isPdfLoading" style="float: right; cursor: default; color: #ddd;">picture_as_pdf</i>
+				<h3>Layers</h3>
+			</div>
+			<div ng-repeat="(k, v) in layers" class="form-group form-inline">
+				<span class='h4'>{{v.name}}</span>
+				<!-- 
+				<span id="{{k}}" class="ios7CBox ios7CBox-small" ng-click="clickMenu(k, v);" ng-checked="v.checked" ng-disabled="v.disabled" style="float:right;"></span>
+				 -->
+				<md-checkbox md-no-ink aria-label="checkbox" ng-click="clickMenu(k, v);" ng-checked="v.checked" ng-disabled="v.disabled" class="md-primary" style="float:right;"></md-checkbox>
+			</div>
+		</div>
+		<hr/>
+		<div>
+			<h3>Edit</h3>
+			<div ng-repeat="(k, v) in edit" class="form-group form-inline">
+				<span class='h4'>{{v.name}}</span>
+			    <md-checkbox md-no-ink aria-label="checkbox" ng-click="clickMenu(k, v);" ng-checked="v.checked" ng-disabled="v.disabled" class="md-primary" style="float:right;"></md-checkbox>
+			</div>
+		</div>
+		<div ng-if="roadEditable()">
+			<hr/>
+			<h3>Road Type</h3>
+			<div class="form-group form-inline">
+				<div class="road-style" ng-class="{'selected': roadEdit.isMain}" ng-click="setRoadType(true)">
+			        <div class='road-item main-road col-sm-6'></div>
+			        <span>Main Road</span>
+			    </div>
+			    <div class="road-style" ng-class="{'selected': !roadEdit.isMain}" ng-click="setRoadType(false)">
+			        <div class='road-item sub-road col-sm-6'></div> 
+			        <span>Sub Road</span>
+			    </div>
+			</div>
+		</div>
+	</div>
+	<div id="jsmap" class="map" style="height:100%;"></div>
+	<div id="infowindow" class="right-infowindow block">
+		<span id="ctrl" class="glyphicon glyphicon-align-justify ctrl"></span>
+		<div id="info-content" class="info-content" ng-include="'gis/setup/template/autoInfo.html'"></div>
+	</div>
+	<div id="err-info" class="err">
+	   <div ng-repeat='err in errorList'>[{{err.title}}] {{err.info}}</div>
+	</div>
+</div>
+

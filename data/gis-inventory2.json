@@ -1,0 +1,86 @@
+[
+    {
+        "locName": "C026",
+        "item": "M55-C2",
+        "title": "VIZIO",
+        "total": 780,
+        "lotNo": "10602152241"
+    },
+    {
+        "locName": "C026",
+        "item": "D32H-C1",
+        "title": "VIZIO",
+        "total": 530,
+        "lotNo": "10223561221"
+    },
+    {
+        "locName": "C028",
+        "item": "M55-C2",
+        "title": "VIZIO",
+        "total": 290,
+        "lotNo": "10602152241"
+    },
+    {
+        "locName": "C028",
+        "item": "D32H-C1",
+        "title": "VIZIO",
+        "total": 1320,
+        "lotNo": "10223561221"
+    },
+    {
+        "locName": "D045",
+        "item": "M55-C2",
+        "title": "VIZIO",
+        "total": 400,
+        "lotNo": "10602152241"
+    },
+    {
+        "locName": "D045",
+        "item": "D32H-C1",
+        "title": "VIZIO",
+        "total": 380,
+        "lotNo": "10223561221"
+    },
+    {
+        "locName": "D046",
+        "item": "ELEFJ191",
+        "title": "LENOVO",
+        "total": 1080,
+        "lotNo": "BOE-15046"
+    },
+    {
+        "locName": "D046",
+        "item": "LT40EM75",
+        "title": "LENOVO",
+        "total": 390,
+        "lotNo": "046838073144"
+    },
+    {
+        "locName": "D049",
+        "item": "ELEFJ191",
+        "title": "LENOVO",
+        "total": 770,
+        "lotNo": "BOE-15046"
+    },
+    {
+        "locName": "D049",
+        "item": "LT40EM75",
+        "title": "LENOVO",
+        "total": 450,
+        "lotNo": "046838073144"
+    },
+    {
+        "locName": "F009",
+        "item": "ELEFJ191",
+        "title": "LENOVO",
+        "total": 930,
+        "lotNo": "BOE-15046"
+    },
+    {
+        "locName": "F009",
+        "item": "LT40EM75",
+        "title": "LENOVO",
+        "total": 190,
+        "lotNo": "046838073144"
+    }
+]

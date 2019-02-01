@@ -1,0 +1,71 @@
+<div class="grid-content grid-100">
+    <form class="grid-100 grid-parent" novalidate name="editForm" ng-submit="editForm.$valid && submit()">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">{{formTitle}}
+                <span ng-show="orderPlan.id">: {{orderPlan.id}}</span>
+            </h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Virtual Location Group Name</label>
+                <input-validation-message field="name" form="editForm"></input-validation-message>
+                <input type="text" name="name" placeholder="Enter Virtual Location Group Name" ng-model="virtualLocationGroup.name" required
+                />
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Select Group Type</label>
+                <input-validation-message field="groupType" form="editForm"></input-validation-message>
+                <ui-select ng-model="virtualLocationGroup.virtualLocationGroupType" name="groupType" on-select="onSelectType($select.selected)"
+                    ng-disabled="!isAddAction" required>
+                    <ui-select-match allow-clear="true">
+                        <span ng-bind="$select.selected"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="type in groupTypes | filter: $select.search">
+                        <div>{{type}}</div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25" ng-if="isSelectWeight">
+                <label class="label-input">Pick Strategy Weight
+                    <i class="fa fa-question-circle" title="Default value is 1. The higher the high pick strategy weight"></i>
+                </label>
+
+                <input-validation-message field="name" form="editForm"></input-validation-message>
+                <input type="text" name="name" placeholder="Pick Strategy Weight" ng-model="virtualLocationGroup.pickStrategyWeight" required/>
+            </div>
+            <div class="grid-25">
+                <md-switch class="md-primary" ng-model="virtualLocationGroup.allowAutoAssign">Allow Auto Assign Task</md-switch>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-100">
+                <label class="label-input">Picker</label>
+                <multiple-user-auto-complete name="assignees" limit="30" ng-model="virtualLocationGroup.userIds">
+                </multiple-user-auto-complete>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-100">
+                <label class="label-input">Tag</label>
+                <input-validation-message field="tags" form="editForm"></input-validation-message>
+                <ui-select multiple name="tags" ng-model="virtualLocationGroup.tagIds" class="form-control" required>
+                    <ui-select-match>
+                        <span ng-bind="$item.name"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item.id as item in virturalTags  | filter: $select.search" refresh="getVirturalTags($select.search)" refresh-delay="50">
+                        <div ng-bind="item.name"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" permission-check="{{'facility::virtualLocationGroup_write'}}"
+                value="submitLabel" is-loading="loading"></waitting-btn>
+            <button type="button" class="grid-10 ripplelink pull-right cancel" ng-click="cancel(editForm)">Cancel</button>
+        </div>
+    </form>
+</div>

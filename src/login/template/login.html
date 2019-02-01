@@ -1,0 +1,33 @@
+
+<div class="login-background">
+
+    <div style="padding-top:55px;">
+        <iframe id="androidApk" src="" name="androidApk" style="width: 1px; height: 1px; visibility: hidden;"
+            marginwidth="0" marginheight="0" frameborder="0" scrolling="No"></iframe>
+
+        <div id="androidMark" title="Download android apk" style="height: 36px; width: 22px; cursor: pointer; float: right;
+                    background: #F5F5F5 url('assets/img/android.png') no-repeat; border-radius: 10px 0px 0px 10px"></div>
+
+        <div id="androidLink" style="float:right; border-radius: 20px 0px 0px 20px; padding: 5px 20px 5px 15px;
+                    background: #F5F5F5; margin-right: -160px; display: none;">
+            <span class="material-icons" style="float: left; color:forestgreen; font-size:36px; padding-right: 10px;">android</span>
+            <a href="android/lt-app.apk" target="androidApk" style="padding-top: 8px; float: left; display: block;">DOWNLOAD</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="wrap">
+                    <p class="form-title">
+                        WISE</p>
+                    <form class="login" name="loginForm">
+                        <input type="text" name="username" ng-model="userName" placeholder="Username" required>
+                        <input type="password"  name="password"  ng-model="password" placeholder="Password" required>
+                        <input  id="loginBtn" type="submit" value="Sign In" ng-click="loginForm.$valid && signIn()"  class="btn btn-success btn-sm">
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

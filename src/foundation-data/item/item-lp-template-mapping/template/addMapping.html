@@ -1,0 +1,71 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">{{title}}</h1>
+        </div>
+        <form class="grid-100 grid-parent" novalidate name="editForm" ng-submit="editForm.$valid && submit()">
+            <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label>Customer:</label>
+                    <input-validation-message field="customer" form="editForm"></input-validation-message>
+                    <organization-auto-complete  ng-model="mapping.customerId" name="customer" tag="Customer" required="true"
+                                                 allow-clear="true"/>
+                </div>
+                <div class="grid-25">
+                    <label>Mapping Type</label>
+                    <input-validation-message field="mappingType" form="editForm"></input-validation-message>
+                    <ui-select name="mappingType" on-select="mappingTypeOnSelect(mapping.mappingType)" ng-model="mapping.mappingType" ng-required="true">
+                        <ui-select-match allow-clear="true">
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in ['Dynamic Field', 'Static Field']">
+                            <div ng-bind="item"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+  
+
+         
+            </div>
+            <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label>Carrier:</label>
+                    <input-validation-message field="carrier" form="editForm"></input-validation-message>
+                    <organization-auto-complete  ng-model="mapping.carrierId" name="carrier" tag="Carrier" required="true"
+                                                 allow-clear="true"/>
+                </div>
+                <div class="grid-25">
+                    <label>Field Name</label>
+                    <input-validation-message field="fieldName" form="editForm"></input-validation-message>
+                    <ui-select name="fieldName" ng-model="mapping.fieldName" ng-disabled="!mapping.mappingType" ng-required="true">
+                        <ui-select-match allow-clear="true">
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="fieldName in fieldNames | filter: $select.search"
+                                           refresh="getFieldNames($select.search)">
+                            <div ng-bind="fieldName"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                
+                <div class="grid-25">
+                    <label>Field Value:</label>
+                    <input-validation-message field="fieldValue" form="editForm"></input-validation-message>
+                    <lt-tags-input placeholder="Enter Field Value" name="fieldValue" ng-model="mapping.fieldValueRegexs" required="true"></lt-tags-input>
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container" style="margin-bottom: 100px;">
+            <div class="grid-25">
+                <label>LP Configuration Template:</label>
+                <input-validation-message field="lpConfigurationTemplate" form="editForm"></input-validation-message>
+                <lp-configuration-template-auto-complete name="lpConfigurationTemplate" ng-model="mapping.lpTemplateId" required="true" allow-clear="true"> </lp-configuration-template-auto-complete>
+            </div>
+            </div>
+            <div class="grid-parent grid-100 container">
+                <unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="submitName" is-loading="loading"
+                                   permission-check="{{'item::itemLpTemplateMapping_write'}}"></unis-waitting-btn>
+                <button type="button" class="grid-10 pull-right cancel" ng-click="cancel()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

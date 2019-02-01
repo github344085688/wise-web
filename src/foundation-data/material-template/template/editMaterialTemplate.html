@@ -1,0 +1,70 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">
+                <span class="caption-subject bold"> {{title}} Material Template</span>
+            </h1>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <form  novalidate name="forms.materialForm" ng-submit="forms.materialForm.$valid && saveOrUpdateMaterialTemplate()">
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-40">
+                        <label class="label-input">Name</label>
+                        <input-validation-message field="name" form="forms.materialForm"></input-validation-message>
+                        <input type="text" name="name" class="form-control" ng-model="materialTemplate.name" required size="5" />
+                    </div>
+                </div>
+
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-30">
+                        <label class="label-input">Material Item</label>
+                    </div>
+                    <div class="grid-15">
+                        <label class="label-input">UOM Name</label>
+                    </div>
+                    <div class="grid-15">
+                        <label class="label-input">Quantity</label>
+                    </div>
+
+                </div>
+
+                <div class="grid-parent grid-100 container" ng-repeat="itemLine in materialTemplate.materialItems track by $index">
+                    <div class="grid-25">
+                        <input-validation-message field="itemLine{{$index}}itemSpecId" form="forms.materialForm"></input-validation-message>
+                        <itemspec-auto-complete name="itemLine{{$index}}itemSpecId" ng-model="itemLine.itemSpecId" required="true" on-select="onSelectItemSpec(itemLine.itemSpecId,$index,itemLine)"
+                            on-select-param="itemLine" tags="['Material']" />
+                    </div>
+                    <div class="grid-15">
+                        <input-validation-message field="itemLine{{$index}}unitid" form="forms.materialForm"></input-validation-message>
+                        <ui-select name="itemLine{{$index}}unitid" required="true" ng-model="itemLine.unitId" style="border-radius: 4px;">
+                            <ui-select-match placeholder="Select UOM">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="uomItem.id as uomItem in itemUnits[$index] | filter: $select.search" refresh="searchUom(itemLine.itemSpecId,$index)"
+                                refresh-delay="50">
+                                {{uomItem.name}}
+                            </ui-select-choices>
+                        </ui-select>
+
+                    </div>
+                    <div class="grid-15">
+                        <input-validation-message field="itemLine{{$index}}qty" form="forms.materialForm"></input-validation-message>
+                        <input type="number" name="itemLine{{$index}}qty" ng-model="itemLine.qty" class="form-control" placeholder="Qty" required/>
+                    </div>
+                    <div class="grid-20">
+                        <button type="button" class="grid-40 green" ng-click="addMaterialItem()">Add</button>
+                        <div class="grid-5"> &nbsp</div>
+                        <button type="button" class=" grid-40 " ng-show="!$first" ng-click="removeMaterialItem($index)" aria-hidden="false" style="background:#e7505a">Remove</button>
+                    </div>
+
+                </div>
+
+
+                <div class="grid-parent grid-100 container" style="margin-top:50px;">
+                    <unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="submitLabel" is-loading="loading"></unis-waitting-btn>
+                    <button type="button" class="grid-10 pull-right cancel" ng-click="cancelBtn()">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+

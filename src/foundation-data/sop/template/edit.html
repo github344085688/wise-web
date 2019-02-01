@@ -1,0 +1,84 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Foundation Data</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#/fd/sop/list">Handling SOP</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span ng-show="ctrl.isAddAction" class="caption-subject bold"> Add Handling SOP</span>
+                    <span ng-show="!ctrl.isAddAction" class="caption-subject bold"> Edit Handling SOP </span>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <form novalidate name="sopTypeForm" ng-submit="sopTypeForm.$valid && ctrl.addOrUpdateSop()">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label><b>Organization</b></label>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>Customer</label>
+                                    <organization-auto-complete ng-model="ctrl.sop.customerId" tag="Customer"></organization-auto-complete>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Title</label>
+                                    <organization-auto-complete ng-model="ctrl.sop.titleId" tag="Title"></organization-auto-complete>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Supplier</label>
+                                    <organization-auto-complete ng-model="ctrl.sop.supplierId" tag="Supplier"></organization-auto-complete>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Brand</label>
+                                    <organization-auto-complete ng-model="ctrl.sop.brandId" tag="Brand"></organization-auto-complete>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Carrier</label>
+                                    <organization-auto-complete ng-model="ctrl.sop.carrierId" tag="Carrier"></organization-auto-complete>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Retailer</label>
+                                    <organization-auto-complete ng-model="ctrl.sop.retailerId" tag="Retailer"></organization-auto-complete>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-6">
+                            <label>Item</label>
+                            <itemspec-auto-complete ng-model="ctrl.sop.itemSpecId" name="keyword"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Step</label>
+                            <ui-select multiple ng-model="ctrl.sop.steps" ng-disabled="disabled" title="Customer">
+                                <ui-select-match allow-clear="true">{{$item}}</ui-select-match>
+                                <ui-select-choices repeat="step in ctrl.taskSteps | filter:$select.search ">
+                                    <small>{{step}}</small>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <label>Content</label>
+                            <textarea name="Content" ng-model="ctrl.sop.content" class="form-control" placeholder="Enter text" />
+                        </div>
+                    </div>
+                    <div class="row form-actions right">
+                        <waitting-btn type="submit" btn-class="btn blue"
+                                      value="submitLabel" is-loading="loading"></waitting-btn>
+                        <button type="button" class="btn default" ng-click="ctrl.cancelEditSop()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,95 @@
+<div class="row">
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="actions" permission-check="{{'lpConfigurationTemplate_write'}}">
+                <a href="#/fd/lp-configuration-template/main/single-template-add"><b>Add LP Single Item Template</b></a>
+            </div>
+        </div>
+        <div class="portlet-body form form-horizontal"  ng-keyup="ctrl.keyUpSearch($event)">
+            <form>
+                <div class="row form-group" >
+                    <div class="col-md-3">
+                        <label>Name</label>
+                        <input class="form-control" ng-model="ctrl.searchInfo.name" placeholder="Enter Name" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Customer</label>
+                        <organization-auto-complete ng-model="ctrl.searchInfo.customerId" name="customer" allow-clear="true"
+                                                    tag="Customer"></organization-auto-complete>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Description</label>
+                        <input type="text"  ng-model="ctrl.searchInfo.description"
+                               class="form-control" placeholder="Type any text to search"/>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Layer</label>
+                        <input type="number" ng-model="ctrl.searchInfo.layer"
+                               class="form-control" placeholder="Layer"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label>Total Qty</label>
+                        <input type="number" ng-model="ctrl.searchInfo.totalQty"
+                               class="form-control" placeholder="Total Qty"/>
+                    </div>
+                </div>
+                <div class="form-actions right">
+                    <waitting-btn type="button" btn-class="btn blue"
+                                  ng-click="ctrl.search()"
+                                  value="'Search'" is-loading="isLoading"></waitting-btn>
+                </div>
+            </form>
+        </div>
+        <!-- TABLE -->
+        <div class="row">
+            <div class="portlet light box-shadow-none">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject bold"> Search Results</span>
+                    </div>
+                </div>
+
+                <div class="portlet-body">
+                    <div ng-show="ctrl.isLoading" class="text-center">
+                        <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                    </div>
+
+                    <div ng-show="!ctrl.isLoading" class="dataTables_wrapper no-footer">
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer"
+                                   id="sample_1" role="grid" aria-describedby="sample_1_info">
+                                <thead>
+                                <tr role="row">
+                                    <th> Name</th>
+                                    <th> Customer</th>
+                                    <th> Description</th>
+                                    <th> Layer</th>
+                                    <th> Total Qty</th>
+                                    <th permission-check="{{'lpConfigurationTemplate_write'}}"> Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="lpSingleTemplate in ctrl.lpSingleTemplateView track by $index">
+                                    <td>{{lpSingleTemplate.name}}</td>
+                                    <td>{{lpSingleTemplate.customerName}}</td>
+                                    <td>{{lpSingleTemplate.description}}</td>
+                                    <td>{{lpSingleTemplate.layer}}</td>
+                                    <td>{{lpSingleTemplate.totalQty}}</td>
+                                    <td  permission-check="{{'lpConfigurationTemplate_write'}}">
+                                        <a ui-sref="fd.lpConfigurationTemplate.main.singleTemplateEdit({lpConfigurationTemplateId:lpSingleTemplate.id})">Edit</a>
+                                        <!--| <a href="#" ng-click="ctrl.remove($index)">Remove</a>-->
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <pager total-count="ctrl.lpSingleTemplates.length" page-size="ctrl.pageSize"
+                               load-content="ctrl.loadContent(currentPage)"></pager>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

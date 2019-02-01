@@ -1,0 +1,68 @@
+<md-dialog flex="50" ng-cloak>
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Select Dock Page</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <i class="material-icons">close</i>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div class="portlet light box-shadow-none" style="margin-bottom: 0">
+                    <div class="portlet-title">
+                        <div class="row form-group">
+                            <div class="col-md-3">
+                                <label class="bold">Task:</label>
+                                <label>{{task.id}}</label>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="bold">Status:</label>
+                                <label>{{task.status}}</label>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="bold">Dock Status:</label>
+                                <label>{{getStatus(task.dock)}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-show="!isLoadingComplete" class="text-center">
+                        <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                    </div>
+
+                    <div ng-show="isLoadingComplete" class="portlet-body form form-horizontal" style="padding: 0;margin-bottom: 0">
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <table class="table table-striped table-bloaded table-hover table-checkable order-column dataTable no-footer"
+                                       role="grid">
+                                    <thead>
+                                    <th>Dock Select</th>
+                                    <th>Dock No</th>
+                                    <th>Status</th>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="dock in docks" ng-click="selectDock(dock)">
+                                        <td><input type="radio" name="dock" ng-model="selectedDock"
+                                                   ng-checked="isSelectDock(dock)"></input></td>
+                                        <td>{{dock.name}}</td>
+                                        <td>{{getStatus(dock)}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <div style="margin-right: 50px">
+                <button type=" button " ng-click="save() " class="btn blue ">&nbsp;OK&nbsp;</button>
+                <button type="button " ng-click="cancel() " class="btn default ">Cancel</button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

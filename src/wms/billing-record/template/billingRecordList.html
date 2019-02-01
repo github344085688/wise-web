@@ -1,0 +1,150 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Billing Record</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold">Billing Record List</span>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <form>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <label>Billing Code</label>
+                            <!--<input type="text" ng-model="searchInfo.billingCode" class="form-control" placeholder="Enter Billing Code"/>-->
+
+                            <ui-select name="type" ng-model="searchInfo.billingCode">
+                                <ui-select-match allow-clear="true">
+                                    <div ng-bind="$select.selected.id"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="item.id as item in billingCodes | filter: $select.search">
+                                    <div ng-bind="item.id"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <!--<div class="col-md-3">-->
+                            <!--<label>Customer</label>-->
+                            <!--<organization-auto-complete name="customer" ng-model="searchInfo.customerId" tag="Customer"-->
+                                                        <!--allow-clear="true"></organization-auto-complete>-->
+                        <!--</div>-->
+
+                        <div class="col-md-3">
+                            <label>Status</label>
+                            <ui-select name="type" ng-model="searchInfo.status">
+                                <ui-select-match allow-clear="true">
+                                    <div ng-bind="$select.selected"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="item  in ['Created', 'ReadyToBill', 'Sent', 'Void']| filter: $select.search">
+                                    {{item}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Type</label>
+                            <ui-select name="type" ng-model="searchInfo.type">
+                                <ui-select-match allow-clear="true">
+                                    <div ng-bind="$select.selected"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="item  in ['Receipt', 'Pick', 'Pack', 'CCTask']| filter: $select.search">
+                                    {{item}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <!--<div class="col-md-3">-->
+                            <!--<label>Task</label>-->
+                            <!--<input type="text" ng-model="searchInfo.taskId" class="form-control" placeholder="Enter Task ID"/>-->
+                        <!--</div>-->
+                        <div class="col-md-3">
+                            <label>Note</label>
+                            <input type="text" ng-model="searchInfo.notes" class="form-control" placeholder="Enter Note"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <label>Created Date From</label>
+                            <lt-date-time  value="searchInfo.createdWhenFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Created Date To</label>
+                            <lt-date-time  value="searchInfo.createdWhenTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                        </div>
+                    </div>
+                    <div class="row form-actions right">
+                        <waitting-btn type="button" btn-class="btn yellow" ng-click="export()"
+                                      value="'Export'" is-loading="exporting"></waitting-btn>
+
+                        <waitting-btn type="submit" btn-class="btn blue" ng-click="search()"
+                                      value="'Search'" is-loading="loading"></waitting-btn>
+                    </div>
+                </form>
+
+            </div>
+            <!-- TABLE -->
+            <div class="row">
+                <div class="portlet light box-shadow-none">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject bold"> Search Results</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div ng-show="loading" class="text-center">
+                                <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                        </div>
+                        <div ng-show="!loading" class="dataTables_wrapper no-footer">
+                            <div class="table-scrollable">
+                                <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer"
+                                       id="sample_1" role="grid" aria-describedby="sample_1_info">
+                                    <thead>
+                                    <tr role="row">
+                                        <th> Billing Code </th>
+                                        <th> Status </th>
+                                        <th> Type </th>
+                                        <th> Unit Price </th>
+                                        <th> QTY </th>
+                                        <th> Amount </th>
+                                        <th> Note </th>
+                                        <th> Entry ID </th>
+                                        <th> Sent When </th>
+                                        <th> Date Created </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="record in recordView track by $index">
+                                        <!--<td>{{record.id}}</td>-->
+                                        <td>{{record.billingCode}}</td>
+                                        <td>{{record.status}}</td>
+                                        <td>{{record.type}}</td>
+                                        <td>{{record.unitPrice}}</td>
+                                        <td>{{record.qty}}</td>
+                                        <td>{{record.amount}}</td>
+                                        <!--<td>{{record.taskId}}</td>-->
+                                        <td>{{record.notes}}</td>
+                                        <td>{{record.entryId}}</td>
+                                        <td>{{record.sentWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                                        <td>{{record.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <pager total-count="paging.totalCount" current-page ="paging.pageNo"
+                               page-size="pageSize" load-content="loadContent(currentPage)"></pager>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

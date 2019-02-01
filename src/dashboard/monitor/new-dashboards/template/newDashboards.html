@@ -1,0 +1,445 @@
+<div class="new-dashboard-show">
+    <div class="grid-100 Top-Bar" style="height: 65px; padding: 5px 50px 0px">
+        <div class="grid-20">
+            <a href="javascript:void(0)">
+                <img src="assets/img/unis-logo-clear@2x.png"  style="padding-top: 7px;"  alt="logo" class="logo-default" />
+            </a>
+        </div>
+        <div class="grid-80 Valley" style="line-height:60px">
+            <div class="grid-50">
+                <span>{{currentTime}}&nbsp;&nbsp;&nbsp;<img src="assets/img/ic-access-time.svg" style="position: relative; top: 2px; padding: 0px 8px 0px 20px"/>{{currentHMS}}</span>
+            </div>
+            <div style="float: right; font-size: 17px;">
+                <a ng-click="changeToCofig()">Change Dashboard Configuration</a>
+            </div>
+        </div>
+    </div>
+    <div class="new-dashboard-contain">
+        <div  ng-class="{'grid-49-half-margin':tableQty > 2 ,'grid-100':tableQty < 3,'dashboard-column':tableQty > 1,'dashboard-column-only':tableQty === 1 }" style="position: relative">
+        <div class="grid-100" style=" padding: 10px 0 5px; ">
+                <div class="grid-100 rectangle-show">
+                    <div class="element-select left">
+                        <div class="mask-layer" ng-click="onClickInput($event)"></div>
+                        <input class="select-input select-input-for-new" ng-model="newDashboardsLayouts['tableOne'].tableName" />
+                        <img src="assets/img/shape.svg" class="shape" ng-mouseover = "onMouseOverOnShape($event)" />
+                        <div class="select-contain select-contain-new"  ng-mouseleave="onMouseLeaveShape($event)">
+                            <div class="select-option" ng-repeat=" table in tablesOne" ng-click="onSelectOption('tableOne',tablesOne,table,$event)" 
+                            ng-class="{'selected-bg-color': table.name === newDashboardsLayouts['tableOne'].tableName }">
+                                <img src="assets/img/shape-copy.svg" ng-if=" table.name === newDashboardsLayouts['tableOne'].tableName " class="select-img" />
+                                <span class="new-dashboard-select-span">{{table.name}}</span>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <div class="pause-and-play left" ng-click="pauseOrResumeDashboard('tableOne')">
+                        <img src="assets/img/play.svg" class="postion-img" ng-if="newDashboardsLayouts['tableOne'].isPause" />
+                        <img src="assets/img/pause.svg" class="postion-img" ng-if="!newDashboardsLayouts['tableOne'].isPause" />
+                        <button type="button" class="new-button pause-resume-button" >
+                            {{newDashboardsLayouts['tableOne'].isPause?'Resume':'Pause'}}
+                        </button>
+
+                    </div>
+                    <div class="page-left-and-right left" ng-style="{'margin-left':setMargin(tableQty,'tableOne')}">
+                        <img src="assets/img/page-left.svg" ng-click="prePage('tableOne')" />
+                        <label class="page-num"> Page {{newDashboardsLayouts['tableOne'].paging.pageNoFromdb}} of {{newDashboardsLayouts['tableOne'].paging.totalPage}}</label>
+                        <img src="assets/img/page-right.svg" ng-click="nextPage('tableOne')" />
+                    </div>
+                    <div class="export-div right">
+                        <unis-waitting-btn ng-type="button" btn-class="new-button" ng-click="exportTableOne(newDashboardsLayouts['tableOne'].tableName)"
+                            value="'Export To Excel'" is-loading="isTableOneLoading"></unis-waitting-btn>
+                    </div>
+                    <div class="export-div right padding-right-20" ng-if =" newDashboardsLayouts['tableOne'].tableName === 'Equipment in Yard'"  permission-check="{{'dashboard::batchCheckout_write'}}">
+                            <unis-waitting-btn  ng-type="button" btn-class="new-button bg-red-levelone" ng-click="batchCheckout('tableOne','isTableOneCheckouting')"
+                                value="'Batch Checkout'" is-loading="isTableOneCheckouting"></unis-waitting-btn>
+                     </div>
+                </div>
+                <div class="grid-100">
+                    <table class="dashboard-table">
+                        <thead>
+                            <tr>
+                                <th ng-repeat="head in shortHeadOrLongHead('tableOne') track by $index">
+                                        <span> {{head}}</span>
+                                </th>
+                                <th ng-if =" newDashboardsLayouts['tableOne'].tableName === 'Equipment in Yard'" permission-check="{{'dashboard::batchCheckout_write'}}"> 
+                                        <input type="checkbox" id="selectAll" name="selectAll" ng-click="toggleAll($event,newDashboardsLayouts['tableOne'].progressDatas.data)" ng-checked="selectAllIsChecked(newDashboardsLayouts['tableOne'].progressDatas.data)">
+                                        <label  class="checkbox predifine-checkbox" for="selectAll">
+                                        </label>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="data in  newDashboardsLayouts['tableOne'].progressDatas.data track by $index">
+                                <td ng-repeat="head in shortHeadOrLongHead('tableOne') ">
+
+                                    <div style="display: -webkit-box;" ng-if="head ==='Progress'">
+                                        <div class="pie">
+                                            <div class="pie-over" ng-style="{'background-image':bgImgColor(data[head]),'transform':rotate(data[head]) }"></div>
+                                        </div>
+                                        <span style="padding-left: 10px">{{data[head]}}</span>
+                                    </div>
+                                    <span ng-if="head !='Progress'" ng-class="{'high-color':highColor(head,data[head])}">
+                                        <span ng-if="head !='Task ID'">{{data[head]}}</span>
+                                        <span ng-if="newDashboardsLayouts['tableOne'].tableName !='Unassigned Tasks' && head ==='Task ID'">{{data[head]}}</span>
+                                       <span ng-if="newDashboardsLayouts['tableOne'].tableName==='Unassigned Tasks' && head ==='Task ID'"  > {{data[head]}}  <img src="assets/img/assign.svg" ng-click="popupAssignDialog(data['Task ID'],'tableOne')"  title="Assignee" style="width: 16px; height: auto ; cursor: pointer;" /></span>
+                                    </span>
+                                </td>
+                                <td style="width:50px" ng-if =" newDashboardsLayouts['tableOne'].tableName === 'Equipment in Yard'" permission-check="{{'dashboard::batchCheckout_write'}}">
+                                        <input type="checkbox" id="subtheme-orange_{{$index}}" name="profile-subtheme" ng-checked="isChecked(data)" ng-click="checkEquipment($event, data)">
+                                        <label  class="checkbox predifine-checkbox" for="subtheme-orange_{{$index}}"></label>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+        </div>
+            <div ng-if="showAssigntables.tableOne" style="position: absolute; top: 0; left:0; bottom: 0; top: 0; width: 100%; height: 100%; margin: auto;  background:rgba(51,51,51,0.2); z-index: 10; ">
+                <div style="position: absolute; top: 0; left:0; bottom: 0; top: 0;width: 60%; height: 150px; margin:auto 20%;background: #fff; z-index: 100; padding: 15px 0; ">
+                    <div class="grid-100">
+                        <div class="grid-20">
+                        <label>Assign Task Id</label>
+                       <div style="padding: 6px 5px;display: block; border: 1px solid #ddd; background: #d6d2de">{{assignTaskId}}</div>
+                        </div>
+                        <div class="grid-60">
+                            <label>Assign To:</label>
+                            <input-validation-message field="assignee" ></input-validation-message>
+                            <user-auto-complete name="assignee" ng-model="assignment.assigneeUserId" required="true"></user-auto-complete>
+                        </div>
+                        <div class="grid-20" style="margin-top: 20px;">
+                            <waitting-btn type="button" btn-class="ripplelink" ng-click="assigningTask('tableOne')" value="'Assign'" is-loading="AssignLoading"></waitting-btn>
+                        </div>
+
+                    </div>
+                    <div class="grid-parent grid-100 container" style="border-top: 1px solid #ddd ; margin-top: 20px;">
+                        <div class="grid-20" style="float: right; margin-top: 4px; margin-right: 19px;">
+                            <button type="button" class="btn default" ng-click="cancel('tableOne')">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="dashboard-column" ng-class="{'grid-49-half':tableQty > 2 ,'grid-100':tableQty < 3 }" ng-if="tableQty > 1" style="position: relative">
+            <div class="grid-100" style=" padding: 10px 0 5px;">
+                <div class="grid-100 rectangle-show">
+                    <div class="element-select left">
+                        <div class="mask-layer" ng-click="onClickInput($event)"></div>
+                        <input class="select-input select-input-for-new" ng-model="newDashboardsLayouts['tableTwo'].tableName" 
+                        />
+                        <img src="assets/img/shape.svg" class="shape"  ng-mouseover = "onMouseOverOnShape($event)" />
+                        <div class="select-contain select-contain-new" ng-mouseleave="onMouseLeaveShape($event)">
+                            <div class="select-option" ng-repeat=" table in tablesTwo" ng-click="onSelectOption('tableTwo',tablesTwo,table,$event)" 
+                                 ng-class="{'selected-bg-color': table.name === newDashboardsLayouts['tableTwo'].tableName}">
+                                <img src="assets/img/shape-copy.svg" ng-if="table.name === newDashboardsLayouts['tableTwo'].tableName" class="select-img" />
+                                <span class="new-dashboard-select-span">{{table.name}}</span>
+                            </div>
+                        </div>
+                    </div>
+                  
+                    <div class="pause-and-play left" ng-click="pauseOrResumeDashboard('tableTwo')">
+                        <img src="assets/img/play.svg" class="postion-img" ng-if="newDashboardsLayouts['tableTwo'].isPause" />
+                        <img src="assets/img/pause.svg" class="postion-img" ng-if="!newDashboardsLayouts['tableTwo'].isPause" />
+                        <button type="button" class="new-button pause-resume-button" >
+                            {{newDashboardsLayouts['tableTwo'].isPause?'Resume':'Pause'}}
+                        </button>
+                    </div>
+                    <div class="page-left-and-right left" ng-style="{'margin-left':setMargin(tableQty,'tableTwo')}">
+                        <img src="assets/img/page-left.svg" ng-click="prePage('tableTwo')" />
+                        <label class="page-num"> Page {{newDashboardsLayouts['tableTwo'].paging.pageNoFromdb}} of {{newDashboardsLayouts['tableTwo'].paging.totalPage}}</label>
+                        <img src="assets/img/page-right.svg" ng-click="nextPage('tableTwo')" />
+                    </div>
+                    <div class="export-div right">
+                        <unis-waitting-btn ng-type="button" btn-class="new-button" ng-click="exportTableTwo(newDashboardsLayouts['tableTwo'].tableName)"
+                            value="'Export To Excel'" is-loading="isTableTwoLoading"></unis-waitting-btn>
+                    </div>
+                    <div class="export-div right padding-right-20" ng-if =" newDashboardsLayouts['tableTwo'].tableName === 'Equipment in Yard'" permission-check="{{'dashboard::batchCheckout_write'}}">
+                        <unis-waitting-btn  ng-type="button" btn-class="new-button bg-red-levelone" ng-click="batchCheckout('tableTwo','isTableTwoCheckouting')"
+                            value="'Batch Checkout'" is-loading="isTableTwoCheckouting"></unis-waitting-btn>
+                    </div>
+                </div>
+                <div class="grid-100">
+                    <table class="dashboard-table">
+                        <thead>
+                            <tr>
+                                <th ng-repeat="head in shortHeadOrLongHead('tableTwo')  track by $index">
+                                        <span> {{head}}</span>
+                                </th>
+                                <th ng-if =" newDashboardsLayouts['tableTwo'].tableName === 'Equipment in Yard'" permission-check="{{'dashboard::batchCheckout_write'}}">
+                                    <input type="checkbox" id="selectAll" name="selectAll" ng-click="toggleAll($event,newDashboardsLayouts['tableTwo'].progressDatas.data)" ng-checked="selectAllIsChecked(newDashboardsLayouts['tableTwo'].progressDatas.data)">
+                                    <label  class="checkbox predifine-checkbox" for="selectAll">
+                                    </label>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="data in  newDashboardsLayouts['tableTwo'].progressDatas.data track by $index">
+                                <td ng-repeat="head in shortHeadOrLongHead('tableTwo')">
+                                    <div style="display: -webkit-box;" ng-if="head ==='Progress'">
+                                        <div class="pie">
+                                            <div class="pie-over" ng-style="{'background-image':bgImgColor(data[head]),'transform':rotate(data[head]) }"></div>
+                                        </div>
+                                        <span style="padding-left: 10px">{{data[head]}}</span>
+                                    </div>
+                                    <span ng-if="head !='Progress'" ng-class="{'high-color':highColor(head,data[head])}">
+                                        <span ng-if="head !='Task ID'">{{data[head]}}</span>
+                                        <span ng-if="newDashboardsLayouts['tableTwo'].tableName !='Unassigned Tasks' && head ==='Task ID'">{{data[head]}}</span>
+                                       <span ng-if="newDashboardsLayouts['tableTwo'].tableName==='Unassigned Tasks' && head ==='Task ID'" > {{data[head]}}  <img src="assets/img/assign.svg" ng-click="popupAssignDialog(data['Task ID'],'tableTwo')"  title="Assignee" style="width: 14px; height: auto" /></span>
+
+                                    </span>
+                                </td>
+                                <td style="width:50px" ng-if =" newDashboardsLayouts['tableTwo'].tableName === 'Equipment in Yard'" permission-check="{{'dashboard::batchCheckout_write'}}">
+                                    <input type="checkbox" id="subtheme-orange_{{$index}}" name="profile-subtheme" ng-checked="isChecked(data)" ng-click="checkEquipment($event, data)">
+                                    <label  class="checkbox predifine-checkbox" for="subtheme-orange_{{$index}}"></label>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div ng-if="showAssigntables.tableTwo" style="position: absolute; top: 0; left:0; bottom: 0; top: 0; width: 100%; height: 100%; margin: auto;  background:rgba(51,51,51,0.2); z-index: 10; ">
+                <div style="position: absolute; top: 0; left:0; bottom: 0; top: 0;width: 60%; height: 150px; margin:auto 20%;background: #fff; z-index: 100; padding: 15px 0; ">
+                    <div class="grid-100">
+                        <div class="grid-20">
+                            <label>Assign Task Id</label>
+                            <div style="padding: 6px 5px;display: block; border: 1px solid #ddd; background: #d6d2de">{{assignTaskId}}</div>
+                        </div>
+                        <div class="grid-60">
+                            <label>Assign To:</label>
+                            <input-validation-message field="assignee" ></input-validation-message>
+                            <user-auto-complete name="assignee" ng-model="assignment.assigneeUserId" required="true"></user-auto-complete>
+                        </div>
+                        <div class="grid-20" style="margin-top: 20px;">
+                            <waitting-btn type="button" btn-class="ripplelink" ng-click="assigningTask('tableTwo')" value="'Assign'" is-loading="AssignLoading"></waitting-btn>
+                        </div>
+
+                    </div>
+                    <div class="grid-parent grid-100 container" style="border-top: 1px solid #ddd ; margin-top: 20px;">
+                        <div class="grid-20" style="float: right; margin-top: 4px; margin-right: 19px;">
+                            <button type="button" class="btn default" ng-click="cancel('tableTwo')">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="dashboard-column" ng-class="{'grid-49-half-margin':tableQty > 3 ,'grid-100':tableQty < 4 }" ng-if="tableQty>2" style="position: relative">
+            <div class="grid-100" style=" padding: 10px 0 5px;">
+                <div class="grid-100 rectangle-show">
+                    <div class="element-select left">
+                        <div class="mask-layer" ng-click="onClickInput($event)"></div>
+                        <input class="select-input select-input-for-new" ng-model="newDashboardsLayouts['tableThree'].tableName" 
+                        />
+                        <img src="assets/img/shape.svg" class="shape"  ng-mouseover = "onMouseOverOnShape($event)"/>
+                        <div class="select-contain select-contain-new" ng-mouseleave="onMouseLeaveShape($event)">
+                            <div class="select-option" ng-repeat=" table in tablesTwo" ng-click="onSelectOption('tableThree',tablesTwo,table,$event)"
+                                ng-class="{'selected-bg-color': table.name === newDashboardsLayouts['tableThree'].tableName }">
+                                <img src="assets/img/shape-copy.svg" ng-if="table.name === newDashboardsLayouts['tableThree'].tableName" class="select-img" />
+                                <span class="new-dashboard-select-span">{{table.name}}</span>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <div class="pause-and-play left" ng-click="pauseOrResumeDashboard('tableThree')">
+                        <img src="assets/img/play.svg" class="postion-img" ng-if="newDashboardsLayouts['tableThree'].isPause" />
+                        <img src="assets/img/pause.svg" class="postion-img" ng-if="!newDashboardsLayouts['tableThree'].isPause" />
+                        <button type="button" class="new-button pause-resume-button" >
+                            {{newDashboardsLayouts['tableThree'].isPause?'Resume':'Pause'}}
+                        </button>
+                    </div>
+                    <div class="page-left-and-right left" ng-style="{'margin-left':setMargin(tableQty,'tableThree')}">
+                        <img src="assets/img/page-left.svg" ng-click="prePage('tableThree')" />
+                        <label class="page-num"> Page {{newDashboardsLayouts['tableThree'].paging.pageNoFromdb}} of {{newDashboardsLayouts['tableThree'].paging.totalPage}}</label>
+                        <img src="assets/img/page-right.svg" ng-click="nextPage('tableThree')" />
+                    </div>
+                    <div class="export-div right">
+                        <unis-waitting-btn ng-type="button" btn-class="new-button" ng-click="exportTableThree(newDashboardsLayouts['tableThree'].tableName)"
+                            value="'Export To Excel'" is-loading="isTableThreeLoading"></unis-waitting-btn>
+                    </div>
+                    <div class="export-div right padding-right-20" ng-if =" newDashboardsLayouts['tableThree'].tableName === 'Equipment in Yard'" permission-check="{{'dashboard::batchCheckout_write'}}">
+                        <unis-waitting-btn  ng-type="button" btn-class="new-button bg-red-levelone" ng-click="batchCheckout('tableThree','isTableThreeCheckouting')"
+                            value="'Batch Checkout'" is-loading="isTableThreeCheckouting"></unis-waitting-btn>
+                    </div>
+                </div>
+                <div class="grid-100">
+                    <table class="dashboard-table">
+                        <thead>
+                            <tr>
+                                <th ng-repeat="head in shortHeadOrLongHead('tableThree') track by $index">
+                                   <span> {{head}}</span>
+                                </th>
+                                <th ng-if =" newDashboardsLayouts['tableThree'].tableName === 'Equipment in Yard'" permission-check="{{'dashboard::batchCheckout_write'}}">
+                                    <input type="checkbox" id="selectAll" name="selectAll" ng-click="toggleAll($event,newDashboardsLayouts['tableThree'].progressDatas.data)" ng-checked="selectAllIsChecked(newDashboardsLayouts['tableThree'].progressDatas.data)">
+                                    <label class="checkbox predifine-checkbox"  for="selectAll">
+                                    </label>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="data in  newDashboardsLayouts['tableThree'].progressDatas.data track by $index">
+                                <td ng-repeat="head in shortHeadOrLongHead('tableThree')">
+                                    <div style="display: -webkit-box;" ng-if="head ==='Progress'">
+                                        <div class="pie">
+                                            <div class="pie-over" ng-style="{'background-image':bgImgColor(data[head]),'transform':rotate(data[head]) }"></div>
+                                        </div>
+                                        <span style="padding-left: 10px">{{data[head]}}</span>
+                                    </div>
+
+
+                                    <span ng-if="head !='Progress'" ng-class="{'high-color':highColor(head,data[head])}">
+                                        <span ng-if="head !='Task ID'">{{data[head]}}</span>
+                                        <span ng-if="newDashboardsLayouts['tableThree'].tableName !='Unassigned Tasks' && head ==='Task ID'">{{data[head]}}</span>
+                                       <a ng-if="newDashboardsLayouts['tableThree'].tableName==='Unassigned Tasks' && head ==='Task ID'" > {{data[head]}}  <img src="assets/img/assign.svg"  ng-click="popupAssignDialog(data['Task ID'],'tableThree')"  title="Assignee" style="width: 14px; height: auto" /></a>
+
+                                    </span>
+
+                                </td>
+                                <td style="width:50px" ng-if =" newDashboardsLayouts['tableThree'].tableName === 'Equipment in Yard'" permission-check="{{'dashboard::batchCheckout_write'}}">
+                                    <input type="checkbox" id="subtheme-orange_{{$index}}" name="profile-subtheme" ng-checked="isChecked(data)" ng-click="checkEquipment($event, data)">
+                                    <label  class="checkbox predifine-checkbox" for="subtheme-orange_{{$index}}"></label>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+            <div ng-if="showAssigntables.tableThree" style="position: absolute; top: 0; left:0; bottom: 0; top: 0; width: 100%; height: 100%; margin: auto;  background:rgba(51,51,51,0.2); z-index: 10; ">
+                <div style="position: absolute; top: 0; left:0; bottom: 0; top: 0;width: 60%; height: 150px; margin:auto 20%;background: #fff; z-index: 100; padding: 15px 0; ">
+                    <div class="grid-100">
+                        <div class="grid-20">
+                            <label>Assign Task Id</label>
+                            <div style="padding: 6px 5px;display: block; border: 1px solid #ddd; background: #d6d2de">{{assignTaskId}}</div>
+                        </div>
+                        <div class="grid-60">
+                            <label>Assign To:</label>
+                            <input-validation-message field="assignee" ></input-validation-message>
+                            <user-auto-complete name="assignee" ng-model="assignment.assigneeUserId" required="true"></user-auto-complete>
+                        </div>
+                        <div class="grid-20" style="margin-top: 20px;">
+                            <waitting-btn type="button" btn-class="ripplelink" ng-click="assigningTask('tableThree')" value="'Assign'" is-loading="AssignLoading"></waitting-btn>
+                        </div>
+                    </div>
+                    <div class="grid-parent grid-100 container" style="border-top: 1px solid #ddd ; margin-top: 20px;">
+                        <div class="grid-20" style="float: right; margin-top: 4px; margin-right: 19px;">
+                            <button type="button" class="btn default" ng-click="cancel('tableThree')">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid-49-half dashboard-column" ng-if="tableQty>3" style="position: relative">
+            <div class="grid-100" style=" padding: 10px 0 5px;">
+                <div class="grid-100 rectangle-show">
+                    <div class="element-select left">
+                        <div class="mask-layer" ng-click="onClickInput($event)"></div>
+                        <input class="select-input select-input-for-new" ng-model="newDashboardsLayouts['tableFour'].tableName" 
+                        />
+                        <img src="assets/img/shape.svg" class="shape" ng-mouseover = "onMouseOverOnShape($event)" />
+                        <div class="select-contain select-contain-new" ng-mouseleave="onMouseLeaveShape($event)">
+                            <div class="select-option" ng-repeat=" table in tablesTwo" ng-click="onSelectOption('tableFour',tablesTwo,table,$event)"
+                                ng-class="{'selected-bg-color': table.name === newDashboardsLayouts['tableFour'].tableName }">
+                                <img src="assets/img/shape-copy.svg" ng-if="table.name === newDashboardsLayouts['tableFour'].tableName" class="select-img" />
+                                <span class="new-dashboard-select-span">{{table.name}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pause-and-play left" ng-click="pauseOrResumeDashboard('tableFour')">
+                        <img src="assets/img/play.svg" class="postion-img" ng-if="newDashboardsLayouts['tableFour'].isPause" />
+                        <img src="assets/img/pause.svg" class="postion-img" ng-if="!newDashboardsLayouts['tableFour'].isPause" />
+                        <button type="button" class="new-button pause-resume-button" >
+                            {{newDashboardsLayouts['tableFour'].isPause?'Resume':'Pause'}}
+                        </button>
+                    </div>
+                    <div class="page-left-and-right left" ng-style="{'margin-left':setMargin(tableQty,'tableFour')}">
+                        <img src="assets/img/page-left.svg" ng-click="prePage('tableFour')" />
+                        <label class="page-num"> Page {{newDashboardsLayouts['tableFour'].paging.pageNoFromdb}} of {{newDashboardsLayouts['tableFour'].paging.totalPage}}</label>
+                        <img src="assets/img/page-right.svg" ng-click="nextPage('tableFour')" />
+                    </div>
+                    <div class="export-div right">
+                        <unis-waitting-btn ng-type="button" btn-class="new-button" ng-click="exportTableFour(newDashboardsLayouts['tableFour'].tableName)"
+                            value="'Export To Excel'" is-loading="isTableFourLoading"></unis-waitting-btn>
+                    </div>
+                    <div class="export-div right padding-right-20" ng-if =" newDashboardsLayouts['tableFour'].tableName === 'Equipment in Yard'" permission-check="{{'dashboard::batchCheckout_write'}}">
+                        <unis-waitting-btn  ng-type="button" btn-class="new-button bg-red-levelone" ng-click="batchCheckout('tableFour','isTableFourCheckouting')"
+                            value="'Batch Checkout'" is-loading="isTableFourCheckouting"></unis-waitting-btn>
+                    </div>
+                </div>
+                <div class="grid-100">
+                    <table class="dashboard-table">
+                        <thead>
+                            <tr>
+                                <th ng-repeat="head in shortHeadOrLongHead('tableFour') track by $index">
+                                        <span> {{head}}</span>
+                                </th>
+                                <th ng-if =" newDashboardsLayouts['tableFour'].tableName === 'Equipment in Yard'" permission-check="{{'dashboard::batchCheckout_write'}}">
+                                    <input type="checkbox" id="selectAll" name="selectAll" ng-click="toggleAll($event,newDashboardsLayouts['tableFour'].progressDatas.data)" ng-checked="selectAllIsChecked(newDashboardsLayouts['tableFour'].progressDatas.data)">
+                                    <label class="checkbox predifine-checkbox"  for="selectAll">
+                                    </label>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="data in  newDashboardsLayouts['tableFour'].progressDatas.data track by $index">
+                                <td ng-repeat="head in shortHeadOrLongHead('tableFour')">
+                                    <div style="display: -webkit-box;" ng-if="head ==='Progress'">
+                                        <div class="pie">
+                                            <div class="pie-over" ng-style="{'background-image':bgImgColor(data[head]),'transform':rotate(data[head]) }"></div>
+                                        </div>
+                                        <span style="padding-left: 10px">{{data[head]}}</span>
+                                    </div>
+
+
+                                    <span ng-if="head !='Progress'" ng-class="{'high-color':highColor(head,data[head])}">
+                                        <span ng-if="head !='Task ID'">{{data[head]}}</span>
+                                        <span ng-if="newDashboardsLayouts['tableFour'].tableName !='Unassigned Tasks' && head ==='Task ID'">{{data[head]}}</span>
+                                       <a ng-if="newDashboardsLayouts['tableFour'].tableName==='Unassigned Tasks' && head ==='Task ID'"  > {{data[head]}}  <img src="assets/img/assign.svg"  ng-click="popupAssignDialog(data['Task ID'],'tableFour')"  title="Assignee"  style="width: 14px; height: auto" /></a>
+
+                                    </span>
+
+                                </td>
+                                <td style="width:50px" ng-if =" newDashboardsLayouts['tableFour'].tableName === 'Equipment in Yard'" permission-check="{{'dashboard::batchCheckout_write'}}">
+                                    <input type="checkbox" id="subtheme-orange_{{$index}}" name="profile-subtheme" ng-checked="isChecked(data)" ng-click="checkEquipment($event, data)">
+                                    <label  class="checkbox predifine-checkbox" for="subtheme-orange_{{$index}}"></label>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div ng-if="showAssigntables.tableFour" style="position: absolute; top: 0; left:0; bottom: 0; top: 0; width: 100%; height: 100%; margin: auto;  background:rgba(51,51,51,0.2); z-index: 10; ">
+                <div style="position: absolute; top: 0; left:0; bottom: 0; top: 0;width: 60%; height: 150px; margin:auto 20%;background: #fff; z-index: 100; padding: 15px 0; ">
+                    <div class="grid-100">
+                        <div class="grid-20">
+                            <label>Assign Task Id</label>
+                            <div style="padding: 6px 5px;display: block; border: 1px solid #ddd; background: #d6d2de">{{assignTaskId}}</div>
+                        </div>
+                        <div class="grid-60">
+                            <label>Assign To:</label>
+                            <input-validation-message field="assignee" ></input-validation-message>
+                            <user-auto-complete name="assignee" ng-model="assignment.assigneeUserId" required="true"></user-auto-complete>
+                        </div>
+                        <div class="grid-20" style="margin-top: 20px;">
+                            <waitting-btn type="button" btn-class="ripplelink" ng-click="assigningTask('tableFour')" value="'Assign'" is-loading="AssignLoading"></waitting-btn>
+                        </div>
+
+                    </div>
+                    <div class="grid-parent grid-100 container" style="border-top: 1px solid #ddd ; margin-top: 20px;">
+                        <div class="grid-20" style="float: right; margin-top: 4px; margin-right: 19px;">
+                            <button type="button" class="btn default" ng-click="cancel('tableFour')">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

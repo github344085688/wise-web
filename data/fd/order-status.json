@@ -1,0 +1,21 @@
+  [
+  "Imported",
+  "Open",
+  "Partial Committed",
+  "Commit Blocked",
+  "Commit Failed",
+  "Committed",
+  "Planned",
+  "Picking",
+  "Picked",
+  "Packing",
+  "Packed",
+  "Staged",
+  "Loading",
+  "Loaded",
+  "Shipped",
+  "Partial Shipped",
+  "Short Shipped",
+  "Reopen",
+  "Cancelled"
+]

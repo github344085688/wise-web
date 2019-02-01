@@ -1,0 +1,37 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100" >
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Performance Report</h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+
+            <div class="grid-parent grid-100 container">
+                <div class="grid-20">
+                    <label>Employee:</label>
+                    <user-auto-complete name="userName" on-select="onSelectUser(user)" ng-model="uesr.userId" required="true"></user-auto-complete>
+                </div>
+                <div class="grid-25">
+                    <label>Start Date:</label>
+                    <lt-date-time value="search.dateFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                </div>
+                <div class="grid-25">
+                    <label>End Date:</label>
+                    <lt-date-time value="search.dateTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-90">&nbsp;</div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="export()" value="'Export'" is-loading="exporting"></waitting-btn>
+            </div>
+
+        </div>
+        <div class="grid-parent grid-100 container" style="min-height: 400px;">
+        </div>
+    </div>
+</div>

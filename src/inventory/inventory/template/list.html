@@ -1,0 +1,268 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100 ">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Inventory List</h1>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-50">
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-50">
+                        <label class="label-input">Customer:</label>
+                        <organization-auto-complete name="customer" ng-model="search.customerId" tag="Customer" allow-clear="true"></organization-auto-complete>
+                    </div>
+                    <div class="grid-50">
+                        <label class="label-input">Title:</label>
+                        <organization-auto-complete name="title" ng-model="search.titleId" tag="Title" allow-clear="true"></organization-auto-complete>
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-50">
+                        <label class="label-input">LP:</label>
+                        <lt-tags-input placeholder="Enter LP ID" ng-model="search.lpIds" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                    </div>
+                    <div class="grid-50">
+                        <label class="label-input">SN:</label>
+                        <input class="form-control" type="text" ng-model="search.sn" />
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-50">
+                        <label class="label-input">Order ID:</label>
+                        <lt-tags-input placeholder="Enter Order ID" ng-model="search.orderIds" fill="DN-" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                    </div>
+                    <div class="grid-50">
+                        <label class="label-input">Receipt ID:</label>
+                        <lt-tags-input placeholder="Enter Receipt ID" ng-model="search.receiptIds" fill="RN-" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-50">
+                        <label class="label-input">Inventory Status:</label>
+                        <ui-select name="status" ng-model="search.status">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item  in  inventoryStatus| filter: $select.search">
+                                {{item}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="grid-50">
+                        <label class="label-input">Location:</label>
+                        <multiple-location-auto-complete ng-model="search.locationIds" />
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-50">
+                        <label class="label-input">Lot#</label>
+                        <input class="form-control" ng-model="search.lotNo" />
+                    </div>
+                    <div class="grid-50">
+                        <label class="label-input">Original Received LP</label>
+                        <input class="form-control" ng-model="search.originalReceiveLPId" />
+                    </div>
+                </div>
+            </div>
+            <div class="grid-50">
+                <div class="grid-parent grid-100 container">
+                    <label class="label-input">Item:</label>
+                    <itemspec-auto-complete ng-model="search.itemSpecId" name="itemSpec" customer-id="search.customerId" on-select="itemSpecIdOnSelect(search.itemSpecId)"
+                        allow-clear="true" />
+
+                </div>
+                <div ng-if="isLoading" class="text-center">
+                    <img src="assets/img/loading-spinner-grey.gif">
+                   
+                </div>
+                <div ng-if="!isLoading">
+  
+                    <div ng-show="notDiverseFields && notDiverseFields.length>0" class="grid-parent grid-100 container" style="background-color: rgba(93, 204, 214, 0.188235); padding:15px 25px 5px 5px; margin-bottom: 15px; margin-right:-15px;">
+                        <label class="label-input">Dynamic Properties</label>
+                        <div class="grid-parent grid-100 container">
+                            <label class="grid-100" ng-repeat="notDiverse in notDiverseFields" style="padding-left:44px">
+                                {{notDiverse.dynamicName}} : {{notDiverse.value}}
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-80">&nbsp;</div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="searchInventories()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+            <div class="grid-10" ng-show="activetab == 'detail'">
+                <waitting-btn type="button" btn-class="btn yellow" ng-click="export()" value="'Export'" is-loading="exporting"></waitting-btn>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-100 grid-parent">
+            <div class="grid-parent grid-100 container" style="margin-top: 30px;">
+                <div class="tab-container">
+                    <ul>
+                        <li style="width:180px" data-tab-title="Section1" ng-class="{'active':activetab == 'summary'}" ng-click="changeTab('summary')">
+                            Summary </li>
+                        <li style="width:180px" data-tab-title="Section2" ng-class="{'active':activetab == 'detail'}" ng-click="changeTab('detail')">
+                            Inventory Detail </li>
+                        <li style="width:180px" data-tab-title="Section3" ng-class="{'active':activetab == 'lock'}" ng-click="changeTab('lock')">
+                            Inventory Lock Detail</li>
+                    </ul>
+                </div>
+            </div>
+            <div ng-class="{'active':activetab == 'summary'}" class="grid-100 tab-content" id="section1">
+                <div class="row" style="overflow: auto;">
+                    <div class="grid-parent grid-100 ">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Unit</th>
+                                    <th>Status</th>
+                                    <th>Item Status</th>
+                                    <th>Total QTY</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="inventory in inventorySum track by $index">
+                                    <td>
+                                        <item-display item="itemSpecMapSum[inventory.itemSpecId]"></item-display>
+                                    </td>
+                                    <td>{{unitMapSum[inventory.unitId].name}}</td>
+                                    <td>{{inventory.status}}</td>
+                                    <td>{{inventory.itemStatus}}</td>
+                                    <td>{{inventory.qty}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="grid-100">
+                    <div class="grid-content grid-100">
+                        <unis-pager total-count="pagingSum.totalCount" page-size="summary_page_Size" load-content="loadSummaryContent(currentPage)"></unis-pager>
+                    </div>
+                </div>
+            </div>
+            <div ng-class="{'active':activetab == 'detail'}" class="grid-100 tab-content " id="section2">
+                <div class="row" style="overflow: auto;">
+                    <div class="grid-parent grid-100">
+                        <table class="table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Unit</th>
+                                    <th>SN</th>
+                                    <th>Weight</th>
+                                    <th>Weight Unit </th>
+                                    <th>Lot No.</th>
+                                    <th>Expiration Date</th>
+                                    <th>Mfg Date</th>
+                                    <th>Shelf Life Days</th>
+                                    <th>QTY</th>
+                                    <th>Status</th>
+                                    <th>Item Status</th>
+                                    <th>LP @ Location (Pick Strategy Weight)</th>
+                                    <th>LP Configuration</th>
+                                    <th>Customer</th>
+                                    <th>Original Received LP</th>
+                                    <th>Pick Task ID</th>
+                                    <th>Title</th>
+                                    <th>Received by LP</th>
+                                    <th>Receipt ID</th>
+                                    <th>Order ID</th>
+                                    <th>Shipped Date</th>
+                                    <!--<th width="200">Actions</th>-->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="inventory in inventories track by $index">
+                                    <td>
+                                        <item-display item="itemSpecMap[inventory.itemSpecId]"></item-display>
+                                    </td>
+                                    <td>{{unitMap[inventory.unitId].name}}</td>
+                                    <td>{{inventory.sn}}</td>
+                                    <td>{{inventory.weight}}</td>
+                                    <td><span ng-if="inventory.weight">{{unitMap[inventory.unitId].weightUnit}}</span></td>
+                                    <td>{{inventory.lotNo}}</td>
+                                    <td>{{inventory.expirationDate}}</td>
+                                    <td>{{inventory.mfgDate}}</td>
+                                    <td>{{inventory.shelfLifeDays}}</td>
+                                    <td>{{inventory.qty}}</td>
+                                    <td>{{inventory.status}}</td>
+                                    <td>{{inventory.itemStatus}}</td>
+                                    <td>{{inventory.lpId}} @ {{lpMap[inventory.lpId].location}} ({{lpMap[inventory.lpId].locationObject.pickStrategyWeight}})</td>
+                                    <td>{{lpMap[inventory.lpId].confName}}</td>
+                                    <td>{{inventory.customerName}}</td>
+                                    <td>{{inventory.originalReceiveLPId}}</td>
+                                    <td>{{inventory.pickTaskId}}</td>
+                                    <td>{{inventory.titleName}}</td>
+                                    <td>{{inventory.originalReceiveLPId}}</td>
+                                    <td>{{inventory.receiptId}}</td>
+                                    <td>{{inventory.orderId}}</td>
+                                    <td>{{inventory.shippedWhen}}</td>
+                                    <!--<td style="text-align: center; min-width: 160px">-->
+                                    <!--<a ng-href="{{'#/wms/inventory/inventory/' + item.id}}" title="View">View</a>-->
+                                    <!--</td>-->
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+                <div class="grid-100">
+                    <div class="grid-content grid-100">
+                        <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="detail_page_Size" load-content="loadContent(currentPage)">
+                        </unis-pager>
+                    </div>
+                </div>
+            </div>
+            <div ng-class="{'active':activetab == 'lock'}" class="grid-100 tab-content" id="section3">
+                <div class="row" style="overflow: auto;">
+                    <div class="grid-parent grid-100">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Unit</th>
+                                    <th>QTY</th>
+                                    <th>Customer</th>
+                                    <th>Title</th>
+                                    <th>Order ID</th>
+                                    <th>Item Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="inventory in inventoryLock track by $index">
+                                    <td>
+                                        <item-display item="inventoryLockItemSpecMap[inventory.itemSpecId]"></item-display>
+                                    </td>
+                                    <td>{{inventoryLockUnitMap[inventory.unitId].name}}</td>
+                                    <td>{{inventory.qty}}</td>
+                                    <td>{{inventory.customerName}}</td>
+                                    <td>{{inventory.titleName}}</td>
+                                    <td>{{inventory.orderId}}</td>
+                                    <td>{{inventory.itemStatus}}</td>
+                                    <td><a ng-click="releaseQty(inventory)">release</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="grid-100">
+                    <div class="grid-content grid-100">
+                        <unis-pager total-count="inventoryLockPaging.totalCount" page-size="lock_page_Size" load-content="loadInventoryLockContent(currentPage)"></unis-pager>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

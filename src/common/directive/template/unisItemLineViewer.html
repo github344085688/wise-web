@@ -1,0 +1,55 @@
+<div style="background-color: rgba(122, 206, 214, 0.11);
+       padding:10px 10px 0px 10px;  width:100%;" >
+    <div class="grid-parent grid-100">
+        <div style="width:95%; float:left;">
+            <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label class="bold">Item:</label>
+                    <label><item-display item="itemLine"></item-display></label>
+                </div>
+                <div class="grid-25">
+                    <label class="bold">Item Group:</label>
+                    <label> {{itemLine.itemGroupName}} </label>
+                </div>
+                <div class="grid-25">
+                    <label class="bold">UOM:</label>
+                    <label> {{itemLine.unitName}} </label>
+                </div>
+                <div class="grid-25">
+                    <label class="bold">QTY:</label>
+                    <label> {{itemLine.qty}} </label>
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container" ng-show="showLocation == 'true'">
+                <div class="grid-100" ng-show="showLocation == 'true'">
+                    <label class="bold">Pick Locations(Base QTY):</label>
+                    <label ng-repeat="strategy in itemLine.strategies">
+                      <span class="label box-shadow-none label-success" style="margin-left: 5px; padding: 5px; background-color: #7baeb2;">
+                          {{strategy.locationName}} ： {{strategy.baseQty}}  ({{strategy.itemSpecName}})</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="tools" ng-show="itemLine.bundle" style="float:right;">
+            <a class="expand-a" ng-class="{'expand': isExpand, 'collapse': !isExpand}"
+               data-original-title="" title="" ng-click="expandOrClose()"></a>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+    <div ng-show="isExpand">
+        <div class="grid-parent grid-100 container" style="margin-bottom: 5px;" ng-repeat="item in itemLine.itemBundle.items">
+            <div class="grid-33">
+                <label class="bold">Item:</label>
+                <label> {{item.itemSpecName}} </label>
+            </div>
+            <div class="grid-25">
+                <label class="bold">Base QTY:</label>
+                <label> {{item.qty}} </label>
+            </div>
+            <div class="grid-25">
+                <label class="bold">UOM:</label>
+                <label> {{item.unitName}} </label>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Admin</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Service</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Item Import Upload</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <template-manage  file-category="Item" ></template-manage>
+    <div class="tabbable-custom" style="margin-top: 15px;">
+        <ul class="nav nav-tabs ">
+            <li ng-class="{'active':activetab == 'itemSpec'}">
+                <a data-toggle="tab" ng-click="changeTab('itemSpec')"> Import Item Spec  </a>
+            </li>
+
+        </ul>
+        <div class="tab-content" style="padding:15px; min-height: 330px;">
+            <div class="tab-pane active">
+                <div class="row form-group" ng-show="!isUploading">
+                    <label class="bold col-md-2" style="padding-left: 20px; padding-top: 5px;">Excel Data File:</label>
+                    <div class="col-md-6">
+                        <input type="file" id="excelDataFile" name="excelDataFile" class="form-control" ng-model="excelDataFilePath" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+                            onchange="angular.element(this).scope().excelDataFileChange(this)" ng-readonly="true" />
+                    </div>
+             
+                    <label  class="col-md-2 control-label" style="line-height:30px; text-align: right;">Import Material:
+                    </label>
+                    <div class="col-md-1">
+                            <md-switch class="md-primary" aria-label="Import Materia" ng-model="ImportSetting.isImportMateria"
+                            ng-change="changeImportMateria(ImportSetting.isImportMateria)" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                    </div>
+                    
+
+                </div>
+
+                <div ng-show="isUploading" class="text-center">
+                    <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;UPLOADING...</span>
+                </div>
+
+                <div>
+
+                    <div ng-if="!ImportSetting.isImportMateria"  ng-include="'admin/service/item-import/upload/template/defaultValue.html'"></div>
+
+                    <div class="row form-group" style="margin: 10px; padding: 10px; border-top: 1px solid #ddd;">
+                        <div class="col-md-9" style="text-align: right; float:right">
+                          
+                            <waitting-btn type="submit" btn-class="btn blue" ng-click="submit()" value="submitLabel" is-loading="loading"></waitting-btn>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

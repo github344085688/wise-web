@@ -1,0 +1,68 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Foundation Data</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Billing</a>
+        </li>
+    </ul>
+</div>
+<div class="portlet light bordered" style="margin: 15px">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-gift"></i>Entry Fee Configuration
+        </div>
+
+    </div>
+    <div class="portlet-body">
+        <ui-view>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-addon input-circle-left">
+                            <i class="fa fa-search"></i>
+                        </span>
+                        <div>
+                            <input class="form-control input-circle-right" ng-model="keyword" placeholder="Input any text to filter entry fee">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 text-right">
+                    <button class="btn blue" ng-click="addEntryFee()">add entry fee</button>
+                    <button class="btn blue" ng-click="copyEntryFee()">copy entry fee</button>
+                </div>
+            </div>
+            <div class="portlet-list"style="padding-top: 30px;">
+                <div class="portlet light bordered col-md-12" ng-repeat="entryFee in entryFeeList">
+                    <div class="portlet-header">
+                        {{entryFee.type}} / {{entryFee.serviceItem}}
+                        <span ng-if="entryFee.type == 'Storage'"> / {{entryFee.frequency}}</span>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row">
+                            <div class="col-xs-2"><b>Facility:</b> {{entryFee.facility}}</div>
+                            <div class="col-xs-3"><b>Customer:</b> {{entryFee.customer}}</div>
+                            <div class="col-xs-2"><b>Supplier:</b> {{entryFee.supplier}}</div>
+                            <div class="col-xs-3"><b>Shipping Account:</b> {{entryFee.shippingAccount}}</div>
+                            <div class="col-xs-2"><b>Bill to:</b> {{entryFee.billTo}}</div>
+                        </div>
+                        <div class="row" style="padding-top: 10px;">
+                            <div class="col-xs-2"><b>Unit:</b> {{entryFee.unit}}</div>
+                            <div class="col-xs-3" ng-if="entryFee.unitType && entryFee.unitType !== ''"><b>Container Type:</b> {{entryFee.unitType}}</div>
+                            <div class="col-xs-2"><b>Rate:</b> ${{entryFee.rate}}</div>
+                            <div class="col-xs-3"><b>Cost:</b> ${{entryFee.cost}}</div>
+                            <div class="col-xs-2"><b>Margin:</b> {{entryFee.margin}}%</div>
+                        </div>
+                        <div class="row" style="padding-top: 10px;">
+                            <div class="col-xs-12"><b>Description:</b> {{entryFee.description}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </ui-view>
+    </div>
+</div>

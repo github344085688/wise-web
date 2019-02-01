@@ -1,0 +1,43 @@
+<md-dialog id="unis" flex="50" ng-cloak  >
+    <form class="light-theme" novalidate name="editForm" ng-submit="editForm.$valid && submit()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Tip</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="min-height: 200px; overflow: visible;">
+            <div class="form-horizontal">
+                <div class="grid-100 grid-content" >
+                    <div class="grid-parent grid-100 container">
+                        Warning: System will take below actions immediately when forceing remove
+                        this receipt({{info.receiptId}}) from receive task({{info.taskId}}).
+                    </div>
+                    <p>1. Remove LP Detail in LP Setup step of this receiveTask if there has.</p>
+                    <p>2. Delete new item lines which been added from Android on this delete-receipt if there has.</p>
+                    <p>3. Rollback receipt status from IN_PROGRESS to IMPORTED</p>
+                    <div class="grid-parent grid-100 container" style="margin-top: 30px;">
+                        <label style="text-align: right; float: left; padding-right: 15px;">Reason: </label>
+                        <div class="grid-75">
+                            <input-validation-message field="reason" form="editForm"></input-validation-message>
+                            <input name="reason" ng-model="info.reason" required="true" style="width:100%"/>
+                        </div>
+                    </div>
+                    <p style="color: red; ">{{ info.error }}</p>
+                </div>
+
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+            <div class="grid-100 grid-content">
+                <div class="grid-100 grid-parent container">
+                    <unis-waitting-btn value="'Save'" is-loading="loading" ng-if="info.taskId"
+                                       btn-class="grid-10 ripplelink pull-right button-between" ></unis-waitting-btn>
+                    <button type="button" class="grid-10 cancel pull-right" ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+

@@ -1,0 +1,12 @@
+<div class="input-icon right" ng-show="form[field].$invalid && (form.$submitted ||form[field].$touched)">
+     <i class="fa fa-warning tooltips lt-tooltip has-error" ng-show="!hasCustumMessage()">
+         <span class="lt-tooltip-text" ng-show="form[field].$error.uiSelectRequired">Required</span>
+         <span class="lt-tooltip-text" ng-show="form[field].$error.required">Required</span>
+         <span class="lt-tooltip-text" ng-show="form[field].$error.email">Need correct email format</span>
+         <span class="lt-tooltip-text" ng-show="form[field].$error.minlength">Too short</span>
+         <span class="lt-tooltip-text" ng-show="form[field].$error.maxlength">Too long</span>
+     </i>
+    <i class="fa fa-warning tooltips lt-tooltip has-error" ng-show="hasCustumMessage()">
+        <span class="lt-tooltip-text" >{{message}}</span>
+    </i>
+</div>

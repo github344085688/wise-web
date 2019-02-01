@@ -1,0 +1,105 @@
+<md-dialog id="unis" flex="50" ng-cloak>
+    <form class="light-theme"  novalidate name="editForm" ng-submit="editForm.$valid && submit()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Edit Pick Task</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content  style="max-height: 80%; overflow-y: auto;">
+            <div class="form-horizontal">
+                <div class="grid-100 grid-content" >
+                    <div class="grid-parent grid-100 container">
+                        <label class="grid-25 label-input">Planned Assignee: </label>
+                        <div class="grid-75">
+                            <input-validation-message field="plannedAssignee" form="editForm"></input-validation-message>
+                            <user-auto-complete name="plannedAssignee" on-select="onSelectUser(user)"
+                                                ng-model="task.plannedAssigneeUserId" required="true"></user-auto-complete>
+                        </div>
+                    </div>
+                    <div class="grid-parent grid-100 container">
+                        <label class="grid-25 label-input">Priority: </label>
+                        <div class="grid-75">
+                            <task-priority-auto-complete ng-model="task.priority"></task-priority-auto-complete>
+                        </div>
+                    </div>
+                    <div class="grid-parent grid-100 container">
+                        <label class="grid-25 label-input">Rush: </label>
+                        <div class="grid-75">
+                            <md-switch class="md-primary" aria-label="Is Rush" style="margin: 0px" ng-model="task.isRush"></md-switch>
+                        </div>
+                    </div>
+                    <div class="grid-parent grid-100 container">
+                        <label class="grid-25 label-input">Description: </label>
+                        <div class="grid-75">
+                            <input type="text" ng-model="task.description"/>
+                        </div>
+                    </div>
+                    <div class="grid-parent grid-100 container">
+                            <label class="grid-25 control-label"> Pick Rounds: </label>
+                            <div class="grid-75">
+                                <div style="padding: 15px 15px 20px;background-color: rgba(198, 228, 230, 0.36); max-height: 300px; width: 100%; overflow: auto;">
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-5">
+                                            &nbsp;
+                                        </div>
+                                        <div class="grid-40">
+                                            <label>Weight</label>
+                                        </div>
+                                        <div class="grid-35">
+                                            <label>Unit</label>
+                                        </div>
+                                        <div class="grid-20">
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container" ng-repeat="pickRound in task.pickRounds track by $index">
+                                        <div class="grid-5" style="line-height: 30px;text-align: right;">
+                                            <label>{{$index+1}}</labels>
+                                        </div>
+                                        <div class="grid-40">
+                                            <input-validation-message field="weight{{$index}}" form="editForm"></input-validation-message>
+                                            <input type="number" name="weight{{$index}}" class="form-control" ng-model="pickRound.weight" required/>
+                                        </div>
+                                        <div class="grid-35">
+                                            <input-validation-message field="unit{{$index}}" form="editForm"></input-validation-message>
+                                            <ui-select name="unit{{$index}}" ng-model="pickRound.weightUnit" required>
+                                                <ui-select-match>{{$select.selected}}</ui-select-match>
+                                                <ui-select-choices repeat="unitName in weightUnits">
+                                                    {{unitName}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-20">
+                                            <button type="button" class="btn red" ng-click="remove($index)">Remove</button>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+                                        <label class="grid-80 control-label"> &nbsp; </label>
+                                        <div class="grid-20">
+                                            <button type="button" class="btn green" ng-click="add()">Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+            <div class="grid-100 grid-content">
+                <div class="grid-100 grid-parent container">
+                    <div class="grid-100">
+                        <div style="color: red; ">{{ errorMsg }}</div>
+                    </div>
+                </div>
+                <div class="grid-100 grid-parent container">
+                    <unis-waitting-btn ng-type="submit" value="'Save'" is-loading="saving"
+                        btn-class="grid-10 ripplelink pull-right button-between" ></unis-waitting-btn>
+                    <button type="button" class="grid-10 cancel pull-right" ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

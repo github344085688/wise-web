@@ -1,0 +1,643 @@
+<script type="text/ng-template" id="Receiving">
+    <div class="panel panel-default">
+
+        <div class="panel-body">
+            <div class="form-group row">
+                <div class="col-md-3">
+                     <b>Assignees:</b>
+                     <span ng-repeat="user in step.assignees" style="margin:5px 5px">
+                        {{user.firstName}} {{user.lastName}}
+                     </span>
+                </div>
+                <div class="col-md-3">
+                    <b>Dock:</b><span style="background-color:#e8e3cf; margin: 5px 5px;padding: 5px 10px;border-radius: 3px;">{{step.dock.name}}</span>
+                </div>
+                <div class="col-md-3"><b>Status:</b>{{step.status}}</div>
+                <div class="col-md-3"><b>Priority:</b>{{step.priority}}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <b>Entry: </b>
+                    <a ng-href="{{'#/cf/facility/window/checkin/' + step.entryId + '/' + step.entryId + '/carrier-info'}}" target="_blank">{{step.entryId}}</a>
+                </div>
+                <div class="col-md-3">
+                    <b>RN: </b><a  ng-href="{{'#/wms/inbound/receipt/' + receipt.id}}" target="_blank">{{receipt.id}}</a>
+                </div>
+                <div class="col-md-3">
+                    <b>Company: </b>{{receipt.companyName}}
+                </div>
+                <div class="col-md-3">
+                    <b>Customer: </b>{{receipt.customerName}}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-3">
+                    <b>Appointment Time: </b>
+                    {{receipt.appointmentTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                </div>
+                <div class="col-md-3">
+                    <b>Start Time:</b>
+                    <span>{{step.startTime}}</span>
+                </div>
+                <div class="col-md-3">
+                    <b>End Time:</b>
+                    <span>{{step.endTime}}</span>
+                </div>
+                <div class="col-md-3">
+                    <b>Duration:</b>
+                    <span ng-show="stepTimerMap[step.id]">{{stepTimerMap[step.id].durationTime}}</span>&nbsp; <a href="#" ng-click="popUpDurationDetail(step)">Detail</a>
+                </div>
+            </div>
+            <div class="form-group" ng-if="step.name == 'Receiving'">
+                <div class="col-md-3">
+                    <b>Received Carton QTY: </b>
+                    <span>{{step.cartonNos.length}}</span>
+                </div>
+                <div class="col-md-3">
+                        <b>Container#: </b>
+                        <span ng-repeat="Container in step.containerNOs">
+                                {{Container}}
+                                  &nbsp;</span>
+                </div>
+                <div class="col-md-3">
+                    <b>Trailer#: </b>
+                        <span ng-repeat="trailer in step.trailers">
+                                {{trailer}}
+                                  &nbsp;</span>
+                </div>
+            </div>
+            <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer"
+                   id="sample_1" role="grid" aria-describedby="sample_1_info">
+                <thead>
+                <tr role="row">
+                    <th> Item</th>
+                    <th> UOM</th>
+                    <th> Expected Item QTY</th>
+                    <th> Expected Carton Qty</th>
+                    <th> Note</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="itemline in receipt.itemLines track by $index">
+                    <td>
+                        <item-display item="itemline"></item-display>
+                    </td>
+                    <td>{{itemline.unitName}}</td>
+                    <td>{{itemline.qty}}</td>
+                    <td>{{itemline.snList.length}}</td>
+                    <td>{{itemline.note}}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="form-group" ng-if="step.name == 'Offload'">
+                <div class="col-md-12">
+                        <div><b>Offload</b>:</div>
+                        <ul class="feeds" style="display: inline-block;">
+                            <li ng-repeat="p in offLoadPhotoIds" style="display: inline-block; margin: 5px 5px;">
+                                <img style="width:50px;height: 50px;" http-src="/file-app/file-download/{{p}}" title="Offload: {{step.photoMap[p].createdWhen}}" />
+                            </li>
+                            <li style="display: inline-block; margin: 5px 5px;">
+                                    <upload-btn ng-model="offLoadPhotoIds" type="OFFLOAD" step-id="step.id" app='wms' module='tran' service='takephoto' save-picture="savePicture(param)"></upload-btn>
+                                </li>
+                        </ul>
+            
+                    </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="LPN">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <b>Assignees:</b>
+                    <span ng-repeat="user in step.assignees" style="margin:5px 5px">
+                        {{user.firstName}} {{user.lastName}}
+                     </span>
+                </div>
+                <div class="col-md-3">
+                    <b>Dock:</b><span style="background-color:#e8e3cf; margin: 5px 5px;padding: 5px 10px;border-radius: 3px;">{{step.dock.name}}</span>
+                </div>
+                <div class="col-md-3"><b>Status:</b>{{step.status}}</div>
+                <div class="col-md-3"><b>Priority:</b>{{step.priority}}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <b>Entry: </b>
+                    <a ng-href="{{'#/cf/facility/window/checkin/' + step.entryId + '/' + step.entryId + '/carrier-info'}}" target="_blank">{{step.entryId}}</a>
+                </div>
+                <div class="col-md-3">
+                    <b>RN: </b><a  ng-href="{{'#/wms/inbound/receipt/' + receipt.id}}" target="_blank">{{receipt.id}}</a>
+                </div>
+                <div class="col-md-3">
+                    <b>Company: </b>{{receipt.companyName}}
+                </div>
+                <div class="col-md-3">
+                    <b>Customer: </b>{{receipt.customerName}}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-3">
+                    <b>Appointment Time: </b>
+                    {{receipt.appointmentTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                </div>
+                <div class="col-md-3">
+                    <b>Start Time:</b>
+                    <span>{{step.startTime}}</span>
+                </div>
+                <div class="col-md-3">
+                    <b>End Time:</b>
+                    <span>{{step.endTime}}</span>
+                </div>
+                <div class="col-md-3">
+                    <b>Duration:</b>
+                    <span ng-show="stepTimerMap[step.id]">{{stepTimerMap[step.id].durationTime}}</span>&nbsp; <a href="#" ng-click="popUpDurationDetail(step)">Detail</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <b>Carton QTY: </b>
+                    <span>{{step.cartons.length ? step.cartons.length : 0}}</span>
+                </div>
+                <div class="col-md-3">
+                    <b>Container#: </b>
+                    <span ng-repeat="Container in step.containerNOs">{{Container}}&nbsp;</span>
+                </div>
+                <div class="col-md-3">
+                    <b>Trailer#: </b>
+                    <span ng-repeat="trailer in step.trailers">{{trailer}}&nbsp;</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="PutAway">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <b>Assignees:</b>
+                    <span ng-repeat="user in step.assignees" style="margin:5px 5px">
+                        {{user.firstName}} {{user.lastName}}
+                     </span>
+                </div>
+                <div class="col-md-3">
+                    <b>Dock:</b><span style="background-color:#e8e3cf; margin: 5px 5px;padding: 5px 10px;border-radius: 3px;">{{step.dock.name}}</span>
+                </div>
+                <div class="col-md-3"><b>Status:</b>{{step.status}}</div>
+                <div class="col-md-3"><b>Priority:</b>{{step.priority}}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <b>Entry: </b>
+                    <a ng-href="{{'#/cf/facility/window/checkin/' + step.entryId + '/' + step.entryId + '/carrier-info'}}"
+                       target="_blank">{{step.entryId}}</a>
+                </div>
+                <div class="col-md-3">
+                    <b>RN: </b><a ng-href="{{'#/wms/inbound/receipt/' + receipt.id}}" target="_blank">{{receipt.id}}</a>
+                </div>
+                <div class="col-md-3">
+                    <b>Company: </b>{{receipt.companyName}}
+                </div>
+                <div class="col-md-3">
+                    <b>Customer: </b>{{receipt.customerName}}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <b>Appointment Time: </b>
+                    {{receipt.appointmentTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                </div>
+                <div class="col-md-3">
+                    <b>Start Time:</b>
+                    <span>{{step.startTime}}</span>
+                </div>
+                <div class="col-md-3">
+                    <b>End Time:</b>
+                    <span>{{step.endTime}}</span>
+                </div>
+                <div class="col-md-3">
+                    <b>Duration:</b>
+                    <span ng-show="stepTimerMap[step.id]">{{stepTimerMap[step.id].durationTime}}</span>&nbsp; <a href="#" ng-click="popUpDurationDetail(step)">Detail</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="Photo">
+    <div class="panel panel-default">
+
+
+        <div class="panel-body">
+            <div class="form-group row">
+                   <div class="col-md-3">
+                             <b>Assignees:</b>
+                             <span ng-repeat="user in step.assignees" style="margin:5px 5px">
+                                {{user.firstName}} {{user.lastName}}
+                             </span>
+                    </div>
+           
+                    <div class="col-md-3"><b>Status:</b>{{step.status}}</div>
+                      
+                    
+                    <div class="col-md-3">
+                            <b>RN: </b><a  ng-href="{{'#/wms/inbound/receipt/' + receipt.id}}" target="_blank">{{receipt.id}}</a>
+                    </div>
+                    <div class="col-md-3">
+                            <b>Company: </b>{{receipt.companyName}}
+                    </div>         
+             </div>
+             
+        
+            <div class="form-group row">
+                        <div class="col-md-3">
+                                    <b>Customer: </b>{{receipt.customerName}}
+                    </div>
+            
+                        <div class="col-md-3">
+                            <b>Start Time:</b>
+                            <span>{{step.startTime}}</span>
+                        </div>
+                        <div class="col-md-3">
+                            <b>End Time:</b>
+                            <span>{{step.endTime}}</span>
+                        </div>
+                        <div class="col-md-3">
+                            <b>Duration:</b>
+                            <span ng-show="stepTimerMap[step.id]">{{stepTimerMap[step.id].durationTime}}</span>&nbsp; <a href="#" ng-click="popUpDurationDetail(step)">Detail</a>
+                        </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12" ng-repeat="photo in photoGroups track by $index">
+                        <div style="padding: 10px 0px;"><b>{{photo.headInfo}}</b></div>
+                        <ul class="feeds" style="display: inline-block;">
+                            <li ng-repeat="p in photo.photoIds" style="display: inline-block; margin: 5px 5px;">
+                                <img style="width:50px;height: 50px;" http-src="/file-app/file-download/{{p}}" title="Offload: {{step.photoMap[p].createdWhen}}" />
+                            </li>
+                            <li style="display: inline-block; margin: 5px 5px;">
+                                    <upload-btn ng-model="photo.photoIds" type="{{photo.stepType}}" step-id="photo.stepId" app='wms' module='tran' service='takephoto' save-picture="savePicture(param)"></upload-btn>
+                            </li>
+                        </ul>
+            
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="Shipping">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <b>Assignees:</b>
+                    <span ng-repeat="user in step.assignees" style="margin:5px 5px">
+                        {{user.firstName}} {{user.lastName}}
+                     </span>
+                </div>
+                <div class="col-md-3">
+                    <b>Dock:</b>
+                    <span style="background-color:#e8e3cf; margin: 5px 5px;padding: 5px 10px;border-radius: 3px;">{{step.dock.name}}</span> 
+                </div>
+                <div class="col-md-3"><b>Status:</b>{{step.status}}</div>
+                <div class="col-md-3"><b>Priority:</b>{{step.priority}}</div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-3"><b>Entry: </b>
+                    <a ng-href="{{'#/cf/facility/window/checkin/' + step.entryId + '/' + step.entryId + '/carrier-info'}}" target="_blank">{{step.entryId}} </a></div>
+                <div class="col-md-3"><b>Load ID:</b><a ng-href="{{'#/wms/outbound/load/' + step.loadId}}" target="_blank">{{step.loadId}}</a></div>
+                <div class="col-md-3">
+                    <b>Load No: </b>{{loadMap[step.loadId].loadNo}}
+                </div>
+                <div class="col-md-3">
+                    <b>Load Type: </b>{{loadMap[step.loadId].type}}
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <b>Company: </b>{{loadMap[step.loadId].companyName}}
+                </div>
+                <div class="col-md-3">
+                    <b>Customer: </b>{{loadMap[step.loadId].customerName}}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <b>Appointment Time: </b>
+                    {{loadMap[step.loadId].appointmentTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                </div>
+                <div class="col-md-3">
+                    <b>Start Time:</b>
+                    <span>{{step.startTime}}</span>
+                </div>
+                <div class="col-md-3">
+                    <b>End Time:</b>
+                    <span>{{step.endTime}}</span>
+                </div>
+                <div class="col-md-3">
+                    <b>Duration:</b>
+                    <span ng-show="stepTimerMap[step.id]">{{stepTimerMap[step.id].durationTime}}</span>&nbsp; <a href="#" ng-click="popUpDurationDetail(step)">Detail</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <b>Shipped Carton QTY: </b>
+                    <span>{{step.cartonNos.length}}</span>
+                </div>
+                <div class="col-md-3">
+                    <b>Container#: </b>
+                        <span ng-repeat="Container in step.containerNOs">
+                                {{Container}}
+                                  &nbsp;</span>
+                </div>
+                <div class="col-md-3">
+                        <b>Trailer#: </b>
+                        <span ng-repeat="trailer in step.trailers">
+                                {{trailer}}
+                                  &nbsp;</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <span class="bold">Orders: </span>
+                    <span ng-repeat="orderLine in loadMap[step.loadId].orderLines">
+                        <span ng-hide="$index==0"> | </span>
+                        <a ng-href="{{'#/wms/outbound/order/' + orderLine.orderId}}" target="_blank">{{orderLine.orderId}} </a>
+                    </span>
+                </div>
+            </div>
+            <table class="table table-striped table-bloaded table-hover table-checkable order-column dataTable no-footer">
+                <thead>
+                <th>Order</th>
+                <th>Status</th>
+                <th>Customer</th>
+                <th>Reference</th>
+                <th>Purchase Order No.</th>
+                <th>Ship to</th>
+                <th>Appointment</th>
+                </thead>
+                <tbody>
+                <tr ng-repeat="orderLine in loadMap[step.loadId].orderLines">
+                    <td><a ng-href="{{'#/wms/outbound/order/' + orderLine.orderId}}" target="_blank">{{orderLine.orderId}}</a></td>
+                    <td>{{orderMap[orderLine.orderId].status}}</td>
+                    <td>{{orderMap[orderLine.orderId].customerName}}</td>
+                    <td>{{orderMap[orderLine.orderId].referenceNo}}</td>
+                    <td>{{orderMap[orderLine.orderId].poNo}}</td>
+                    <td>{{generateShipToAddressStr(orderMap[orderLine.orderId].shipToAddress)}}</td>
+                    <td>{{orderMap[orderLine.orderId].appointmentTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</script>
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Task</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a ui-sref="wms.task.receiptTask.list">Transload Task</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin-top:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> Transload Task: {{task.id}}</span>
+                </div>
+                <div class="actions">
+                    <waitting-btn type="button" permission-check="{{'task::transloadTask_write'}}" btn-class="btn green" ng-click="convertToGeneric()"
+                        ng-if="task.isShowConvertBtn" is-loading="convertLoading" is-ready="!task.isConvertedToGeneric"
+                        value="'Convert to Generic'"></waitting-btn>
+                    <waitting-btn type="button" permission-check="{{'task::transloadTask_write'}}" btn-class="btn green" ng-click="closeTask()"
+                        ng-disabled="task.status != 'New' && task.status != 'In Progress' && task.status != 'Pause'" is-loading="closeTaskIsLoading"
+                        value="'Close Task'"></waitting-btn>
+                    <waitting-btn type="button" permission-check="{{'task::transloadTask_write'}}" btn-class="btn red" ng-click="cancelTask()"
+                        ng-if="task.status === 'New'" is-loading="cancelTaskIsLoading" value="'Cancel Task'"></waitting-btn>
+                    <button type="button" permission-check="{{'task::transloadTask_write'}}" class="btn blue" ng-click="editTask()" style="line-height:2;">Edit Transload Task</button>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <div class="row form-group">
+
+                    <div class="col-md-3">
+                        <b>Status</b>: {{task.status}}
+                    </div>
+                    <div class="col-md-3">
+                        <b>Assignee</b>: {{task.assignee.firstName}} {{task.assignee.lastName}}</div>
+                    <div class="col-md-3">
+                        <b>Priority</b>: {{task.priority}}</div>
+                    <div class="col-md-3" ng-if="task.status === 'In Progress'">
+                        <div class="col-md-12" style=" padding:2px 0 0 0;">
+                            <div style="float:left;">
+                                <b>In Progress</b>:
+                            </div>
+                            <div id="unis" style="float:left;padding-top: 3px;">
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'15px','width':widthPer25(task.inprogrePer),'background':'#156998'}"></div>
+                                </div>
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'15px','width':widthPer50(task.inprogrePer),'background':'#156998'}"></div>
+                                </div>
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'15px','width':widthPer75(task.inprogrePer),'background':'#156998'}"></div>
+                                </div>
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'15px','width':widthPer100(task.inprogrePer),'background':'#156998'}"></div>
+                                </div>
+
+                            </div>
+                            <div style="display:inline-block;"> {{ widthPer(task.inprogrePer) }}</div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-9">
+                        <b>Description</b>: {{task.description}}</div>
+                </div>
+                <div class="row form-group" style="margin-bottom: 25px;">
+                    <div class="col-md-3">
+                        <b>Start Time:</b>
+                        <span>{{task.startTime}}</span>
+                    </div>
+                    <div class="col-md-3">
+                        <b>End Time:</b>
+                        <span>{{task.endTime}}</span>
+                    </div>
+                    <span class="col-md-3">
+                        <b>Created Time: </b>{{task.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}} &nbsp;
+                        <span ng-show="task.createdBy">({{task.createdBy}})</span>
+                    </span>
+                    <span class="col-md-3">
+                        <b>Updated Time: </b>{{task.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}} &nbsp;
+                        <span ng-show="task.updatedBy">({{task.updatedBy}})</span>
+                    </span>
+                </div>
+                <div class="panel panel-default" ng-repeat="step in task.steps track by $index">
+                    <div class="panel-heading" style="height:54px;">
+                        <div class="panel-title" style="display: block; float: left;line-height:34px;"> STEP | {{step.name}}</div>
+                        <div class="actions" style="text-align: right;">
+                            <waitting-btn type="button" btn-class="btn blue" ng-if="step.status == 'New' && step.name != 'Photo'" ng-click="startStep(step)" is-loading="step.stepStarting"
+                                value="'Start'" permission-check="{{'task::transloadTask_write'}}"></waitting-btn>
+                            <waitting-btn type="button" btn-class="btn red" ng-if="step.name=='Shipping' && step.status != 'Done' && step.status != 'Force Closed'"
+                                ng-click="stepUnShipAll(step)" is-loading="step.unshippingAllIsLoading" value="'Un-Ship All'"
+                                permission-check="{{'task::transloadTask_write'}}"></waitting-btn>
+                            <waitting-btn type="button" btn-class="btn red" ng-if="step.name=='Receiving' &&step.status != 'Done' && step.status != 'Force Closed'"
+                                ng-click="stepUnReceiveAll(step)" is-loading="step.unreceiveAllIsLoading" value="'Un-Receive All'"
+                                permission-check="{{'task::transloadTask_write'}}"></waitting-btn>
+                            <waitting-btn type="button" btn-class="btn green" ng-if="step.name=='Shipping' && !step.shippAllIsDisabled" ng-click="stepShipAll(step)"
+                                is-loading="step.shippingAllIsLoading" value="'Ship All'" permission-check="{{'task::transloadTask_write'}}"></waitting-btn>
+                            <waitting-btn type="button" btn-class="btn green" ng-if="step.name=='Receiving' && !step.receiveAllIsDisabled" ng-click="stepReceiveAll(step)"
+                                is-loading="step.receiveAllIsLoading" value="'Receive All'" permission-check="{{'task::transloadTask_write'}}"></waitting-btn>
+                            <waitting-btn type="button" btn-class="btn green" ng-click="completeStep(step)" is-loading="step.completeStepIsLoading" ng-if="!step.completeIsDisabled && step.name != 'Photo'"
+                                value="'Complete'" permission-check="{{'task::transloadTask_write'}}"></waitting-btn>
+                            <!-- <waitting-btn type="button" btn-class="btn red"  ng-if="step.showLazyClose && !step.lazyCloseIsDisabled" ng-click="lazyCloseStep(step)"
+                                              is-loading="lazyCloseStepIsLoading"
+                                              value="'Lazy Close'"></waitting-btn> -->
+                            <waitting-btn type="button" btn-class="btn blue" ng-if="step.name != 'Photo' && (step.status == 'Done' || step.status == 'Force Closed')" ng-click="releaseDock(step)"
+                                is-loading="step.dockReleasing" value="'Release Dock'" permission-check="{{'task::transloadTask_write'}}"></waitting-btn>
+                            <waitting-btn type="button" btn-class="btn red" ng-click="reopenStep(step)" is-loading="step.reopenStepIsLoading" ng-if="!step.reopenIsDisabled"
+                                value="'Reopen'" permission-check="{{'task::transloadTask_write'}}"></waitting-btn>
+                            <waitting-btn type="button" btn-class="btn green" ng-if="step.name=='Shipping' && (step.status == 'Done' || step.status == 'Force Closed')"
+                                ng-click="createNewLoad(step)" is-loading="step.createNewLoad" value="'Create New Load'" permission-check="{{'task::transloadTask_write'}}"></waitting-btn>
+
+                            <button permission-check="{{'task::transloadTask_write'}}" type="button" class="btn yellow" update-step-assignees task-step="step"
+                                is-unis="true">Edit Assignees</button>
+                            <a target="_blank" class="btn blue" ng-if="step.name=='Receiving'" ui-sref="wms.task.transloadTask.transload({ taskId: step.taskId, receiptId: step.receiptId, dockId: step.dockId})">Open</a>
+                            <a target="_blank" class="btn blue" ng-if="step.name=='Shipping'" ui-sref="wms.task.transloadTask.shipping({ taskId: step.taskId, loadId: step.loadId, dockId: step.dockId})">Open</a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="tabbable-custom" style="margin-bottom: 0px; overflow: visible">
+                            <ul class="nav nav-tabs">
+                                <li ng-class="{'active':activeTabs[step.id] == 'content'}">
+                                    <a data-toggle="tab" ng-click="changeTab('content', step)"> Content </a>
+                                </li>
+                                <li ng-show="step.name == 'Receiving' || step.name == 'LPN'" ng-class="{'active':activeTabs[step.id] == 'cartons'}">
+                                    <a data-toggle="tab" ng-click="changeTab('cartons', step)"> Cartons </a>
+                                </li>
+                                <li ng-show="step.name == 'PutAway'" ng-class="{'active':activeTabs[step.id] == 'putAwayResults'}">
+                                    <a data-toggle="tab" ng-click="changeTab('putAwayResults', step)"> Results </a>
+                                </li>
+                                <li ng-class="{'active':activeTabs[step.id] == 'stepException'}">
+                                    <a data-toggle="tab" ng-click="changeTab('stepException',step)"> Exception
+                                        <i ng-if="step.exceptionResult && step.exceptionResult.hasException" style="color:red" class="fa fa-exclamation-triangle red-font"
+                                            aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" style="padding:15px;">
+                                <div ng-class="{'active':activeTabs[step.id] == 'content'}" class="tab-pane ">
+                                    <div ng-if="step.name == 'Offload' || step.name == 'Receiving'" ng-include="'Receiving'"></div>
+                                    <div ng-if="step.name == 'Shipping'" ng-include="'Shipping'"></div>
+                                    <div ng-if="step.name == 'LPN'" ng-include="'LPN'"></div>
+                                    <div ng-if="step.name == 'PutAway'" ng-include="'PutAway'"></div>
+                                    <div ng-if="step.name == 'Photo'" ng-include="'Photo'"></div>
+                                </div>
+                                <div ng-show="step.name == 'LPN'" ng-class="{'active':activeTabs[step.id] == 'cartons'}" class="tab-pane" style="min-height: 100px;">
+                                    <div class="row" style="padding: 5px;" ng-if="step.cartons&&step.cartons.length>0">
+                                        <div class="col-md-2">
+                                            <b>LP</b>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <b>SN</b>
+                                        </div>
+                                    </div>
+                                    <div class="row" ng-repeat="carton in step.cartons track by $index" style="padding: 5px;">
+                                        <div class="col-md-2">{{carton.cartonNo}}</div>
+                                        <div class="col-md-10" style="word-break: break-word;">
+                                            <span>
+                                                {{carton.snList.toString()}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-show="step.name == 'PutAway'" ng-class="{'active':activeTabs[step.id] == 'putAwayResults'}" class="tab-pane" style="min-height: 100px;">
+                                    <div class="row">
+                                        <span class="col-md-2" ng-repeat="result in step.putAwayResults track by $index">
+                                            {{result.cartonNo}}
+                                            <span ng-if="result.locationId">({{result.locationName}})</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div ng-show="step.name == 'Receiving'" ng-class="{'active':activeTabs[step.id] == 'cartons'}" class="tab-pane">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <ul class="nav nav-tabs tabs-left">
+                                                <li ng-repeat="cartonObj in cartonObjs track by $index" ng-class="{'active':cartonTab == cartonObj.id}">
+                                                    <a href="#" ng-click="changeCartonTab(cartonObj)"> {{cartonObj.id}} ({{cartonObj.cartons.length}}) </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <div class="tab-content">
+                                                <div class="form-group" style="text-align: right; padding-right:30px;">
+                                                    <button type="button" id="copyBtn" class="btn green btn-outline" data-clipboard-text="{{copyObj.text}}">Copy To Clip Board</button>
+                                                </div>
+                                                <div class="tab-pane" ng-repeat="cartonObj in cartonObjs track by $index" ng-class="{'active':cartonTab == cartonObj.id}">
+                                                    <span class="col-md-3" ng-repeat="carton in cartonObj.cartons track by $index">{{carton.cartonNo}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-class="{'active':activeTabs[step.id] == 'stepException'}" class="tab-pane" style="padding-bottom: 10px;display: flow-root;">
+
+                                    <div ng-if="step.exceptionResult && step.exceptionResult.hasException">
+                                        <div class="form-group">
+                                            <div class="col-md-6">
+                                                <h5>Below cartons were not received, total {{step.exceptionResult.notReceiveCartons.length}}</h5>
+                                            </div>
+                                            <div class="col-md-6" style="text-align: right; padding-right:30px;">
+                                                <button type="button" id="copyExceptionBtn" class="btn green btn-outline" data-clipboard-text="{{step.exceptionResult.exceptionCartonStr}}">Copy To Clip Board</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-12" style="display: inline-block;">
+                                            <span class="col-md-2" ng-repeat="carton in step.exceptionResult.notReceiveCartons track by $index">{{carton}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="height:54px;">
+                        <div class="panel-title" style="display: block; float: left;line-height:34px;"> Pending Load</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <b>Load ID:</b>
+                            <span>
+                                <a ng-repeat="loadId in pendingLoadIds track by $index" style="margin: 0 15px;" ng-click="pendingLoadToCreatEntry()">
+                                    {{loadId}}
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>

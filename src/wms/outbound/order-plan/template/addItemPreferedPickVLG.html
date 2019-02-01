@@ -1,0 +1,102 @@
+<md-dialog id="unis" flex="60">
+    <form class="light-theme" novalidate name="editForm" ng-submit="editForm.$valid && submitVGL()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Item Prefered Pick Virtual Location Group</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content style="overflow: auto;min-height: 280px;">
+            <div class="md-dialog-content">
+
+                <div class="grid-100">
+                    <div class="grid-content">
+                        <div class="grid-100 grid-parent container">
+                            <div class="grid-25">
+                                <label>Mini CS QTY</label>
+                                <input-validation-message field="csFrom" form="editForm"></input-validation-message>
+                                <input type="number" name="csFrom" ng-model="itemAndVLG.minCsQty" required="true" />
+                            </div>
+                            <div class="grid-25">
+                                <label>Max CS QTY </label>
+                                <input-validation-message field="csTo" form="editForm"></input-validation-message>
+                                <input type="number" name="csTo" ng-model="itemAndVLG.maxCsQty" required="true" />
+                            </div>
+                            <div class="grid-30">
+                                <label>Virtual Location Group</label>
+                                <input-validation-message field="VLG" form="editForm"></input-validation-message>
+                                <location-virtual-group-auto-complete name="VLG" placeholder="Enter Virtual Location Group" group-type="Zone" allow-clear="true"
+                                    ng-model="itemAndVLG.virtualLocationGroupId" required="true"></location-virtual-group-auto-complete>
+                            </div>
+                            <div class="grid-20">
+                                <label>&nbsp;</label>
+                                <unis-waitting-btn btn-type="submit" btn-class="ripplelink pull-right button-between" value="labelName" is-loading="loading"></unis-waitting-btn>
+                            </div>
+                        </div>
+                        <div class="grid-100 grid-parent container">
+                            <!-- <div ng-show="isLoading" class="text-center">
+                                <img src="assets/img/loading-spinner-grey.gif">
+                                <span>&nbsp;LOADING...</span>
+                            </div> -->
+                            <div>
+                                <div class="table-scrollable">
+                                    <table class="table">
+                                        <thead>
+                                            <tr role="row">
+
+                                                <th>Min CS QTY</th>
+                                                <th>Max CS QTY</th>
+                                                <th>virtual Location Group</th>
+                                                <th>Action</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="itemVirtualLocation in itemPreferedPickVLGConfigurations track by $index">
+                                                <th>{{itemVirtualLocation.minCsQty}}</th>
+                                                <th>{{itemVirtualLocation.maxCsQty}}</th>
+                                                <th>{{itemVirtualLocation.VLGName}}</th>
+                                                <td>
+                                                    <a href="#" ng-click="btnDelVLG(itemVirtualLocation.id)">
+                                                        <b>Delete</b>
+                                                    </a> |
+                                                    <a href="#" ng-click="btnEditVLG(itemVirtualLocation)">
+                                                        <b>Edit</b>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- <unis-pager total-count="locationLists.length" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager> -->
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-100">
+                            <div style="float: left; color: red;  text-align: left; padding-left: 20px;">&nbsp;{{ errorMsg }}</div>
+                        </div>
+
+                        <!-- <div class="grid-20">
+                            <button type="button" ng-click="cancel()" class="ripplelink">Cancel</button>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+
+    </form>
+</md-dialog>

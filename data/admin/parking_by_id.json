@@ -1,0 +1,19 @@
+{
+     "parkingId": "001",
+     "renter": "test",
+     "renterType": "company",
+     "phone": "12536374652",
+     "email": "12536374652@163.com",
+     "parkingGroups": [
+        { "rsd": "5/20/2016 15:59",
+          "red": "5/25/2016 15:59",
+          "count": 1,
+          "locations": ["A001"]
+        },
+        { "rsd": "5/20/2016 15:59",
+          "red": "5/25/2016 15:59",
+          "count": 1,
+          "locations": ["A001"]
+        }
+     ]
+  }

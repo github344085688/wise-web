@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="59px" height="58px" viewBox="0 0 59 58" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>86A161E6-1549-4C47-A045-1747093D6C5E</title>
+    <desc>Created with sketchtool.</desc>
+    <defs></defs>
+    <g id="Modals--Warning,-Error,-Success" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="White/Light---Error" transform="translate(-691.000000, -410.000000)" fill="#F34D70">
+            <g id="ERROR" transform="translate(570.000000, 386.000000)">
+                <g id="ic_cancel-copy" transform="translate(121.000000, 24.000000)">
+                    <path d="M29.5,0 C13.1865,0 0,12.963 0,29 C0,45.037 13.1865,58 29.5,58 C45.8135,58 59,45.037 59,29 C59,12.963 45.8135,0 29.5,0 L29.5,0 Z M44,39.911 L39.77,44 L29,33.589 L18.23,44 L14,39.911 L24.77,29.5 L14,19.089 L18.23,15 L29,25.411 L39.77,15 L44,19.089 L33.23,29.5 L44,39.911 L44,39.911 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

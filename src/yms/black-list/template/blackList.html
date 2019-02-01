@@ -1,0 +1,54 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">YMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">black-list</a>
+        </li>
+    </ul>
+</div>
+<div class="portlet light bordered" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold"> Black List </span>
+        </div>
+    </div>
+    <div class="portlet-body yms-black-list">
+        <div class="row">
+            <div class="input-icon  right col-md-4">
+                <i class="fa fa-search font-green" style="right:17px;"></i>
+                <input type="text" class="form-control" placeholder="Input And Word to Search">
+            </div>
+            <button type="button" class="btn blue" style="" ng-click="search()">Search</button>
+            <button type="button" class="btn blue" style="float: right;right: 20px" ng-click="addBlackList()">Add BlackList</button>
+        </div>
+        <div class="black-list-container" style="padding: 20px;">
+            <div class="row" ng-repeat="black in blackList track by $index">
+                <span>
+                    <i class="material-icons"  ng-click="remove($index)" title="Remove">clear</i>
+                </span>
+                <span class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <b>{{black.type}} : </b>
+                            <label>{{black.value}}</label>
+                        </div>
+                        <div class="col-md-4">
+                            <b>Effective Date : </b>
+                            <label>{{black.effectiveDate}}</label>
+                        </div>
+                        <div class="col-md-4">
+                            <b>Expired Date : </b>
+                            <label>{{black.expiredDate}}</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <img ng-repeat="imgSrc in black.imgs" http-src="{{imgSrc}}" width="100px", height="100px">
+                    </div>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

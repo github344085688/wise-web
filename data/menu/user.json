@@ -1,0 +1,31 @@
+[{
+    "title": "Tag",
+    "icon": "label",
+    "state": "user.tag",
+    "url": "/user/tag",
+    "permissions": "user::tag_read"
+    },{
+        "title": "Role",
+        "icon": "label",
+        "state": "user.role",
+        "url": "/user/role",
+        "permissions": "user::role_read"
+    },{
+        "title": "Permission",
+        "icon": "label",
+        "state": "user.permission",
+        "url": "/user/permission",
+        "permissions": "user::permission_read"
+    },{
+        "title": "Role Permission",
+        "icon": "label",
+        "state": "user.rolePermission.list",
+        "url": "/user/role-permission/list",
+        "permissions": "user::rolePermission_read"
+    }, {
+        "title": "User Management",
+        "icon": "person",
+        "state": "user.userManagement",
+        "url": "/user/user-management",
+        "permissions": "user::userManagement_read"
+    }]

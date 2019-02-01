@@ -1,0 +1,72 @@
+<div class="grid-100 row">
+  <div class="grid-content grid-100">
+    <div class="grid-parent grid-100 container">
+      <h1 class="section-label pull-left">EDI Log List</h1>
+    </div>
+    <div class="grid-parent grid-100 container">
+      <div class="grid-25" style="margin-top: 6px;">
+        <label>RN# & DN#</label>
+        <input type="text" placeholder="RN# & DN#" ng-model="searchInfo.foreignId" />
+      </div>
+      <div class="grid-25">
+        <label class="label-input">Type:</label>
+        <ui-select name="type" ng-model="searchInfo.type">
+          <ui-select-match allow-clear="true">
+            <div ng-bind="$select.selected"></div>
+          </ui-select-match>
+          <ui-select-choices repeat="type in ['Receipt', 'Receipt Confirmation', 'Order', 'Order Confirmation',
+            'PI', 'PK', 'GI', 'STA', 'Supplier Receipt Confirmation', 'Supplier Order Confirmation',
+            'Window Check In Delivery Truck Response', 'Gate Check Out Delivery Truck Response', 'Gate Check In Delivery WareHouse Response',
+            'Window Check In POD Image Response', 'Sync Imported Receipt To Hon', 'Sync Imported Order To Hon'] | filter: $select.search">
+            <div ng-bind="type"></div>
+          </ui-select-choices>
+        </ui-select>
+      </div>
+    </div>
+
+    <div class="grid-parent grid-100 container">
+      <div class="grid-90">&nbsp;</div>
+      <div class="grid-10 ">
+        <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="loading"></waitting-btn>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="grid-100 row">
+  <div class="grid-content grid-100">
+    <div class="grid-parent grid-100 container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Customer Name</th>
+            <th>ForeignId</th>
+            <th>Shipped Slp Ids</th>
+            <th>Created When</th>
+            <th>Updated When</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="ediLog in ediLogList track by $index">
+            <td><a ng-href="{{'#/wms/edi/view/' + ediLog.id}}" target="_blank">{{ediLog.id}}</a></td>
+            <td>{{ediLog.type}}</td>
+            <td>{{ediLog.customerName}}</td>
+            <td>{{ediLog.foreignId}}</td>
+            <td> <span ng-repeat="shippedSlpId in ediLog.shippedSlpIds track by $index">
+                {{shippedSlpId}}&nbsp;
+              </span> </td>
+            <td>{{ediLog.createdWhen | amDateFormat:'YYYY-MM-DD'}}</td>
+            <td>{{ediLog.updatedWhen | amDateFormat:'YYYY-MM-DD'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="grid-100">
+  <div class="grid-content grid-100">
+    <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+  </div>
+</div>

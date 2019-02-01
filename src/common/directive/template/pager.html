@@ -1,0 +1,47 @@
+<div class="row" ng-show="totalCount">
+    <div class="col-md-4 col-sm-4" >
+        <div ng-if="!hideTotalRecord" class="dataTables_info" id="sample_1_info" role="status" aria-live="polite">Showing {{ (pager.activedPage
+            -1) * pageSize + 1}} to {{ pager.activedPage * pageSize > totalCount ? totalCount : pager.activedPage *
+            pageSize}} of {{totalCount}} records
+        </div>
+    </div>
+    <div class="col-md-8 col-sm-8">
+        <div class="paginate paging_bootstrap_full_number" style="float: right">
+            <ul class="pagination" style="visibility: visible;">
+
+
+                <li class="prev" ng-click="loadFirstPage()"><a href="#" title="First"><i
+                        class="fa fa-angle-double-left"></i></a></li>
+                <li ng-class="{'prev disabled':pager.activedPage === 1}" ng-click="loadPrevPage()"><a href="#"
+                                                                                                      title="Prev"><i
+                        class="fa fa-angle-left"></i></a></li>
+
+                <li ng-repeat="page in pages track by $index" ng-class="{'active':page.active}"
+                    ng-click="loadPage($index)"><a href="#">{{page.number}}</a></li>
+
+                <li ng-class="{'next disabled':pager.activedPage == pager.totalPage}" ng-click="loadNextPage()"><a
+                        href="#" title="Next"><i class="fa fa-angle-right"></i></a></li>
+                <li ng-class="next" ng-click="loadLastPage()"><a href="#" title="Last"><i
+                        class="fa fa-angle-double-right"></i></a></li>
+            </ul>
+        </div>
+        <div class="paginate paging_bootstrap_full_number" style="display: inline-block;float:right;margin:10px 10px;">
+
+            <div class="dataTables_paginate paging_bootstrap_extended">
+                <div class="pagination-panel">Page:<input type="number" ng-model="inputPage"  class="pagination-panel-input form-control input-sm input-inline input-mini"
+                                                                                          maxlenght="5"
+                                                                                          style="text-align:center; margin: 0 5px;"><a
+                        href="javascript:void(0)" class="btn btn-sm default next" ng-click="goToPage()">Go</a><span class="pagination-panel-total"></span></div>
+            </div>
+        </div>
+        <div class="paginate paging_bootstrap_full_number" style="display: inline-block;float:right;margin:10px 10px;">
+            <div class="dataTables_length"><label>View <select ng-model="pageSize" name="datatable_ajax_length"
+                                                               aria-controls="datatable_ajax"
+                            ng-options="pz for pz in pageSizeOptions"   class="form-control input-xs input-sm input-inline">
+
+
+            </select> records</label></div>
+        </div>
+
+    </div>
+</div>

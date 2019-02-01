@@ -1,0 +1,16 @@
+{
+	"Receipt": ["per container","per pallet","per case","per piece","per drum","per barrel","per pound","per ton","per kg","per cft"],
+	"Picking": ["per case", "per piece"],
+	"Loading": ["per pallet", "small parcel", "loose"],
+	"Packing": ["per case", "per piece"],
+	"Kitting": ["parent item", "child item"],
+	"Labeling": ["per case", "per piece", "per pallet", "per each"],
+	"Tag": ["per each"],
+	"Slip sheet application": ["per pallet", "per each", "per box"],
+	"Corner board application": ["per pallet", "per case", "per each"],
+	"Type": ["per case", "per piece", "per pallet", "per container", "per cft", "per sqft"], 
+	"Billing Cycle": ["monthly", "weekly", "bi-monthly", "daily", "anniversary"], 
+	"Grace Period": ["day", "month", "week"],
+	"Pallet Usage": ["per pallet"],
+	"Over Time": ["hour"]
+}

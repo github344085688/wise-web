@@ -1,0 +1,109 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Item Lp Template Mapping List</h1>
+            <a class="create-button"  permission-check="{{'item::itemLpTemplateMapping_write'}}"
+               ui-sref="fd.item.lpTemplateMapping.add"><b>Add Item Lp Template Mapping</b></a>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label>Customer:</label>
+                <organization-auto-complete  ng-model="searchInfo.customerId" name="customer" tag="Customer"
+                                        allow-clear="true"/>
+            </div>
+            <div class="grid-25">
+                <label>Carrier:</label>
+                <organization-auto-complete  ng-model="searchInfo.carrierId" name="carrier" tag="Carrier"
+                                             allow-clear="true"/>
+            </div>
+
+            <div class="grid-25">
+                <label>LP Configuration Template:</label>
+                <lp-configuration-template-auto-complete ng-model="searchInfo.lpTemplateId"  allow-clear="true"> </lp-configuration-template-auto-complete>
+            </div>
+
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label>Mapping Type</label>
+                <ui-select name="mappingType" on-select="mappingTypeOnSelect(searchInfo.mappingType)" ng-model="searchInfo.mappingType">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in ['Dynamic Field', 'Static Field']">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                <label>Field Name</label>
+                <ui-select name="fieldName" ng-model="searchInfo.fieldName" ng-disabled="!searchInfo.mappingType">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="fieldName in fieldNames | filter: $select.search"
+                                       refresh="getFieldNames($select.search)">
+                        <div ng-bind="fieldName"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                <label>Field Value:</label>
+                <input placeholder="Enter Field Value" type="text" ng-model="searchInfo.fieldValueRegex"/>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-90">&nbsp;</div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="isLoading"></waitting-btn>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID#</th>
+                    <th>Customer</th>
+                    <th>Carrier</th>
+                    <th>Mapping Type</th>
+                    <th>Lp Template</th>
+                    <th>Field Name</th>
+                    <th>Field Value</th>
+                    <th>Created When</th>
+                    <th permission-check="{{'item::itemLpTemplateMapping_write'}}">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in mappingsView track by $index">
+                    <td  ng-href="{{'#/fd/item/lpTemplateMapping/edit/' + item.id}}" target="_blank">{{item.id}}</td>
+                    <td>{{item.customerName}}</td>
+                    <td>{{item.carrierName}}</td>
+                    <td>{{item.mappingType}}</td>
+                    <td>
+                        {{item.lpTemplateName}}
+                    </td>
+                    <td>{{item.fieldName}}</td>
+                    <td> <span ng-repeat="value in item.fieldValueRegexs">{{value}}<span ng-if="!$last">,&nbsp; </span></span></td>
+                    <td>{{item.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                        <span ng-show="item.createdBy">({{item.createdBy}})</span>
+                    </td>
+                    <td  permission-check="{{'item::itemLpTemplateMapping_write'}}">
+                        <a ng-click="update(item.id)" title="Delete">Edit</a>&nbsp;|&nbsp;
+                        <a ng-click="delete(item.id)" title="Delete">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="mappings.length" page-size="pageObj.pageSize" load-content="loadContent(currentPage)"></unis-pager>
+    </div>
+</div>

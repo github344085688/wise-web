@@ -1,0 +1,174 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Admin</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Service</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Print</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Label Template</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> Label Template </span>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <form novalidate name="labelTemplateForm">
+                    <div class="row form-group">
+                        <div class="col-md-4">
+                            <label>Label Type</label>
+                            <ui-select name="labelTemplate.labelType" ng-model="labelTemplate.labelType">
+                                <ui-select-match allow-clear="true">
+                                    <div ng-bind="$select.selected"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in labelTypes | filter: $select.search">
+                                    <div ng-bind="item"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="bold">Template:</label>
+                            <div class="input-icon right"
+                                 ng-show="labelTemplateForm.templateName.$invalid && (labelTemplateForm.$submitted || labelTemplateForm.templateName.$touched)">
+                                <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                    <span class="lt-tooltip-text">Required</span>
+                                </i>
+                            </div>
+                            <template-auto-complete ng-model="labelTemplate.templateId"
+                                                    name="template"></template-auto-complete>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label>Print Type</label>
+                            <ui-select name="labelTemplate.printType" ng-model="labelTemplate.printType">
+                                <ui-select-match allow-clear="true">
+                                    <div ng-bind="$select.selected"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in ['PDF', 'ZPL']">
+                                    <div ng-bind="item"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-3">
+                            <label class="bold">Customer:</label>
+                            <organization-auto-complete ng-model="labelTemplate.customerId" name="customer"
+                                                        on-select="onCustomerSelect(org)"
+                                                        tag="Customer" allow-clear="true" is-search-all-facilities="true"></organization-auto-complete>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="bold">Retailer:</label>
+                            <organization-auto-complete ng-model="labelTemplate.retailerId" name="retailer"
+                                                        on-select="onCustomerSelect(org)"
+                                                        tag="Retailer" allow-clear="true"></organization-auto-complete>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Facility</label>
+                            <input-validation-message field="warehouse" form="userInfoForm"></input-validation-message>
+                            <ui-select name="searchFacility" ng-model="labelTemplate.facility" on-select="selectFacility($select.selected.name)" class="form-control">
+                                <ui-select-match placeholder="Facility" allow-clear="true">
+                                    <div ng-bind="$select.selected.name"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="facility.name as facility in facilities | filter: $select.search">
+                                    <div ng-bind="facility.name"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Label Status</label>
+                            <ui-select name="labelTemplate.status" ng-model="labelTemplate.status">
+                                <ui-select-match allow-clear="true">
+                                    <div ng-bind="$select.selected"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in ['Active', 'Inactive']">
+                                    <div ng-bind="item"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <label class="bold">Label Fields:</label>
+                            <lt-tags-input enable-multiple-tag-input="true" placeholder="Label Fields" ng-model="labelTemplate.fields" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <label class="bold">Description:</label>
+                            <input type="text" name="description" class="form-control"
+                                   ng-model="labelTemplate.description">
+                        </div>
+                    </div>
+                    <div class="row form-actions right">
+                        <waitting-btn type="submit" btn-class="btn blue" ng-click="labelTemplateForm.$valid && submit()"
+                                      value="'submit'" is-loading="loading"
+                                      permission-check="{{'service::print_write'}}"></waitting-btn>
+                        <button type="reset" class="btn blue" ng-click="reset()">Reset</button>
+                    </div>
+                </form>
+                <div class="panel non-border non-gutter bottom">
+                    <div class="panel-heading header-primary">
+                        <h3 class="panel-title">Label Template Results
+                            <input type="text" ng-model="searchText" class="form-control input-circle"
+                                   placeholder="Enter text">
+                        </h3>
+                    </div>
+                    <div class="panel-body non-gutter bottom">
+                        <div>
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Label Type</th>
+                                    <th>Template</th>
+                                    <th>Customer</th>
+                                    <th>Facility</th>
+                                    <th>Retailer</th>
+                                    <th>Print Type</th>
+                                    <th>Print Level</th>
+                                    <th>Status</th>
+                                    <th>Fields</th>
+                                    <th>Desc</th>
+                                    <th permission-check="{{'service::print_write'}}">action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="labelTemplate in labelTemplates | filter:searchText">
+                                    <td style="padding: 8px 3px"><a ng-click="toUpdate(labelTemplate)">{{labelTemplate.labelType}}</a></td>
+                                    <td style="padding: 8px 3px">{{labelTemplate.templateId}}</td>
+                                    <td style="padding: 8px 3px">{{labelTemplate.customerName}}</td>
+                                    <td style="padding: 8px 3px">{{labelTemplate.facility}}</td>
+                                    <td style="padding: 8px 3px">{{labelTemplate.retailerName}}</td>
+                                    <td style="padding: 8px 3px">{{labelTemplate.printType}}</td>
+                                    <td style="padding: 8px 3px">{{labelTemplate.printLevel}}</td>
+                                    <td style="padding: 8px 3px">{{labelTemplate.status}}</td>
+                                    <td style="padding: 8px 3px">{{labelTemplate.fields}}</td>
+                                    <td style="padding: 8px 3px">{{labelTemplate.description}}</td>
+                                    <td style="padding: 8px 3px" permission-check="{{'service::print_write'}}">
+                                        <a ng-click="delete(labelTemplate.id)">delete</a>&nbsp;&nbsp;
+                                        <a ng-click="clone(labelTemplate)">clone</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

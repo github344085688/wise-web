@@ -1,0 +1,589 @@
+<div class="portlet light bordered" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold">OrderID: {{order.id}}</span>
+        </div>
+        <div class="actions" ng-hide="order.status === Closed">
+            <span permission-check="{{'outbound::order_write'}}">
+                <waitting-btn type="button" btn-class="btn gray " icon-class="glyphicon glyphicon-print" ng-click="printPalletLabel(order.id)"
+                                is-loading="printPalletLabeling" value="'Pallet Label'"></waitting-btn>
+
+                <waitting-btn type="button" btn-class="btn gray " icon-class="glyphicon glyphicon-print" ng-click="printOrderPackingListPrint(order.id)"
+                    is-loading="printPackingListing" value="'Packing List'"></waitting-btn>
+                <waitting-btn type="button" btn-class="btn gray " icon-class="glyphicon glyphicon-print" ng-click="printUCCLabel()"
+                    is-loading="printUCCLabeling" value="'UCC Label'"></waitting-btn>
+                <button type="button" class="btn blue " ng-click="editOrder(order.id)" ng-show="order.status != 'Cancelled'">Edit Order</button>
+                <waitting-btn type="button" btn-class="btn blue " value="'Close Order'" ng-if="!isDisabledMap.closeOrder" is-loading="isCloseOrdering"
+                    ng-click="closeOrder(order)"></waitting-btn>
+                <waitting-btn type="button" btn-class="btn red " value="'Cancel Order'" ng-if="!isDisabledMap.cancelOrder" is-loading="isCancelOrdering"
+                    ng-click="cancelOrder(order)"></waitting-btn>
+                <waitting-btn type="button" btn-class="btn green " value="'Clone Order'" is-loading="isCloneOrdering" ng-click="cloneOrder(order.id)"></waitting-btn>
+                <button type="button" class="btn yellow" ng-click="rollBack()" ng-show="!isDisabledMap.rollBackOrder">Roll Back Order</button>
+                <waitting-btn type="button" btn-class="btn blue " value="'Separate Order'" ng-if="!isDisabledMap.seperateOrder"
+                    is-loading="isSeparateOrder" ng-click="separateOrder(order.id)"></waitting-btn>
+    
+            </span>
+          
+            <span permission-check="{{'outbound::orderReopen_write'}}">
+                <waitting-btn type="button" btn-class="btn red " value="'Reopen Order'" ng-if="!isDisabledMap.reopenOrder" is-loading="isReopenOrdering"
+                    ng-click="reopenOrder(order)"></waitting-btn>
+            </span>
+            <span>
+                <button type="button" class="btn" style="background-color: #a769b3; border-color: #a769b3; color:#fff;" ng-click="attachment()"> Attachment</button>
+
+            </span>
+
+        </div>
+    </div>
+
+    <div ng-show="loading" class="text-center">
+        <img src="assets/img/loading-spinner-grey.gif">
+        <span>&nbsp;LOADING...</span>
+    </div>
+
+    <div ng-show="!loading" class="portlet-body form form-horizontal">
+
+        <div class="tabbable-line">
+            <ul class="nav nav-tabs">
+                <li ng-class="{'active': activeTab == 'info'}">
+                    <a ng-click="changeTab('info')" data-toggle="tab" aria-expanded="false">Info</a>
+                </li>
+                <li ng-class="{'active': activeTab == 'dynamicFields'}">
+                    <a ng-click="changeTab('dynamicFields')" data-toggle="tab" aria-expanded="false">Dynamic Fields</a>
+                </li>
+                <li ng-class="{'active': activeTab == 'pickInventories'}">
+                    <a ng-click="changeTab('pickInventories')" data-toggle="tab" aria-expanded="false">Picked Inventories</a>
+                </li>
+                <li ng-class="{'active': activeTab == 'shipInventories'}">
+                    <a ng-click="changeTab('shipInventories')" data-toggle="tab" aria-expanded="false">Shipped Inventories</a>
+                </li>
+                <li ng-class="{'active': activeTab == 'billingManual'}">
+                    <a ng-click="changeTab('billingManual')" data-toggle="tab" aria-expanded="false">Manual Billing</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane" ng-class="{'active': activeTab == 'info'}" id="info">
+                    <div class="view-container">
+                        <div class="row">
+                            <span class="col-md-3">
+                                <b>Customer: </b>{{order.customerName}}</span>
+                            <span class="col-md-3">
+                                <b>Status: </b>{{order.status}}</span>
+                            <span class="col-md-3">
+                                <b>Order Type: </b>{{order.orderType}}
+                            </span>
+                            <span class="col-md-3">
+                                <b>Retailer: </b>{{order.retailerName}}
+                            </span>
+                            
+                        </div>
+                        <div class="row">
+                         
+                            <span class="col-md-3">
+                                <b>Carrier: </b>{{order.carrierName}}</span>
+                            <span class="col-md-3">
+                                <b>Ship Method: </b>{{order.shipMethod}}</span>
+                            <span class="col-md-3">
+                                <b>Delivery Service: </b>{{order.deliveryService}}</span>
+                            <span class="col-md-3">
+                                <b>Freight Term: </b>{{order.freightTerm}}</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-3">
+                                <b>Entry ID: </b>
+                                <span ng-repeat="entryId in order.entryIds">{{entryId}}&nbsp;</span>
+                            </span>
+                            <span class="col-md-3">
+                                <b>Load NO: </b>
+                                <span ng-repeat="load in order.loads track by $index">
+                                    <a ng-href="{{'#/wms/outbound/load/' + load.id}}" target="_blank">{{load.loadNo}}
+                                    </a>
+                                    <span ng-show="!$last">,&nbsp;</span>
+                                </span>
+                            </span>
+                            <span class="col-md-3">
+                                <b>Customer Sales Order No.: </b>
+                                <span ng-repeat="soNo in order.soNos">
+                                    {{soNo}}&nbsp;
+                                </span>
+                            </span>
+                            <span class="col-md-3">
+                                <b>Reference: </b>
+                                {{order.referenceNo}}
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-3">
+                                <b>Shipment Tickets: </b>
+                                <a ng-repeat="ticketId in order.shipmentTicketIds" target="_blank" ui-sref="wms.outbound.shipmentTicket.view({ticketId: ticketId})">{{ticketId}} </a>
+                            </span>
+                            <span class="col-md-3">
+                                <b>Pro: </b>
+                                {{order.proNo}}
+                            </span>
+                            <span class="col-md-3">
+                                <b>Purchase Order No.: </b>
+                                {{order.poNo}}
+                            </span>
+                            <span class="col-md-3">
+                                <b>Batch: </b>
+                                {{order.batchNo}}
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-3">
+                                <b>Shipping Account No.: </b>{{order.shippingAccountNo}}</span>
+                            <span class="col-md-3">
+                                <b>Partial Lock Inventory: </b>{{order.allowPartialLockInventory? 'Yes' : 'No'}}</span>
+                            <span class="col-md-3">
+                                <b>Commitment Include WIP: </b>{{order.commitmentIncludeWIP? 'Yes' : 'No'}}</span>
+                            <span class="col-md-3">
+                                        <b>Priority: </b>{{order.priorityPoints}}
+                            </span>
+                        </div>
+                        <div class="row">
+                              <span class="col-md-3">
+                                <b>Is Rush: </b>{{order.isRush? 'Yes' : 'No'}}</span>
+                             <span class="col-md-3">
+                                <b>Is Transload: </b>{{order.isTransload? 'Yes' : 'No'}}</span>
+                            <span class="col-md-3">
+                                <b>Enable Auto Commit: </b>
+                                 {{order.enableAutoCommit? 'Yes' : 'No'}}
+                             </span>
+                            <span class="col-md-3">
+                                <b>Is Allow Retry Commit: </b>
+                                 {{order.isAllowRetryCommit? 'Yes' : 'No'}}
+                             </span>
+                        </div>
+                        <div class="row">
+                             <span class="col-md-3">
+                                <b>Long Haul No: </b>{{order.longHaulNo }}</span>
+                            <span class="col-md-3">
+                                <b>Load No(EDI): </b>{{order.loadNo}}</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-3">
+                                <b>Delivery Request Date: </b>{{order.mabd | amDateFormat:'YYYY-MM-DD'}}</span>
+                            <span class="col-md-3">
+                                <b>Schedule Date: </b>{{order.scheduleDate | amDateFormat:'YYYY-MM-DD'}}</span>
+                            <span class="col-md-3">
+                                <b>Create Time: </b>{{order.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}} &nbsp;
+                                <span ng-show="order.source != 'FTP' && order.source != 'EDI'">({{order.createdBy}})</span>
+                                <span ng-show="order.source == 'FTP'">(FTP)</span>
+                                <span ng-show="order.source == 'EDI'">(EDI)</span>
+                            </span>
+                            <span class="col-md-3">
+                                <b>Update Time: </b>{{order.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}} &nbsp;
+                                <span ng-show="order.updatedBy">({{order.updatedBy}})</span>
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-3">
+                                <b>In Yard Time: </b>{{order.inYardTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</span>
+                            <span class="col-md-3">
+                                <b>Shipped Time: </b>{{order.shippedTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</span>
+                            <span class="col-md-3">
+                                <b>Ship Not Before: </b>{{order.shipNotBefore | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</span>
+                            <span class="col-md-3">
+                                <b>Ship Not Later: </b>{{order.shipNoLater | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-3">
+                                <b>Attempted Commit Date: </b>{{order.attemptedCommitDate | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                            </span>
+                            <span class="col-md-3">
+                                <b>	Appointment Time: </b>{{order.appointmentTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-6">
+                                <b>Ship From: </b>{{order.shipFrom}}</span>
+                            <span class="col-md-6">
+                                <b>Ship To: </b>{{getAddressInfo(order.shipToAddress)}}
+                                <br/><span style="padding-left:60px" ng-if = 'order.shipToAddress.email'>
+                                    Email:{{order.shipToAddress.email}}
+                                </span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <span style="padding-left:60px" ng-if = 'order.shipToAddress.phone'>
+                                    Tel:{{order.shipToAddress.phone}}
+                                </span>
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-12">
+                                <b>LPs({{order.lps.length}}): </b>
+                                <span ng-repeat="(location, lps) in lpByLocationMap">
+                                    <b>Location({{location}})</b>:
+                                    <span ng-repeat="lp in lps">
+                                        {{lp.id}}
+                                    </span>
+                                    &nbsp;
+                                </span>
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-6">
+                                <b>Sold To: </b>{{getAddressInfo(order.soldToAddress)}}</span>
+                            <span class="col-md-6">
+                                <b>Store: </b>{{getAddressInfo(order.storeAddress)}}</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-6">
+                                <b>Bill To: </b>{{getAddressInfo(order.billToAddress)}}</span>
+                            <span class="col-md-6 text-pre">
+                                <b>Order Note: </b>{{order.orderNote}}</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-6 text-pre">
+                                <b>Label Note: </b>{{order.labelNote}}</span>
+                            <span class="col-md-6 text-pre">
+                                <b>Load Note: </b>{{order.loadNote}}</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-6 text-pre">
+                                <b>Pick Note: </b>{{order.pickNote}}</span>
+                            <span class="col-md-6 text-pre">
+                                <b>Pack Note: </b>{{order.packNote}}</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-6 text-pre">
+                                <b>BOL Note: </b>{{order.bolNote}}</span>
+                            <span class="col-md-6 text-pre">
+                                <b>Total Pallets: </b>{{order.totalPallets}}</span>
+                        </div>
+                    </div>
+                    <div class="tabbable-custom" style="margin-bottom: 0px; overflow: visible">
+                        <ul class="nav nav-tabs">
+                            <li ng-class="{'active':activeTab_line  == 'itemLine'}">
+                                <a data-toggle="tab" ng-click="changeTab_line('itemLine')"> Item Lines </a>
+                            </li>
+                            <li ng-class="{'active':activeTab_line  == 'materialLine'}">
+                                <a data-toggle="tab" ng-click="changeTab_line('materialLine')"> Material Lines </a>
+                            </li>
+                            <li ng-if="order.isTransload" ng-class="{'active':activeTab_line == 'cartons'}">
+                                <a data-toggle="tab" ng-click="changeTab_line('cartons')"> Cartions ({{order.allSerialNumbers.length}}) </a>
+                            </li>
+                            <li ng-class="{'active':activeTab_line  == 'trackingNos'}">
+                                <a data-toggle="tab" ng-click="changeTab_line('trackingNos')"> Tracking Nos </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" style="padding:15px;">
+                            <div ng-class="{'active':activeTab_line  == 'itemLine'}" class="tab-pane">
+                                <div class="form-group">
+                                    <div class="col-md-12" style="padding-top:7px; padding-left:0px;">
+                                        <div class="col-md-3">
+                                            <label>Total QTY: </label>
+                                            <label class="bold">{{order.totalQty}}</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>Total Pallet QTY:</label>
+                                            <label class="bold">{{order.totalPalletQty}}</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>Total Weight:</label>
+                                            <label class="bold">{{filterToFixed(order.shippedWeight)}} / {{filterToFixed(order.orderWeight)}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-scrollable">
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Item</th>
+                                                <th>Lp Template</th>
+                                                <th>Title</th>
+                                                <th>Supplier</th>
+                                                <th>UOM</th>
+                                                <th>Qty</th>
+                                                <th>PickQty</th>
+                                                <th>ShipQty</th>
+                                                <th>CommitedQty</th>
+                                                <th>Pallet Qty</th>
+                                                <th>Order Weight</th>
+                                                <th>Picked Weight</th>
+                                                <th>Shipped Weight</th>
+                                                <th>Adjusted Pallet Qty</th>
+                                                <th>Original Order Qty</th>
+                                                <th>Total Insurance Amount</th>
+                                                <th>Lot#</th>
+                                                <th>Note</th>
+                                                <th ng-if="order.isTransload ">Cartons</th>
+                                                <td>Pack Ship Desc</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="item in itemLineView track by $index">
+                                                <td>{{(($index + 1) + (current_page_item - 1) *pageSize)}}</td>
+                                                <td>
+                                                    <item-display item="item"></item-display>
+                                                </td>
+                                                <td>{{item.lpTemplateName}}</td>
+                                                <td>{{item.titleName}}</td>
+                                                <td>{{item.supplierName}}</td>
+                                                <td>{{item.unit.name}}</td>
+                                                <td>{{item.qty}}</td>
+                                                <td>
+                                                    <span ng-if="item.pickQty != item.qty" style="color: red; background: yellow;">{{item.pickQty}}</span>
+                                                    <span ng-if="item.pickQty == item.qty">{{item.pickQty}}</span>
+                                                </td>
+                                                <td>
+                                                    <span ng-if="item.shipQty != item.qty" style="color: red; background: yellow;">{{item.shipQty}}</span>
+                                                    <span ng-if="item.shipQty == item.qty">{{item.shipQty}}</span>
+                                                </td>
+                                                <td>{{item.commitedQty}}</td>
+                                                <td>{{item.palletQty}}</td>
+                                                <td>{{item.orderWeight}}</td>
+                                                <td>{{filterToFixed(item.pickedWeight)}} / {{filterToFixed(item.orderWeight)}}</td>
+                                                <td>{{item.shippedWeight}}</td>
+                                                <td>{{item.adjustedPalletQty}}</td>
+                                                <td>{{item.originalOrderQty }}</td>
+                                                <td>{{item.totalInsuranceAmount}}</td>
+                                                <td>{{item.lotNo}}</td>
+                                                <td>{{item.note}}</td>
+                                                <td ng-if="order.isTransload">
+                                                        <a href="" ng-click="editCartonDetail(item)" > Cartons Detail</a>
+                                                </td>
+                                                <td>{{item.packSlipDescription}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <pager total-count="order.itemLines.length" page-size="pageSize" load-content="loadContent_itemLines(currentPage)"></pager>
+                            </div>
+                            <div ng-class="{'active':activeTab_line  == 'materialLine'}" class="tab-pane ">
+                                <div class="table-scrollable">
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Item</th>
+                                                <th>UOM</th>
+                                                <th>Qty</th>
+                                                <th>Title</th>
+                                                <th>Supplier</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="item in materialLineView track by $index" ng-init="materialIndex = $index">
+                                                <td>{{((materialIndex + 1) + (current_page_material - 1) *pageSize)}}</td>
+                                                <td>
+                                                    <item-display item="item"></item-display>
+                                                </td>
+                                                <td>{{item.unitName}}</td>
+                                                <td>{{item.qty}}</td>
+                                                <td>{{item.titleName}}</td>
+                                                <td>{{item.supplierName}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <pager total-count="order.materialLines.length" page-size="pageSize" load-content="loadContent_materialLines(currentPage)"></pager>
+                            </div>
+                            <div ng-if="order.isTransload" ng-class="{'active':activeTab_line == 'cartons'}" class="tab-pane ">
+                                <div class="form-group" style="text-align: right; padding-right:30px;">
+                                    <button type="button" id="copyBtn" class="btn green btn-outline" data-clipboard-text="{{order.cartonStr}}">Copy To Clip Board</button>
+                                </div>
+                                <div class="form-group" style="display:inline-block">
+                                    <span class="col-md-3" ng-repeat="carton in order.allSerialNumbers track by $index">{{carton}}</span>
+                                </div>
+                            </div>
+                            <div ng-class="{'active':activeTab_line == 'trackingNos'}" class="tab-pane">
+
+                                <div class="trackingNOs-itemLines" ng-repeat="trackingnoitem in trackingnoitemLines track by $index  ">                                 
+                                    <div class="rows">Tracking No: <span  style="margin-right:20px">{{trackingnoitem.trackingNo}}</span>
+                                                      Cost: <span>{{trackingnoitem.shippingCost}}</span>
+                                    </div>
+                                    <div class="rows">
+                                        <table class="table table-striped table-bordered table-hover">
+                                            <tbody>
+                                            <tr  ng-repeat="item in trackingnoitem.itemLineDetails track by $index ">
+                                                <td style="width: 70%"><laber>Item:</laber><span class="span">
+                                                     <item-display item="item"></item-display>
+                                                    </span></td>
+                                                <td style="width: 15%"><laber>QTY:</laber><span class="span">{{item.qty}}</span></td>
+                                                <td style="width: 15%"><laber>Unit:</laber><span class="span">{{item.unit.name}}</span></td>                                  </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" ng-class="{'active': activeTab == 'dynamicFields'}" id="dynamicFields">
+                    <div class="view-container">
+                        <div class="row">
+                            <span class="col-md-12" ng-repeat="(key, fieldName) in dynamicFields" style="word-wrap: break-word ;padding: 10px">
+                                <b>{{fieldName}}: </b>{{order.dynamicFields[key]}}</span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="tab-pane" ng-class="{'active': activeTab == 'pickInventories'}" id="pickInventories">
+                    <div class="view-container">
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Item</th>
+                                        <!--<th>Customer</th>-->
+                                        <th>Title</th>
+                                        <th>Supplier</th>
+                                        <th>PickTask</th>
+                                        <th>LpId</th>
+                                        <th>Outmost LPId</th>
+                                        <th>UOM</th>
+                                        <th>Qty</th>
+                                        <th>SN</th>
+                                        <th>CreatedBy</th>
+                                        <th>CreatedWhen</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in order.pickInventories track by $index">
+                                        <td>{{($index + 1)}}</td>
+                                        <td>
+                                            <item-display item="item"></item-display>
+                                        </td>
+                                        <!--<td>{{item.customerName}}</td>-->
+                                        <td>{{item.titleName}}</td>
+                                        <td>{{item.supplierName}}</td>
+                                        <td>{{item.pickTaskId}}</td>
+                                        <td>{{item.lpId}}</td>
+                                        <td>{{item.outmostLPId}}</td>
+                                        <td>{{item.unit.name}}</td>
+                                        <td>{{item.qty}}</td>
+                                        <td>{{item.sn}}</td>
+                                        <td>{{item.createdBy}}</td>
+                                        <td>{{item.updatedWhen}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" ng-class="{'active': activeTab == 'shipInventories'}" id="shipInventories">
+                    <div class="view-container">
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Item</th>
+                                        <!--<th>Customer</th>-->
+                                        <th>Title</th>
+                                        <th>Supplier</th>
+                                        <th>LoadTask</th>
+                                        <th>LpId</th>
+                                        <th>Outmost LPId</th>
+                                        <th>UOM</th>
+                                        <th>Qty</th>
+                                        <th>UpdatedBy</th>
+                                        <th>UpdatedWhen</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in order.shipInventories track by $index">
+                                        <td>{{($index + 1)}}</td>
+                                        <td>
+                                            <item-display item="item"></item-display>
+                                        </td>
+                                        <!--<td>{{item.customerName}}</td>-->
+                                        <td>{{item.titleName}}</td>
+                                        <td>{{item.supplierName}}</td>
+                                        <td>{{item.loadTaskId}}</td>
+                                        <td>{{item.lpId}}</td>
+                                        <td>{{item.outmostLPId}}</td>
+                                        <td>{{item.unit.name}}</td>
+                                        <td>{{item.qty}}</td>
+                                        <td>{{item.updatedBy}}</td>
+                                        <td>{{item.updatedWhen}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" ng-class="{'active': activeTab == 'billingManual'}">
+                    <div class="view-container">
+                        <div class="row" ng-repeat="billing in order.billingManualViews track by $index">
+                            <div ng-if="billing.status !== 'Sent'" class="col-md-2">
+                                <label>Account Item</label>
+                                <ui-select ng-model="billing.billingCode" required
+                                           on-select="accountItemselect($select.selected, billing)">
+                                    <ui-select-match>
+                                        <span ng-bind="$select.selected.AccountItem"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="code.AccountItem as code in accountItems | filter: $select.search">
+                                        {{code.AccountItem}}
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div ng-if="billing.status === 'Sent'" class="col-md-2">
+                                <label>Billing Code</label>
+                                <div style="height: 35px;">
+                                    {{billing.billingCode}}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Description</label>
+                                <div style="height: 35px;">
+                                    {{billing.billingDesc}}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Note</label>
+                                <input class="form-control" type="text"  ng-model="billing.note"/>
+                            </div>
+                            <div ng-if="billing.status !== 'Sent'" class="col-md-1">
+                                <label>Qty</label>
+                                <input type="number" class="form-control" required ng-model="billing.qty" />
+                            </div>
+                            <div ng-if="billing.status === 'Sent'" class="col-md-1">
+                                <label>Qty</label>
+                                <div style="height: 35px;">
+                                    {{billing.qty}}
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <label>UOM</label>
+                                <div style="height: 35px;">
+                                    {{billing.billingUom}}
+                                </div>
+                            </div>
+                            <div class="col-md-2" style="padding-top: 20px;">
+                                <div ng-if="billing.status !== 'Sent'" class="cycle-button" ng-click="removeBilling($index, billing)">
+                                    <i class="material-icons" style="color: red; font-weight: bold;">
+                                        clear
+                                    </i>
+                                </div>
+                                <div ng-if="$last" class="cycle-button" ng-click="addBilling()">
+                                    <i class="material-icons" style="color: #fff; font-weight: bold;">
+                                        add
+                                    </i>
+                                </div>
+                                <span ng-if="billing.status === 'Sent'" style="font-weight: bold;font-size:20px;color: #ffa203;">{{billing.status}}</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-9"></div>
+                            <div class="col-md-3">
+                                <waitting-btn type="submit" btn-class="btn blue" value="'Save Billing'" is-loading="savingBilling" ng-click="saveBilling()">
+                                </waitting-btn>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+</div>

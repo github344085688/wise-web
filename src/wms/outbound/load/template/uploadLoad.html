@@ -1,0 +1,43 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Outbound</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Load</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Upload Load</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> Load upload</span>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <form novalidate>
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <label>Load File:</label>
+                            <input type="file" id="loadFile" name="file" class="form-control" ng-model="loadFilePath" onchange="angular.element(this).scope().loadFileChange(this)" ng-readonly="true">
+                        </div>
+                    </div>
+                    <div class="form-actions right">
+                        <button ng-click="upload()" class="btn blue">upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,71 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">User</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Permission</a>
+        </li>
+    </ul>
+</div>
+<div id="user-tags" class="portlet light bordered" style="margin: 15px">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-gift"></i>Permission Management
+        </div>
+        <div class="actions">
+            <button class="btn green text-transform-none" ng-click="addOrUpdatePermission()"
+                    permission-check="{{'user::permission_write'}}">
+                <b>Add Permission</b>
+            </button>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row form-group">
+            <div class="col-md-3">
+                <input class="form-control" placeholder="Enter Permission Name" ng-model="permissionSearch.name" />
+            </div>
+            <div class="col-md-3">
+                <ui-select name="category" ng-model="permissionSearch.category">
+                    <ui-select-match allow-clear="true" placeholder="Enter Permission Category" >
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in ['WEB', 'ANDROID', 'API', 'ALL']">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-md-3">
+                <input class="form-control" placeholder="Enter Description" ng-model="permissionSearch.description" />
+            </div>
+            <button type="button" class="btn blue" style="float:left;" ng-click="searchPermissions()">Search</button>
+        </div>
+        <div class="table-scrollable">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th width="25%"> Permission Name </th>
+                    <th width="5%"> Category </th>
+                    <th width="5%"> Group </th>
+                    <th style="text-align: center;"> Description </th>
+                    <th width="5%"  permission-check="{{'user::permission_write'}}"> Action </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="permission in permissionView">
+                    <td style="color: #0b7b5c; font-weight: 600;">{{permission.name}}</td>
+                    <td>{{permission.category}}</td>
+                    <td>{{permission.groupName}}</td>
+                    <td  align="center">{{permission.description}}</td>
+                    <td  align="center"  permission-check="{{'user::permission_write'}}"><a class="btnbtn-icon-only btn-default" style="color:#e28181;"
+                    ng-click="removePermission(permission)">
+                        <i class="icon-trash"></i>
+                    </a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <pager total-count="permissions.length" page-size="pageSize"  load-content="loadContent(currentPage)"></pager>
+    </div>
+</div>

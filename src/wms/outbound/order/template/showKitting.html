@@ -1,0 +1,18 @@
+<md-dialog flex="80">
+    <form novalidate name="addItemLineForm" class="form-horizontal">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Kitting</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="padding: 40px 30px 30px 30px;">
+            <item-line-viewer item-line="itemLine" is-expand="true"></item-line-viewer>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <div style="margin-right: 50px">
+                <button type="button" class="btn blue" ng-click="cancel()">Ok</button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+

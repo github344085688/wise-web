@@ -1,0 +1,133 @@
+<div class="portlet light bordered add-order-container" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold">{{formTitle}}
+            </span>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+
+        <form name="addItemLineForm" novalidate ng-submit="addItemLineForm.$valid && submit()">
+
+            <div class="form-group">
+                <div class="col-md-3">
+                    <label>Material Type:</label>
+
+                    <ui-select ng-model="materialLine.type" on-select="selectMateriaType($select.selected)">
+                        <ui-select-match>
+                            <span ng-bind="$select.selected"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="type in ['Inbound','Outbound']">
+                            <span ng-bind="type"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="col-md-3" >
+                    <label>Receipt ID:</label>
+
+                    <ui-select ng-model="materialLine.receiptId">
+                        <ui-select-match>
+                            <span ng-bind="$select.selected"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="receipt in receiptLists | filter: $select.search" refresh="getReceiptList($select.search)" refresh-delay="50">
+                            <span ng-bind="receipt"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="col-md-3" >
+                    <label>Order ID:</label>
+
+                    <ui-select ng-model="materialLine.orderId">
+                        <ui-select-match>
+                            <span ng-bind="$select.selected"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="order in OrderLists | filter: $select.search" refresh="getOrderList($select.search)" refresh-delay="50">
+                            <span ng-bind="order"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <label>Title:</label>
+                    <input-validation-message field="title" form="addItemLineForm"></input-validation-message>
+                    <organization-auto-complete name="Title" tag="Title" on-select="titleOnSelect(org)" ng-model="materialLine.titleId" required="true"></organization-auto-complete>
+                </div>
+                <div class="col-md-3">
+                    <label>Supplier:</label>
+                    <organization-auto-complete name="Supplier" tag="Supplier" on-select="supplierOnSelect(org)" allow-clear="true" ng-model="materialLine.supplierId"></organization-auto-complete>
+                </div>
+
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label>Item:</label>
+                    <input-validation-message field="itemSpec" form="addItemLineForm"></input-validation-message>
+                    <itemspec-auto-complete name="itemSpec" ng-model="materialLine.itemSpecId" ext-param="{statuses:['Active','Discontinue']}"
+                        on-select="itemSpecIdOnSelect(itemSpec)" tags="['Material']" required="true " />
+                </div>
+                <div class="col-md-3">
+                    <label>Qty:</label>
+                    <input-validation-message field="qty" form="addItemLineForm"></input-validation-message>
+                    <input type="number" name="qty" class="form-control" ng-model="materialLine.qty" REQUIRED="true" />
+                </div>
+                <div class="col-md-3">
+                    <label>UOM:</label>
+                    <input-validation-message field="unit" form="addItemLineForm"></input-validation-message>
+                    <ui-select ng-model="materialLine.unit" name="unit" REQUIRED="true">
+                        <ui-select-match>
+                            <span ng-bind="$select.selected.name"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="unit in itemSpecUnits | filter: $select.search">
+                            <span ng-bind="unit.name"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group ">
+                <div class="item-line-diverse-container " ng-show="diverseFields && diverseFields.length>0">
+
+                    <div class="form-group" ng-switch on="field.itemProperty.type" ng-repeat="field in diverseFields">
+                        <label class="control-label col-md-2">{{field.itemProperty.name}}:</label>
+                        <div class="col-md-5">
+                            <input-validation-message field="field.{{$index}}.value" form="addItemLineForm"></input-validation-message>
+                            <ui-select name="field.{{$index}}.value" ng-model="field.selectedProduct" ng-show="field.availableDiverseValues && field.availableDiverseValues.length>0"
+                                on-select="diverseValuesSelected(field)" ng-required="field.availableDiverseValues && field.availableDiverseValues.length>0">
+                                <ui-select-match>
+                                    <div>{{$select.selected.value}} {{$select.selected.unit}}</div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="diverseObj in diverseValuesMap[field.propertyId] | filter: $select.search">
+                                    <div>{{diverseObj.value}} {{diverseObj.unit}}</div>
+                                </ui-select-choices>
+                            </ui-select>
+                            <div ng-show="!field.availableDiverseValues || field.availableDiverseValues.length == 0" style="margin-top:8px;">
+                                No product in the inventory
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="form-group">
+                        <div class="col-md-7" style="text-align: right;">
+                            <button type="button" class="btn green" ng-click="resetFilter()">Reset Filter</button>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label>Note</label>
+                    <textarea class="form-control" name="description" id="description" form-groups="1" ng-model="materialLine.note"></textarea>
+                </div>
+            </div>
+
+
+            <div class="form-group form-actions right">
+                <waitting-btn type="submit" btn-class="btn blue" value="submitLabel" is-loading="loading"></waitting-btn>
+                <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>

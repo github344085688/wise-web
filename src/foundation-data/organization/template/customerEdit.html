@@ -1,0 +1,1926 @@
+<form class="grid-100 grid-parent" novalidate name="customerForm" ng-submit="customerForm.$valid && addOrUpdateCustomer()">
+    <div class="grid-content grid-100">
+      <div class="grid-100 grid-parent"  permission-check="{{'organizationAdd_write'}}" >
+                    <div class="grid-40">&nbsp;</div>
+                    <div class="grid-15 ">
+                        <waitting-btn type="button" btn-class="ripplelink" ng-click="saveAsATemplate()" value="'Save As a Template'" is-loading="cloneCustomerLoading"></waitting-btn>
+                    </div>
+                    <div class="grid-15 ">
+                        <waitting-btn type="button" btn-class="ripplelink" ng-click="chooseTemplate()" value="'Choose a Template'" is-loading="cloneCustomerLoading"></waitting-btn>
+                    </div>
+                    <div class="grid-15 ">
+                        <waitting-btn type="button" btn-class="ripplelink" ng-click="cloneCustomerSetting()" value="'Clone Customer Setting'" is-loading="cloneCustomerLoading"></waitting-btn>
+                    </div>
+                    <div class="grid-15 ">
+                        <waitting-btn type="button" btn-class="ripplelink delete" ng-click="inactive()" value="'Inactive Customer'" is-loading="cloneCustomerLoading"></waitting-btn>
+                    </div>
+        </div>
+        <div class="grid-100 grid-parent">
+            <div class="grid-parent grid-100 container" style="margin-top: 30px;">
+                <div class="tab-container">
+                    <ul>
+                        <li data-tab-title="Section_basic" ng-click="selectedTab('basic')" ng-class="{'active':activetab === 'basic'}">
+                            Generic
+                        </li>
+                        <li data-tab-title="Section_transload" ng-click="selectedTab('transload')" ng-class="{'active':activetab === 'transload'}">
+                            Transload
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div ng-class="{'active':activetab === 'basic'}" class="grid-100 tab-content" id="Section_basic">
+                <div class="grid-100 grid-parent" style="margin-bottom: 30px;">
+                    <div class="grid-parent grid-100" style="margin-bottom: 10px;">
+                        <div>
+                            <div class="grid-parent grid-100 container">
+                                <div class="grid-parent grid-100 container" style="padding-top:20px;border-bottom: 1px solid #d0c6c6; margin-bottom: 30px;">
+                                    <div class="second-title">Foundation：</div>
+                                </div>
+                                <div style="padding:20px;background:#eee">
+                                    <div class="grid-parent grid-100 container">
+                                        <div CLASS="grid-100">
+                                            <label>Activated Facilites</label>
+                                            <ui-select multiple name="searchFacility" ng-change="getActivatedFacilityNames()" ng-model="customer.activatedFacilityIds" class="form-control">
+                                                <ui-select-match placeholder="Facility">
+                                                    {{$item.name}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="facility.id as facility in facilities | filter: { name: $select.search }">
+                                                    <div ng-bind="facility.name"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-50">
+                                            <label>Payment Term </label>
+                                            <ui-select name="paymentTerm" ng-model="customer.paymentTerm" ng-model="customer.paymentTerm">
+                                                <ui-select-match allow-clear="true">
+                                                    <div ng-bind="$select.selected"></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="p in paymentTerms">
+                                                    <div ng-bind="p"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Select Invoice Format</label>
+                                            <ui-select multiple tagging name="invoiceContents" theme="bootstrap" ng-model="customer.invoiceContents">
+                                                <ui-select-match>
+                                                    {{$item}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="invoiceFormat in invoiceFormatOptions">
+                                                    {{invoiceFormat}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Invoice Note</label>
+                                            <input type="text" ng-model="customer.invoiceNote" />
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                            <label>UCC Prefix</label>
+                                            <input type="text" ng-model="customer.uccPrefix" />
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Credit Limit</label>
+                                            <input type="text" ng-model="customer.creditLimit" />
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Credit Handle</label>
+                                            <ui-select name="creditHandle" ng-model="customer.creditHandle" on-select="onSelect('creditHandle')">
+                                                <ui-select-match allow-clear="true">
+                                                    <div ng-bind="$select.selected"></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="handle in creditHandles">
+                                                    <div ng-bind="handle"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Invoice Format</label>
+                                            <ui-select name="invoiceFormat" on-select="onSelect('invoiceFormat')" ng-model="customer.invoiceFormat">
+                                                <ui-select-match allow-clear="true">
+                                                    <div ng-bind="$select.selected"></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="invoiceFormat in invoiceFormats">
+                                                    <div ng-bind="invoiceFormat"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                            <label>Default Base Uom</label>
+                                            <ui-select  ng-model="customer.defaultBaseUom">
+                                                <ui-select-match allow-clear="true">
+                                                    <div ng-bind="$select.selected.name"></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="uomDefinition.name as uomDefinition in uomDefinitions | filter: $select.search">
+                                                    <div ng-bind="uomDefinition.name"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Linear UOM</label>
+                                            <select ng-model="customer.linearUnit" ng-options="o for o in getFieldUnits('Linear')" class="custom-select"></select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Weight UOM</label>
+                                            <select ng-model="customer.weightUnit" ng-options="o for o in getFieldUnits('Weight')" class="custom-select"></select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Currency UOM</label>
+                                            <select ng-model="customer.currency" ng-options="o for o in getFieldUnits('Currency')" class="custom-select"></select>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+
+                                        <div class="grid-25">
+                                            <label>Default LP Configuration Template</label>
+                                            <ui-select name="defaultLpTemplate" on-select="onSelect('defaultLpConfigurationTemplateId')" ng-model="customer.defaultLpConfigurationTemplateId">
+                                                <ui-select-match allow-clear="true">
+                                                    <div>{{$select.selected.description}}</div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="tem.id as tem in lpConfigurationTemplates | filter: $select.search" refresh="getLpConfigurationTemplates($select.search)"
+                                                    refresh-delay="50">
+                                                    <div ng-bind="tem.description"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Default Item Group:</label>
+                                            <ui-select ng-model="customer.itemGroup" on-select="onSelect('itemGroup')">
+                                                <ui-select-match allow-clear="true">
+                                                    <div ng-bind="$select.selected.name"></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="group.id as group in availableGroups" refresh="searchAvailableGroups($select.search)">
+                                                    <div ng-bind="group.name"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Default Location Group</label>
+                                            <ui-select name="status" ng-model="customer.locationGroupId" on-select="onSelect('locationGroupId')">
+                                                <ui-select-match allow-clear="true">
+                                                    {{$select.selected.name}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="locationGroup.id as locationGroup in locationGroups| filter: $select.search">
+                                                    {{locationGroup.name}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>LP Label Size</label>
+                                            <ui-select name="lpLabelSize" ng-model="customer.lpLabelSize">
+                                                <ui-select-match>
+                                                    {{$select.selected}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="lpLabelSize in lpLabelSizes| filter: $select.search">
+                                                    {{lpLabelSize}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                            <label>Storage Free Of Charge Hours</label>
+                                            <input type="number" ng-model="customer.storageFreeOfChargeHours" />
+                                        </div>
+
+                                        <div class="grid-25">
+                                            <label>Default SN Validate Regex</label>
+                                            <input type="text" ng-model="customer.defaultItemSNValidateRegex" />
+                                        </div>
+                                    </div>
+
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                            <label>Admin Emails</label>
+                                            <lt-tags-input placeholder="Enter Admin Emails" ng-model="customer.adminEmails"></lt-tags-input>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Customer Emails</label>
+                                            <lt-tags-input placeholder="Enter Customer Emails" ng-model="customer.customerEmails"></lt-tags-input>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Customer CC Emails</label>
+                                            <lt-tags-input placeholder="Enter Customer CC Emails" ng-model="customer.customerCCEmails"></lt-tags-input>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid-parent grid-100 container">
+                                            <div class="grid-25">
+                                                    <label>Auto Customer Reports</label>
+                                                    <ui-select multiple ng-model="customer.autoCustomerReports">
+                                                        <ui-select-match allow-clear="true">
+                                                            {{$item}}
+                                                        </ui-select-match>
+                                                        <ui-select-choices repeat="item in ['Daily Order Process Report By Transload','Daily Order Process Report', 'Daily Inbound Report',
+                                                         'Daily Outbound Report', 'Daily Inventory Report','Imports Group Inventory Report', 'Container POD Monitor Daily Report',
+                                                         'Daily Data Comparison Report For TPV and AMTRAN RC/DC'] | filter: $select.search">
+                                                            <div ng-bind="item"></div>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                            </div>
+                                            <div class="grid-25" ng-show="customer.autoCustomerReports.indexOf('Daily Inventory Report') > -1">
+                                                    <label>Daily Inventory Report Criteria</label>
+                                                    <ui-select multiple ng-model="customer.dailyInventoryReportCriteria">
+                                                        <ui-select-match allow-clear="true">
+                                                            {{$item}}
+                                                        </ui-select-match>
+                                                        <ui-select-choices repeat="item in ['Damage', 'Receiving', 'Available', 'OnHold', 'Reserved', 'Picked', 'Packed',
+                                                         'Loaded'] | filter: $select.search">
+                                                            <div ng-bind="item"></div>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                            </div>
+                                            <div class="grid-25">
+                                                <label>Commodity Descrption</label>
+                                                <input type="text" ng-model="customer.commodityDescription" />
+                                            </div>
+                                            
+                                    </div>
+
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                            <label>Allow Overwrite Item </label>
+                                            <md-switch class="md-primary" aria-label="Allow Overwrite Item" ng-model="customer.allowOverWriteItem" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Is Include WIP</label>
+                                            <md-switch class="md-primary" aria-label="Commitment Include WIP" ng-model="customer.isIncludeWip" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Is Allow Kitting</label>
+                                            <md-switch class="md-primary" aria-label="Is Allow Kitting" ng-model="customer.isAllowKitting" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+                                        <div class="grid-25">
+                                            <label>Has Serial Number</label>
+                                            <md-switch class="md-primary" aria-label="Has Serial Number" ng-model="customer.hasSerialNumber" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                            <label>Is Need Inform From TMS</label>
+                                            <md-switch class="md-primary" aria-label="Is Need Inform From TMS" ng-model="customer.needInformTMS" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+                                        <div class="grid-25">
+                                            <label>Has Tenant Location</label>
+                                            <md-switch class="md-primary" aria-label="Has Tenant Location" ng-model="customer.hasTenantLocation" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+                                        <div class="grid-25">
+                                            <label>Enable Item Location Check</label>
+                                            <md-switch class="md-primary" aria-label="Enable Item Location Check" ng-model="customer.enableItemLocationCheck " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Disable Create Item Spec Warnings On EDI</label>
+                                            <md-switch class="md-primary" aria-label="Disable Create Item Spec Warnings On EDI" ng-model="customer.disableCreateItemSpecWarningsOnEDI" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+
+                                        <div class="grid-25">
+                                            <label>Auto Collect Lot No From Item Line</label>
+                                            <md-switch class="md-primary" aria-label="Auto Collect Lot No From Item Line" ng-model="customer.autoCollectLotNoFromItemLine" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+                                        <div class="grid-25">
+                                            <label>Auto Collect Exp Date From Item Line</label>
+                                            <md-switch class="md-primary" aria-label="Auto Collect Exp Date From Item Line" ng-model="customer.autoCollectExpDateFromItemLine " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+                                        <div class="grid-25">
+                                            <label>Disable Create Account Warnings On EDI</label>
+                                            <md-switch class="md-primary" aria-label="Disable Create Account Warnings On EDI" ng-model="customer.disableCreateAccountWarningsOnEDI" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid-parent grid-100 container">
+                                         <div class="grid-25">
+                                              <label>is Sn Unique Across Items</label>
+                                              <md-switch class="md-primary" aria-label="" ng-model="customer.isSnUniqueAcrossItems " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                         </div>
+                                         <div class="grid-25">
+                                            <label>Inventory Report Exclude Make Pallet Adjust Record</label>
+                                            <md-switch class="md-primary" aria-label="" ng-model="customer.inventoryReportExcludeMakePalletAdjustRecord " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Allow Create Active ItemSpec Trough EDI</label>
+                                            <md-switch class="md-primary" aria-label="" ng-model="customer.allowActiveWhenCreateItemSpecOfEDI " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                         <div class="grid-25">
+                                            <label>Enable Sn Unique Supplier Ids</label>
+                                            <multiple-organization-auto-complete name="supplier"
+                                                                                 ng-model="customer.enableSnUniqueSupplierIds"
+                                                                                 tag="Supplier"></multiple-organization-auto-complete>
+                                         </div>
+
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                             <label>Use Item ID As LotNo</label>
+                                             <md-switch class="md-primary" aria-label="" ng-model="customer.useItemIdAsLotNo " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+                                   </div>
+                                    <div class="grid-parent grid-100 container" style="background-color: rgba(202, 220, 217, 0.3);padding-top: 10px;padding-bottom: 10px;">
+                                        <div class="grid-100" style="padding-bottom: 10px;">Small Parcel Pack Config</div>
+                                        <div class="grid-parent grid-100 container" style="padding-left: 15px;">
+
+                                            <div class="grid-25">
+                                              <label>Qty</label>
+                                              <input type="number" ng-model="customer.smallParcelPackConfig.qty" />
+                                            </div>
+                                            <div class="grid-25">
+                                                <label>Allow Mixed Packaging For Small Parcel</label>
+                                                <md-switch class="md-primary" aria-label="Allow Mixed Packaging For Small Parcel" ng-model="customer.smallParcelPackConfig.allowMixedPackagingForSmallParcel" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                             
+                                            </div>
+                                
+                                        </div>
+                        
+                                    </div>
+
+                                    <div class="grid-parent grid-100 container" style="background-color: rgba(202, 220, 217, 0.3);padding-top: 10px;">
+                                        <div class="grid-100 container ">Customer Accounts
+                                            <i class="fa fa-angle-up" style="color: #4b7e89; font-size: 36px; float: right;  margin-top: -10px;"
+                                               ng-class="{'fa-angle-up': isShowCustomerAccounts === false,
+                                               'fa-angle-down': isShowCustomerAccounts === true}"
+                                               ng-click="isShowCustomerAccounts = !isShowCustomerAccounts;"></i>
+                                            <div style="padding-right: 45px; float:right;">
+                                                <button type="button" class="ripplelink" style="padding: 0 25px;" ng-click="addCustomerAccount()">Add</button>
+                                            </div>
+                                        </div>
+                                        <div ng-if="isShowCustomerAccounts">
+                                            <div class="grid-parent grid-100 container" ng-repeat="account in customer.customerAccounts track by $index"
+                                                 style="margin-bottom: 20px;">
+                                                <div class="grid-parent grid-100 container" style="padding-left: 15px;">
+                                                    <div class="grid-25">
+                                                        <label class="label-input">Retailer</label>
+                                                        <input-validation-message field="Retailer" form="customerForm"></input-validation-message>
+                                                        <organization-auto-complete name="Retailer" ng-model="account.retailerId" tag="Retailer" required="true"
+                                                                                    allow-clear="true"></organization-auto-complete>
+                                                    </div>
+                                                    <div class="grid-25">
+                                                        <label class="label-input">Carrier</label>
+                                                        <organization-auto-complete name="Carrier" ng-model="account.carrierId" tag="Carrier"
+                                                                                    allow-clear="true"></organization-auto-complete>
+                                                    </div>
+                                                    <div class="grid-25">
+                                                        <label class="label-input">Freight Term</label>
+                                                        <ui-select ng-model="account.freightTerm">
+                                                            <ui-select-match>
+                                                                {{$select.selected}}
+                                                            </ui-select-match>
+                                                            <ui-select-choices repeat="term in ['Collect', 'Prepaid', 'Third Party']| filter: $select.search">
+                                                                {{term}}
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                    </div>
+                                                    <div class="grid-25">
+                                                        <label class="label-input">Facility</label>
+                                                        <ui-select name="facility" ng-model="account.facilityId" class="form-control">
+                                                            <ui-select-match>
+                                                                {{$select.selected.name}}
+                                                            </ui-select-match>
+                                                            <ui-select-choices repeat="facility.id as facility in facilities | filter: { name: $select.search }">
+                                                                <div ng-bind="facility.name"></div>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                    </div>
+                                                </div>
+                                                <div  class="grid-parent grid-100 container" style="padding-left: 15px;">
+                                                    <div class="grid-50">
+                                                        <input-validation-message field="billToInfo" form="customerForm"></input-validation-message>
+                                                        <label class="label-input">Bill To Address <a address-select address-model="account.billToAddress" address-data="account.billToInfo" style="float: right;">Edit</a></label>
+                                                        <textarea name="billToInfo" rows="2" class="form-control" ng-model="account.billToInfo" disabled="true" required="true" style="min-height:50px;"></textarea>
+                                                    </div>
+
+                                                    <div class="grid-10" style="padding-top: 45px;">
+                                                        <button type="button" class="ripplelink delete" ng-click="removeCustomerAccount($index)">Remove</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid-parent grid-100 container" style="padding-top:20px;border-bottom: 1px solid #d0c6c6;margin-bottom: 30px;">
+                                    <div class="second-title">Billing Pay：</div>
+                                </div>
+                                <div style="padding:20px;background:#eee">
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                            <label>Billing PalletQty Percent</label>
+                                            <input type="number" ng-model="customer.billingPalletQtyPercent" />
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>OutBound Billing Level</label>
+                                            <ui-select ng-model="customer.outBoundBillingLevel">
+                                                <ui-select-match>
+                                                    {{$select.selected}}
+                                                </ui-select-match>
+                                                <ui-select-choices
+                                                        repeat="level in billingLevels| filter: $select.search">
+                                                    {{level}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Send Report To Bill Pay</label>
+                                            <md-switch class="md-primary" aria-label="Send Report To Bill Pay" ng-model="customer.billingPay " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Check Billing Invoice When Reopen</label>
+                                            <md-switch class="md-primary" aria-label="Check Billing Invoice When Reopen" ng-model="customer.reopenCheckBillingPay " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid-parent grid-100 container" style="padding-top:20px;border-bottom: 1px solid #d0c6c6;margin-bottom: 30px;">
+                                    <div class="second-title">Inbound：</div>
+                                </div>
+                                <div style="padding:20px;background:#eee">
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-100">
+                                            <div style="display: block; float: left; padding-right:10px; padding-top:4px;">
+                                                <label>Receipt Fields</label>
+                                                <i class="fa fa-question-circle" title="Support add order itemline with receipt fields.">
+                                                </i>:
+                                            </div>
+                                            <input type="checkbox" id="container" ng-model="customer.receiptContainerNo">
+                                            <label class="checkbox" for="container">
+                                                <span class="text">Container</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+
+                                        <div class="grid-25">
+                                            <label>Receipt Unique Keys</label>
+                                            <ui-select multiple ng-model="customer.receiptUniqueKeys">
+                                                <ui-select-match allow-clear="true">
+                                                    {{$item}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="receiptUniqueKey in receiptUniqueKeys | filter: $select.search">
+                                                    <div ng-bind="receiptUniqueKey"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Receipt ItemLine Unique Keys</label>
+                                            <ui-select multiple ng-model="customer.receiptItemLineUniqueKeys">
+                                                <ui-select-match allow-clear="true">
+                                                    {{$item}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="receiptItemLineUniqueKey in receiptItemLineUniqueKeys | filter: $select.search">
+                                                    <div ng-bind="receiptItemLineUniqueKey"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Put Away Preferred Locations </label>
+                                            <ui-select multiple name="putAwayPreferredLocations " ng-model="customer.putAwayPreferredLocations">
+                                                <ui-select-match>
+                                                    {{$item}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="item in ['Same Expiration Date', 'Fixed Item Location', 'Fixed Title Zone'] | filter: $select.search">
+                                                    <div ng-bind="item"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Enable RC Titles</label>
+                                            <multiple-organization-auto-complete name="enableRCTitleIds"
+                                                                                 ng-model="customer.enableRCTitleIds"
+                                                                                 tag="Supplier"></multiple-organization-auto-complete>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+                                            <div class="grid-25">
+                                                    <label>Lp Item QTY Calc Method On Receive </label>
+                                                    <ui-select name="lpItemQTYCalcMethodOnReceive"  ng-model="customer.lpItemQTYCalcMethodOnReceive">
+                                                        <ui-select-match allow-clear="true">
+                                                            <div ng-bind="$select.selected"></div>
+                                                        </ui-select-match>
+                                                        <ui-select-choices repeat="lpItem in LPItemQTYCalcMethods">
+                                                            <div ng-bind="lpItem"></div>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                            </div>
+            
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                            <label>Is Auto Close Receipt</label>
+                                            <md-switch class="md-primary" aria-label="Is Auto Close Receipt" ng-model="customer.isAutoCloseReceipt" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Allow Receipt EDI</label>
+                                            <md-switch class="md-primary" aria-label="Allow Receipt EDI" ng-model="customer.allowReceiptEDI" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+                                        <div class="grid-25">
+                                            <label>Allow Receive Confirmation EDI</label>
+                                            <md-switch class="md-primary" aria-label="Allow Receive Confirmation EDI" ng-model="customer.allowReceiveConfirmationEDI"
+                                                style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Allow Receive Confirmation By Not EDI Source </label>
+                                            <md-switch class="md-primary" aria-label="Allow Receive Confirmation By Not EDI Source" ng-model="customer.allowReceiveConfirmationByNonEDISource"
+                                                style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                    </div>
+
+
+
+                                        <div class="grid-parent grid-100 container">
+                                            <div class="grid-25">
+                                                <label>Need Collect Receipt Reference No On Window Check in </label>
+                                                <md-switch class="md-primary" aria-label="Need Collect Receipt Reference No On Window Check in" ng-model="customer.needCollectReceiptReferenceNoOnWindowCheckin "
+                                                           style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                            </div>
+                                            <div class="grid-25">
+                                                <label>Force Receive By UPC Code</label>
+                                                <md-switch class="md-primary" aria-label="Force Receive By UPC Code" ng-model="customer.isForceReceiveByUPC " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                            </div>
+                                            <div class="grid-25">
+                                                <label>Skip LP Verify On Receive</label>
+                                                <md-switch class="md-primary" aria-label="Skip LP Verify On Receive " ng-model="customer.skipLPVerifyOnReceive " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                            </div>
+                                            <div class="grid-25">
+                                                <label>Allow Short Receive</label>
+                                                <md-switch class="md-primary" aria-label="Allow Short Receive" ng-model="customer.allowShortReceive " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="grid-parent grid-100 container">
+                                                <div class="grid-25">
+                                                        <label>Skip Put Away On Receive</label>
+                                                        <md-switch class="md-primary" aria-label="Skip Put Away On Receive" ng-model="customer.skipPutAwayOnReceive" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                                </div>
+                                                <div class="grid-25">
+                                                        <label>Enable Select LP Template By TiHi On Receive</label>
+                                                        <md-switch class="md-primary" aria-label="Enable Select LP Template By Ti Hi On Receive" ng-model="customer.enableSelectLPTemplateByTiHiOnReceive " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                                </div>
+                                                <div class="grid-25">
+                                                        <label>Allow Receive To Storage Location</label>
+                                                        <md-switch class="md-primary" aria-label="Allow Receive To Storage Location" ng-model="customer.allowReceiveToStorageLocation " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                                </div>
+                                                <div class="grid-25">
+                                                        <label>Allow Sync Receipt To Hon</label>
+                                                        <md-switch class="md-primary" aria-label="Allow Sync Receipt To Hon" ng-model="customer.allowSyncReceiptToHon " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                                </div>
+                                        </div>
+
+                                        <div class="grid-parent grid-100 container">
+                                            <div class="grid-25">
+                                                    <label>Enable SN Check By Pre Provided SN File</label>
+                                                    <md-switch class="md-primary" aria-label="Enable Sn Check By Pre Provided Sn File" ng-model="customer.enableSnCheckByPreProvidedSnFile" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                            </div>
+                                            <div class="grid-25">
+                                                    <label>Allow Receive Invalid SN</label>
+                                                    <md-switch class="md-primary" aria-label="Allow Receive Invalid SN" ng-model="customer.allowReceiveInvalidSN" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                            </div>
+                                            <div class="grid-25">
+                                                <label>Need Alert High Value Item</label>
+                                                <md-switch class="md-primary" aria-label="Need Alert High Value Item" ng-model="customer.needAlertHighValueItem" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                            </div>
+                                            <div class="grid-25" ng-show="customer.enableSnCheckByPreProvidedSnFile">
+                                                <label>Pre Provided SN Check SupplierIds</label>
+                                                <multiple-organization-auto-complete name="supplier"
+                                                                                     ng-model="customer.preProvidedSnCheckSupplierIds"
+                                                                                     tag="Supplier"></multiple-organization-auto-complete>
+                                            </div>
+                                    </div>
+
+                                    <div class="grid-parent grid-100 container" style="background-color: rgba(202, 220, 217, 0.3);padding-top: 10px;">
+                                        <div class="grid-100">Required Collect On Receiving</div>
+                                        <div class="grid-parent grid-100 container">
+
+                                        <div class="grid-25">
+                                            <md-switch class="md-primary" ng-model="customer.requireCollectLotNoOnReceive" style="margin-bottom:0px;">Lot No.</md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <md-switch class="md-primary" ng-model="customer.requireCollectExpirationDateOnReceive" style="margin-bottom:0px;">Expiration Date</md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <md-switch class="md-primary" ng-model="customer.requireCollectMfgDateOnReceive">Mfg Date</md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <md-switch class="md-primary" ng-model="customer.requireCollectShelfLifeDaysOnReceive">Shelf Life Days</md-switch>
+                                        </div>
+                                        </div>
+                                        <div class="grid-parent grid-100 container">
+                                            <div class="grid-25">
+                                                    <md-switch class="md-primary" ng-model="customer.requireCollectPalletNoOnReceive"> Pallet No</md-switch>
+                                            </div>
+                                            <div class="grid-25">
+                                                <label>Item Dimension</label>
+                                                <md-switch class="md-primary" aria-label="Require Collect Item Dimension On Receive" ng-model="customer.requireCollectItemDimensionOnReceive" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                            </div>
+                                            <div class="grid-25">
+                                                <label> Item Location</label>
+                                                <md-switch class="md-primary" aria-label="Require Check Item Location On Receive" ng-model="customer.requireCheckItemLocationOnReceive" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                            </div>
+                                            <div class="grid-25">
+                                                <label> Weight For SN</label>
+                                                <md-switch class="md-primary" aria-label="Require Collect Weight For Sn On Receive " ng-model="customer.requireCollectWeightForSnOnReceive" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container" style="background-color: rgba(202, 220, 217, 0.3);padding-top: 10px;">
+                                        <div class="grid-100">Compatible With Third Party LP</div>
+                                        <div class="grid-parent grid-100 container">
+
+                                            <div class="grid-25">
+                                                <md-switch class="md-primary" ng-model="customer.needCompatibleWithThirdPartyLP" style="margin-bottom:0px;">Need Compatible</md-switch>
+                                            </div>
+                                            <div class="grid-25">
+                                                <label>Third Party LP Prefix</label>
+                                                <input type="text" ng-model="customer.thirdPartyLPPrefix" />
+                                            </div>
+                                            <div class="grid-25">
+                                                <label>Third Party LP Padding</label>
+                                                <input type="text" ng-model="customer.thirdPartyLPPadding" />
+                                            </div>
+                                            <div class="grid-25">
+                                                <label>Location Item Check Types</label>
+                                                <ui-select multiple ng-model="customer.locationItemCheckTypes">
+                                                    <ui-select-match allow-clear="true">
+                                                        {{$item}}
+                                                    </ui-select-match>
+                                                    <ui-select-choices repeat="type in ['Same Item', 'Same LotNo', 'Same Exp Date'] | filter: $select.search">
+                                                        <div ng-bind="type"></div>
+                                                    </ui-select-choices>
+                                                </ui-select>                                 
+                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="grid-parent grid-100 container" style="padding-top:20px;border-bottom: 1px solid #d0c6c6; margin-bottom: 30px;">
+                                    <div class="second-title">Outbound：</div>
+                                </div>
+                                <div style="padding:20px;background:#eee">
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                            <label>Outbound Ship From Name</label>
+                                            <input type="text" ng-model="customer.outboundShipFromName" />
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Shipping Rule</label>
+                                            <ui-select name="shippingRule" on-select="onSelect('shippingRule')" ng-model="customer.shippingRule">
+                                                <ui-select-match allow-clear="true">
+                                                    <div ng-bind="$select.selected"></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="shippingRule in shippingRules">
+                                                    <div ng-bind="shippingRule"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Shipping Rule Time Window</label>
+                                            <ui-select name="srtw" on-select="onSelect('timeWindow')" ng-model="customer.timeWindow">
+                                                <ui-select-match allow-clear="true">
+                                                    <div ng-bind="$select.selected"></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="srtw in [ 'Daily','Monthly','Yearly']">
+                                                    <div ng-bind="srtw"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Shipment Tracking Type</label>
+                                            <!--<input-validation-message field="shipment Tracking Type" form="customerForm"></input-validation-message>-->
+                                            <ui-select name="shipmentTrackingType" on-select="onSelect('shipmentTrackingType')" ng-model="customer.shipmentTrackingType">
+                                                <ui-select-match allow-clear="true">
+                                                    <div ng-bind="$select.selected"></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="shipmentTrackingType in shipmentTrackingTypes | filter: $select.search">
+                                                    <div ng-bind="shipmentTrackingType"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                            <label>Order Unique Keys</label>
+                                            <ui-select multiple ng-model="customer.orderUniqueKeys">
+                                                <ui-select-match allow-clear="true">
+                                                    {{$item}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="orderUniqueKey in orderUniqueKeys | filter: $select.search">
+                                                    <div ng-bind="orderUniqueKey"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+
+                                        <div class="grid-25">
+                                            <label>Order ItemLine Unique Keys</label>
+                                            <ui-select multiple ng-model="customer.orderItemLineUniqueKeys">
+                                                <ui-select-match allow-clear="true">
+                                                    {{$item}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="orderItemLineUniqueKey in orderItemLineUniqueKeys | filter: $select.search">
+                                                    <div ng-bind="orderItemLineUniqueKey"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Order Plan Group By</label>
+                                            <ui-select multiple name="orderPlanItemLineGroupBys" ng-model="customer.orderPlanItemLineGroupBys">
+                                                <ui-select-match>
+                                                    {{$item.label}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="item.name as item in orderPlanGroupByArr | filter: $select.search">
+                                                    <div ng-bind="item.label"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Supported Order Types</label>
+                                            <ui-select multiple ng-model="customer.supportedOrderTypes">
+                                                <ui-select-match allow-clear="true">
+                                                    <div ng-bind="$item"></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="item in orderTypes | filter: $select.search">
+                                                    <div ng-bind="item"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                            <label>Deliver Confirmation Level</label>
+                                            <!--<input-validation-message field="shipment Tracking Type" form="customerForm"></input-validation-message>-->
+                                            <ui-select name="deliverConfirmationLevel" ng-model="customer.deliverConfirmationLevel">
+                                                <ui-select-match allow-clear="true">
+                                                    <div ng-bind="$select.selected"></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="deliverConfirmationLevel in deliverConfirmationLevels | filter: $select.search">
+                                                    <div ng-bind="deliverConfirmationLevel"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Replenishment Item Capacity</label>
+                                            <input type="number" ng-model="customer.replenishmentItemCapacity" />
+                                        </div>
+                                        <div class="grid-25" >
+                                            <label>Pick Suggest Level</label>
+                                            <ui-select  name="pickSuggestLevel" ng-model="customer.pickSuggestLevel">
+                                                <ui-select-match allow-clear="true">
+                                                    <div ng-bind="$select.selected"></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="level in pickSuggestLevels| filter: $select.search" >
+                                                    {{level}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25" >
+                                            <label>Close Pick Suggest For Order Types</label>
+                                            <ui-select  multiple ng-model="customer.closePickSuggestForOrderTypes">
+                                                <ui-select-match>
+                                                    <div ng-bind="$item"></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="item in orderTypes | filter: $select.search" >
+                                                    <div ng-bind="item"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25" ng-show="customer.allowReceiptEDI">
+                                            <label>Overwrite Receipt Status Of EDI</label>
+                                            <ui-select multiple name="overwriteReceiptStatusOfEDI" ng-model="customer.overwriteReceiptStatusOfEDI">
+                                                <ui-select-match>
+                                                    {{$item}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="status in receiptStatuses| filter: $select.search" refresh="getReceiptStatusList($select.search)"
+                                                    refresh-delay="50">
+                                                    {{status}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-50" style="padding-left: 0">
+                                            <label>Enable DC Titles</label>
+                                            <multiple-organization-auto-complete name="enableDCTitleIds"
+                                                                                 ng-model="customer.enableDCTitleIds"
+                                                                                 tag="Title"></multiple-organization-auto-complete>
+                                        </div>
+                                        <div class="grid-25" style="padding-left: 10px;">
+                                            <label>Min Order Percentage</label>
+                                            <input type="number" ng-model="customer.minOrderPercentage" />
+                                        </div>
+                                        <div class="grid-25" style="padding-left: 10px;">
+                                            <label>Max Order Percentage</label>
+                                            <input type="number" ng-model="customer.maxOrderPercentage" />
+                                        </div>
+
+                                        <div class="grid-25" ng-show="customer.allowOrderEDI">
+                                            <label>Overwrite Order Status Of EDI</label>
+                                            <ui-select multiple name="overwriteOrderStatusOfEDI" ng-model="customer.overwriteOrderStatusOfEDI">
+                                                <ui-select-match>
+                                                    {{$item}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="status in orderStatuses| filter: $select.search" refresh="getOrderStatusList($select.search)"
+                                                    refresh-delay="50">
+                                                    {{status}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                            <label>Shipping Label Print Type</label>
+                                            <ui-select name="status" ng-model="customer.shippingLabelPrintType" >
+                                                <ui-select-match allow-clear="true">
+                                                    {{$select.selected}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="printType in shippingLabelPrintTypes| filter: $select.search">
+                                                    {{printType}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25" style="padding-left: 10px;">
+                                            <label>Remind Expiration Date Line</label>
+                                            <input type="number" ng-model="customer.remindExpirationDateLine" />
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Pick Version</label>
+                                            <ui-select name="Pick Version" ng-model="customer.pickVersion"  ng-change="$select.selected ? customer.pickVersion = $select.selected :customer.pickVersion = null ">
+                                                <ui-select-match allow-clear="true">
+                                                    {{$select.selected}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="pickVersion in pickVersions| filter: $select.search">
+                                                    {{pickVersion}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25" style="padding-left: 10px;">
+                                            <label>Required Counting Sheet</label>
+                                            <ui-select multiple name="requiredCountingSheet" ng-model="customer.requiredCountingSheetFacilities" class="form-control">
+                                                <ui-select-match allow-clear="true">
+                                                    {{$item}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="facility in activatedFacilityNames | filter: $select.search">
+                                                    <div ng-bind="facility"></div>
+                                                </ui-select-choices>
+                                                <ui-select-no-choice>No available option.</ui-select-no-choice>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+
+                                        <div class="grid-25">
+                                            <label>Partial Lock Inventory</label>
+                                            <md-switch class="md-primary" aria-label="Partial Lock Inventory" ng-model="customer.allowPartialLockInventory" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Allow Order EDI </label>
+                                            <md-switch class="md-primary" aria-label="Allow Order EDI" ng-model="customer.allowOrderEDI" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Is Allow ShortShip</label>
+                                            <md-switch class="md-primary" aria-label="Is Allow ShortShip" ng-model="customer.isAllowShortShip" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Is Allow Auto Dock Assign</label>
+                                            <md-switch class="md-primary" aria-label="Is Allow Auto Dock Assign" ng-model="customer.isAllowAutoDockAssign" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                            <label>Allow Incremental Send DC</label>
+                                            <md-switch class="md-primary" aria-label="Allow Incremental Send DC" ng-model="customer.allowIncrementalSendDC " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Master BOL By Trailer</label>
+                                            <md-switch class="md-primary" aria-label="Master BOL By Trailer" ng-model="customer.masterBOLByTrailer " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Collect Long Haul When Commit </label>
+                                            <md-switch class="md-primary" aria-label="Collect Long Haul When Commit" ng-model="customer.collectLongHaulWhenCommit "
+                                                style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Auto Trigger Pack Task </label>
+                                            <md-switch class="md-primary" aria-label="Auto Trigger Pack Task" ng-model="customer.autoTriggerPackTask " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+
+                                        <div class="grid-25">
+                                            <label>Allow Deliver Confirmation EDI</label>
+                                            <md-switch class="md-primary" aria-label="Allow Deliver Confirmation EDI" ng-model="customer.allowDeliverConfirmationEDI"
+                                                style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+                                        <div class="grid-25">
+                                            <label>Allow Deliver Confirmation By Not EDI Source </label>
+                                            <md-switch class="md-primary" aria-label="Allow Deliver Confirmation By Not EDI Source" ng-model="customer.allowDeliverConfirmationByNonEDISource "
+                                                style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Release Cancelled Order Inventory Lock Before Put Back</label>
+                                            <md-switch class="md-primary" aria-label="Release Cancelled Order Inventory Lock Before Put Back" ng-model="customer.releaseCancelledOrderInventoryLockBeforePutBack "
+                                                style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Require Unit Validate For Picking</label>
+                                            <md-switch class="md-primary" aria-label="Require Unit Validate For Picking" ng-model="customer.requirePickingUnitValidate "
+                                                style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+
+                                        <div class="grid-25">
+                                            <label>Only Collect SN During Shipping</label>
+                                            <md-switch class="md-primary" aria-label="Only Collect SN During Shipping" ng-model="customer.onlyCollectSNDuringShipping"
+                                                style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+                                        <div class="grid-25">
+                                            <label>Allow Create Pick Task Without Pick Strategy</label>
+                                            <md-switch class="md-primary" aria-label="Allow Create Pick Task Without Pick Strategy" ng-model="customer.allowCreatePickTaskWithoutPickStrategy"
+                                                style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+                                        <div class="grid-25">
+                                            <label>Use SLP For Shipping</label>
+                                            <md-switch class="md-primary" aria-label="Use SLP For Shipping" ng-model="customer.useSLPForShipping"
+                                                style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+                                        <div class="grid-25">
+                                                <label>Force Scan Case UPC For Case Pick</label>
+                                                <md-switch class="md-primary" aria-label="Force Scan Case UPC For Case Pick" ng-model="customer.forceScanCaseUPCForCasePick"
+                                                    style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                            </div>
+
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                            <label>Allow Auto Allocate In WavePick</label>
+                                            <md-switch class="md-primary" aria-label="Allow Auto Allocate In WavePick" ng-model="customer.allowAutoAllocateInWavePick"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Allow Stage All In WavePick</label>
+                                            <md-switch class="md-primary" aria-label="Allow Stage All In WavePick" ng-model="customer.allowStageAllInWavePick"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Skip CLP In WavePick (DropShip)</label>
+                                            <md-switch class="md-primary" aria-label="Skip CLP In WavePick (DropShip)" ng-model="customer.skipCLPInWavePick"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Allow Batch Close Order</label>
+                                            <md-switch class="md-primary" aria-label="Allow Batch Close Order" ng-model="customer.allowBatchCloseOrder"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                            <label>Allow Retry Commit</label>
+                                            <md-switch class="md-primary" aria-label="Allow Retry Commit" ng-model="customer.isAllowRetryCommit"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Allow Update Order Detail WIP</label>
+                                            <md-switch class="md-primary" aria-label="Allow Update Order Detail WIP" ng-model="customer.allowUpdateOrderDetailWIP"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Allow Send PI</label>
+                                            <md-switch class="md-primary" aria-label="Allow Send PI" ng-model="customer.allowSendPI"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Allow Send PK</label>
+                                            <md-switch class="md-primary" aria-label="Allow Send PK" ng-model="customer.allowSendPK"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                            <label>Allow Send GI</label>
+                                            <md-switch class="md-primary" aria-label="Allow Send GI" ng-model="customer.allowSendGI"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Allow Send STA</label>
+                                            <md-switch class="md-primary" aria-label="Allow Send STA" ng-model="customer.allowSendSTA"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+
+                                        <div class="grid-25">
+                                            <label>Determine Pick Type By Uom</label>
+                                            <md-switch class="md-primary" aria-label="Determine Pick Type By Uom" ng-model="customer.determinePickTypeByUom"
+                                                        style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Is Pack Need Check Packaging Type</label>
+                                            <md-switch class="md-primary" aria-label="Is Pack Need Check Packaging Type" ng-model="customer.isPackNeedCheckPackagingType"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                 <!--       <div class="grid-25">
+                                            <label>Enable Pallet Pick</label>
+                                            <md-switch class="md-primary" aria-label="Enable Pallet Pick"
+                                                       ng-model="customer.enablePalletPick"
+                                                        style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>-->
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+
+                                        <div class="grid-25">
+                                            <label>Enable Pick Pull Step</label>
+                                            <md-switch class="md-primary" aria-label="Enable Pick Pull Step" ng-model="customer.enablePickPullStep"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Allow Pick By Click Item</label>
+                                            <md-switch class="md-primary" aria-label="Allow Pick By Click Item" ng-model="customer.allowPickByClickItem"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Skip CLP In Order Pick (DropShip)</label>
+                                            <md-switch class="md-primary" aria-label="Skip CLP In Order Pick (DropShip)" ng-model="customer.skipCLPInOrderPick"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Allow Partial Ship</label>
+                                            <md-switch class="md-primary" aria-label="Allow Partial Ship" ng-model="customer.allowPartialShip"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                    </div>
+                                    <div  class="grid-parent grid-100 container">
+
+                                        <div class="grid-25">
+                                            <label>Allow Auto CC</label>
+                                            <md-switch class="md-primary" aria-label="Allow Auto CC" ng-model="customer.allowAutoCC " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Enable Pick By Lot No</label>
+                                            <md-switch class="md-primary" aria-label="Enable Pick By Lot No" ng-model="customer.enablePickByLotNo " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+                                        <div class="grid-25">
+                                            <label>Skip Print CLP In Pick</label>
+                                            <md-switch class="md-primary" aria-label="Skip Print CLP In Pick" ng-model="customer.skipPrintCLPInPick" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Allow Make Pallet Adjust Inventory </label>
+                                            <md-switch class="md-primary" aria-label="Allow Make Pallet Adjust Inventory" ng-model="customer.allowMakePalletAdjustInventory"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                    </div>
+
+                                    <div  class="grid-parent grid-100 container">
+
+
+                                        <div class="grid-25">
+                                            <label>Allow MultipleLoad For Each Order </label>
+                                            <md-switch class="md-primary" aria-label="Allow MultipleLoad For Each Order" ng-model="customer.allowMultipleLoadForEachOrder"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+                                        <div class="grid-25">
+                                            <label>Allow Auto Close Pick Task </label>
+                                            <md-switch class="md-primary" aria-label="Allow Auto Close Pick Task" ng-model="customer.allowAutoClosePickTask"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Allow Auto Add Order Qty By Weight</label>
+                                            <md-switch class="md-primary" aria-label="Allow Auto Add Order Qty By Weight" ng-model="customer.allowAutoAddOrderQtyByWeight"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+
+                                        <div class="grid-25">
+                                            <label>Allow Auto Close Load Task </label>
+                                            <md-switch class="md-primary" aria-label="allow Auto Close Load Task" ng-model="customer.allowAutoCloseLoadTask"
+                                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container">
+                                            <div class="grid-25">
+                                                    <label>Recalculate Order Qty On Commitment By Weight</label>
+                                                    <md-switch class="md-primary" aria-label="" ng-model="customer.reCalcOrderQtyOnCommitmentByWeight " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                             </div>
+                                             <div class="grid-25">
+                                                    <label>Require Trigger Replenish On Pick Suggest</label>
+                                                   <md-switch class="md-primary" aria-label="" ng-model="customer.requireTriggerReplenishOnPickSuggest " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                             </div>
+                                             <div class="grid-25">
+                                                     <label>Disable Pick By Pallet</label>
+                                                     <md-switch class="md-primary" aria-label="" ng-model="customer.disablePickByPallet " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                             </div>
+                                            <div class="grid-25">
+                                                     <label>Allow Sync Order To Hon</label>
+                                                     <md-switch class="md-primary" aria-label="" ng-model="customer.allowSyncOrderToHon " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                             </div>
+                                        </div>
+                                        <div class="grid-parent grid-100 container">
+                                            <div class="grid-25">
+                                                    <label>Enable Pick By SN</label>
+                                                    <md-switch class="md-primary" aria-label="" ng-model="customer.enablePickBySn " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                             </div>
+                                             <div class="grid-25">
+                                                    <label>Allow Send Packing List By Load After DC Sent</label>
+                                                    <md-switch class="md-primary" aria-label="" ng-model="customer.allowSendPackingListByLoadAfterDCSent" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                             </div>
+                                             <div class="grid-25">
+                                                <label>Allow Pick Auto Submit</label>
+                                                <md-switch class="md-primary" aria-label="" ng-model="customer.allowPickAutoSubmit" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                            </div>
+                                            <div class="grid-25">
+                                                    <label>Force Use LP Template</label>
+                                                    <md-switch class="md-primary" aria-label="" ng-model="customer.forceUseLPTemplate" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                            </div>
+                                        </div>
+                                        <div class="grid-parent grid-100 container">
+                                            <div class="grid-25">
+                                                <label>Allow Material Line By LP Config When Picked</label>
+                                                <md-switch class="md-primary" aria-label="" ng-model="customer.allowMaterialLineByLPConfigWhenPicked" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                            </div>
+                                        </div>
+                                       
+                                    <div class="grid-parent grid-100 container" style="background-color: rgba(202, 220, 217, 0.3); padding-top: 10px;">
+                                        <div class="grid-100 container ">Skip Stage on Pick</div>
+                                        <div class="grid-50" style="padding-right:0px;">
+                                            <label>Skip Stage Order Types</label>
+                                            <ui-select multiple ng-model="customer.skipStageOnPick.orderTypes">
+                                                <ui-select-match allow-clear="true">
+                                                    <div ng-bind="$item"></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="item in orderTypes | filter: $select.search">
+                                                    <div ng-bind="item"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <md-switch class="md-primary" ng-model="customer.skipStageOnPick.enableSkipStage " style="margin-bottom:0px;">Enable Skip Stage</md-switch>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid-parent grid-100 container" style="background-color: rgba(202, 220, 217, 0.3); padding-top: 10px;">
+                                        <div class="grid-100 container ">Auto Commit when receive DN</div>
+                                        <div class="grid-50" style="padding-right:0px;">
+                                            <label>Auto Commit Order Types</label>
+                                            <ui-select multiple ng-model="customer.autoCommitOrderTypes">
+                                                <ui-select-match allow-clear="true">
+                                                    <div ng-bind="$item"></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="item in orderTypes | filter: $select.search">
+                                                    <div ng-bind="item"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <md-switch class="md-primary" ng-model="customer.enableAutoCommit " style="margin-bottom:0px;">Enable Auto Commit</md-switch>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container" style="background-color: rgba(202, 220, 217, 0.3);padding-top: 10px;">
+                                        <div class="grid-100 container ">Set Auto Close Back Order</div>
+                                        <div class="grid-50" style="padding-right:0px;">
+                                            <label>Allow Auto Close Back Order Retailers</label>
+                                            <multiple-organization-relationship-auto-complete ng-model="customer.allowAutoCloseBackOrderRetailerIds" name="allowAutoCloseBackOrderRetailerIds"
+                                                tag="Retailer" customer-id="customer.orgId">
+                                            </multiple-organization-relationship-auto-complete>
+                                        </div>
+                                        <div class="grid-10" style="padding-left: 0px;">
+                                            <img class="btn-icon-delete" src="assets/img/Delete.png" alt="Clear All Retailer" ng-click="clearAllRetailer()" style="margin-top:18px;">
+                                        </div>
+                                        <div class="grid-25">
+                                            <md-switch class="md-primary" ng-model="customer.isDefaultAutoCloseBackOrder " style="margin-bottom:0px;">Default All Retailer Auto Close Back Order</md-switch>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid-parent grid-100 container" style="background-color: rgba(202, 220, 217, 0.3);padding: 10px 0px;">
+                                        <div class="grid-100 container ">Set Auto Create PRO#</div>
+                                        <div class="grid-50" style="padding-right:0px;">
+                                            <label>PRO# Index From</label>
+                                            <input type="number" ng-model="customer.proNoStartIndex" />
+                                        </div>
+                                        <div class="grid-25">
+                                            <md-switch class="md-primary" ng-model="customer.isAutoCreateProNo " style="margin-bottom:0px;">Auto Create PRO#</md-switch>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid-parent grid-100 container" style="background-color: rgba(202, 220, 217, 0.3);padding: 10px 0px;">
+                                        <div class="grid-100 container ">Order Item Top Location Setting</div>
+                                        <div class="grid-50" style="padding-right:0px;">
+                                            <label>Location Name Regex</label>
+                                            <i class="fa fa-question-circle" title="e.g. ^BPK: Location start with BPK , A$: Location end with A"></i>
+                                            <input type="text" ng-model="customer.orderItemTopFromLocationReg" />
+                                        </div>
+                                        <div class="grid-50">
+                                            <label>Location Types</label>
+                                            <ui-select multiple ng-model="customer.orderItemTopFromLocationTypes">
+                                                <ui-select-match allow-clear="true">
+                                                    <div ng-bind="$item"></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="item in locationTypes | filter: $select.search">
+                                                    <div ng-bind="item"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="grid-parent grid-100 container" style="background-color: rgba(202, 220, 217, 0.3);padding-top: 10px;">
+                                        <div class="grid-100 container ">Order Type Pick Type Mappings
+                                            <i class="fa fa-angle-up" style="color: #4b7e89; font-size: 36px; float: right;  margin-top: -10px;" ng-class="{'fa-angle-up': isShowOrderTypePickTypeMappings === false,
+                                               'fa-angle-down': isShowOrderTypePickTypeMappings === true}"
+                                               ng-click="isShowOrderTypePickTypeMappings = !isShowOrderTypePickTypeMappings;"></i>
+                                            <div style="padding-right: 45px; float:right;">
+                                                <button type="button" class="ripplelink" style="padding: 0 25px;" ng-click="addOrderTypePickTypeMappings()">Add</button>
+                                            </div>
+                                        </div>
+                                        <div ng-show="isShowOrderTypePickTypeMappings">
+                                            <div class="grid-parent grid-100 container" ng-repeat="account in customer.orderTypePickTypeMappings track by $index"
+                                                 style="margin-bottom: 20px;">
+                                                <div class="grid-parent grid-100 container" style="padding-left: 15px;">
+                                                    <div class="grid-25">
+                                                        <label class="label-input">Order Type</label>
+                                                        <input-validation-message field="orderTypes" form="customerForm"></input-validation-message>
+                                                        <ui-select name="orderTypes" ng-model="customer.orderTypePickTypeMappings[$index].orderType"    required="true">
+                                                            <ui-select-match allow-clear="true" >
+                                                                <div ng-bind="$select.selected" ></div>
+                                                            </ui-select-match>
+                                                            <ui-select-choices repeat="p in orderTypes">
+                                                                <div ng-bind="p"></div>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                    </div>
+                                                    <div class="grid-25">
+                                                        <label class="label-input">Pick Type</label>
+                                                        <ui-select  ng-model="customer.orderTypePickTypeMappings[$index].pickType" >
+                                                            <ui-select-match allow-clear="true">
+                                                                <div ng-bind="$select.selected"></div>
+                                                            </ui-select-match>
+                                                            <ui-select-choices repeat="p in pickTypes">
+                                                                <div ng-bind="p"></div>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                    </div>
+                                                    <div class="grid-10" style="padding-top: 22px;">
+                                                        <button type="button" class="ripplelink delete" ng-click="removeOrderTypePickTypeMappings($index)">Remove</button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="grid-parent grid-100 container" style="padding-top:20px;border-bottom: 1px solid #d0c6c6; margin-bottom: 30px;">
+                                    <div class="second-title">Shipping Label：</div>
+                                </div>
+                                <div style="padding:20px; background:#eee">
+
+                                    <div class="grid-parent grid-100 container" style="background-color: rgba(202, 220, 217, 0.3);padding-top: 10px;">
+                                        <div class="grid-100 container ">
+                                            <i class="fa fa-angle-up" style="color: #4b7e89; font-size: 36px; float: right;  margin-top: -10px;"
+                                               ng-class="{'fa-angle-up': isShowRetailerShipInfos === false,
+                                               'fa-angle-down': isShowRetailerShipInfos === true}"
+                                               ng-click="isShowRetailerShipInfos = !isShowRetailerShipInfos;"></i>
+                                            <div style="padding-right: 45px; float:right;">
+                                                <button type="button" class="ripplelink" style="padding: 0 25px;"
+                                                        ng-click="addRetailerShipInfo()">Add</button>
+                                            </div>
+                                        </div>
+                                        <div ng-show="isShowRetailerShipInfos">
+                                            <div class="grid-parent grid-100 container" ng-repeat="retailerShipInfo in customer.retailerShipInfos track by $index"
+                                                 style="margin-bottom: 20px;">
+                                                <div class="grid-parent grid-100 container" style="padding-left: 15px;">
+                                                    <div class="grid-25">
+                                                        <label>Retailer</label>
+                                                        <organization-auto-complete name="Retailer" ng-model="retailerShipInfo.retailerId"
+                                                                                    tag="Retailer" allow-clear="true"></organization-auto-complete>
+                                                    </div>
+                                                    <div class="grid-25">
+                                                        <label> Shipper Name Type</label>
+                                                        <ui-select name="shipperNameType" ng-model="retailerShipInfo.shipperNameType">
+                                                            <ui-select-match>
+                                                                <div ng-bind="$select.selected"></div>
+                                                            </ui-select-match>
+                                                            <ui-select-choices repeat="shipperName in shipperNameTypes| filter: $select.search">
+                                                                {{shipperName}}
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                    </div>
+                                                    <div class="grid-25">
+                                                        <label> Shipper Address Type </label>
+                                                        <ui-select name="shipperAddressType" ng-model="retailerShipInfo.shipperAddressType">
+                                                            <ui-select-match>
+                                                                <div ng-bind="$select.selected"></div>
+                                                            </ui-select-match>
+                                                            <ui-select-choices repeat="shipFromAddress in shipperAddressTypes| filter: $select.search">
+                                                                {{shipFromAddress}}
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                    </div>
+                                                    <div class="grid-10"  style="padding-top: 20px;" ng-if="!(retailerShipInfo.retailerId && retailerShipInfo.shipperAddressType =='RETAILER_ADDRESS')">
+                                                        <button type="button" class="ripplelink delete" ng-click="removeRetailerShipInfo($index)">Remove</button>
+                                                    </div>
+                                                </div>
+                                                <div  class="grid-parent grid-100 container" style="padding-left: 15px;" ng-if="retailerShipInfo.retailerId && retailerShipInfo.shipperAddressType =='RETAILER_ADDRESS'">
+                                                    <div class="grid-75" >
+                                                        <input-validation-message field="retailAddressInfo + {{$index}}" form="customerForm"></input-validation-message>
+                                                        <label>Retailer Address</label>
+                                                        <label lt-address-selection organization="{{retailerShipInfo.retailerId}}"
+                                                            lt-address-id="retailerShipInfo.retailerAddressId"
+                                                            lt-address-model="retailerShipInfo.retailerAddressInfo"
+
+                                                            cannot-switch-organization = "true"
+                                                            style="float: right;"><a>Edit</a>
+                                                        </label>
+                                                        <textarea name="retailAddressInfo + {{$index}}" rows="2" class="form-control"
+                                                            ng-model="retailerShipInfo.retailerAddressInfo" disabled="true"
+                                                            required="true" style="min-height:50px;">
+                                                        </textarea>
+                                                    </div>
+                                                    <div class="grid-10" style="padding-top: 45px;">
+                                                        <button type="button" class="ripplelink delete" ng-click="removeRetailerShipInfo($index)">Remove</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="grid-parent grid-100 container" style="padding-top:20px;border-bottom: 1px solid #d0c6c6; margin-bottom: 30px;">
+                                    <div class="second-title">YMS：</div>
+                                </div>
+                                <div style="padding:20px;background:#eee">
+                                    <div class="grid-parent grid-100 container">
+                                        <div class="grid-25">
+                                            <label>Allow Yard Equipment Qty</label>
+                                            <input type="number" ng-model="customer.allowYardEquipmentQty" />
+                                        </div>
+                                    </div>
+                                </div>                              
+
+                                <div class="grid-parent grid-100 container"
+                                     style="padding-top:20px;border-bottom: 2px solid #222; margin-bottom: 30px;">
+                                    <div class="second-title">Bill of Lading：</div>
+                                </div>
+                                <div class="grid-parent grid-100 container">
+                                    <div class="grid-50 container" style=" padding-right: 10px; padding-top: 10px">
+                                        <div style="border: #222 2px solid; padding:10px; min-height: 204px; position: relative; box-sizing: border-box">
+                                            <div style="position: absolute; background: #fff;height: 30px;  line-height: 30px; left: 20px; top: -16px;">
+                                                <label style="font-weight: 900; float: left;"> COD Amount and Fee Terms:</label>
+                                                <input type="checkbox" id="codAmountAndFeeTermsMbolSelected"
+                                                       ng-model="codAmountAndFeeTerms.mbolSelected" disabled="true" >
+                                                <label class="checkbox" for="codAmountAndFeeTermsMbolSelected">
+                                                    <span class="text" style="padding:0">MBOL</span>
+                                                </label>
+                                                <input type="checkbox" id="codAmountAndFeeTermsBolSelected"
+                                                       ng-model="codAmountAndFeeTerms.bolSelected" disabled="true" >
+                                                <label class="checkbox" for="codAmountAndFeeTermsBolSelected">
+                                                    <span class="text" style="padding:0">BOL</span>
+                                                </label>
+                                            </div>
+                                            <div style=" margin-left:30px; display: block; margin-top: 20px; height: 30px; line-height: 30px;">
+                                                <label style="font-weight: 900; float: left;"> COD Amount:$</label>
+                                                <input type="text" ng-model="codAmountAndFeeTerms.codAmount"  style="border-bottom: 1px solid #222 !important; border: none; box-shadow: none !important; margin-left: 10px; display: inline-block; width: 250px; box-sizing: none !important; ">
+                                            </div>
+
+                                            <div style="margin-left:50px; display: block; margin-top: 16px; height: 30px; line-height: 30px;">
+                                                <div style="">
+                                                    <label style="font-weight: 900; float: left;"> Fee Terms: </label>
+                                                </div>
+
+                                                <div style="display: inline-block; height: 30px; line-height: 30px; margin-left: 10px;">
+                                                    <label for="Collect1" style="float: left">Collect :
+                                                    </label>
+                                                    <input type="checkbox" id="Collect1" ng-model="codAmountAndFeeTerms.codCollect" ng-click="onCodAmountAndFeeTerms('codCollect',codAmountAndFeeTerms.codCollect)"
+                                                           style="vertical-align: middle; display: inline-block;-webkit-appearance: checkbox; width: 18px; height: 18px;">
+
+                                                </div>
+
+                                                <div style="display: inline-block ; height: 30px; line-height: 30px; margin-left: 20px;">
+                                                    <label for="Prepaid" style="float: left">Prepaid:
+                                                    </label>
+                                                    <input type="checkbox" id="Prepaid" ng-model="codAmountAndFeeTerms.codPrepaid" ng-click="onCodAmountAndFeeTerms('codPrepaid',codAmountAndFeeTerms.codPrepaid)"
+                                                           style="vertical-align: middle; display: inline-block;-webkit-appearance: checkbox; width: 18px; height: 18px;">
+
+
+                                                </div>
+                                            </div>
+
+                                            <div style=" margin-left:70px; display: block; margin-top: 18px; height: 30px; line-height: 30px;">
+
+                                                <div style="display: inline-block; height: 30px; line-height: 30px;">
+
+                                                    <label for="CustomerCheckAcceptable">
+                                                        Customer check acceptable:
+                                                    </label>
+                                                    <input type="checkbox" id="CustomerCheckAcceptable" ng-model="codAmountAndFeeTerms.codAcceptable" ng-click="onCodAmountAndFeeTerms('codAcceptable',codAmountAndFeeTerms.codAcceptable)"
+                                                           style="vertical-align: middle; display: inline-block;-webkit-appearance: checkbox; width: 18px; height: 18px;">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="grid-50 container" style=" padding-right: 10px; padding-top: 10px">
+                                        <div style="border: #222 2px solid; padding:20px; min-height: 170px; position: relative; box-sizing: border-box">
+                                            <div style="position: absolute; background: #fff;height: 30px;  line-height: 30px; left: 20px; top: -16px;">
+                                                <label style="font-weight: 900; float: left;"> Freight Counted:</label>
+                                                <input type="checkbox" id="bolFreightCountedMbolSelected"
+                                                       ng-model="bolFreightCounted.mbolSelected" disabled="true" >
+                                                <label class="checkbox" for="bolFreightCountedMbolSelected">
+                                                    <span class="text" style="padding:0">MBOL</span>
+                                                </label>
+                                                <input type="checkbox" id="bolFreightCountedBolSelected" disabled="true"
+                                                       ng-model="bolFreightCounted.bolSelected">
+                                                <label class="checkbox" for="bolFreightCountedBolSelected">
+                                                    <span class="text" style="padding:0">BOL</span>
+                                                </label>
+                                            </div>
+
+                                            <div class=" grid-100 ">
+
+                                                <div class="grid-50 container">
+                                                    <div class="grid-100 container">
+                                                        <div style="width: 100%; margin: auto; border: 2px solid #222;padding: 10px;">
+                                                            <div style="display: block ; height: 30px; line-height: 30px; ">
+                                                                <label type="checkbox">
+                                                                    <input type="checkbox" ng-model="bolFreightCounted.leftShipper" ng-click="onBolFreightCountedLeft('leftShipper',bolFreightCounted.leftShipper)"
+                                                                           style="display: inline-block;  -webkit-appearance: checkbox;    width: 18px;    height: 18px;    position: inherit;    vertical-align: middle;">
+                                                                    By Shipper
+                                                                </label>
+
+                                                            </div>
+                                                            <div style="display: block ; height: 30px; line-height: 30px;">
+                                                                <label type="checkbox">
+                                                                    <input type="checkbox" ng-model="bolFreightCounted.leftContain" ng-click="onBolFreightCountedLeft('leftContain',bolFreightCounted.leftContain)"
+                                                                           style="display: inline-block;  -webkit-appearance: checkbox;    width: 18px;    height: 18px;    position: inherit;    vertical-align: middle;">
+                                                                    By Driver/pallets  said to contain
+                                                                </label>
+
+                                                            </div>
+                                                            <div style="display: block ; height: 30px; line-height: 30px; ">
+                                                                <label type="checkbox" >
+                                                                    <input type="checkbox" ng-model="bolFreightCounted.leftPieces" ng-click="onBolFreightCountedLeft('leftPieces',bolFreightCounted.leftPieces)"
+                                                                           style="display: inline-block;  -webkit-appearance: checkbox;    width: 18px;    height: 18px;    position: inherit;    vertical-align: middle;">
+                                                                    By Driver/Pieces
+                                                                </label>
+
+                                                            </div>
+                                                        </div>
+                                                        <div style="display: block; margin-top: 10px; text-align: center " >
+
+                                                            <input type="radio" name="TemplateSelected"  value="leftTemplateSelected" ng-checked="bolFreightCounted.leftSelected"   ng-model="bolFreightCounted.templateSelected"  style="box-shadow: none!important;display: inline-block;vertical-align: middle;width: 18px; height: 18px; margin: 0; position: inherit;">
+                                                            Select
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="grid-50 container">
+                                                    <div class="grid-100 container">
+                                                        <div style="width: 100%; margin: auto; border: 2px solid #222 ; line-height: 30px; padding: 10px;">
+                                                            <div style="display: block ; height: 30px; line-height: 30px;">
+                                                                <label class="checkbox">
+                                                                    <input type="checkbox" ng-model="bolFreightCounted.rightContain" ng-click="onBolFreightCountedRight('rightContain',bolFreightCounted.rightContain)"
+                                                                           style="display: inline-block;  -webkit-appearance: checkbox;    width: 20px;    height: 20px;    position: inherit;    vertical-align: middle;">
+                                                                    By Driver/pallets  said to contain
+                                                                </label>
+
+                                                            </div>
+                                                            <div style="display: block ; height: 30px; line-height: 30px; ">
+                                                                <label type="checkbox">
+                                                                    <input type="checkbox" ng-model="bolFreightCounted.rightPieces" ng-click="onBolFreightCountedRight('rightPieces',bolFreightCounted.rightPieces)"
+                                                                           style="display: inline-block;  -webkit-appearance: checkbox;    width: 18px;    height: 18px;    position: inherit;    vertical-align: middle;">
+                                                                    By Driver/Pieces
+                                                                </label>
+
+                                                            </div>
+
+                                                            <div style="display: block ; height: 30px;  text-align: center">
+                                                                NO SHIPPER LOADER COUNT
+                                                            </div>
+                                                        </div>
+                                                        <div  style="display: block; margin-top: 10px; text-align: center " >
+                                                            <input type="radio" name="TemplateSelected"  value="rightTemplateSelected" ng-checked="bolFreightCounted.rightSelected" ng-model="bolFreightCounted.templateSelected" style="display: inline-block;width: 18px; height: 18px; margin: 0;vertical-align: middle; position: inherit; box-shadow: none!important;">
+                                                            Select
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+                                </div>
+                                <div class="grid-parent grid-100 container">
+                                    <div class="grid-50 container" style=" padding-right: 10px; padding-top: 10px">
+                                        <div style="border: #222 2px solid; padding:10px; min-height: 150px; position: relative; box-sizing: border-box">
+                                            <div style="position: absolute; background: #fff;height: 30px;  line-height: 30px; left: 20px; top: -16px;">
+                                                <label style="font-weight: 900; float: left;"> Other Options:</label>
+                                                <input type="checkbox" id="bolOtherOptionsMbolSelected" disabled="true"
+                                                       ng-model="bolOtherOptions.mbolSelected">
+                                                <label class="checkbox" for="bolOtherOptionsMbolSelected">
+                                                    <span class="text" style="padding:0">MBOL</span>
+                                                </label>
+                                                <input type="checkbox" id="bolOtherOptionsBolSelected" disabled="true"
+                                                       ng-model="bolOtherOptions.bolSelected">
+                                                <label class="checkbox" for="bolOtherOptionsBolSelected">
+                                                    <span class="text" style="padding:0">BOL</span>
+                                                </label>
+                                            </div>
+                                            <div class=" grid-100 " style="padding-top:30px; ">
+                                                <label style="display: inline-block;  width: 35%; float: left;">Dispaly Driver License NO: </label>
+                                                <md-switch class="md-primary" aria-label="Dispaly Driver License NO: " ng-model="bolOtherOptions.displayDriverLicenseNo"
+                                                           style="margin-top: 0;margin-bottom: 0; display: inline-block"></md-switch>
+                                            </div>
+                                            <div class=" grid-100 ">
+                                                <label style="display: inline-block;  width: 35%;line-height: 18px; float: left;">Order
+                                                    Total Pallets 1st: </label>
+                                                <md-switch class="md-primary" aria-label="Order Total Pallets 1st "  ng-model="bolOtherOptions.orderTotalPalletsFirst"
+                                                           style="margin-top: 0;margin-bottom: 0; display: inline-block"></md-switch>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="grid-parent grid-100 container">
+                                    <div class="grid-50 container" style=" padding-right: 10px; padding-top: 10px">
+                                        <div style="border: #222 2px solid; padding:15px; min-height: 170px; position: relative; box-sizing: border-box">
+                                            <div style="position: absolute; background: #fff;height: 30px;  line-height: 30px; left: 20px; top: -16px;">
+                                                <label style="font-weight: 900; float: left;"> Dynamic Field A1:</label>
+                                                <input type="checkbox" id="bolDynamicFieldA1MbolSelected" ng-click="relevancyDynamicFieldA1Mbol(bolDynamicFieldA1.mbolSelected,bolDynamicFieldA2)" ng-model="bolDynamicFieldA1.mbolSelected">
+                                                <label class="checkbox" for="bolDynamicFieldA1MbolSelected">
+                                                    <span class="text" style="padding:0">MBOL</span>
+                                                </label>
+                                                <input type="checkbox" id="bolDynamicFieldA1BolSelected" ng-click="relevancyDynamicFieldA1Bol(bolDynamicFieldA1.bolSelected,bolDynamicFieldA2)" ng-model="bolDynamicFieldA1.bolSelected">
+                                                <label class="checkbox" for="bolDynamicFieldA1BolSelected">
+                                                    <span class="text" style="padding:0">BOL</span>
+                                                </label>
+                                            </div>
+
+                                            <div class=" grid-100 " style="padding: 20px 15px;" ng-init="bolDynamicFieldA1.isEdit = false">
+                                                <textarea ng-model="bolDynamicFieldA1.content" ng-if="bolDynamicFieldA1.isEdit">
+                                                </textarea>
+                                                <div style="width: 100%; padding-bottom: 15px; height: 87px; " ng-if="! bolDynamicFieldA1.isEdit">
+                                                    {{bolDynamicFieldA1.content}}
+                                                </div>
+
+                                                <div style="text-align: center;" ng-if="bolDynamicFieldA1.isEdit">
+                                                    <input type="text" ng-model="bolDynamicFieldA1.leftInput" autocomplete="off" style="border-bottom: 1px solid #222 !important; border: none; box-shadow: none !important; margin-left: 10px; display: inline-block; width: 40%; box-sizing: none !important; "/>
+                                                    <label style="font-weight: 900;"> Per</label>
+                                                    <input type="text" ng-model="bolDynamicFieldA1.rightInput" autocomplete="off"  style="border-bottom: 1px solid #222 !important; border: none; box-shadow: none !important; margin-left: 10px; display: inline-block; width: 40%; box-sizing: none !important; "/>
+                                                </div>
+                                                <div style="text-align: center;" ng-if="! bolDynamicFieldA1.isEdit">
+                                                    <label style="width: 40%; border-bottom: 1px solid #222; display: inline-block; vertical-align: bottom;"> {{bolDynamicFieldA1.leftInput}}</label>
+                                                    <label style="font-weight: 900;"> Per </label>
+                                                    <label style="width: 40%; border-bottom: 1px solid #222; display: inline-block; vertical-align: bottom;" > {{bolDynamicFieldA1.rightInput}}</label>
+                                                </div>
+
+                                            </div>
+                                            <div style="position: absolute; right: 30px; bottom: 20px;">
+                                                <a href="" ng-click="bolDynamicFieldA1.isEdit =!bolDynamicFieldA1.isEdit">
+                                                    <span ng-if="!bolDynamicFieldA1.isEdit">EDIT</span>
+                                                    <span ng-if="bolDynamicFieldA1.isEdit">CANCEL</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid-50 container" style=" padding-right: 10px; padding-top: 10px">
+                                        <div style="border: #222 2px solid; padding:15px; min-height: 170px;  position: relative; box-sizing: border-box">
+                                            <div style="position: absolute; background: #fff;height: 30px;  line-height: 30px; left: 20px; top: -16px;">
+                                                <label style="font-weight: 900; float: left;"> Dynamic Field A1:
+                                                </label>
+                                                <input type="checkbox"  ng-model="bolDynamicFieldA2.mbolSelected" ng-click="relevancyDynamicFieldA1Mbol(bolDynamicFieldA2.mbolSelected,bolDynamicFieldA1)" id="bolDynamicFieldA2MbolSelected">
+                                                <label class="checkbox" for="bolDynamicFieldA2MbolSelected">
+                                                    <span class="text" style="padding:0">MBOL</span>
+                                                </label>
+                                                <input type="checkbox"  ng-model="bolDynamicFieldA2.bolSelected"  ng-click="relevancyDynamicFieldA1Bol(bolDynamicFieldA2.bolSelected,bolDynamicFieldA1)" id="bolDynamicFieldA2BolSelected">
+                                                <label class="checkbox" for="bolDynamicFieldA2BolSelected">
+                                                    <span class="text" style="padding:0">BOL</span>
+                                                </label>
+                                            </div>
+
+                                            <div class=" grid-100 " style="padding: 20px 15px;" ng-init="bolDynamicFieldA2.isEdit = false">
+                                                 <textarea ng-model="bolDynamicFieldA2.content" ng-if="bolDynamicFieldA2.isEdit">
+                                                </textarea>
+                                                <div style="width: 100%;height: 70px; " ng-if="!bolDynamicFieldA2.isEdit">
+                                                    {{bolDynamicFieldA2.content}}
+
+                                                </div>
+                                                <div style="display: block ; text-align: center" ng-if="bolDynamicFieldA2.isEdit">
+                                                    <input type="text" ng-model="bolDynamicFieldA2.signatureInput" autocomplete="off"
+                                                           style="border-bottom: 1px solid #222 !important; border: none; box-shadow: none !important; margin-left: 10px; display: inline-block; width: 50%; box-sizing: none !important; ">
+                                                </div>
+                                                <div style="display: block ; text-align: center" ng-if="!bolDynamicFieldA2.isEdit">
+                                                    <label style="width: 50%; border-bottom: 1px solid #222; display: inline-block"> {{bolDynamicFieldA2.signatureInput}}</label>
+                                                </div>
+                                                <div style="display: block ; text-align: center">
+                                                    Consignee signature Print Name
+                                                </div>
+                                            </div>
+                                            <div style="position: absolute; right: 30px; bottom: 20px;">
+                                                <a href="" ng-click="bolDynamicFieldA2.isEdit =!bolDynamicFieldA2.isEdit">
+                                                    <span ng-if="!bolDynamicFieldA2.isEdit">EDIT</span>
+                                                    <span ng-if="bolDynamicFieldA2.isEdit">CANCEL</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="grid-parent grid-100 container">
+
+
+
+                                    <div class="grid-50 container" style=" padding-right: 10px; padding-top: 10px">
+                                        <div style="border: #222 2px solid; padding:15px; min-height: 170px; position: relative; box-sizing: border-box">
+                                            <div style="position: absolute; background: #fff;height: 30px;  line-height: 30px; left: 20px; top: -16px;">
+                                                <label style="font-weight: 900; float: left;"> Dynamic Field B1:</label>
+                                                <input type="checkbox" ng-model="bolDynamicFieldB1.mbolSelected" id="bolDynamicFieldB1MbolSelected">
+                                                <label class="checkbox" for="bolDynamicFieldB1MbolSelected">
+                                                    <span class="text" style="padding:0">MBOL</span>
+                                                </label>
+                                                <input type="checkbox" ng-model="bolDynamicFieldB1.bolSelected" id="bolDynamicFieldB1BolSelected">
+                                                <label class="checkbox" for="bolDynamicFieldB1BolSelected">
+                                                    <span class="text" style="padding:0">BOL</span>
+                                                </label>
+                                            </div>
+
+                                            <div class=" grid-100 " style="padding: 20px 15px;" ng-init="bolDynamicFieldB1.isEdit = false">
+                                                <textarea ng-model="bolDynamicFieldB1.content" ng-if="bolDynamicFieldB1.isEdit">
+                                                </textarea>
+                                                <div style="width: 100%;height: 50px; " ng-if="!bolDynamicFieldB1.isEdit">
+                                                    {{bolDynamicFieldB1.content}}
+
+                                                </div>
+                                            </div>
+                                            <div style="position: absolute; right: 30px; bottom: 20px;">
+                                                <a href="" ng-click="bolDynamicFieldB1.isEdit =!bolDynamicFieldB1.isEdit" >
+                                                    <span ng-if="!bolDynamicFieldB1.isEdit">EDIT</span>
+                                                    <span ng-if="bolDynamicFieldB1.isEdit">CANCEL</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid-50 container" style=" padding-right: 10px; padding-top: 10px">
+                                        <div style="border: #222 2px solid; padding:15px; min-height: 170px;position: relative; box-sizing: border-box">
+                                            <div style="position: absolute; background: #fff;height: 30px;  line-height: 30px; left: 20px; top: -16px;">
+                                                <label style="font-weight: 900; float: left;"> Dynamic Field B2:</label>
+                                                <input type="checkbox" ng-model="bolDynamicFieldB2.mbolSelected" id="bolDynamicFieldB2MbolSelected">
+                                                <label class="checkbox" for="bolDynamicFieldB2MbolSelected">
+                                                    <span class="text" style="padding:0">MBOL</span>
+                                                </label>
+                                                <input type="checkbox"  ng-model="bolDynamicFieldB2.bolSelected" id="bolDynamicFieldB2BolSelected">
+                                                <label class="checkbox" for="bolDynamicFieldB2BolSelected">
+                                                    <span class="text" style="padding:0">BOL</span>
+                                                </label>
+                                            </div>
+
+                                            <div class=" grid-100 " style="padding: 20px 15px;" ng-init="bolDynamicFieldB2.isEdit = false">
+                                                  <textarea ng-model="bolDynamicFieldB2.content" ng-if="bolDynamicFieldB2.isEdit">
+                                                </textarea>
+                                                <div style="width: 100%;height: 50px; "  ng-if="! bolDynamicFieldB2.isEdit">
+                                                    {{bolDynamicFieldB2.content}}
+                                                </div>
+                                                <div style="display: block" ng-if="bolDynamicFieldB2.isEdit">
+                                                    <input type="text"  ng-model="bolDynamicFieldB2.signatureInput" autocomplete="off"
+                                                           style="border-bottom: 1px solid #222 !important; border: none; box-shadow: none !important; margin-left: 10px; display: inline-block; width: 40%; box-sizing: none !important; ">
+                                                    <label style="font-weight: 900;"> Shipper</label>
+                                                </div>
+                                                <div style="display: block; " ng-if="!bolDynamicFieldB2.isEdit">
+                                                    <label style="width: 40%; text-align: center; border-bottom: 1px solid #222; display: inline-block"> {{bolDynamicFieldB2.signatureInput}}</label>
+                                                    <label style="font-weight: 900;"> Shipper</label>
+                                                </div>
+                                                <span style=" font-weight: 700;">Signature</span>
+
+
+                                            </div>
+                                            <div style="position: absolute; right: 30px; bottom: 20px;">
+                                                <a href="" ng-click="bolDynamicFieldB2.isEdit =!bolDynamicFieldB2.isEdit" >
+                                                    <span ng-if="!bolDynamicFieldB2.isEdit">EDIT</span>
+                                                    <span ng-if="bolDynamicFieldB2.isEdit">CANCEL</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="grid-parent grid-100 container" style="padding-top:20px;border-bottom: 1px solid #d0c6c6;">
+                                    <div class="second-title">Dynamic Fields：</div>
+                                </div>
+                                <div class="grid-parent grid-100 container">
+                                    <div class="grid-50">
+                                        <label class="label-input">Receive Dynamic Fields</label>
+                                    </div>
+                                    <div class="grid-50">
+                                        <label class="label-input">Receipt Item Line Dynamic Fields</label>
+                                    </div>
+                                </div>
+                                <div class="grid-parent grid-100 container">
+                                    <div class="grid-50">
+                                        <div class="grid-parent grid-100 container" ng-repeat="receiptDynamicField in itemLineDynamicFieldLists track by $index">
+                                            <div class="grid-30">
+                                                <label>{{receiptDynamicField}}</label>
+                                            </div>
+                                            <div class="grid-60">
+                                                <input type="text" ng-model="customer.receiptDynamicFields[receiptDynamicField]" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid-50">
+                                        <div class="grid-parent grid-100 container" ng-repeat="receiptItemLineDynamic in itemLineDynamicFieldLists track by $index">
+                                            <div class="grid-30">
+                                                <label>{{receiptItemLineDynamic}}</label>
+                                            </div>
+                                            <div class="grid-60">
+                                                <input type="text" ng-model="customer.receiptItemLineDynamicFields[receiptItemLineDynamic]" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid-parent grid-100 container" style="padding-top:15px">
+                                    <div class="grid-50">
+                                        <label class="label-input">Order Dynamic Fields</label>
+                                    </div>
+                                    <div class="grid-50">
+                                        <label class="label-input">Order Item Line Dynamic Fields</label>
+                                    </div>
+                                </div>
+                                <div class="grid-parent grid-100 container">
+                                    <div class="grid-50">
+                                        <div class="grid-parent grid-100 container" ng-repeat="orderDynamicField in itemLineDynamicFieldLists track by $index">
+                                            <div class="grid-30">
+                                                <label>{{orderDynamicField}}</label>
+                                            </div>
+                                            <div class="grid-60">
+                                                <input type="text" ng-model="customer.orderDynamicFields[orderDynamicField]" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid-50">
+                                        <div class="grid-parent grid-100 container" ng-repeat="orderItemLineDynamicField in itemLineDynamicFieldLists track by $index">
+                                            <div class="grid-30">
+                                                <label>{{orderItemLineDynamicField}}</label>
+                                            </div>
+                                            <div class="grid-60">
+                                                <input type="text" ng-model="customer.orderItemLineDynamicFields[orderItemLineDynamicField]" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-class="{'active':activetab === 'transload'}" class="grid-100 tab-content" id="Section_transload">
+                <div class="grid-100 grid-parent" style="margin-bottom: 30px;">
+                    <div class="grid-parent grid-100" style="margin-bottom: 10px;">
+                        <div>
+                            <div class="grid-parent grid-100 container">
+                                <div class="grid-90">
+                                    <span class="caption-subject bold" style="font-size: 20px;">Transload:</span>
+                                </div>
+
+                            </div>
+                            <div class="grid-parent grid-100 container">
+                                <div class="grid-parent grid-100 container">
+
+                                    <div class="grid-25">
+                                        <label>Is Transload</label>
+                                        <md-switch class="md-primary" aria-label="Is Transload" ng-model="customer.isTransload" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                    </div>
+                                    <div class="grid-25">
+                                        <label>Has Transload LPN Step</label>
+                                        <md-switch class="md-primary" aria-label="Has Transload LPN Step" ng-model="customer.transloadLPNStep " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                    </div>
+                                    <div class="grid-25">
+                                        <label>Has Transload Put Away Step</label>
+                                        <md-switch class="md-primary" aria-label="Has Transload Put Away Step" ng-model="customer.transloadPutAwayStep " style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                    </div>
+                                    <div class="grid-25">
+                                        <label>Allow Create Transload Task Without Mapped Order</label>
+                                        <md-switch class="md-primary" aria-label="Allow Create Transload Task Without Mapped Order" ng-model="customer.allowCreateTransloadTaskWithoutMappedOrder "
+                                            style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                    </div>
+                                </div>
+                                <div class="grid-parent grid-100 container">
+                                    <div class="grid-parent grid-100 container">
+
+                                        <div class="grid-25">
+                                            <label>Allow Adding New Item For Receiving</label>
+                                            <md-switch class="md-primary" aria-label="Allow Adding New Item For Receiving" ng-model="customer.allowAddingNewItemForReceiving" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Require Scan Serial Number On Transload LPN</label>
+                                            <md-switch class="md-primary" aria-label="Require Scan Serial Number On Transload LPN" ng-model="customer.requireScanSerialNumberOnTransloadLPN" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Allow Transload Photos Step</label>
+                                            <md-switch class="md-primary" aria-label="Allow Transload Photos Step" ng-model="customer.allowTransloadPhotosStep" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                        </div>
+                                    </div>
+                                <div class="grid-parent grid-100 container" style="background-color: rgba(202, 220, 217, 0.3);padding-top: 10px;">
+                                    <div class="grid-100 container ">Set Auto Generate Outbound Order</div>
+                                    <div class="grid-25">
+                                        <label>Auto Generate Outbound Order When Receipt Is Closed</label>
+                                        <md-switch class="md-primary" aria-label="Allow Deliver Confirmation EDI" ng-model="customer.autoGenerateOutboundOrderWhenReceiptIsClosed"
+                                            ng-change="setAutoOutboundOrder(customer.autoGenerateOutboundOrderWhenReceiptIsClosed)"
+                                            style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                    </div>
+                                    <div ng-if="isSetOutboundOrder">
+                                        <div class="grid-25">
+                                            <label>Default Carrier</label>
+                                            <span style="color: red;" ng-if="isSetOutboundOrder">*</span>
+                                            <input-validation-message field="carrie" form="customerForm" ng-if="isSetOutboundOrder"></input-validation-message>
+                                            <organization-auto-complete name="carrie" ng-model="customer.defaultCarrierIdByAutoGenerateOutboundOrder" tag="Carrier"
+                                                required="isSetOutboundOrder"></organization-auto-complete>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Default Ship To Address</label>
+                                            <span style="color: red;" ng-if="isSetOutboundOrder">*</span>
+                                            <input-validation-message field="address" form="customerForm" ng-if="isSetOutboundOrder"></input-validation-message>
+                                            <ui-select name="address" ng-model="customer.defaultShipToAddressIdByAutoGenerateOutboundOrder" required="isSetOutboundOrder">
+                                                <ui-select-match allow-clear="true">
+                                                    <div ng-bind="generageAddressData($select.selected)"></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat=" address.id as address in addresses | filter:$select.search" refresh="filterAddress($select.search)"
+                                                    refresh-delay="50">
+                                                    <div ng-bind="generageAddressData(address)"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="grid-25">
+                                            <label>Freight Term</label>
+                                            <span style="color: red;" ng-if="isSetOutboundOrder">*</span>
+                                            <input-validation-message field="freight" form="customerForm" ng-if="isSetOutboundOrder"></input-validation-message>
+                                            <ui-select name="freight" ng-model="customer.defaultFreightTermByAutoGenerateOutboundOrder" required="isSetOutboundOrder">
+                                                <ui-select-match allow-clear="true">
+                                                    <div ng-bind="$select.selected"></div>
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="defaultFreightTerm in defaultFreightTerms | filter: $select.search">
+                                                    <div ng-bind="defaultFreightTerm"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid-parent grid-100 container" style="background-color: rgba(202, 220, 217, 0.3);padding-top: 10px; padding-bottom: 20px;">
+                                    <div class="grid-100">Required Collect On Transload LPN</div>
+                                    <div class="grid-25">
+                                        <md-switch class="md-primary" ng-model="customer.requireCollectLotNoOnTransloadLPN" style="margin-bottom:0px;">Lot No.</md-switch>
+                                    </div>
+                                    <div class="grid-25">
+                                        <md-switch class="md-primary" ng-model="customer.requireCollectExpirationDateOnTransloadLPN" style="margin-bottom:0px;">Expiration Date</md-switch>
+                                    </div>
+                                    <div class="grid-25">
+                                        <md-switch class="md-primary" ng-model="customer.requireCollectPalletNoOnTransloadLPN" style="margin-bottom:0px;">Pallet No</md-switch>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="grid-parent grid-100 container">
+            <div ng-if= "submitLabel === 'Save'"><unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="submitLabel" is-loading="loading"
+                permission-check="{{'organizationAdd_write'}}"></unis-waitting-btn></div>
+            <div ng-if= "submitLabel === 'Update'" > <unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="submitLabel" is-loading="loading"
+                permission-check="{{'organizationUpdate_write'}}"></unis-waitting-btn></div>
+
+           
+            <button type="button" class="grid-10 pull-right cancel" ng-click="cancelEditOrganization()">Cancel</button>
+        </div>
+    </div>
+</form>

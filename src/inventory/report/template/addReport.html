@@ -1,0 +1,145 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Inventory</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Report</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Add Report</a>
+        </li>
+    </ul>
+</div>
+<div class="portlet light bordered order-list-container" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold"> Add Report </span>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <form name="editForm" class="form-horizontal"  novalidate ng-submit="editForm.$valid && submit()">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label>Customer:</label>
+                            <organization-auto-complete name="customer" ng-model="reportModel.customerId" tag="Customer" allow-clear="true"></organization-auto-complete>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Report Type</label>
+                            <input-validation-message field="type" form="editForm"></input-validation-message>
+                            <ui-select name="type" ng-model="reportModel.type" on-select="typeOnSelect(reportModel.type)" required="true">
+                                <ui-select-match allow-clear="true">
+                                    <div ng-bind="$select.selected"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in ['Inbound_schedule', 'Inbound_finished', 'Outbound_schedule','Outbound_finished','Inventory']">
+                                    <div ng-bind="item"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label>Title:</label>
+                            <organization-auto-complete name="title" ng-model="reportModel.titleId" tag="Title" allow-clear="true"></organization-auto-complete>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Supplier:</label>
+                            <organization-auto-complete ng-model="reportModel.supplierId" name="supplier" tag="Supplier"  allow-clear="true"></organization-auto-complete>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-show="reportModel.type == 'Outbound_schedule'||reportModel.type == 'Outbound_finished'">
+                        <div class="col-md-6">
+                            <label>Start Schedule Date:</label>
+                            <lt-date-time value="reportModel.scheduleTimeStart" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                        </div>
+                        <div class="col-md-6">
+                            <label>End Schedule Date:</label>
+                            <lt-date-time value="reportModel.scheduleTimeEnd" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-show="reportModel.type == 'Outbound_schedule'||reportModel.type == 'Outbound_finished'">
+                        <div class="col-md-6">
+                            <md-radio-group layout="row" ng-model="reportModel.shippingReportStatus" >
+                                <md-radio-button ng-value="'All'" aria-label="All" >
+                                    All
+                                </md-radio-button>
+                                <md-radio-button ng-value="'Shipped'" aria-label="Shipped" >
+                                    Shipped
+                                </md-radio-button>
+                                <md-radio-button ng-value="'UnShipped'" aria-label="UnShipped">
+                                    UnShipped
+                                </md-radio-button>
+                            </md-radio-group>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-show="((reportModel.type == 'Outbound_schedule' ||reportModel.type == 'Outbound_finished')&& reportModel.shippingReportStatus != 'UnShipped') ||  (reportModel.type == 'Inbound_schedule'||reportModel.type == 'Inbound_finished')">
+                        <div class="col-md-6">
+                            <label>Start {{timeName}} Date:</label>
+                            <input-validation-message field="startTime" form="editForm"></input-validation-message>
+                            <lt-date-time  name="startTime" value="reportModel.startTime" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                        </div>
+                        <div class="col-md-6">
+                            <label >End {{timeName}} Date:</label>
+                            <lt-date-time  value="reportModel.endTime" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-show="reportModel.type == 'Inventory'">
+                        <div class="col-md-6">
+                            <label >Inventory Date:</label>
+                            <lt-date-time  value="reportModel.endTime" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                        </div>
+                        <div class="col-md-6">
+                            <label >Include Zero Qty:</label>
+                            <md-radio-group layout="row" ng-model="reportModel.includeZeroQty"  style="margin-top:5px;">
+                                <md-radio-button ng-value="'Include'" aria-label="Yes" >
+                                    YES
+                                </md-radio-button>
+                                <md-radio-button ng-value="'Exclude'" aria-label="No" >
+                                    NO
+                                </md-radio-button>
+                            </md-radio-group>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" ng-show="search.type != 'Inventory'">
+                    <div class="form-group">
+                        <label>Item:</label>
+                        <itemspec-auto-complete ng-model="reportModel.itemSpecId" name="itemSpec" customer-id="reportModel.customerId"
+                                                on-select="itemSpecIdOnSelect(reportModel.itemSpecId)"  allow-clear="true"/>
+                    </div>
+                    <div ng-show="diverseFields && diverseFields.length>0"
+                         style="background-color: rgba(93, 204, 214, 0.188235); padding:15px 25px 5px 5px; margin-bottom: 15px; margin-right:-15px;">
+                        <div class="form-group" ng-switch on="field.itemProperty.type" ng-repeat="field in diverseFields">
+                            <label class="control-label col-md-3">{{field.itemProperty.name}}:</label>
+                            <div class="col-md-9">
+                                <input-validation-message field="field.{{$index}}.value" form="addItemLineForm"></input-validation-message>
+                                <ui-select name="field.{{$index}}.value" ng-model="field.selectedProduct"
+                                           ng-show="field.availableDiverseValues && field.availableDiverseValues.length>0"
+                                           on-select="diverseValuesSelected(field)">
+                                    <ui-select-match allow-clear="true">
+                                        <div>{{$select.selected.value}} {{$select.selected.unit}}</div>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="diverseObj in field.availableDiverseValues">
+                                        <div>{{diverseObj.value}} {{diverseObj.unit}}</div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-actions right" >
+                <waitting-btn type="submit" btn-class="btn blue"
+                              value="'Save'" is-loading="loading"></waitting-btn>
+                <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

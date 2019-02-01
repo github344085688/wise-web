@@ -1,0 +1,161 @@
+<md-dialog id="unis" flex="80" ng-cloak>
+    <form class="light-theme">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Location</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="overflow: auto;">
+            <div class="md-dialog-content">
+
+                <div class="grid-100">
+                    <div class="grid-content">
+                        <div class="grid-100 grid-parent container">
+                            <div class="grid-25">
+                                <label>Location Type</label>
+                                <ui-select multiple name="types" ng-model="searchInfo.types">
+                                    <ui-select-match>
+                                        {{$item}}
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="type in locationTypes| filter: $select.search">
+                                        {{type}}
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="grid-25">
+                                <label>Location Group</label>
+                                <ui-select name="locationGroupName" ng-model="searchInfo.locationGroupId">
+                                    <ui-select-match allow-clear="true">
+                                        {{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="locationGroup.id as locationGroup in locationGroups| filter: $select.search">
+                                        {{locationGroup.name}}
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="grid-25">
+                                <label>Parent</label>
+                                <ui-select name="type" ng-model="searchInfo.parentId">
+                                    <ui-select-match allow-clear="true">
+                                        <div ng-bind="$select.selected.name"></div>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="zone.id as zone in zones | filter: $select.search">
+                                        {{zone.name}}
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="grid-25">
+                                <label>Content</label>
+                                <i class="fa fa-question-circle" title="e.g. ^BPK: Location start with BPK , A$: Location end with A">
+                                </i>
+                                <input type="text" ng-model="searchInfo.regexName" class="form-control" placeholder="Type any text to search" />
+                            </div>
+                        </div>
+                        <div class="grid-100 grid-parent container">
+                            <div class="grid-25">
+                                <label>Support Pick Type</label>
+                                <ui-select name="supportPickType" ng-model="searchInfo.supportPickType">
+                                    <ui-select-match allow-clear="true">
+                                        {{$select.selected}}
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="pickType in pickTypes | filter: $select.search" refresh="getPickTypes()" refresh-delay="50">
+                                        <div ng-bind="pickType"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="grid-25">
+                                <label>Tenant</label>
+                                <organization-auto-complete ng-model="searchInfo.tenantId" name="tenant" allow-clear="true" tag="Customer"></organization-auto-complete>
+                            </div>
+                            <div class="grid-25">
+                                <label>Entry</label>
+                                <lt-tags-input placeholder="Enter Entry" ng-model="searchInfo.entryIds" fill="ET-"></lt-tags-input>
+                            </div>
+                        </div>
+                        <div class="grid-100 grid-parent container">
+
+                            <div style="float:right">
+                                <waitting-btn type="submit" btn-class="btn blue" ng-click="search()" value="'Search'" is-loading="searchLocationCompleted"></waitting-btn>
+                            </div>
+
+
+                        </div>
+                        <div class="grid-100 grid-parent container">
+                            <div>
+                                <div class="table-scrollable">
+                                    <table class="table">
+                                        <thead>
+                                            <tr role="row">
+                                                <th>
+                                                    <input type="checkbox" id="selectAll" name="selectAll" ng-click="toggleAll($event)" ng-checked="selectAllIsChecked()">
+                                                    <label class="checkbox" for="selectAll">
+                                                   
+                                             </label>
+                                                </th>
+                                                <th> Name</th>
+                                                <th> Floor</th>
+                                                <th> Parent Id</th>
+                                                <th> Type</th>
+                                                <th> Location Group</th>
+                                                <th> Support Pick Type</th>
+                                                <th> Pick Strategy Weight</th>
+                                                <th> Support Equipments</th>
+                                                <th> Tenant </th>
+                                                <th> Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="location in locationListsView track by $index">
+                                                <td style="width:50px">
+                                                    <input type="checkbox" id="subtheme-orange_{{$index}}" name="profile-subtheme" ng-checked="isChecked(location)" ng-click="checkLocation($event, location)">
+                                                    <label class="checkbox" for="subtheme-orange_{{$index}}"></label>
+                                                </td>
+                                                <td><a ui-sref="cf.facility.resource.location.edit({locationId:location.id})">{{location.name}}</a></td>
+                                                <td>{{location.floor}}</td>
+                                                <td>{{location.parentInfo.name}}</td>
+                                                <td>{{location.type}}</td>
+                                                <td>{{location.itemGroupName}}</td>
+                                                <td>{{location.supportPickType}}</td>
+                                                <td>{{location.pickStrategyWeight}}</td>
+                                                <td>
+                                                    <span ng-repeat="supportEquipment in location.supportEquipments">
+                                                                     {{supportEquipment}}&nbsp;
+                                                              </span>
+                                                </td>
+                                                <th>{{location.tenantName}}</th>
+                                                <td>{{location.status}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <unis-pager total-count="locationLists.length" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+                               
+                            </div>
+                    
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-60">&nbsp;</div>
+                        <div class="grid-20">
+                            <button type="button" ng-click="ok()" class="ripplelink">&nbsp;OK&nbsp;</button>
+                        </div>
+                        <div class="grid-20">
+                            <button type="button" ng-click="cancel()" class="ripplelink">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>

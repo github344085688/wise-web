@@ -1,0 +1,100 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Outbound</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a ui-sref="#">Shippment Ticket</a>
+        </li>
+    </ul>
+</div>
+
+<div class="container-fluid ng-scope" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold ng-binding"> Ticket ID: {{ticketId}}</span>
+                </div>
+                    <div class="actions">
+                        <waitting-btn type="button" btn-class="btn blue print-btn"  value="'Close'" permission-check="{{'outbound::shippmentTicket_write'}}" 
+                            is-loading="isClose" ng-if="shipmentTick.status != 'Closed'" ng-click="close(shipmentTick.id)"></waitting-btn>
+                        <waitting-btn type="button" btn-class="btn gray print-btn" icon-class="glyphicon glyphicon-print" ng-click="printPackingListPrint(shipmentTick.loadId, shipmentTick.orderId)"
+                        is-loading="printPackingList" value="'Packing List'" ></waitting-btn>
+                      
+                  </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <div class="row form-group" style="padding-top: 15px ">
+                    <div class="col-md-12">
+                        <h4>Info: </h4>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3 ng-binding"><b>Order ID</b>: {{shipmentTick.orderId}}</div>
+                    <div class="col-md-3 ng-binding"><b>Load ID</b>: {{shipmentTick.loadId}}</div>
+                    <div class="col-md-3 ng-binding"><b>Status</b>: {{shipmentTick.status}}</div>
+                    <div class="col-md-3 ng-binding"><b>Closed Time</b>: {{shipmentTick.closedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-md-3 ng-binding"><b>CreatedBy</b>: {{shipmentTick.createdBy}}</div>
+                    <div class="col-md-3 ng-binding"><b>UpdatedBy</b>: {{shipmentTick.updatedBy}}</div>
+                    <div class="col-md-3 ng-binding"><b>Created Time</b>: {{shipmentTick.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</div>
+                    <div class="col-md-3 ng-binding"><b>Update Time</b>: {{shipmentTick.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</div>
+                </div>
+                <div class="row form-group" style="padding-top: 15px ">
+                    <div class="col-md-12">
+                        <h4>Item Lines: </h4>
+                    </div>
+                </div>
+                <div class="panel panel-default ng-scope" ng-repeat="ticketId in shipmentTick.loadedSlpIds track by $index">
+                    <div ng-if="ticketId">
+                        <div class="panel-heading" style="height: 45px;">
+                            <div style="display: block; float: left; line-height:34px;" class="panel-title ng-binding">{{ticketId}} </div>
+                        </div>
+                        <div class="panel-body">
+
+                            <div class="tabbable-custom" style="margin-bottom: 0px; overflow: visible">
+                                <div style="padding:15px;" ng-repeat="lpItemData in shipmentTick.lpItemLines[ticketId]">
+                                    <div class="ng-scope">
+                                        <div class="form-group ng-scope">
+                                                <div class="table-scrollable">
+                                                    <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_1"
+                                                        role="grid" aria-describedby="sample_1_info">
+                                                        <thead>
+                                                            <tr role="row">
+                                                                <th> Item</th>
+                                                                <th> UOM</th>
+                                                                <th> Qty</th>
+                                                                <th> Has Serial Number</th>
+                                                                <th> SN List</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr class="ng-scope">
+                                                                <td><item-display item="lpItemData.item"></item-display></td>
+                                                                <td> {{lpItemData.itemQtys[0].unitName}}</td>
+                                                                <td> {{lpItemData.itemQtys[0].qty}}</td>
+                                                                <td> {{lpItemData.item.hasSerialNumber?"Yes":"No"}}</td>
+                                                                <td> {{lpItemData.snList}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

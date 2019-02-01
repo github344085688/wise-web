@@ -1,0 +1,154 @@
+[{
+    "id":"1234",
+    "name":"Valley",
+    "descript":"-- warehouse descript & info --",
+    "contact" : {
+       "address" : "15930 Valley Blvd, City of Industry, CA 91744",
+       "phone" : "626-926-0325",
+       "email" : "Janet.ho@logisticsteam.com",
+       "area" : "600,000 ft²"
+    },
+    "layout" : {
+       "Zone" : 51,
+       "Location" : 1563,
+       "Staging" : 92,
+       "Dock" : 91,
+       "Parking" : 129
+    }
+},{
+    "id":"1235",
+    "name":"Via Baron",
+    "descript":"-- warehouse descript & info --",
+    "contact" : {
+       "address" : "19914 S. Via Baron, Rancho Dominguez, CA 90220",
+       "phone" : "310-747-7388 ext:2515",
+       "email" : "andy.lim@logisticsteam.com",
+       "area" : "300,000 ft²"
+    },
+    "layout" : {
+       "Zone" : 24,
+       "Location" : 786,
+       "Staging" : 50,
+       "Dock" : 42,
+       "Parking" : 72
+    }
+},{
+    "id":"1236",
+    "name":"Turnbull",
+    "descript":"-- warehouse descript & info --",
+    "contact" : {
+       "address" : "900 Turnbull Canyon Rd, City of Industry, CA 91745",
+       "phone" : "626-926-0325",
+       "email" : "Janet.ho@logisticsteam.com",
+       "area" : "250,000 ft²"
+    },
+    "layout" : {
+       "Zone" : 27,
+       "Location" : 630,
+       "Staging" : 46,
+       "Dock" : 38,
+       "Parking" : 76
+    }
+},{
+    "id":"1237",
+    "name":"Walnut",
+    "descript":"-- warehouse descript & info --",
+    "contact" : {
+       "address" : "218 Machlin Ct. Walnut, CA 91789",
+       "phone" : "626-926-0325",
+       "email" : "Janet.ho@logisticsteam.com",
+       "area" : "300,000 ft²"
+    },
+    "layout" : {
+       "Zone" : 29,
+       "Location" : 816,
+       "Staging" : 43,
+       "Dock" : 41,
+       "Parking" : 112
+    }
+},{
+    "id":"1238",
+    "name":"Stimson",
+    "descript":"-- warehouse descript & info --",
+    "contact" : {
+       "address" : "347 S. Stimson Ave, City of Industry, CA 91744",
+       "phone" : "626-926-0325",
+       "email" : "Janet.ho@logisticsteam.com",
+       "area" : "200,000 ft²"
+    },
+    "layout" : {
+       "Zone" : 20,
+       "Location" : 509,
+       "Staging" : 26,
+       "Dock" : 24,
+       "Parking" : 38
+    }
+},{
+    "id":"1239",
+    "name":"Portage",
+    "descript":"-- warehouse descript & info --",
+    "contact" : {
+       "address" : "6515 Ameriplex Dr, Ste A , Portage, IN 46368",
+       "phone" : "909-485-5156",
+       "email" : "Chin.Lim@logisticsteam.com",
+       "area" : "400,000 ft²"
+    },
+    "layout" : {
+       "Zone" : 39,
+       "Location" : 986,
+       "Staging" : 56,
+       "Dock" : 49,
+       "Parking" : 73
+    }
+},{
+    "id":"1240",
+    "name":"Dallas",
+    "descript":"-- warehouse descript & info --",
+    "contact" : {
+       "address" : "2250 Lion Country Parkway, suite 100, Grand Prairie, TX 75050",
+       "phone" : "817-600-7992",
+       "email" : "tomas.sanchez@logisticsteam.com",
+       "area" : "350,000 ft²"
+    },
+    "layout" : {
+       "Zone" : 32,
+       "Location" : 856,
+       "Staging" : 45,
+       "Dock" : 41,
+       "Parking" : 69
+    }
+},{
+    "id":"1241",
+    "name":"Woodbridge",
+    "descript":"-- warehouse descript & info --",
+    "contact" : {
+       "address" : "3001 Woodbridge Ave, Edison, NJ 08837",
+       "phone" : "626-533-2093",
+       "email" : "albert.hickey@logisticsteam.com",
+       "area" : "300,000 ft²"
+    },
+    "layout" : {
+       "Zone" : 26,
+       "Location" : 832,
+       "Staging" : 46,
+       "Dock" : 44,
+       "Parking" : 68
+    }
+},{
+    "id":"1242",
+    "name":"Long Beach",
+    "descript":"-- warehouse descript & info --",
+    "contact" : {
+       "address" : "Port of Long Beach, CA 90802",
+       "phone" : "626-533-2093",
+       "email" : "albert.hickey@logisticsteam.com",
+       "area" : "300,000 ft²"
+    },
+    "layout" : {
+       "Zone" : 26,
+       "Location" : 832,
+       "Staging" : 46,
+       "Dock" : 44,
+       "Parking" : 68
+    }
+}]

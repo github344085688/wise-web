@@ -1,0 +1,95 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Replenishment History</h1>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Task ID:</label>
+                <input type="text" placeholder="Enter Task" ng-model="searchInfo.taskId"/>
+            </div>
+            <div class="grid-50">
+                <label class="label-input">SN List:</label>
+                <lt-tags-input placeholder="Enter SN List" ng-model="searchInfo.snList"/>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Item:</label>
+                <itemspec-auto-complete name="itemSpecId" ng-model="searchInfo.itemSpecId" name="itemSpec"
+                                        on-select="itemSpecIdOnSelect(itemSpec)" allow-clear="true"/>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input" >From LP</label>
+                <input type="text" placeholder="Enter From LP" ng-model="searchInfo.fromLPId">
+            </div>
+            <div class="grid-25">
+                <label class="label-input" >To LP</label>
+                <input type="text" placeholder="Enter To LP" ng-model="searchInfo.toLPId">
+            </div>
+            <div class="grid-25">
+                <label class="label-input" >To Location</label>
+                <location-auto-complete placeholder="Enter To LocationId" ng-model="searchInfo.toLocationId"></location-auto-complete>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <unis-waitting-btn ng-type="button" btn-class="grid-10 ripplelink pull-right"
+                               ng-click="searchStepProcess()"
+                               value="'Search'" is-loading="isLoading"></unis-waitting-btn>
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+          <table class="table">
+                <thead>
+                    <tr>
+                        <th> # </th>
+                        <th> Task ID </th>
+                        <th> Step ID </th>
+                        <th> Status </th>
+                        <th> Item </th>
+                        <th> QTY </th>
+                        <th> SN List </th>
+                        <th> From Unit </th>
+                        <th> To Unit</th>
+                        <th> From LP </th>
+                        <th> To LP </th>
+                        <th> To Location </th>
+                        <th> Created When </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="replenishmentProcess in replenishmentProcessView track by $index">
+                        <td>{{$index + 1}}</td>
+                        <td>{{replenishmentProcess.taskId}}</td>
+                        <td>{{replenishmentProcess.stepId}}</td>
+                        <td>{{replenishmentProcess.replenishStatus}}</td>
+                        <td><item-display item="replenishmentProcess"></item-display></td>
+                        <td>{{replenishmentProcess.qty}}</td>
+                        <td>
+                            <span ng-repeat="sn in replenishmentProcess.snList">
+                                {{sn}}&nbsp;
+                            </span>
+                        </td>
+                        <td>{{replenishmentProcess.fromUnitName}}</td>
+                        <td>{{replenishmentProcess.toUnitName}}</td>
+                        <td>{{replenishmentProcess.fromLPId}}</td>
+                        <td>{{replenishmentProcess.toLPId}}</td>
+                        <td>{{replenishmentProcess.toLocationName}}</td>
+                        <td>{{replenishmentProcess.createdWhen}}</td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+</div>
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="pageObj.totalCount" page-size="pageObj.pageSize" load-content="loadContent(currentPage)"></unis-pager>
+    </div>
+</div>
+
+
+

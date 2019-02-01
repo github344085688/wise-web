@@ -1,0 +1,57 @@
+<md-dialog id="unis" flex="60">
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h1>Attachment Upload</h1>
+            <span flex></span>
+            <i class="fa fa-times" ng-click="cancel()"></i>
+        </div>
+    </md-toolbar>
+    <md-dialog-content style="min-height: 200px; overflow: visible;">
+        <div permission-check="{{'outbound::order_write'}}">
+            <upload-attachment module='outbound' service='order' upload-file-success="uploadFileSuccess(param)"></upload-attachment>
+
+        </div>
+        <div class="grid-100">
+            <div class="grid-100 grid-content">
+                <div class="grid-parent grid-100 container">
+                    <div class="table-scrollable">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>File Name</th>
+                                    <th>Update By</th>
+                                    <th>Time</th>
+                                    <th>Action</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <div>
+                                    <tr ng-repeat="file in orderFilesView track by $index">
+
+                                        <td>
+                                            <a href="#" ng-click="loadFile(file)" download="{{file.name}}" style="text-decoration:none;">
+                                                <span class="glyphicon glyphicon-file"></span>
+                                                {{file.name}}
+                                            </a>
+                                        </td>
+                                        <td> {{file.createdBy}}</td>
+                                        <td> {{file.createdWhen}}</td>
+                                        <td><a href="#" ng-click="deleteFileEntry(file.id)"><b>Delete</b></a></td>
+                                    </tr>
+                                </div>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <unis-pager total-count="orderFiles.length" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+
+
+                </div>
+            </div>
+        </div>
+    </md-dialog-content>
+</md-dialog>

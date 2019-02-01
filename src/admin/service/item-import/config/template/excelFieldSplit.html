@@ -1,0 +1,48 @@
+<div class="row form-group" style="margin: 10px 0px 0px 20px;">
+    <div class="bold col-md-2">
+        Item Spec Fields:
+    </div>
+    <div class="bold col-md-10">
+        <ui-select multiple ng-model="excelFields.itemSpec" ng-change="selectItemFieldChange($select.selected)">
+            <ui-select-match allow-clear="true">
+                <span ng-bind="$item"></span>
+            </ui-select-match>
+            <ui-select-choices
+                    repeat="col in importUploadFields | filter:$select.search">
+                <div>{{col}}</div>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+</div>
+<div  ng-if="activetab == 'itemSpec'" class="row form-group" style="margin: 10px 0px 0px 20px;">
+    <div class="bold col-md-2">
+        Item UOM Fields:
+    </div>
+    <div class="bold col-md-10">
+        <ui-select multiple ng-model="excelFields.itemUOM" ng-change="selectItemUOMChange($select.selected)">
+            <ui-select-match allow-clear="true">
+                <span ng-bind="$item"></span>
+            </ui-select-match>
+            <ui-select-choices
+                    repeat="col in importUploadFields | filter:$select.search">
+                <div>{{col}}</div>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+</div>
+<div  ng-if="activetab == 'itemSpec'" class="row form-group" style="margin: 10px 0px 0px 20px;">
+    <div class="bold col-md-2">
+        Item AKA:
+    </div>
+    <div class="bold col-md-10">
+        <ui-select multiple ng-model="excelFields.itemAKA" ng-change="selectItemAkaChange($select.selected)">
+            <ui-select-match allow-clear="true">
+                <span ng-bind="$item"></span>
+            </ui-select-match>
+            <ui-select-choices
+                    repeat="col in importUploadFields | filter:$select.search">
+                <div>{{col}}</div>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+</div>

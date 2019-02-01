@@ -1,0 +1,91 @@
+<div class="row form-group" ng-if="activetab == 'itemSpec'" ng-repeat="itemUnitMatch in itemUnits track by  $index" ng-init="outerIndex = $index">
+    <hr/>
+    <div class="row form-group" style="margin: 10px 0px;">
+        <div ng-if="activetab != 'itemSpec'" class="bold col-md-3"></div>
+        <div ng-if="activetab == 'itemSpec'" class="bold col-md-2"></div>
+        <div class="bold col-md-2">
+            Excel File Field
+        </div>
+        <div ng-if="activetab != 'itemSpec'" class="bold col-md-3">
+            DB Field
+        </div>
+
+        <div ng-if="activetab == 'itemSpec'" class="bold col-md-3">
+            UOM Field
+        </div>
+        <div class="col-md-2">
+            <label style="margin-top:5px;float:left">BaseUOM:</label>
+            <md-switch class="md-primary" ng-model="itemUnitMatch['isBaseUOM']" style="margin-top: 0;margin-bottom: 0;float:left"></md-switch>
+
+        </div>
+        <div class="col-md-3" style="float:right">
+            <button type="button" class="btn red" ng-click="removeUOM(outerIndex)" style="float:right">Remove</button>
+        </div>
+    </div>
+    <div ng-repeat="col in excelFields.itemUOM track by $index">
+        <div class="row form-group" style="margin:5px 0px">
+            <div ng-if="activetab == 'itemSpec'" class="col-md-1"></div>
+            <div class="col-md-1">
+                <i ng-click="removeField($index, excelFields.itemUOM, itemUnitMatch)" class="material-icons adjustmentDeleteBtn" title="delete">delete_forever</i>
+            </div>
+            <div class="col-md-3" style="padding-top: 8px;">
+                <span>
+                                {{col}}
+                                </span>
+                <span style="float:right" ng-if="activetab == 'itemSpec'">
+                                    <input type="checkbox" id="mapUnitValue{{outerIndex}}" ng-checked="mapUnitValue[col+outerIndex]"
+                                           ng-click="checkUnitMapValue(col,outerIndex)"/>
+                                    <label for="mapUnitValue{{outerIndex}}">Value Mapping</label>
+                                </span>
+            </div>
+            <div class="col-md-3">
+                <ui-select ng-model="itemUnitMatch[col]" on-select="fieldUnitMatchOnSelect(col, $select.selected,outerIndex)">
+                    <ui-select-match allow-clear="true">
+                        <span ng-bind="$select.selected.fieldName"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item.fieldName as item in itemunitImportFields | filter: $select.search">
+                        <b>{{item.fieldName}}</b>
+                    </ui-select-choices>
+                    <ui-select-no-choice>
+                        No available item.
+                    </ui-select-no-choice>
+                </ui-select>
+            </div>
+        </div>
+
+        <div ng-show="mapUnitValue[col+outerIndex]" style="padding: 15px 15px 5px;margin-bottom: 10px; background-color: rgba(93, 204, 214, 0.19);">
+            <div class="row form-group" ng-repeat="itemUnit in matchUnitLines[outerIndex][col] track by $index">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" ng-model="itemUnit.name"/>
+                </div>
+
+                <div class="col-md-3">
+                    <ui-select ng-model="itemUnit.itemSpecValue">
+                        <ui-select-match>
+                            <span ng-bind="$select.selected"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat=" item in itemUnitAndCodeFieldsEnums[col]">
+                            <b>{{item}}</b>
+                        </ui-select-choices>
+                        <ui-select-no-choice>
+                            No available item.
+                        </ui-select-no-choice>
+                    </ui-select>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn red" ng-click="removeUnitMappingValue(matchUnitLines[outerIndex][col],$index)">Remove</button>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-8">
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn green" ng-click="addUnitMappingValue(matchUnitLines[outerIndex][col])">Add</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

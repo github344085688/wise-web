@@ -1,0 +1,91 @@
+<div ui-view>
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <a href="javascript:;">Inventory</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a href="#">Adjustment</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a href="#">Create Adjustment</a>
+            </li>
+        </ul>
+    </div>
+
+    <div style="padding: 20px 0px;">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation">
+                <a role="tab" data-toggle="tab" style="width: 10px;"> </a>
+            </li>
+
+            <li role="presentation" ng-class="{'active':subTabActiveId == 'LPAdjustment'}">
+                <a role="tab" data-toggle="tab" ng-click="subTabActive('LPAdjustment')">LP Adjustment</a>
+            </li>
+
+            <li role="presentation" ng-class="{'active':subTabActiveId == 'BatchAdjustment'}">
+                <a role="tab" data-toggle="tab" ng-click="subTabActive('BatchAdjustment')">Batch Adjustment</a>
+            </li>
+
+            <li role="presentation" ng-class="{'active':subTabActiveId == 'NewInventory'}">
+                <a role="tab" data-toggle="tab" ng-click="subTabActive('NewInventory')">New Inventory</a>
+            </li>
+
+            <li role="presentation" ng-class="{'active':subTabActiveId == 'NewLP'}">
+                <a role="tab" data-toggle="tab" ng-click="subTabActive('NewLP')">New LP</a>
+            </li>
+        </ul>
+
+        <div class="tab-content" style="padding: 0px 20px;">
+
+            <div role="tabpanel" class="tab-pane active" ng-if="subTabActiveId == 'LPAdjustment'">
+                <div ng-include="'inventory/adjustment/template/lpAdjustment.html'"></div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane active" ng-if="subTabActiveId == 'BatchAdjustment'">
+                <div ng-include="'inventory/adjustment/template/batchAdjustment.html'"></div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane active" ng-if="subTabActiveId == 'NewInventory'">
+                <div ng-include="'inventory/adjustment/template/newInventory.html'"></div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane active" ng-if="subTabActiveId == 'NewLP'">
+                <div ng-include="'inventory/adjustment/template/newLP.html'"></div>
+            </div>
+        </div>
+
+        <div style="padding-right:75px; margin-top:20px; height: 50px; padding-top: 20px; border-top: 1px solid #ddd;">
+            <div class="form-group form-self-actions" >
+                <label style="float:left; margin-top:7px; padding:0px 15px;">Reason<span style="color: red;">*</span></label>
+                <ui-select ng-model="adjustmentObj.reason" style="float:left; width:300px;">
+                    <ui-select-match >
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="reason in adjustmentReasons  | filter: $select.search">
+                        <div ng-bind="reason"></div>
+                    </ui-select-choices>
+                </ui-select>
+                <label style="float:left; margin-top:7px; padding:0px 15px;">notes<span style="color: red;">*</span></label>
+                <textarea rows="2"  style="float:left; width:400px;" class="form-control"
+                           ng-model="adjustmentObj.notes" required></textarea>
+
+                <div ng-show= "'Receiving Error' === adjustmentObj.reason"  style="float: left">
+                <label style="float:left; margin-top:7px; padding:0px 15px;">Receipt Id<span style="color: red;">*</span></label>
+                <textarea rows="2"  style="float:left; width:285px;" class="form-control"
+                           ng-model="adjustmentObj.receiptId" required></textarea>
+                </div>
+                <input ng-show="subTabActiveId != 'NewLP'" type="checkbox" id="approve" ng-click="checkOrUnCheck()"/>
+                <label ng-show="subTabActiveId != 'NewLP'" for="approve" style="font-size: 18px;">Approve Now</label>
+
+                <waitting-btn btn-class="btn blue" ng-click="saveData()"
+                              value="'Save'" is-loading="isSaving"></waitting-btn>
+                <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>

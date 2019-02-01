@@ -1,0 +1,73 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100" ng-keyup="keyUpSearch($event)">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Carrier</h1>
+            <a class="create-button" href="#/fd/carrier/add" permission-check="{{'carrier_write'}}">
+                <b>Add Carrier</b>
+            </a>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-33">
+                <label class="label-input">Name</label>
+                <input type="text" ng-model="searchInfo.nameRegex" class="form-control" placeholder="Name" />
+            </div>
+            <div class="grid-33">
+                <label class="label-input">SCAC</label>
+                <input type="text" ng-model="searchInfo.scac" class="form-control" placeholder="SCAC" />
+            </div>
+            <div class="grid-33">
+                <label class="label-input">McDOT</label>
+                <input type="text" ng-model="searchInfo.mcDot" class="form-control" placeholder="McDOT" />
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-80">&nbsp;</div>
+            <div class="grid-10">
+                <waitting-btn type="button" btn-class="btn yellow" ng-click="export()" value="'Export'" is-loading="exporting"></waitting-btn>
+            </div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr role="row">
+                        <th> Name </th>
+                        <th> SCAC </th>
+                        <th> Mc Dot </th>
+                        <th> Note </th>
+                        <th> Date Created </th>
+                        <th> Date Updated </th>
+                        <th permission-check="{{'carrier_write'}}"> Actions </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="carrier in carriers track by $index">
+                        <td>{{carrier.name}}</td>
+                        <td>{{carrier.scac}}</td>
+                        <td>{{carrier.mcDot}}</td>
+                        <td>{{carrier.note}}</td>
+                        <td>{{carrier.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                        <td>{{carrier.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                        <td permission-check="{{'carrier_write'}}">
+                            <a ui-sref="fd.carrier.edit({carrierId:carrier.id})">Edit</a>&nbsp;&nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageObj.pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+    </div>
+</div>

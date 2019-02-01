@@ -1,0 +1,35 @@
+<header class="page-header navbar navbar-fixed-top" ng-show="isShowHeader()"></header>
+<div class="clearfix"></div>
+<!-- BEGIN CONTAINER -->
+<div ng-style="pageContainerStyle" style="height: 100%;" >
+    <sidebar-menu module-name="{{moduleName}}" ng-if="isShowMenu()"
+                  keep-expanded="false" auto-scroll="true" slide-speed="200"></sidebar-menu>
+    <!-- BEGIN CONTENT -->
+    <div ng-class="{'page-content-margin-left':isShowMenu()}" style="height: 100%;">
+        <div class="page-content" style="height: 100%;">
+            <!-- BEGIN ACTUAL CONTENT -->
+            <div id="unis" style="height: 100%;">
+                <div class="light-theme" style="height: 100%;">
+                    <div id="sitecontainer" style="height: 100%;">
+                        <div id="sitebody" style="padding-top:0px; background:#fff;height: 100%;" >
+                            <div id="sitecontent" style="padding:0px; height: 100%; ">
+                                <div ui-view style="height: 100%;">
+                                    <div class="xs-col-12" style="padding: 20px;min-height:500px;">
+                                        <h1>Welcome!</h1>
+                                    </div>
+                                </div>
+                                <!-- END ACTUAL CONTENT -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END CONTENT -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <footer class="footer" ng-if="moduleName != 'gis'"></footer>
+</div> -->
+</div>
+</div>
+<!-- END CONTAINER -->

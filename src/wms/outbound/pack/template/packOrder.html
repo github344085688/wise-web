@@ -1,0 +1,141 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Outbound</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Pack</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Pick Pack Task</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Pack Order</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid pack-order" style="margin:15px">
+    <div class="portlet light bordered">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject bold"> Pack Order</span>
+            </div>
+            <div class="actions">
+                <a href="javascript:;" class="btn btn-primary btn-sm" placeholder="Print Packing List">
+                    <i class="material-icons ng-binding">print</i> Packing List
+                </a>
+                <a href="javascript:;" ng-click="printPalletLabel(order.orderId)" class="btn btn-primary btn-sm" placeholder="Print Shipping Label">
+                    <i class="material-icons ng-binding">print</i> Shipping Label
+                </a>
+            </div>
+        </div>
+        <div class="portlet-body form form-horizontal">
+            <div class="note" style="background-color: #c0edf1; padding-right:15px;">
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label class="bold">Order:</label>
+                        <label>{{order.orderId}}</label>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="bold">Material:</label>
+                        <label ng-repeat="m in order.materials">{{getItemName(m.itemSpecId)}}&nbsp;&nbsp;</label>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="bold">Package:</label>
+                        <ui-select style="width:200px; display:inline-block; margin-top:-5px;" ng-model="order.packagingType.itemSpecId" name="orderPackage" ng-change="packageChange($select.selected)" placeholder="Select Package">
+                            <ui-select-match>
+                                <div ng-bind="$select.selected.name"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="con.id as con in containerTypes | filter: $select.search" refresh="getContainerTypeList($select.search)" refresh-delay="50">
+                                <div>{{con.name}}</div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="row form-group" ng-show="diverseItemSpecs.length > 0">
+                    <div class="col-md-2">
+                        <label class="bold">Diverse Property:</label>
+                    </div>
+                    <div class="col-md-10" style="padding-left: 0px">
+                        <ui-select ng-model="order.packagingType.productId">
+                            <ui-select-match>
+                                <div ng-bind="getDiverse($select.selected)"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="diverse.id as diverse in diverseItemSpecs | filter: $select.search" refresh-delay="50">
+                                <div>{{getDiverse(diverse)}}</div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th> Item </th>
+                                    <th> Unit </th>
+                                    <th> Qty </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="itemLine in order.itemLines">
+                                    <td> {{getItemName(itemLine.itemSpecId)}}</td>
+                                    <td> {{getUnitName(itemLine.unitId)}} </td>
+                                    <td> {{itemLine.qty}} </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <form name="editForm" action="#">
+                <div ng-repeat="package in order.packages track by $index" ng-init="packIndex=$index" style=" margin-bottom:10px; padding: 0px 15px 10px;
+                border: 1px solid #e0ebf9;">
+                    <div class="row" style="font-size: 16px; background-color: #c0edf1;  padding:15px;">
+                        <span><b>{{package.packageId + ($index + 1)}}</b></span>
+                        <span ng-show="$index>0"><i class="material-icons"ng-click="removePackage($index)" title="Remove" style="float:right;">clear</i></span>
+                    </div>
+                    <div class="alert alert-danger" ng-show="packFullIndex === packIndex">
+                        <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>-->
+                        Warning! The <strong>{{package.items[itemFullIndex].itemId}}</strong> in the packages are more than its quantity.
+                    </div>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th> Item </th>
+                                <th> Unit </th>
+                                <th width="30%"> Qty </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="itemLine in package.packItemLines track by $index" ng-init="itemIndex=$index">
+                                <td> {{getItemName(itemLine.itemSpecId)}}</td>
+                                <td> {{getUnitName(itemLine.unitId)}} </td>
+                                <td>
+                                    <input ng-model="itemLine.qty" ng-class="{ 'pack-input-item-full': itemFullIndex===itemIndex && packFullIndex === packIndex}" name="qty_{{packIndex}}_{{itemIndex}}" ng-change="qtyChange(editForm)" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="padding-bottom:35px;margin-top:10px;">
+                        <button type="button" class="btn blue" style="float:right;"
+                                permission-check="{{'outbound::packOrder_write'}}"
+                                ng-click="packageIsFull()">Package Is Full</button>
+                    </div>
+                </div>
+            </form>
+            <div style="margin-bottom: 10px; padding-right: 15px; padding-bottom: 35px;">
+                <button type="button" class="btn blue" style="float:right;" ng-click="complete()"
+                        permission-check="{{'outbound::packOrder_write'}}"
+                        ng-disabled="!isComplete">Complete</button>
+            </div>
+        </div>
+    </div>
+</div>

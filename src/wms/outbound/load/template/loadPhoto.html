@@ -1,0 +1,17 @@
+<div class="row form-group">
+    <div class="col-md-12"><b>Load Photos</b>:
+        <ul class="list-unstyled" ng-show="photos && photos.length > 0">
+            <li ng-repeat="(photoType, photos) in loadPhotos" class="form-group">
+                <ul class="list-inline">
+                    <span class="col-md-1">{{photoType}}:</span>
+                    <li ng-repeat="p in photos">
+                        <img style="width:200px;height: 200px;" http-src="{{p.url}}"
+                             title="{{photoType}}: {{formatTime(p.createTime)}}"/>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <span ng-show="!photos ||  photos.length < 1"> No Photo.</span>
+    </div>
+
+</div>

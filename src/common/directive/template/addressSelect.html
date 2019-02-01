@@ -1,0 +1,200 @@
+<md-dialog flex="80" ng-cloak>
+    <form name="addressForm" novalidate ng-submit="addressForm.$valid && saveAddress()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Address Select</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <i class="material-icons">close</i>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" style="height:600px;">
+                <!--<div class="row">-->
+                <div class="col-md-6">
+                    <div class="row" style="margin-bottom:30px;">
+                        <div class="col-md-5">
+                            <organization-auto-complete name="organizationId" ng-model="searchInfo.organizationId"
+                                                        tag={{organizationTag}} allow-clear="true"></organization-auto-complete>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" ng-model="searchInfo.keyword" class="form-control"
+                                   ng-keypress="searchNameOnKeyPress($event)" placeholder="Type any text to search" />
+                        </div>
+                        <div class="col-md-2" style="padding-left: 0px">
+                            <button type="button" class="btn blue" ng-click="search()"> Search </button>
+                        </div>
+                    </div>
+
+                    <slim-scoller></slim-scoller>
+                    <div class="tasklist" style="height:550px;">
+                        <div ng-show="!searchAddressCompleted" class="text-center">
+                            <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                        </div>
+                        <div ng-show="searchAddressCompleted" class="tasklist-item"
+                             ng-repeat="address in addresses track by $index">
+                            <div class="tasklist-item-container" ng-click="onClickAddress(address)"
+                                 ng-class="{active: currentAddress.id && currentAddress.id === address.id}">
+                                <div class="tasklist-item-group">
+                                <span class="col-xs-6">
+                                    <b>Organization:</b> {{address.organizationName}}
+                                </span>
+                                <span class="col-xs-6">
+                                    <b>Name:</b> {{address.name}}
+                                </span>
+                                </div>
+                                <div class="tasklist-item-group">
+                                    <span class="col-xs-12">
+                                        <b>Address1:</b> {{address.address1}}
+                                    </span>
+                                </div>
+                                <div class="tasklist-item-group">
+                                    <span class="col-xs-12">
+                                        <b>Address2:</b> {{address.address2}}
+                                    </span>
+                                </div>
+                                <div class="tasklist-item-group">
+                                 <span class="col-xs-6">
+                                    <b>City:</b> {{address.city}}
+                                 </span>
+                                 <span class="col-xs-6">
+                                    <b>State:</b> {{address.state}}
+                                 </span>
+
+                                </div>
+
+                                <div class="tasklist-item-group">
+                                     <span class="col-xs-6">
+                                        <b>ZipCode:</b> {{address.zipCode}}
+                                     </span>
+                                    <span class="col-xs-6">
+                                        <b>Store No:</b> {{address.storeNo}}
+                                    </span>
+                                </div>
+                                <div class="tasklist-item-group">
+                                <span class="col-xs-6">
+                                    <b>Fax:</b> {{address.fax}}
+                                </span>
+                                 <span class="col-xs-6">
+                                    <b>Phone:</b> {{address.phone}}
+                                 </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div style="text-align: center; margin-bottom: 30px; font-size: 25px;">Address Info</div>
+                    <div class="row form-group">
+                        <div class="col-md-8">
+                            <label>Organization</label>
+                            <organization-auto-complete ng-model="currentAddress.organizationId" name="organization" tag={{organizationTag}} allow-clear="true"
+                                                        on-select="currentAddress.onSelectOrganization(org)"></organization-auto-complete>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Residential</label>
+                            <md-switch class="md-primary" ng-model="currentAddress.toHome"
+                                       style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+
+                        <div class="col-md-6">
+                            <label>Reference No.</label>
+                            <!--<input-validation-message field="referenceNo" form="addressForm"></input-validation-message>-->
+                            <input type="text" name="referenceNo" ng-model="currentAddress.referenceNo" class="form-control" placeholder="Enter text"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Name</label>
+                            <input-validation-message field="name" form="addressForm"></input-validation-message>
+                            <input type="text" name="name" ng-model="currentAddress.name" class="form-control" placeholder="Enter text" required />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-6">
+                            <label>Address1</label>
+                            <input type="text" name="address1" ng-model="currentAddress.address1" class="form-control" placeholder="Enter text" />
+                        </div>
+                        <div class="col-md-6">
+                            <label>Address2</label>
+                            <input type="text" name="address2" ng-model="currentAddress.address2" class="form-control" placeholder="Enter text" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-4">
+                            <label>City</label>
+                            <input-validation-message field="city" form="addressForm"></input-validation-message>
+                            <input type="text" name="city" ng-model="currentAddress.city" class="form-control" ng-disabled="isSearchAddress" placeholder="Enter text" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label>State</label>
+                            <input-validation-message field="state" form="addressForm"></input-validation-message>
+                            <input type="text" name="state" ng-model="currentAddress.state" class="form-control" ng-disabled="isSearchAddress" placeholder="Enter text" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label>Zip Code</label>
+                            <label ng-show="isSearchAddress" style="float: right;">
+                                <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;Retrieving...</span>
+                            </label>
+                            <input-validation-message field="zipCode" form="addressForm"></input-validation-message>
+                            <input type="text" name="zipCode" ng-model="currentAddress.zipCode" class="form-control" ng-blur="fillAddressByZip(currentAddress.zipCode)" placeholder="Enter text" required />
+                        </div>
+
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-4">
+                            <label>Country</label>
+                            <input-validation-message field="country" form="addressForm"></input-validation-message>
+                            <input type="text" name="country" ng-model="currentAddress.country" class="form-control" ng-disabled="isSearchAddress" placeholder="Enter text" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label>Store No.</label>
+                            <input type="text" name="storeNo" ng-model="currentAddress.storeNo" class="form-control" placeholder="Enter text" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-4">
+                            <label>Shorthand</label>
+                            <input type="text" name="shorthand" ng-model="currentAddress.shorthand" class="form-control" placeholder="Enter text" />
+                        </div>
+                    </div>
+                    <div class="portlet-title">
+                        <div class="caption">Contact Info</div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-4">
+                            <label>Contact</label>
+                            <input type="text" name="contact" ng-model="currentAddress.contact" class="form-control" placeholder="Enter text" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>Phone</label>
+                            <input type="text" name="phone" ng-model="currentAddress.phone" class="form-control" placeholder="Enter text" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>Extension</label>
+                            <input type="text" name="extension" ng-model="currentAddress.extension" class="form-control" placeholder="Enter text" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-4">
+                            <label>Email</label>
+                            <input type="text" name="email" ng-model="currentAddress.email" class="form-control" placeholder="Enter text" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>Fax</label>
+                            <input type="text" name="fax" ng-model="currentAddress.fax" class="form-control" placeholder="Enter text" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <div style="margin-right: 20px">
+                <button type="submit" class="btn blue ">&nbsp;Save&nbsp;</button>
+                <button type="button" ng-click="cancel() " class="btn default ">Cancel</button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

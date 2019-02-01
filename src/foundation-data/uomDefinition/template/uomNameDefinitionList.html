@@ -1,0 +1,63 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100"  ng-keyup="keyUpSearch($event)">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">UOM Definition</h1>
+            <a class="create-button" ng-click="addUomDefinition()" permission-check="{{'uomDefinition_write'}}">
+                        <b>Add UOM Definition</b>
+                      </a>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-33">
+                <label class="label-input">name</label>
+                <input type="text" name="name" ng-model="UomDefinitionParams.name" class="form-control" placeholder="Enter text" />
+            </div>
+            <div class="grid-33">
+                <label class="label-input">Organization</label>
+                <multiple-organization-auto-complete ng-model="UomDefinitionParams.customerIds" name="customer" tag="Customer"></multiple-organization-auto-complete>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-90">&nbsp;</div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="!isLoadingComplete"></waitting-btn>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr role="row">
+                        <th> Name </th>
+                        <th> Is Common </th>
+                        <th> Customer </th>
+                        <th permission-check="{{'uomDefinition_write'}}"> Actions </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="uomDefinition in uomDefinitionView track by $index">
+                        <td>{{uomDefinition.name}}</td>
+                        <td>{{uomDefinition.isCommon}}</td>
+                        <td>
+                            <span ng-repeat="customerId in uomDefinition.customerIds">
+                                        {{organizationMap[customerId].name}}&nbsp;&nbsp;
+                                    </span>
+                        </td>
+                        <td permission-check="{{'uomDefinition_write'}}">
+                            <a href="#" ng-click="editUomDefinition($index)">Edit</a> |
+                            <a href="#" ng-click="deleteUomDefinition($index)">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="uomDefinitions.length" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+<md-dialog id="unis" flex="60">
+    <form class="light-theme">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Inventory Count</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div class="grid-100">
+                    <div class="grid-content">
+                        <div class="grid-100 grid-parent container">
+                            <div>
+                                <div class="table-scrollable">
+                                    <table class="table">
+                                        <thead>
+                                            <tr role="row">
+                                                <th>Time</th>
+                                                <th>Location</th>
+                                                <th>IPL</th>
+                                                <th>SKU</th>
+                                                <th>Qty</th>
+                                                <th>Uom</th>
+                                                <th>Created By</th>
+                                                <th>Is Effective</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <div ng-if="!loading">
+                                                <tr ng-class="{'fontred': !inventoryCount.isEffective}" ng-repeat="inventoryCount in inventoryCountLists track by $index">
+
+                                                    <td>{{inventoryCount.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                                                    <td>{{inventoryCount.locationName}}</td>
+                                                    <td>{{inventoryCount.lpId }}</td>
+                                                    <td>{{inventoryCount.itemSpecName }}</td>
+                                                    <td>{{inventoryCount.qty}}</td>
+                                                    <td>{{inventoryCount.uom}}</td>
+                                                    <td>{{inventoryCount.createdBy}}</td>
+                                                    <td>{{inventoryCount.isEffective}}</td>
+                                                </tr>
+                                            </div>
+                                        </tbody>
+                                    </table>
+                                    <div ng-if="loading" class="text-center" style="padding-top: 20px;">
+                                        <img src="assets/img/loading-spinner-grey.gif">
+                                        <span>&nbsp;LOADING...</span>
+                                    </div>
+                                </div>
+                                <div ng-show="!loading">
+                                    <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+
+
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-80">&nbsp;</div>
+
+                        <div class="grid-20">
+                            <button type="button" ng-click="cancel()" class="ripplelink">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>

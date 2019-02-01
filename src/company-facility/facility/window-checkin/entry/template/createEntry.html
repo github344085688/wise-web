@@ -1,0 +1,55 @@
+<md-dialog id="unis" flex="30" ng-cloak>
+    <form class="light-theme">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>{{title}}</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                    <div class="grid-100">
+                        <div class="grid-content">
+                            <div class="grid-100 grid-parent container">
+                                <table class="table">
+                                    <tbody>
+                                    <tr ng-repeat="action in entryActionList track by $index" >
+                                        <td style="width:50px">
+                                            <input type="checkbox" id="subtheme-orange_{{$index}}" name="profile-subtheme"
+                                                      ng-checked="isChecked(action)"  ng-click="checkEntry($event, action)">
+                                            <label  class="checkbox" for="subtheme-orange_{{$index}}"  ></label>
+                                        </td>
+                                        <td  ng-click="checkEntry($event, action)">
+                                            <label> {{action}} </label>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                </body>
+                            </div>
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+
+
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-60">&nbsp;</div>
+                        <div class="grid-20">
+                            <button type="button" ng-click="ok()" class="ripplelink">&nbsp;OK&nbsp;</button>
+                        </div>
+                        <div class="grid-20">
+                            <button type="button" ng-click="cancel()" class="ripplelink">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>

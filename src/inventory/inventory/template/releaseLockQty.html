@@ -1,0 +1,68 @@
+<md-dialog id="unis" flex="30">
+    <form novalidate class="light-theme" name="releaseLockForm" ng-submit="releaseLockForm.$valid && release()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>
+                    <item-display item="inventoryLockItemSpecMap[inventory.itemSpecId]"></item-display>
+                </h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" style="min-height: 230px;">
+                <div class="grid-100">
+                    <div class="grid-content">
+                        <div class="grid-100 grid-parent container">
+
+                            <div class="grid-20">
+                                <label class="control-label" style="line-height:30px; text-align: right; display: block">
+                                    Qty:
+                                </label>
+                            </div>
+                            <div class="grid-70">
+                                <div class="input-icon right" ng-show="releaseLockForm.qty.$invalid && (releaseLockForm.$submitted || releaseLockForm.qty.$touched)">
+                                    <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                        <span class="lt-tooltip-text">Required.</span>
+                                    </i>
+                                </div>
+                                <input type="number" placeholder="Input positive integer" name="qty"  min="1" max="{{inventory.qty}}" ng-model="param.qty" required>
+                                <div  ng-show="releaseLockForm.qty.$invalid && (releaseLockForm.$submitted || releaseLockForm.qty.$touched)">
+                                    <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                        <span>The qty must be greater than 0 and less than current lock qty ({{inventory.qty}}).</span>
+                                    </i>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+
+
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-60">&nbsp;</div>
+                        <div class="grid-20">
+                            <button type="submit" class="ripplelink" ng-disabled="isLoading">&nbsp;Release&nbsp;
+                                <div class="ball-pulse" style="display:inline-block;" ng-show="isLoading">
+                                    <div style="width:6px; height:6px;"></div>
+                                    <div style="width:6px; height:6px;"></div>
+                                    <div style="width:6px; height:6px;"></div>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="grid-20">
+                            <button type="button" ng-click="cancel()" class="ripplelink">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>

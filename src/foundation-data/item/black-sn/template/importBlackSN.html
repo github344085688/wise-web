@@ -1,0 +1,27 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Import Item Black SN</h1>
+        </div>
+        <form class="grid-100 grid-parent" novalidate name="editForm" style="margin-top: 30px;"
+              ng-submit="editForm.$valid && submitImportItemBlacks()">
+            <div class="grid-parent grid-100 container" ng-show="isUploading" style="text-align: center;">
+                <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;UPLOADING...</span>
+            </div>
+            <div class="grid-parent grid-100 container">
+                <label class="label-input grid-10" style="text-align: right; padding-top: 2px;">Import File:</label>
+                <div class="grid-60">
+                    <input-validation-message field="importFile" form="editForm"></input-validation-message>
+                    <input style="display:block; width: 100%;" type="file" name="importFile" ng-model="filePath"
+                           onchange="angular.element(this).scope().excelDataFileChange(this)"
+                           ng-readonly="true" required>
+                </div>
+            </div>
+            <div class="grid-parent grid-100 container">
+                <unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="'Save'" is-loading="loading"
+                                   permission-check="{{'item::itemBlackSN_write'}}"></unis-waitting-btn>
+                <button type="button" class="grid-10 pull-right cancel" ng-click="cancelImportItemBlack()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

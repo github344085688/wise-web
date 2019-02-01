@@ -1,0 +1,41 @@
+<form novalidate name="titleForm">
+  <div class="grid-parent grid-100 container">
+    <div class="grid-85">
+      &nbsp;
+    </div>
+    <div class="grid-15">
+      <a ng-click="editCustomerMaterial()">Create Customer Material</a>
+    </div>
+  </div>
+
+  <table class="table" style="margin-top: 20px;">
+    <thead>
+      <tr>
+        <th>Material</th>
+        <th>Range</th>
+        <th>QTY</th>
+        <th>UOM</th>
+        <th>Auto Approval</th>
+        <th>Effective Date</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="customerMaterial in customerMaterialList track by $index">
+        <td>{{customerMaterial.itemSpecName}}</td>
+        <td><span ng-repeat="range in customerMaterial.ranges">{{range}}&nbsp;</span></td>
+        <td>{{customerMaterial.qty}}</td>
+        <td>
+          {{customerMaterial.materialUOM}}
+        </td>
+        <td ng-if="customerMaterial.autoApproval">Yes</td>
+        <td ng-if="!customerMaterial.autoApproval">No</td>
+        <td>{{customerMaterial.effectiveDate | amDateFormat:'YYYY-MM-DD'}}</td>
+        <td><a ng-click="editCustomerMaterial(customerMaterial.id)">edit</a> &nbsp;|&nbsp;
+          <a ng-click="deleteCustomerMaterial(customerMaterial.id)">delete</a>
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+</form>

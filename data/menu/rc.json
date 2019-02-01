@@ -1,0 +1,300 @@
+[
+    {
+        "title": "CONFIGURATION",
+        "state": "rc.configuration",
+        "icon": "build",
+        "subMenu": [
+            {
+                "title": "Report Configuration",
+                "state": "rc.configuration.list",
+                "icon": "assignment",
+                "url": "/rc/configuration/list",
+                "permissions": "report::configuration_write"
+            },{
+                "title": "Auto Report",
+                "state": "rc.configuration.autoReport.list",
+                "icon": "assignment",
+                "url": "/rc/configuration/autoReport/list",
+                "permissions": "report::autoReport_write"
+            }
+        ]
+    },
+    {
+        "title": "OPERATION",
+        "state": "rc.operation",
+        "icon": "local_shipping",
+        "url": "",
+        "subMenu": [
+            {
+                "title": "Inbound",
+                "state": "rc.operation.inbound",
+                "icon": "receipt",
+                "url": "/rc/operation/inbound",
+                "subMenu": [
+                    {
+                        "title": "Receiving Report",
+                        "state": "rc.operation.inbound.receivingReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/inbound/receiving-report/list",
+                        "permissions": "report::receiving_read"
+                    },
+                    {
+                        "title": "Schedule Report",
+                        "state": "rc.operation.inbound.scheduleReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/inbound/schedule-report/list",
+                        "permissions": "report::schedule_read"
+                    },
+                    {
+                        "title": "Schedule Report (New)",
+                        "state": "rc.operation.inbound.newScheduleReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/inbound/new-schedule-report/list",
+                        "permissions": "report::schedule_read"
+                    },
+                    {
+                        "title": "CNG Receiving Report",
+                        "state": "rc.operation.inbound.cngReceivingReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/inbound/cng-receiving-report/list",
+                        "permissions": "report::cngReceiving_read"
+                    }
+                ]
+            },
+            {
+                "title": "Inventory",
+                "state": "rc.operation.inventory",
+                "icon": "receipt",
+                "url": "/rc/operation/inventory",
+                "subMenu": [
+                    {
+                        "title": "Adjustment Report",
+                        "state": "rc.operation.inventory.adjustmentReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/inventory/adjustment-report/list",
+                        "permissions": "report::inventoryAdjustment_read"
+                    },
+                    {
+                        "title": "Inventory Report",
+                        "state": "rc.operation.inventory.inventoryReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/inventory/inventory-report/list",
+                        "permissions": "report::inventory_read"
+                    },
+                    {
+                        "title": "Inventory Report(New)",
+                        "state": "rc.operation.inventory.newInventoryReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/inventory/new-inventory-report/list",
+                        "permissions": "report::newInventory_read"
+                    },
+                    {
+                        "title": "Shortage Report",
+                        "state": "rc.operation.inventory.shortageReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/inventory/shortage-report/list",
+                        "permissions": "report::inventoryShortage_read"
+                    },
+                    {
+                        "title": "Multiple Item Location",
+                        "state": "rc.operation.inventory.multipleItemLocation.list",
+                        "icon": "list",
+                        "url": "/rc/operation/inventory/multiple-item-location/list",
+                        "permissions": "report::multipleItemLocation_read"
+                    },
+                    {
+                        "title": "Empty Location",
+                        "state": "rc.operation.inventory.emptyLocation.list",
+                        "icon": "list",
+                        "url": "/rc/operation/inventory/empty-location/list",
+                        "permissions": "report::emptyLocation_read"
+                    },
+                    {
+                        "title": "Item Misplacement",
+                        "state": "rc.operation.inventory.itemMisplacement.list",
+                        "icon": "list",
+                        "url": "/rc/operation/inventory/item-misplacement/list",
+                        "permissions": "report::itemMisplacement_read"
+                    },
+                    {
+                        "title": "Activity Report",
+                        "state": "rc.operation.inventory.activityReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/inventory/activity-report/list",
+                        "permissions": "report::activityReport_read"
+                    },
+                    {
+                        "title": "Turns Report",
+                        "state": "rc.operation.inventory.turns.list",
+                        "icon": "list",
+                        "url": "/rc/operation/inventory/turns/list",
+                        "permissions": "report::inventoryTurns_read"
+                    },
+                    {
+                        "title": "Item Handle The Most Report",
+                        "state": "rc.operation.inventory.itemHandleTheMostReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/inventory/item-handle-the-most-report/list",
+                        "permissions": "report::itemHandleTheMost_read"
+                    },
+                    {
+                        "title": "Inventory Aging Report",
+                        "state": "rc.operation.inventory.inventoryAgingReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/inventory/inventory-aging-report/list",
+                        "permissions": "report::inventoryAging_read"
+                    },
+                    {
+                        "title": "Legacy Inventory Make Pallet Report",
+                        "state": "rc.operation.inventory.legacyInventoryMakePalletReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/inventory/legacy-inventory-make-pallet-report/list",
+                        "permissions": "report::inventory_read"
+                    }
+                ]
+            },
+            {
+                "title": "Outbound",
+                "state": "rc.operation.outbound",
+                "icon": "receipt",
+                "url": "/rc/operation/outbound",
+                "subMenu": [
+                    {
+                        "title": "Shipping Report",
+                        "state": "rc.operation.outbound.shippingReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/shipping-report/list",
+                        "permissions": "report::shipping_read"
+                    },
+                    {
+                        "title": "Shipping Report (New)",
+                        "state": "rc.operation.outbound.liveShippingReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/live-shipping-report/list",
+                        "permissions": "report::shipping_read"
+                    },
+                    {
+                        "title": "Schedule Report",
+                        "state": "rc.operation.outbound.scheduleReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/outbound-shedule-report/list",
+                        "permissions": "report::outboundSchedule_read"
+                    },
+                    {
+                        "title": "Routing Report",
+                        "state": "rc.operation.outbound.newScheduleReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/new-outbound-shedule-report/list",
+                        "permissions": "report::outboundSchedule_read"
+                    },
+                    {
+                        "title": "LongHaul Report",
+                        "state": "rc.operation.outbound.dailySummaryReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/daily-summary-report/list",
+                        "permissions": "report::dailySummary_read"
+                    },
+                    {
+                        "title": "LongHaul Pick Summary",
+                        "state": "rc.operation.outbound.linehaulPickSummary",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/linehaul-pick-summary",
+                        "permissions": "report::lineHaulPickSummary_read"
+                    },
+                    {
+                        "title": "Pick Detail Report",
+                        "state": "rc.operation.outbound.pickDetailReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/pick-detail-report/list",
+                        "permissions": "report::pickDetail_read"
+                    },
+                    {
+                        "title": "Pick Strategy Report",
+                        "state": "rc.operation.outbound.pickStrategyReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/pick-strategy-report/list",
+                        "permissions": "report::pickStrategy_read"
+                    },
+                    {
+                        "title": "DC Report",
+                        "state": "rc.operation.outbound.dcReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/dc-report/list",
+                        "permissions": "report::dc_read"
+                    },{
+                        "title": "Short Pick Report",
+                        "state": "rc.operation.outbound.shortPickReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/short-pick-report/list",
+                        "permissions": "report::shortPick_read"
+                    },{
+                        "title": "Small Parcel Shipment Report",
+                        "state": "rc.operation.outbound.smallParcelShipmentReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/shipping-label-report/list",
+                        "permissions": "report::smallParcelShipmentReport_read"
+                    },{
+                        "title": "Tracking Number Report",
+                        "state": "rc.operation.outbound.trackingNumberReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/tracking-number-report/list",
+                        "permissions": "report::trackingNumber_read"
+                    },{
+                        "title": "Pick Round Report",
+                        "state": "rc.operation.outbound.pickRoundReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/pick-round-report/list",
+                        "permissions": "report::pickRoundReport_read"
+                    },{
+                        "title": "Order Item Report",
+                        "state": "rc.operation.outbound.openOrderReport .list",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/open-order-report/list",
+                        "permissions": "report::openOrderReport_read"
+                    },{
+                        "title": "Performance Report",
+                        "state": "rc.operation.outbound.performanceReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/performance-report/list",
+                        "permissions": "report::performanceReport_read"
+                    }
+                    ,{
+                        "title": "LP Not Shipped In 24 hours",
+                        "state": "rc.operation.outbound.lpNotShippedReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/lp-not-shipped-report/list",
+                        "permissions": "report::lpNotShippedReport_read"
+                    },{
+                        "title": "Out Of Stock Report",
+                        "state": "rc.operation.outbound.outOfStockReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/out-of-stock-report/list",
+                        "permissions": "report::outOfStock_read"
+                    },{
+                        "title": "QTY Compare Report",
+                        "state": "rc.operation.outbound.qtyCompareReport.list",
+                        "icon": "list",
+                        "url": "/rc/operation/outbound/qty-compare-report/list",
+                        "permissions": "report::qtyCompare_read"
+                    }
+
+                ]
+            }
+        ]
+    },
+    {
+        "title": "BILLING",
+        "state": "rc.billing",
+        "icon": "receipt",
+        "url": "",
+        "subMenu": [
+            {
+                "title": "Billing Check Report",
+                "state": "rc.billing.check",
+                "icon": "list",
+                "url": "/rc/billing/check",
+                "permissions": "report::billing_read"
+            }
+        ]
+    }
+]

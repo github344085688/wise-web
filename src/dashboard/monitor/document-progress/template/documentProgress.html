@@ -1,0 +1,242 @@
+<div class="grid-100 Top-Bar">
+    <div class="grid-20">
+        <a href="javascript:void(0)">
+                <img src="assets/img/sso/unis-co.png" style="width:150px; height:60px" alt="logo" class="logo-default" />
+            </a>
+    </div>
+    <div class="grid-80 Valley" style="line-height:60px">
+        <div class="grid-25">
+            <span>{{currentFacilityAndCompany.facility.name}}</span>
+        </div>
+        <div class="grid-25">
+            <span>{{currentFacilityAndCompany.company.name}}</span>
+        </div>
+        <div class="grid-50">
+            <span style="float:right">{{currentTime}}&nbsp;&nbsp;&nbsp;{{currentHMS}}</span>
+        </div>
+
+    </div>
+
+</div>
+<div class="grid-100" style="padding:20px 30px;background: #55626b;">
+    <div class="grid-100 Rectangle-progress" style="padding: 0px;">
+        <div class="grid-100" style=" padding: 0px;">
+            <div class="progress-title">
+                <div class="f-left Valley"><label> In Progress - Inbound</label></div>
+                <div class="f-right F-type"><label> Page {{inProgressReceiptPager.currentPage}} of {{inProgressReceiptPager.totalPage}}</label></div>
+            </div>
+            <div class="grid-100" style=" padding: 0px;">
+                <table class="monitor-progress-table F-type">
+                    <thead>
+                        <tr>
+                            <th>TaskType</th>
+                            <th>Doc#</th>
+                            <th>EntryID#</th>
+                            <th>Location</th>
+                            <th style="width:15%">Progress</th>
+                            <th style="width:15%">Equipment Type</th>
+                            <th>Worker</th>
+                            <th>Offload Pallet</th>
+                            <th>Duration</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="receipt in inProgressReceiptsView" ng-class="{'exception-color':receipt.progressDurationTime>=72000}">
+                            <td>
+                                <div class="Rectangle-dropoff line-H34">
+                                    <span>Inbound</span>&nbsp;<img src="assets/svg/inbound.svg" class="boundsvg" />
+                                </div>
+                            </td>
+                            <td>{{receipt.id}}</td>
+                            <td>{{receipt.entryId}}</td>
+                            <td>{{receipt.dockName}}</td>
+                            <td>
+
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'14px','width':widthPer25(receipt),'background':'#156998'}"></div>
+                                </div>
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'14px','width':widthPer50(receipt),'background':'#156998'}"></div>
+                                </div>
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'14px','width':widthPer75(receipt),'background':'#156998'}"></div>
+                                </div>
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'14px','width':widthPer100(receipt),'background':'#156998'}"></div>
+                                </div>
+                                <div style="display:inline-block"> {{ widthPer(receipt) }}</div>
+
+                            </td>
+                            <td>{{receipt.checkInData.equipmentType}}</td>
+                            <td>{{receipt.assignee.firstName}} {{receipt.assignee.lastName}}</td>
+                            <td>{{receipt.palletQty}}</td>
+                            <td>{{formatSeconds(receipt.progressDurationTime)}}</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+
+    </div>
+    <div class="grid-100" style="padding: 20px 0 0 0;">
+        <div class="grid-100 Rectangle-progress" style="padding: 0px;">
+            <div class="grid-100" style=" padding: 0px;">
+                <div class="progress-title">
+                    <div class="f-left Valley"><label> In Progress - OutBound</label></div>
+                    <div class="f-right F-type"><label> Page {{inProgressOrderPager.currentPage}} of {{inProgressOrderPager.totalPage}} </label></div>
+                </div>
+
+            </div>
+            <div class="grid-100" style="padding: 0px;">
+                <table class="monitor-progress-table F-type">
+                    <thead>
+                        <tr>
+                            <th>TaskType</th>
+                            <th>Doc#</th>
+                            <th>EntryID#</th>
+                            <th>Location</th>
+                            <th  style="width:15%">Progress</th>
+                            <th style="width:15%">Equipment Type</th>
+                            <th>Worker</th>
+                            <th>Load Pallet</th>
+                            <th>Duration</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="doc in inProgressOrdersView" ng-class="{'exception-color':doc.progressDurationTime>=72000}">
+                            <td>
+                                <div class="Rectangle-pickup line-H34"><span style="font-size:18px;">Outbound</span>&nbsp;<img src="assets/svg/outbound.svg" class="boundsvg" /></div>
+                            </td>
+                            <td>{{doc.id}}</td>
+                            <td>{{doc.entryId}}</td>
+                            <td>{{doc.dockName}}</td>
+                            <td>
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'14px','width':widthPer25(doc),'background':'#156998'}"></div>
+                                </div>
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'14px','width':widthPer50(doc),'background':'#156998'}"></div>
+                                </div>
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'14px','width':widthPer75(doc),'background':'#156998'}"></div>
+                                </div>
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'14px','width':widthPer100(doc),'background':'#156998'}"></div>
+                                </div>
+                                <div style="display:inline-block"> {{ widthPer(doc) }}</div>
+
+                            </td>
+                            <td>{{doc.checkInData.equipmentType}}</td>
+                            <td>{{doc.assignee.firstName}} {{doc.assignee.lastName}}</td>
+                            <td>{{doc.palletQty}}</td>
+                            <td>{{formatSeconds(doc.progressDurationTime)}}</td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+
+    </div>
+    <div class="grid-100" style=" padding:20px 0px 0px 0px;  ">
+        <div class="grid-100 Rectangle-progress" style=" padding: 0px;">
+            <div class="grid-100" style=" padding: 0px;">
+                <div class="progress-title">
+                    <div class="f-left Valley"><label> In Progress - Internal</label></div>
+                    <div class="f-right F-type"><label> Page {{internalStatusOrdersPager.currentPage}} of {{internalStatusOrdersPager.totalPage}}</label></div>
+                </div>
+            </div>
+            <div class="grid-100" style="padding: 0px;">
+                <table class="monitor-progress-table F-type">
+                    <thead>
+                        <tr>
+                            <th>TaskType</th>
+                            <th>Doc#</th>
+                            <th style="width:20%">Location</th>
+                            <th style="width:15%">Progress</th>
+                            <th style="width:15%">Customer</th>
+                            <th  style="width:20%">Worker</th>
+                            <th>Duration</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="doc in internalStatusOrdersView" ng-class="{'exception-color':doc.progressDurationTime>=72000}">
+                            <td>{{doc.status}}</td>
+                            <td>{{doc.id}}</td>
+                            <td>{{doc.locationName}}</td>
+                            <td>
+
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'14px','width':widthPer25(doc),'background':'#156998'}"></div>
+                                </div>
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'14px','width':widthPer50(doc),'background':'#156998'}"></div>
+                                </div>
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'14px','width':widthPer75(doc),'background':'#156998'}"></div>
+                                </div>
+                                <div class="Rectangle-pie">
+                                    <div ng-style="{'height':'14px','width':widthPer100(doc),'background':'#156998'}"></div>
+                                </div>
+                                <div style="display:inline-block"> {{ widthPer(doc) }}</div>
+                            </td>
+                            <td>{{doc.customerName}}</td>
+                            <td>{{doc.assignee.firstName}} {{doc.assignee.lastName}}</td>
+                            <td>{{ formatSeconds(doc.progressDurationTime)}}</td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="grid-100 Rectangle-summer">
+    <div class="grid-20 Valley " style="line-height:103px">
+        Today's Summary
+    </div>
+    <div class="grid-80" style="padding:16px 0px 20px 0px">
+        <div class="grid-100">
+
+            <div ng-style="{'width':(inProgressReceipts.length/(inProgressReceipts.length+inProgressOrders.length+internalStatusOrders.length))*100+'%','background':'#FAAD28','height':'30px','display':'inline-block','float':'left'}"></div>
+
+            <div ng-style="{'width':(inProgressOrders.length/(inProgressReceipts.length+inProgressOrders.length+internalStatusOrders.length))*100+'%','background':'#32c5d2','height':'30px','display':'inline-block','float':'left'}"></div>
+
+            <div ng-style="{'width':(internalStatusOrders.length/(inProgressReceipts.length+inProgressOrders.length+internalStatusOrders.length))*100+'%','background':'#A34EDD','height':'30px','display':'inline-block','float':'left'}"></div>
+
+        </div>
+        <div class="grid-100 F-type" style="padding-top:12px; padding-left: 0px;">
+            <div class="grid-30">
+                <div class="square bg-orange">
+
+                </div>
+                <label class="square-lable"> In Progress Inbound - {{inProgressReceipts.length}}</label>
+            </div>
+            <div class="grid-30">
+                <div class="square bg-green">
+
+                </div>
+                <label class="square-lable"> In Progress Outbound - {{inProgressOrders.length}}</label>
+            </div>
+            <div class="grid-30">
+                <div class="square bg-purple">
+
+                </div>
+                <label class="square-lable">In Progress Internal - {{internalStatusOrders.length}}</label>
+            </div>
+        </div>
+
+    </div>
+</div>

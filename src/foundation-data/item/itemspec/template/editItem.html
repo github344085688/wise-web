@@ -1,0 +1,62 @@
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span ng-show="isAddAction" class="caption-subject bold"> Add Item </span>
+                    <span ng-show="!isAddAction" class="caption-subject bold"> Edit Item
+                        <span style=" font-size:14px; font-weight:500;color:black"> | {{itemSpecName}} </span>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="tabbable-custom" style="margin-top: 15px;">
+                    <ul class="nav nav-tabs ">
+                        <li ng-class="{'active':activetab == 'itemInfo'}">
+                            <a data-toggle="tab" ng-click="ctrl.changeTab('itemInfo')"> Item Info </a>
+                        </li>
+                        <li ng-class="{'active':activetab == 'AKA'}" ng-show="item.id">
+                            <a ng-click="ctrl.changeTab('AKA')" data-toggle="tab"> AKA </a>
+                        </li>
+                        <li ng-class="{'active':activetab == 'diverse'}" ng-show="item.id">
+                            <a data-toggle="tab" ng-click="ctrl.changeTab('diverse')"> Diverse </a>
+                        </li>
+                        <li ng-class="{'active':activetab == 'unit'}" ng-show="item.id">
+                            <a ng-click="ctrl.changeTab('unit')" data-toggle="tab"> Item UOM </a>
+                        </li>
+                        <li ng-class="{'active':activetab == 'bundle'}" ng-show="item.id && item.bundle">
+                            <a ng-click="ctrl.changeTab('bundle')" data-toggle="tab"> Item Kitting </a>
+                        </li>
+                        <li ng-class="{'active':activetab == 'lpConfig'}" ng-show="item.id">
+                            <a ng-click="ctrl.changeTab('lpConfig')" data-toggle="tab"> LP Configuration </a>
+                        </li>
+                        <li ng-class="{'active':activetab == 'materialTemplate'}" ng-show="item.id">
+                            <a ng-click="ctrl.changeTab('materialTemplate')" data-toggle="tab"> Material Template </a>
+                        </li>
+                        <li ng-class="{'active':activetab == 'cartonConfig'}" ng-show="item.id">
+                            <a ng-click="ctrl.changeTab('cartonConfig')" data-toggle="tab"> Carton Configuration </a>
+                        </li>
+                        <li ng-class="{'active':activetab == 'replenishment'}" ng-show="item.id">
+                            <a ng-click="ctrl.changeTab('replenishment')" data-toggle="tab"> Replenishment Setting </a>
+                        </li>
+                        <!--<li ng-class="{'active':activetab == 'pickRule'}" ng-show="item.id">-->
+                            <!--<a ng-click="ctrl.changeTab('pickRule')" data-toggle="tab"> Pick Rule </a>-->
+                        <!--</li>-->
+                        <!--<li ng-class="{'active':activetab == 'shippingRule'}" ng-show="item.id">-->
+                            <!--<a ng-click="ctrl.changeTab('shippingRule')" data-toggle="tab"> Shipping Rule </a>-->
+                        <!--</li>-->
+                        <li ng-class="{'active':activetab == 'diverseUnit'}" ng-show="item.id">
+                            <a ng-click="ctrl.changeTab('diverseUnit')" data-toggle="tab"> Diverse UOM </a>
+                        </li>
+                        <li ng-class="{'active':activetab == 'itemUOMPickSetting'}" ng-show="item.id">
+                            <a ng-click="ctrl.changeTab('itemUOMPickSetting')" data-toggle="tab"> Item UOM Pick Setting </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" style="padding:25px; height: auto;">
+                        <div ui-view style="min-height:300px;" class="active tab-pane">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

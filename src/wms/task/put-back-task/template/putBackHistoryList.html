@@ -1,0 +1,101 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Put Back History</h1>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Task ID:</label>
+                <input type="text" placeholder="Enter Task" ng-model="searchInfo.taskId"/>
+            </div>
+            <div class="grid-50">
+                <label class="label-input">SN List:</label>
+                <lt-tags-input placeholder="Enter SN List" ng-model="searchInfo.snList"/>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Item:</label>
+                <itemspec-auto-complete name="itemSpecId" ng-model="searchInfo.itemSpecId" name="itemSpec"
+                                        on-select="itemSpecIdOnSelect(itemSpec)" allow-clear="true"/>
+            </div>
+            <div class="grid-25" ng-show="unitList && unitList.length>0">
+                <label class="label-input">Unit:</label>
+                <ui-select ng-model="searchInfo.unitId">
+                    <ui-select-match placeholder="Select Unit" allow-clear="true">
+                        <span ng-bind="$select.selected.name"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="unit.id as unit in unitList">
+                        <span ng-bind="unit.name"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input" >From LP</label>
+                <input type="text" placeholder="Enter From LP" ng-model="searchInfo.fromLPId">
+            </div>
+            <div class="grid-25">
+                <label class="label-input" >To LP</label>
+                <input type="text" placeholder="Enter To LP" ng-model="searchInfo.toLPId">
+            </div>
+
+        </div>
+        <div class="grid-parent grid-100 container">
+            <unis-waitting-btn ng-type="button" btn-class="grid-10 ripplelink pull-right"
+                               ng-click="searchHistory()"
+                               value="'Search'" is-loading="isLoading"></unis-waitting-btn>
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+          <table class="table">
+                <thead>
+                    <tr>
+                        <th> # </th>
+                        <th> Task ID </th>
+                        <th> Item </th>
+                        <th> Unit </th>
+                        <th> QTY </th>
+                        <th> Base QTY </th>
+                        <th> SN List </th>
+                        <th> From LP ID </th>
+                        <th> To LP ID </th>
+                        <th> Picked Time</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="historyItem in historyListView track by $index">
+                        <td>{{$index + 1}}</td>
+                        <td>{{historyItem.taskId}}</td>
+                        <td><item-display item="historyItem"></item-display></td>
+                        <td>{{historyItem.unitName}}</td>
+                        <td>{{historyItem.qty}}</td>
+                        <td>{{historyItem.baseQty}}</td>
+                        <td>
+                            <span ng-repeat="sn in historyItem.snList">
+                                {{sn}}
+                            </span>
+                        </td>
+                        <td>{{historyItem.fromLPId}}</td>
+                        <td>{{historyItem.toLPId}}</td>
+                        <td>{{historyItem.pickedWhen| amDateFormat:'YYYY-MM-DD HH:00'}}
+                            <span ng-if="historyItem.pickedBy">({{historyItem.pickedBy}})</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+</div>
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="pageObj.totalCount" page-size="pageObj.pageSize" load-content="loadContent(currentPage)"></unis-pager>
+    </div>
+</div>
+
+
+

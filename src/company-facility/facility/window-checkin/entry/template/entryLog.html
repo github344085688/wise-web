@@ -1,0 +1,177 @@
+<md-dialog id="unis" flex="30" ng-cloak>
+    <form class="light-theme">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Summary (#Entry ID :{{entry.id}})</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="overflow: auto; max-height: 400px;">
+            <div class="md-dialog-content">
+                <div class="grid-100">
+
+
+                    <h1>Summary</h1>
+
+                    <div class="grid-100  label-input-card">
+                        <ul class="timeline">
+                            <li class="timeline-item">
+                                <div class="timeline-info">
+                                    <span>Gate Check In</span>
+                                </div>
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <h3 class="timeline-title">
+                                        <span ng-repeat="timeLine in entry.timeline['Gate Checkin']">
+                                              {{formatTime(timeLine.createdWhen)}} ({{timeLine.createdBy}})
+                                           </span> {{entry.timeline['Gate Checkin']?"":"N/A"}}
+                                    </h3>
+                                    <div><span>Driver Name:</span> {{entry.checkInData.driverName}}</div>
+                                    <div><span>Driver License:</span> {{entry.checkInData.driverLicense}}</div>
+                                    <div><span>Carrier:</span> {{entry.checkInData.carrierName}}</div>
+                                    <div><span>MC/DOT:</span> {{entry.checkInData.mcDot}}</div>
+                                    <div><span>Type:</span> {{entry.checkInData.equipmentType}}</div>
+                                    <div><span>Tractor:</span> {{entry.checkInData.tractor}}</div>
+                                    <div><span>Container:</span> <span ng-repeat="containerNo in entry.checkInData.containerNOs">{{containerNo}}&nbsp; </span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="timeline-item">
+                                <div class="timeline-info">
+                                    <span>Window Checkin</span>
+                                </div>
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <h3 class="timeline-title">
+                                        <span ng-show="entry.timeline['Window Checkin'].length > 0">
+                                                {{formatTime(entry.timeline['Window Checkin'][0].createdWhen)}} ({{entry.timeline['Window Checkin'][0].createdBy}})
+                                        </span> {{entry.timeline['Window Checkin']?"":"N/A"}}
+                                    </h3>
+                                    <div class="timeline-content-block" ng-show="entry.receipts.length > 0">
+                                        <div class="timeline-li-title">Inbound</div>
+                                        <div class="timeline-title timeline-li-content">
+                                            <div ng-repeat="(customerName, receipts) in entry.receiptsGroupByCustomer track by $index">
+                                                <span>{{customerName}}:
+                                                             <a ng-repeat="receipt in receipts track by $index"
+                                                                href="javascript:void(0)"
+                                                                ng-click="showReceipt(receipt.id)">
+                                                                {{receipt.id}}
+                                                            </a>
+                                                        </span></div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="timeline-content-block" ng-show="entry.loads.length > 0">
+                                        <div class="timeline-li-title">Outbound</div>
+                                        <div class="timeline-title timeline-li-content">
+                                            <div ng-repeat="(customerName, loads) in entry.loadsGroupByCustomer track by $index">
+                                                <span>{{customerName}}:
+                                                             <a ng-repeat="load in loads track by $index"
+                                                                href="javascript:void(0)" ng-click="showLoad(load.id)">
+                                                                {{load.loadNo}}
+                                                            </a>
+                                                        </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </li>
+
+                            <li class="timeline-item" ng-repeat="receiveTask in entry.receiveTasks">
+                                <div class="timeline-info">
+                                    <span>Receive <a target="_blank" ui-sref="wms.task.receiveTask.view({taskId: receiveTask.id})">{{receiveTask.id}}</a></span>
+                                </div>
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <h3 class="timeline-title">Assignee: {{receiveTask.assignee.firstName}} {{receiveTask.assignee.lastName}}
+                                    </h3>
+                                    <h3 class="timeline-title">Dock: {{receiveTask.dockName}} </h3>
+                                    <h3 class="timeline-title">Dock Checkin:
+                                        <span ng-repeat="timeLine in entry.timeline['Dock Checkin_' + receiveTask.id]">
+                                              {{formatTime(timeLine.createdWhen)}} ({{timeLine.createdBy}})
+                                           </span></h3>
+                                    <h3 class="timeline-title">Dock Checkout:
+                                        <span ng-repeat="timeLine in entry.timeline['Dock Checkout_' + receiveTask.id]">
+                                              {{formatTime(timeLine.createdWhen)}} ({{timeLine.createdBy}})
+                                           </span></h3>
+                                    <p>
+                                        <ul>
+                                            <li ng-repeat="step in receiveTask.steps" class="timeline-content-block">
+                                                <div class="timeline-li-title">Step: {{step.name}} ({{step.status}})</div>
+                                                <div class="timeline-title timeline-li-content">
+                                                    <div>Assignee: <span ng-repeat="user in step.assignees track by $index">{{user.firstName}} {{user.lastName}} </span>
+                                                    </div>
+                                                    <div>Start: {{step.startTime | date: 'yyyy-MM-dd HH:mm:ss'}}</div>
+                                                    <div>End: {{step.endTime | date: 'yyyy-MM-dd HH:mm:ss'}}</div>
+                                                </div>
+
+                                            </li>
+                                        </ul>
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="timeline-item" ng-repeat="loadTask in entry.loadTasks">
+                                <div class="timeline-info">
+                                    <span>Load <a target="_blank" ui-sref="wms.task.loadTask.view({taskId: loadTask.id})">{{loadTask.id}}</a></span>
+                                </div>
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <h3 class="timeline-title">Assignee: {{loadTask.assignee.firstName}} {{loadTask.assignee.lastName}}
+                                    </h3>
+                                    <h3 class="timeline-title">Dock: {{loadTask.dockName}} </h3>
+                                    <h3 class="timeline-title">Dock Checkin:
+                                        <span ng-repeat="timeLine in entry.timeline['Dock Checkin_' + loadTask.id]">
+                                              {{formatTime(timeLine.createdWhen)}} ({{timeLine.createdBy}})
+                                           </span></h3>
+                                    <h3 class="timeline-title">Dock Checkout:
+                                        <span ng-repeat="timeLine in entry.timeline['Dock Checkout_' + loadTask.id]">
+                                              {{formatTime(timeLine.createdWhen)}} ({{timeLine.createdBy}})
+                                           </span></h3>
+                                    <p>
+                                        <p>
+                                            <ul>
+                                                <li ng-repeat="step in loadTask.steps" class="timeline-content-block">
+                                                    <div class="timeline-li-title">Step: {{step.name}} ({{step.status}})</div>
+                                                    <div class="timeline-title timeline-li-content">
+                                                        <div>Assignee: <span ng-repeat="user in step.assignees track by $index">{{user.firstName}} {{user.lastName}} </span>
+                                                        </div>
+                                                        <div>Start: {{step.startTime | date: 'yyyy-MM-dd HH:mm:ss'}}</div>
+                                                        <div>End: {{step.endTime | date: 'yyyy-MM-dd HH:mm:ss'}}</div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+
+
+            <div class="grid-100">
+
+                <div class="grid-100 grid-parent ">
+                    <div class="grid-80">&nbsp;</div>
+
+                    <div class="grid-20">
+                        <button type="button" ng-click="ok()" class="ripplelink">&nbsp;OK&nbsp;</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>

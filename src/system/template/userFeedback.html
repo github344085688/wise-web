@@ -1,0 +1,99 @@
+
+<div class="portlet light bordered" style="margin: 15px">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-gift"></i>User Feedback
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <form novalidate name="editForm" ng-submit="editForm.$valid && submitFeedback()">
+            <div class="form-group">
+                <label class="col-md-4 control-label">First Name</label>
+                <div class="col-md-5">
+                    <input type="text" class="form-control" name="firstName" ng-model="feedback.firstName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Last Name</label>
+                <div class="col-md-5">
+                    <input type="text" class="form-control" name="lastName" ng-model="feedback.lastName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Facility</label>
+                <div class="col-md-5">
+                    <ui-select name="facility" ng-model="feedback.facility"
+                               class="form-control">
+                        <ui-select-match  placeholder="Facility">
+                            <div ng-bind="$select.selected.name"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="facility in facilities | filter: $select.search.name">
+                            <div ng-bind="facility.name"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Department</label>
+                <div class="col-md-5">
+                    <ui-select name="type" ng-model="feedback.department">
+                        <ui-select-match allow-clear="true">
+                            {{$select.selected}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="department in ['Accounting', 'Shipping', 'Warehouse', 'Other'] | filter: $select.search">
+                            {{department}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Email</label>
+                <div class="col-md-5">
+                    <input type="email" name="email" ng-model="feedback.email" class="form-control" placeholder="Enter Email" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">System</label>
+                <div class="col-md-5">
+                    <input-validation-message field="subject" form="editForm"></input-validation-message>
+                    <ui-select name="subject" ng-model="feedback.system" required="true">
+                        <ui-select-match allow-clear="true">
+                            {{$select.selected}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="system in ['WMS', 'YMS', 'TMS', 'Other'] | filter: $select.search">
+                            {{system}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label">Subject</label>
+                <div class="col-md-5">
+                    <input-validation-message field="subject" form="editForm"></input-validation-message>
+                    <input type="text" name="subject" required="true" ng-model="feedback.subject" class="form-control" placeholder="Enter Subject" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label ">Comments</label>
+                <div class="col-md-5">
+                    <input-validation-message field="comments" form="editForm"></input-validation-message>
+                    <textarea required="true" class="form-control" name="comments"
+                              id="comments" rows="5" ng-model="feedback.comments"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label ">Upload File</label>
+                <div class="col-md-5">
+                    <input type="file" id="uploadFile" onchange="angular.element(this).scope().upLoadFileChange(angular.element(this))"/>
+                </div>
+            </div>
+            <div class="form-group form-actions right">
+                <div class="col-md-9">
+                    <waitting-btn type="submit" btn-class="btn blue"
+                                  value="submitLabel" is-loading="loading"></waitting-btn>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>

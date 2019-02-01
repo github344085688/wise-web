@@ -1,0 +1,758 @@
+[
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN26345",
+        "filter": {
+            "loadStatus_loadNo": "DN26345"
+        },
+        "label": "[Load] DN26345"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "WMT662/ARIAS JUAN",
+        "filter": {
+            "truck_search": "WMT662"
+        },
+        "label": "[Truck] WMT662/ARIAS JUAN"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN28445",
+        "filter": {
+            "loadStatus_loadNo": "DN28445"
+        },
+        "label": "[Load] DN28445"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "WP23460/KYUNG CHUNG",
+        "filter": {
+            "truck_search": "WP23460"
+        },
+        "label": "[Truck] WP23460/KYUNG CHUNG"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN24532",
+        "filter": {
+            "loadStatus_loadNo": "DN24532"
+        },
+        "label": "[Load] DN24532"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "9F30221/BERNZRDO OCHOA",
+        "filter": {
+            "truck_search": "9F30221"
+        },
+        "label": "[Truck] 9F30221/BERNZRDO OCHOA"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN86357",
+        "filter": {
+            "loadStatus_loadNo": "DN86357"
+        },
+        "label": "[Load] DN86357"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "2TY916/JORGE",
+        "filter": {
+            "truck_search": "2TY916"
+        },
+        "label": "[Truck] 2TY916/JORGE"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN24686",
+        "filter": {
+            "loadStatus_loadNo": "DN24686"
+        },
+        "label": "[Load] DN24686"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "P800336/JOHN",
+        "filter": {
+            "truck_search": "P800336"
+        },
+        "label": "[Truck] P800336/JOHN"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN84573",
+        "filter": {
+            "loadStatus_loadNo": "DN84573"
+        },
+        "label": "[Load] DN84573"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "9E29485/JOSE MURILLO",
+        "filter": {
+            "truck_search": "9E29485"
+        },
+        "label": "[Truck] 9E29485/JOSE MURILLO"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN23586",
+        "filter": {
+            "loadStatus_loadNo": "DN23586"
+        },
+        "label": "[Load] DN23586"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "YAHR023/MERCADO HERIBERTO",
+        "filter": {
+            "truck_search": "YAHR023"
+        },
+        "label": "[Truck] YAHR023/MERCADO HERIBERTO"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN74947",
+        "filter": {
+            "loadStatus_loadNo": "DN74947"
+        },
+        "label": "[Load] DN74947"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "1G18409/DIEGO ORELLANA",
+        "filter": {
+            "truck_search": "1G18409"
+        },
+        "label": "[Truck] 1G18409/DIEGO ORELLANA"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN28474",
+        "filter": {
+            "loadStatus_loadNo": "DN28474"
+        },
+        "label": "[Load] DN28474"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "7G38783/BENJAMIN",
+        "filter": {
+            "truck_search": "7G38783"
+        },
+        "label": "[Truck] 7G38783/BENJAMIN"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN93457",
+        "filter": {
+            "loadStatus_loadNo": "DN93457"
+        },
+        "label": "[Load] DN93457"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "AJ6445/JOSE RODRIGUEZ",
+        "filter": {
+            "truck_search": "AJ6445"
+        },
+        "label": "[Truck] AJ6445/JOSE RODRIGUEZ"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN45242",
+        "filter": {
+            "loadStatus_loadNo": "DN45242"
+        },
+        "label": "[Load] DN45242"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "9E70027/ANTONIO FLOREZ",
+        "filter": {
+            "truck_search": "9E70027"
+        },
+        "label": "[Truck] 9E70027/ANTONIO FLOREZ"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN43452",
+        "filter": {
+            "loadStatus_loadNo": "DN43452"
+        },
+        "label": "[Load] DN43452"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "LZ8306/MARIO AREVALO",
+        "filter": {
+            "truck_search": "LZ8306"
+        },
+        "label": "[Truck] LZ8306/MARIO AREVALO"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN76455",
+        "filter": {
+            "loadStatus_loadNo": "DN76455"
+        },
+        "label": "[Load] DN76455"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "16ARBN/CHRISTOPHER JOBE",
+        "filter": {
+            "truck_search": "16ARBN"
+        },
+        "label": "[Truck] 16ARBN/CHRISTOPHER JOBE"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN72434",
+        "filter": {
+            "loadStatus_loadNo": "DN72434"
+        },
+        "label": "[Load] DN72434"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "2356682/JOSE CRUZ",
+        "filter": {
+            "truck_search": "2356682"
+        },
+        "label": "[Truck] 2356682/JOSE CRUZ"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN56233",
+        "filter": {
+            "loadStatus_loadNo": "DN56233"
+        },
+        "label": "[Load] DN56233"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "6S50305/GUANGMING LAN",
+        "filter": {
+            "truck_search": "6S50305"
+        },
+        "label": "[Truck] 6S50305/GUANGMING LAN"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN345132",
+        "filter": {
+            "loadStatus_loadNo": "DN345132"
+        },
+        "label": "[Load] DN345132"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "6N70248/GARCIA ROLANDO",
+        "filter": {
+            "truck_search": "6N70248"
+        },
+        "label": "[Truck] 6N70248/GARCIA ROLANDO"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN28445",
+        "filter": {
+            "loadStatus_loadNo": "DN28445"
+        },
+        "label": "[Load] DN28445"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "8J89613/JOSE MORALES",
+        "filter": {
+            "truck_search": "8J89613"
+        },
+        "label": "[Truck] 8J89613/JOSE MORALES"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN452342",
+        "filter": {
+            "loadStatus_loadNo": "DN452342"
+        },
+        "label": "[Load] DN452342"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "R113664/RODRIGUEZ JULIO",
+        "filter": {
+            "truck_search": "R113664"
+        },
+        "label": "[Truck] R113664/RODRIGUEZ JULIO"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN434512",
+        "filter": {
+            "loadStatus_loadNo": "DN434512"
+        },
+        "label": "[Load] DN434512"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "8A19196/DION CHEN",
+        "filter": {
+            "truck_search": "8A19196"
+        },
+        "label": "[Truck] 8A19196/DION CHEN"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN53423",
+        "filter": {
+            "loadStatus_loadNo": "DN53423"
+        },
+        "label": "[Load] DN53423"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "6P22027/LOUIS METOYER",
+        "filter": {
+            "truck_search": "6P22027"
+        },
+        "label": "[Truck] 6P22027/LOUIS METOYER"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN64553",
+        "filter": {
+            "loadStatus_loadNo": "DN64553"
+        },
+        "label": "[Load] DN64553"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "6A86838/DANNY",
+        "filter": {
+            "truck_search": "6A86838"
+        },
+        "label": "[Truck] 6A86838/DANNY"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN64578",
+        "filter": {
+            "loadStatus_loadNo": "DN64578"
+        },
+        "label": "[Load] DN64578"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "9D25586/GUSTAVO JIMENEZ",
+        "filter": {
+            "truck_search": "9D25586"
+        },
+        "label": "[Truck] 9D25586/GUSTAVO JIMENEZ"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN65142",
+        "filter": {
+            "loadStatus_loadNo": "DN65142"
+        },
+        "label": "[Load] DN65142"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "2316238/VICTOR GARCIA",
+        "filter": {
+            "truck_search": "2316238"
+        },
+        "label": "[Truck] 2316238/VICTOR GARCIA"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN73423",
+        "filter": {
+            "loadStatus_loadNo": "DN73423"
+        },
+        "label": "[Load] DN73423"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "WP61317/MUTU PANAMA",
+        "filter": {
+            "truck_search": "WP61317"
+        },
+        "label": "[Truck] WP61317/MUTU PANAMA"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN75434",
+        "filter": {
+            "loadStatus_loadNo": "DN75434"
+        },
+        "label": "[Load] DN75434"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "2356719/FLORES",
+        "filter": {
+            "truck_search": "2356719"
+        },
+        "label": "[Truck] 2356719/FLORES"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN76453",
+        "filter": {
+            "loadStatus_loadNo": "DN76453"
+        },
+        "label": "[Load] DN76453"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "43601P1/XINWEI JIANG",
+        "filter": {
+            "truck_search": "43601P1"
+        },
+        "label": "[Truck] 43601P1/XINWEI JIANG"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN25764",
+        "filter": {
+            "loadStatus_loadNo": "DN25764"
+        },
+        "label": "[Load] DN25764"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "45047S1/MANUEL MORALES",
+        "filter": {
+            "truck_search": "45047S1"
+        },
+        "label": "[Truck] 45047S1/MANUEL MORALES"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN63433",
+        "filter": {
+            "loadStatus_loadNo": "DN63433"
+        },
+        "label": "[Load] DN63433"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "8C61782/CARLOS",
+        "filter": {
+            "truck_search": "8C61782"
+        },
+        "label": "[Truck] 8C61782/CARLOS"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN87345",
+        "filter": {
+            "loadStatus_loadNo": "DN87345"
+        },
+        "label": "[Load] DN87345"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "8S80558/HUEY",
+        "filter": {
+            "truck_search": "8S80558"
+        },
+        "label": "[Truck] 8S80558/HUEY"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN98424",
+        "filter": {
+            "loadStatus_loadNo": "DN98424"
+        },
+        "label": "[Load] DN98424"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "9F42894/KAI CHENG",
+        "filter": {
+            "truck_search": "9F42894"
+        },
+        "label": "[Truck] 9F42894/KAI CHENG"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN13546",
+        "filter": {
+            "loadStatus_loadNo": "DN13546"
+        },
+        "label": "[Load] DN13546"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "2357425/MICHAEL",
+        "filter": {
+            "truck_search": "2357425"
+        },
+        "label": "[Truck] 2357425/MICHAEL"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN87534",
+        "filter": {
+            "loadStatus_loadNo": "DN87534"
+        },
+        "label": "[Load] DN87534"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "5W99721/CARL HEINE",
+        "filter": {
+            "truck_search": "5W99721"
+        },
+        "label": "[Truck] 5W99721/CARL HEINE"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN45235",
+        "filter": {
+            "loadStatus_loadNo": "DN45235"
+        },
+        "label": "[Load] DN45235"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "2357425/DION CHEN",
+        "filter": {
+            "truck_search": "2357425"
+        },
+        "label": "[Truck] 2357425/DION CHEN"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN78434",
+        "filter": {
+            "loadStatus_loadNo": "DN78434"
+        },
+        "label": "[Load] DN78434"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "5W99721/ALEJO GUZMAN",
+        "filter": {
+            "truck_search": "5W99721"
+        },
+        "label": "[Truck] 5W99721/ALEJO GUZMAN"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN87434",
+        "filter": {
+            "loadStatus_loadNo": "DN87434"
+        },
+        "label": "[Load] DN87434"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "2357246/ROBERT STEEN",
+        "filter": {
+            "truck_search": "2357246"
+        },
+        "label": "[Truck] 2357246/ROBERT STEEN"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN87653",
+        "filter": {
+            "loadStatus_loadNo": "DN87653"
+        },
+        "label": "[Load] DN87653"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "WP43896/VASQUEZ",
+        "filter": {
+            "truck_search": "WP43896"
+        },
+        "label": "[Truck] WP43896/VASQUEZ"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN34546",
+        "filter": {
+            "loadStatus_loadNo": "DN34546"
+        },
+        "label": "[Load] DN34546"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "2297739/BERGERON JOHN",
+        "filter": {
+            "truck_search": "2297739"
+        },
+        "label": "[Truck] 2297739/BERGERON JOHN"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN83434",
+        "filter": {
+            "loadStatus_loadNo": "DN83434"
+        },
+        "label": "[Load] DN83434"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "9E41423/CARLOS GARCIA",
+        "filter": {
+            "truck_search": "9E41423"
+        },
+        "label": "[Truck] 9E41423/CARLOS GARCIA"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN27254",
+        "filter": {
+            "loadStatus_loadNo": "DN27254"
+        },
+        "label": "[Load] DN27254"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "9D63046/OSCAR MARTINEZ",
+        "filter": {
+            "truck_search": "9D63046"
+        },
+        "label": "[Truck] 9D63046/OSCAR MARTINEZ"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN26435",
+        "filter": {
+            "loadStatus_loadNo": "DN26435"
+        },
+        "label": "[Load] DN26435"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "WP59631/JAVIER VERJAN",
+        "filter": {
+            "truck_search": "WP59631"
+        },
+        "label": "[Truck] WP59631/JAVIER VERJAN"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN76244",
+        "filter": {
+            "loadStatus_loadNo": "DN76244"
+        },
+        "label": "[Load] DN76244"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "9E76695/HANGBAE KIM",
+        "filter": {
+            "truck_search": "9E76695"
+        },
+        "label": "[Truck] 9E76695/HANGBAE KIM"
+    },
+    {
+        "menu": "loadStatus",
+        "model": "Load",
+        "item": "DN63763",
+        "filter": {
+            "loadStatus_loadNo": "DN63763"
+        },
+        "label": "[Load] DN63763"
+    },
+    {
+        "menu": "truck",
+        "model": "Truck",
+        "item": "2289588/JINGUO FEI",
+        "filter": {
+            "truck_search": "2289588"
+        },
+        "label": "[Truck] 2289588/JINGUO FEI"
+    }
+]

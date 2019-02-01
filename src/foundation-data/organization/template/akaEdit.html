@@ -1,0 +1,41 @@
+<form novalidate name="akaForm"
+      ng-submit="akaForm.$valid && ctrl.addOrUpdateAka()">
+    <div class="grid-parent grid-100 container">
+        <div class="grid-25">
+            <label class="label-input">Organization</label>
+        </div>
+        <div class="grid-25">
+            <label class="label-input">Reference ID</label>
+        </div>
+        <div class="grid-25">
+            <label class="label-input">Reference Name</label>
+        </div>
+        <div class="grid-15"> </div>
+    </div>
+    <div class="grid-parent grid-100 container" ng-repeat="item in ctrl.aka.items track by $index">
+        <div class="grid-25">
+            <organization-auto-complete ng-model="item.organizationId" name="organization" allow-clear="true"></organization-auto-complete>
+        </div>
+        <div class="grid-25">
+            <input type="text" ng-model="item.referenceId" placeholder="Enter text" />
+        </div>
+        <div class="grid-25">
+            <input type="text" ng-model="item.referenceName" placeholder="Enter text" />
+        </div>
+        <div class="grid-5">
+            <button  type="button" class="ripplelink"
+                     ng-click="ctrl.addItem()">Add</button>
+        </div>
+        <div class="grid-10">
+            <button type="button" class="ripplelink delete"
+                    ng-click="ctrl.removeItem($index)">Remove</button>
+        </div>
+    </div>
+    <div class="grid-parent grid-100 container" style="margin-top:50px;">
+            <div ng-if= "submitLabel === 'Save'"><unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="submitLabel" is-loading="loading"
+                permission-check="{{'organizationAdd_write'}}"></unis-waitting-btn></div>
+            <div ng-if= "submitLabel === 'Update'" > <unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="submitLabel" is-loading="loading"
+                permission-check="{{'organizationUpdate_write'}}"></unis-waitting-btn></div>
+        <button type="button" class="grid-10 pull-right cancel" ng-click="ctrl.cancelEditAka()">Cancel</button>
+    </div>
+</form>

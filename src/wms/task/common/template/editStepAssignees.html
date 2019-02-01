@@ -1,0 +1,29 @@
+<md-dialog id="unis" flex="50" ng-cloak  >
+    <form class="light-theme"  novalidate name="editForm" ng-submit="editForm.$valid && submit()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>{{formTitle}}</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="min-height: 200px; overflow: visible;">
+            <form novalidate name="addItemLineForm" class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-md-2">Assignees:</label>
+                    <div class="col-md-7">
+                        <input-validation-message field="assignees" form="editForm"></input-validation-message>
+                        <multiple-user-auto-complete name="assignees" ng-model="step.assigneeUserIds"></multiple-user-auto-complete>
+                    </div>
+                </div>
+            </form>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+            <div class="row form-group">
+                <div style="color: red; ">{{errorMsg}}</div>
+            </div>
+            <div class="form-group form-self-actions" style="padding-right:75px; margin-top:20px;">
+                <waitting-btn type="submit" btn-class="btn blue" value="'Save'" is-loading="loading"></waitting-btn>
+                <button type="button" class="btn default" ng-click="cancel(editForm)">Cancel</button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

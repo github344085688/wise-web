@@ -1,0 +1,14 @@
+<ui-select name="{{name}}" ng-model="$parent.ngModel" required="{{required}}"
+           ng-disabled="ngDisabled"
+           on-select="_onSelect($select.selected)">
+    <ui-select-match allow-clear="{{allowClear}}">
+        <div ng-bind="$select.selected.printerName"></div>
+    </ui-select-match>
+    <ui-select-choices repeat="printer.id as printer in printers | filter: $select.search.name"
+                       refresh="getPrinters($select.search)" refresh-delay="50">
+        {{printer.printerName}} <span ng-if="showType">({{printer.type}})</span>
+    </ui-select-choices>
+    <ui-select-no-choice>
+        No available option.
+    </ui-select-no-choice>
+</ui-select>

@@ -1,0 +1,52 @@
+<form  novalidate name="customerForm" ng-submit="customerForm.$valid && ctrl.addOrUpdateCarrier()">
+    <div class="alert alert-danger display-hide" ng-show="customerForm.$invalid && customerForm.$submitted" style="display: block;">
+        <button class="close" data-close="alert"></button>
+        You have some form errors. Please check below.
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label>SCAC</label>
+                    <input type="text" ng-model="ctrl.carrier.scac" class="form-control" placeholder="Enter text"/>
+                </div>
+                <div class="col-md-6">
+                    <label>MC/DOT</label>
+                    <input type="text" ng-model="ctrl.carrier.mcDot" class="form-control" placeholder="Enter text"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label>Allowed To Operate</label>
+                    <input type="text" ng-model="ctrl.carrier.allowedToOperate" class="form-control" placeholder="Enter text"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row form-group">
+                <div class="col-md-12">
+                    <label>Note</label>
+                    <input type="text" ng-model="ctrl.carrier.note" class="form-control" placeholder="Enter text"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row form-actions right">
+            <div ng-if= "submitLabel === 'Save'">
+                <waitting-btn type="submit" btn-class="btn blue" 
+                value="submitLabel" permission-check="{{'organizationAdd_write'}}" is-loading="loading"></waitting-btn>
+            </div>
+            <div ng-if= "submitLabel === 'Update'" >
+                 <waitting-btn type="submit" btn-class="btn blue" 
+                value="submitLabel" permission-check="{{'organizationUpdate_write'}}" is-loading="loading"></waitting-btn>
+         </div>
+     
+        <button type="button" class="btn default" ng-click="ctrl.cancelEditOrganization()">Cancel</button>
+    </div>
+</form>

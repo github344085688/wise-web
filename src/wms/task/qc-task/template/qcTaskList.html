@@ -1,0 +1,86 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">QC Task List</h1>
+            <!-- <a class="create-button" href="#/wms/task/qc-task/add" permission-check="{{'task::qcTask_write'}}">
+                <b>Add QC TASK</b>
+            </a> -->
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container">
+
+            <div class="grid-25">
+                <label class="label-input">Customer</label>
+                <organization-auto-complete name="customer" ng-model="searchInfo.customerId" tag="Customer" allow-clear="true"></organization-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Long Haul Date</label>
+                <lt-date-time placeholder="Long Haul Date" date-format="yyyy-mm-dd hh:ii" minute-step="60" value="searchInfo.longHaulDate"></lt-date-time>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Long Haul</label>
+                <longhaul-auto-complete name="longHaul"  placeholder="Enter Long Haul"   ng-model="searchInfo.longHaulId" allow-clear="true"></longhaul-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label>Status</label>
+                <task-status-auto-complete allow-clear="true" ng-model="searchInfo.status"></task-status-auto-complete>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-80">&nbsp;</div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="btn yellow" ng-click="export()"
+                              value="'Export'" is-loading="exporting"></waitting-btn>
+            </div>
+            <div class="grid-10 ">
+
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr role="row">
+                        <th> QC Task ID </th>
+                        <th> Customer </th>
+                        <th> Long Haul </th>
+                        <th> Order ID </th>
+                        <th> status</th>
+                        <th> Force Close Reason </th>
+                        <th> Long Haul Date </th>
+                        <th permission-check="{{'task::qcTask_write'}}"> Actions </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="qcTask in qcTaskView track by $index">
+                        <td>
+                            <a ng-href="{{'#/wms/task/qc-task/view/' + qcTask.id}}" target="_blank">{{qcTask.id}}</a>
+                        </td>
+                        <td>{{qcTask.customerName}}</td>
+                        <td>{{qcTask.longHaulNo}}</td>
+                        <td>
+                            <span ng-repeat="orderId in qcTask.orderIds track by $index">
+                                <a ng-href="{{'#/wms/outbound/order/' + orderId}}" target="_blank">{{orderId}}</a>
+                            </span>
+                        </td>
+                        <td>{{qcTask.status}}</td>
+                        <td>{{qcTask.forceCloseReason}}</td>
+                        <td>{{qcTask.longHaulDate | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                        <td permission-check="{{'task::qcTask_write'}}" >
+                            <a ng-if="qcTask.status==='New'" href="#" ng-click="deleteQCTask(qcTask.id)">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+    </div>
+</div>

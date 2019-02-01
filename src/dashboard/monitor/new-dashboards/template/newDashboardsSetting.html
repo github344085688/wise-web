@@ -1,0 +1,173 @@
+<div class="grid-100 new-dashbords-setting ">
+    <div class="grid-100 font">
+        <h1>Select a Layout</h1>
+        <span>Customize your dashboard. Choose the layout that best fits your needs:</span>
+    </div>
+    <div class="grid-100 font padding-top-50">
+        <div class="grid-49" style=" padding: 0px " ng-click="onRectangleSelectStatus(1)">
+            <div class="grid-100 rectangle" ng-class="{'rectang-active': newDashboardsSetting.showtableCount===1}">
+                <div class="rectangle-img" ng-if="newDashboardsSetting.showtableCount===1">
+                    <img src="assets/img/oval.svg" />
+                    <span>Selected</span>
+                </div>
+                <div class="grid-100 one-rectangle">
+                </div>
+            </div>
+            <div class="grid-100 select-title">
+                <div ng-if="newDashboardsSetting.showtableCount===1">
+                    <span style="display: inline-block;">Select a dashboard:</span>
+                    <div class="element-select">
+                            <div class="mask-layer" ng-click="onClickInput($event)"></div>
+                        <input placeholder="Select x dashboard" class="select-input" ng-model="newDashboardsSetting.detailInfo" 
+                        />
+                        <img src="assets/img/shape.svg" class="shape-config" ng-mouseover = "onMouseOverOnShape($event)"   />
+                        <div class="select-contain" ng-mouseleave="onMouseLeaveShape($event)">
+                            <div class="select-option" ng-repeat=" table in tables" ng-click="onSelectOption(1,table,$event)" ng-class="{'selected-bg-color':table.active}">
+                                <img src="assets/img/shape-copy.svg" ng-if="table.active" class="select-img" />
+                                <span>{{table.name}}</span>
+                            </div>
+
+                            <div class="select-button-contain">
+                                <button class="select-button" ng-click="onClickSelect($event)">Select</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="grid-2">
+            &nbsp;
+        </div>
+        <div class="grid-49" style=" padding: 0px ">
+            <div class="grid-100 rectangle" ng-click="onRectangleSelectStatus(2)" ng-class="{'rectang-active':newDashboardsSetting.showtableCount===2}">
+                <img src="assets/img/oval.svg" class="rectangle-img" ng-if="newDashboardsSetting.showtableCount===2" />
+                <div class="grid-100 two-rectangle-first">
+                </div>
+                <div class="grid-100 two-rectangle-second">
+                </div>
+            </div>
+            <div class="grid-100 select-title">
+                <div ng-if="newDashboardsSetting.showtableCount===2">
+                    <span style="display: inline-block;">Select 2 dashboard:</span>
+                    <div class="element-select">
+                            <div class="mask-layer" ng-click="onClickInput($event)"></div>
+                        <input placeholder="Select x dashboard" class="select-input" ng-model="newDashboardsSetting.detailInfo" 
+                        />
+                        <img src="assets/img/shape.svg" class="shape-config" ng-mouseover = "onMouseOverOnShape($event)"  />
+                        <div class="select-contain" ng-mouseleave="onMouseLeaveShape($event)">
+                            <div class="select-option" ng-repeat=" table in tables" ng-click="onSelectOption(2,table,$event)" ng-class="{'selected-bg-color':table.active}">
+                                <img src="assets/img/shape-copy.svg" ng-if="table.active" class="select-img" />
+                                <span>{{table.name}}</span>
+                            </div>
+
+                            <div class="select-button-contain">
+                                <button class="select-button" ng-click="onClickSelect($event)">Select</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="grid-100 font padding-top-50">
+        <div class="grid-49" style=" padding: 0px ">
+            <div class="grid-100 rectangle" ng-click="onRectangleSelectStatus(3)" ng-class="{'rectang-active': newDashboardsSetting.showtableCount===3}">
+                <img src="assets/img/oval.svg" class="rectangle-img" ng-if="newDashboardsSetting.showtableCount===3" />
+                <div class="grid-100 " style=" padding: 0px ">
+                    <div class="three-rectangle-first">
+
+                    </div>
+                    <div class="grid-1">
+                        &nbsp;
+                    </div>
+                    <div class="three-rectangle-first" style=" padding: 0px ">
+
+                    </div>
+                </div>
+                <div class="grid-100 three-rectangle-three">
+                </div>
+            </div>
+            <div class="grid-100 select-title">
+                <div ng-if="newDashboardsSetting.showtableCount===3">
+                    <span style="display: inline-block;">Select 3 dashboard:</span>
+                    <div class="element-select">
+                        <div class="mask-layer" ng-click="onClickInput($event)"></div>
+                        <input placeholder="Select x dashboard" class="select-input" ng-model="newDashboardsSetting.detailInfo" 
+                        />
+                        <img src="assets/img/shape.svg" class="shape-config" ng-mouseover = "onMouseOverOnShape($event)"  />
+                        <div class="select-contain" ng-mouseleave="onMouseLeaveShape($event)">
+                            <div class="select-option" ng-repeat=" table in tables" ng-click="onSelectOption(3,table,$event)" ng-class="{'selected-bg-color':table.active}">
+                                <img src="assets/img/shape-copy.svg" ng-if="table.active" class="select-img" />
+                                <span>{{table.name}}</span>
+                            </div>
+
+                            <div class="select-button-contain">
+                                <button class="select-button" ng-click="onClickSelect($event)">Select</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="grid-2">
+            &nbsp;
+        </div>
+        <div class="grid-49" style=" padding: 0px ">
+            <div class="grid-100 rectangle" ng-click="onRectangleSelectStatus(4)" ng-class="{'rectang-active': newDashboardsSetting.showtableCount===4}">
+                <img src="assets/img/oval.svg" class="rectangle-img" ng-if="newDashboardsSetting.showtableCount===4" />
+                <div class="grid-100 " style=" padding: 0px ">
+                    <div class="three-rectangle-first">
+
+                    </div>
+                    <div class="grid-1">
+                        &nbsp;
+                    </div>
+                    <div class="three-rectangle-first" style=" padding: 0px ">
+
+                    </div>
+                </div>
+                <div class="grid-100 " style=" padding: 0px ">
+                    <div class="three-rectangle-first">
+
+                    </div>
+                    <div class="grid-1">
+                        &nbsp;
+                    </div>
+                    <div class="three-rectangle-first" style=" padding: 0px ">
+
+                    </div>
+                </div>
+            </div>
+            <div class="grid-100 select-title">
+                <div ng-if="newDashboardsSetting.showtableCount===4">
+                    <span style="display: inline-block;">Select 4 dashboard:</span>
+                    <div class="element-select">
+                        <div class="mask-layer" ng-click="onClickInput($event)"></div>
+                        <input placeholder="Select x dashboard" class="select-input" ng-model="newDashboardsSetting.detailInfo" 
+                        />
+                        <img src="assets/img/shape.svg" class="shape-config" ng-mouseover = "onMouseOverOnShape($event)"  />
+                        <div class="select-contain" ng-mouseleave="onMouseLeaveShape($event)">
+                            <div class="select-option" ng-repeat=" table in tables" ng-click="onSelectOption(4,table,$event)" ng-class="{'selected-bg-color':table.active}">
+                                <img src="assets/img/shape-copy.svg" ng-if="table.active" class="select-img" />
+                                <span>{{table.name}}</span>
+                            </div>
+
+                            <div class="select-button-contain">
+                                <button class="select-button" ng-click="onClickSelect($event)">Select</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="grid-100 font  padding-top-50">
+        <button type="button" ng-disabled="!newDashboardsSetting.detailInfo" value="" class="right" ng-class="{'select-button':newDashboardsSetting.detailInfo , 'button-disable':!newDashboardsSetting.detailInfo , }"
+            style="width: 150px; height: 40px;" ng-click="selectConfiguration()">Select</button>
+    </div>
+</div>

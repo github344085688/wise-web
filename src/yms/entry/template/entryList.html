@@ -1,0 +1,125 @@
+
+<div class="portlet light bordered" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold"> Entry List </span>
+        </div>
+        <div class="actions">
+            <div style="float:left; height:34px; line-height: 34px;">Quick Access:&nbsp;</div>
+            <div class="input-icon" style="float:right;">
+                <i class="fa fa-search font-green" style="right:15px;"></i>
+                <input type="text" class="form-control" style="width:300px;padding-left:10px;" placeholder="Entry ID/Carrier/Driver">
+            </div>
+        </div>
+    </div>
+    <div class="portlet-body entry-list">
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label >Gate Checkin From:</label>
+                    <lt-date-time></lt-date-time>
+                </div>
+
+                <div class="col-md-6">
+                    <label >Gate Checkin To:</label>
+                    <lt-date-time></lt-date-time>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-6">
+                    <label >Gate Checkout From:</label>
+                    <lt-date-time></lt-date-time>
+                </div>
+
+                <div class="col-md-6">
+                    <label >Gate Checkout To:</label>
+                    <lt-date-time></lt-date-time>
+                </div>
+            </div>
+
+        <div class="row form-group">
+            <div class="col-md-12 text-right">
+                <div class="form-actions">
+                    <button type="submit" class="btn blue" >Search</button>
+                </div>
+            </div>
+        </div>
+
+           <div class="portlet bordered light" ng-repeat="entry in entryList track by $index">
+               <div class="portlet-title">
+                   <div class="caption font-green-sharp">
+                       <span class="caption-subject bold uppercase entry-caption-title"> {{entry.entryId}}</span>
+                   </div>
+               </div>
+               <div class="portlet-body entry" >
+                   <div class="row">
+                   <div class="col-md-9">
+                       <div class="row">
+                           <span  class="col-md-4"><b>Carrier: </b>{{entry.carrier}}</span>
+                           <span  class="col-md-4"><b>Driver: </b>{{entry.driver}}</span>
+                           <span  class="col-md-4"><b>Type: </b>{{entry.type}}</span>
+                       </div>
+                       <div class="row">
+                           <div class="checkin-title"><b>Gate Checkin:</b></div>
+                           <div class="col-md-10 checkin-content">
+                               <div class="row">
+                                   <div class="col-md-6">{{entry.checkIn.gateTime}}({{entry.checkIn.gateName}})</div>
+                               </div>
+                               <div class="row">
+                                   <div class="col-md-6">
+                                       <b>Truck LP: </b>
+                                       <span >{{entry.checkIn.lp}}&nbsp</span>
+                                   </div>
+                                   <div class="col-md-6">
+                                       <b>CTNR: </b>
+                                       <span ng-repeat="tr in entry.checkIn.ctnr">{{tr}}&nbsp</span>
+                                   </div>
+                               </div>
+                               <div class="row" style="padding-top: 10px;">
+                                   <div class="col-md-12">
+                                       <a ng-repeat="img in entry.checkIn.picture track by $index" href="{{img}}">
+                                           <img http-src="{{img}}" width="80" height="80">
+                                       </a>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                       <hr/>
+                       <div class="row">
+                           <div class="checkin-title"><b>Gate Checkout:</b></div>
+                           <div class="col-md-10 checkin-content">
+                               <div class="row">
+                                   <div class="col-md-6">{{entry.checkOut.gateTime}}({{entry.checkOut.gateName}})</div>
+                                   <!--<div class="col-md-6"><b>Tractor: </b>{{entry.checkOut.tractor}}</div>-->
+                               </div>
+                               <div class="row">
+                                   <div class="col-md-6">
+                                       <b>LP: </b>
+                                       <span >{{entry.checkOut.lp}}&nbsp</span>
+                                   </div>
+                                   <div class="col-md-6">
+                                       <b>CTNR: </b>
+                                       <span ng-repeat="tr in entry.checkOut.ctnr">{{tr}}&nbsp</span>
+                                   </div>
+                               </div>
+                               <div class="row" style="padding-top: 10px;">
+                                   <div class="col-md-12">
+                                       <a ng-repeat="img in entry.checkOut.picture track by $index" href="{{img}}">
+                                           <img http-src="{{img}}" width="80" height="80">
+                                       </a>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="col-md-3">
+                       <span><b>Truck Tracking: </b></span>
+                       <div ng-repeat="lch in entry.locationChangeHistory">
+                           {{lch.time}}<b>: </b>{{lch.location}}
+                       </div>
+                   </div>
+                   </div>
+               </div>
+           </div>
+    </div>
+</div>
+

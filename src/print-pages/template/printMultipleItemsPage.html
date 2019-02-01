@@ -1,0 +1,34 @@
+<div class="row" style="background-color: white;margin: 0px">
+    <div class="col-md-3 form-group" style="margin-top: 10px;">
+        <div class="row form-group" style="margin-top: 10px;     margin-bottom: 20px;">
+            <div class="col-md-12">
+                <label>Printer</label>
+                <printer-auto-complete name="printerName" ng-model="printerName" types="['PDF']"></printer-auto-complete>
+                <div ng-if="!isZPL">
+                    <waitting-btn type="button" btn-class="btn blue form-group"  style="float:left"
+                                  value="'Print'" is-loading="isLoading" ng-click="print()"></waitting-btn>
+                    <button class="btn blue form-group" style="float:right" onclick="window.frames[0].print()">Window
+                        Print
+                    </button>
+                </div>
+                <div ng-if="isZPL">
+                    <waitting-btn type="button" btn-class="btn blue form-group"  style="float:left"
+                                  value="'Print'" is-loading="isLoading" ng-click="print()"></waitting-btn>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                <div ng-repeat="msg in printMessage" style="margin-bottom: 3px;">{{msg}}</div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="!isZPL" class="col-md-8 text-center">
+        <iframe http-src="{{item}}" ng-repeat="item in printItems"
+                style="border:0px; width: 215mm; background-color: rgba(210, 220, 207, 0.2); margin-bottom: 10px;"
+                onload="angular.element(this).scope().iframeResize(this)"></iframe>
+    </div>
+    <div ng-if="isZPL" class="col-md-8 text-center bordered">
+        <img http-src="{{item}}"  ng-repeat="item in printItems" style=" border-color: gray;border-image-width: 1px;">
+    </div>
+</div>

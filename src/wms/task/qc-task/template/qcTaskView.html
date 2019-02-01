@@ -1,0 +1,132 @@
+<div ng-if="isLoading" class="text-center">
+    <img src="assets/img/loading-spinner-grey.gif">
+    <span>&nbsp;LOADING...</span>
+</div>
+
+<div class="grid-100 row" ng-if="!isLoading">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <div class="grid-90">
+                <h1 class="section-label pull-left">
+                    <span class="caption-subject bold"> QC Task ID：{{taskId}}</span>
+                </h1>
+
+            </div>
+            <div class="grid-10">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="EditOrder()" value="'Edit QC Task'" is-loading="loading"></waitting-btn>
+            </div>
+
+        </div>
+        <div class="grid-parent grid-100 container">
+            <span class="grid-25">
+                <b>Customer: </b>{{qcTask.customerName }}</span>
+            <span class="grid-25">
+                <b>Long Haul: </b>{{qcTask.longHaulNo}} &nbsp;
+
+            </span>
+            <span class="grid-25">
+                <b>Status: </b>{{qcTask.status }} &nbsp;
+
+            </span>
+
+        </div>
+        <div class="grid-parent grid-100 container">
+            <span class="grid-25">
+                <b>Created By: </b>
+                {{qcTask.createdBy}} &nbsp;
+
+            </span>
+            <span class="grid-25">
+
+                <b>Create Time: </b>{{qcTask.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}} &nbsp;
+
+            </span>
+            <span class="grid-25">
+                <b>Last Assigned When: </b>
+                {{qcTask.lastAssignedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}} &nbsp;
+
+            </span>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <span class="grid-80">
+                <b>Order ID: </b>
+                <span ng-repeat="orderId in qcTask.orderIds track by $index">
+                    <a ng-href="{{'#/wms/outbound/order/' + orderId}}" target="_blank">{{orderId}}</a>
+                </span>
+            </span>
+        </div>
+
+    </div>
+    <div class="grid-content grid-100">
+        <div class="grid-100 grid-parent">
+            <div class="grid-parent grid-100 container" style="margin-top: 30px;">
+                <div class="tab-container">
+                    <ul>
+
+                        <li data-tab-title="Section{{$index}}" ng-repeat="orderQCView in orderQCViews track by $index" ng-click="selectedTab(orderQCView)"
+                            ng-class="{'active':activetab === orderQCView.orderId}">
+                            {{orderQCView.orderId}}
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+            <div ng-class="{'active':activetab === orderQCView.orderId}" ng-repeat="orderQCView in orderQCViews track by  $index" class="grid-100 tab-content"
+                id="Section{{$index}}">
+                <div class="grid-100 grid-parent" style="margin-bottom: 30px;">
+                    <div class="grid-parent grid-100" style="margin-bottom: 10px;">
+                        <div class="mt-element-ribbon bg-grey-steel">
+                            <div class="grid-parent grid-100 container">
+                                <div class="grid-90">
+                                    <span class="caption-subject bold" style="font-size: 20px;">Order ID : {{orderQCView.orderId}} </span>
+                                </div>
+
+                            </div>
+                            <div class="grid-parent grid-100 container">
+                                <div class="table-scrollable">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Item & Description</th>
+                                                <th>Status</th>
+                                                <th>Upc Code</th>
+                                                <th>Upc Code Case</th>
+                                                <th>Committed</th>
+                                                <th>Picked</th>
+                                                <th>QC Passed</th>
+                                                <th>Created By</th>
+                                                <th>Created When</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="itemLine in orderQCView.orderQCViewItemLines track by $index">
+                                                <td>{{itemMap[itemLine.itemSpecId].name}} ({{itemMap[itemLine.itemSpecId].desc}})
+                                                </td>
+                                                <td>{{itemMap[itemLine.itemSpecId].status}}</td>
+                                                <td>{{itemMap[itemLine.itemSpecId].upcCode}}</td>
+                                                <td>{{itemMap[itemLine.itemSpecId].upcCodeCase}}</td>
+                                                <td>{{itemLine.commitedQty}}</td>
+                                                <td>{{itemLine.totalPickedQty}}</td>
+                                                <td>{{itemLine.totalQcPassedQty}}</td>
+                                                <td>{{itemLine.createdBy}}</td>
+                                                <td>{{itemLine.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+
+                            <div ng-show="orderQCView.showItemLine">
+                                <unis-item-line-viewer ng-repeat="itemLine in itemLineMap[orderQCView.id]" item-line="itemLine"></unis-item-line-viewer>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+<div class="grid-100 row">
+  <div class="grid-content grid-100">
+    <div class="grid-parent grid-100 container">
+      <h1 class="section-label pull-left">
+        <span ng-show="!id" class="caption-subject bold"> Add Equipment</span>
+        <span ng-show="id" class="caption-subject bold"> Edit Equipment </span>
+      </h1>
+    </div>
+    <div class="grid-parent grid-100 container">
+      <form novalidate name="form" ng-submit="form.$valid && addOrUpdateFacilityEquipment()">
+        <div class="grid-parent grid-100 container">
+          <div class="grid-25">
+            <label class="label-input">Name:</label>
+            <div class="input-icon right" ng-show="form.name.$invalid && (form.$submitted || form.name.$touched)">
+              <i class="fa fa-warning tooltips lt-tooltip has-error">
+                <span class="lt-tooltip-text">Required.</span>
+              </i>
+            </div>
+            <input type="text" name="name" ng-model="param.name" style="width: 100%;min-height: 27px;" required>
+          </div>
+          <div class="grid-25">
+            <label class="label-input">Type:</label>
+            <div class="input-icon right" ng-show="form.type.$invalid && (form.$submitted || form.type.$touched)">
+              <i class="fa fa-warning tooltips lt-tooltip has-error">
+                <span class="lt-tooltip-text">Required.</span>
+              </i>
+            </div>
+            <ui-select name="type" ng-model="param.type" required>
+              <ui-select-match allow-clear="true">
+                {{$select.selected}}
+              </ui-select-match>
+              <ui-select-choices repeat="type in ['Forklift'] | filter: $select.search">
+                {{type}}
+              </ui-select-choices>
+            </ui-select>
+          </div>
+          <div class="grid-25">
+            <label class="label-input">Status:</label>
+            <ui-select name="status" ng-model="param.status">
+              <ui-select-match allow-clear="true">
+                {{$select.selected}}
+              </ui-select-match>
+              <ui-select-choices repeat="status in ['Active', 'Inactive'] | filter: $select.search">
+                {{status}}
+              </ui-select-choices>
+            </ui-select>
+          </div>
+        </div>
+        <div class="grid-parent grid-100 container" style="margin-top:50px;">
+          <div class="grid-80">&nbsp;</div>
+          <div class="grid-10">
+            <unis-waitting-btn btn-type="submit" btn-class="ripplelink  button-between" value="submitLabel" is-loading="loading"></unis-waitting-btn>
+          </div>
+          <div class="grid-10"> <button type="button" class=" cancel" ng-click="cancel()">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>

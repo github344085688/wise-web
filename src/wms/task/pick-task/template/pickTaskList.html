@@ -1,0 +1,271 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Task</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Pick Task List</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin: 15px;">
+    <div class="portlet light bordered">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject bold"> Pick Task List </span>
+            </div>
+        </div>
+        <div class="portlet-body form form-horizontal">
+            <form class="form-horizontal">
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Task ID</label>
+                        <lt-tags-input ng-model="pickTaskSearch.taskIds" placeholder="Enter Task ID" fill="TASK-" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Task Order ID</label>
+                        <lt-tags-input ng-model="pickTaskSearch.orderIds" placeholder="Enter Order ID" fill="DN-" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Assignee</label>
+                        <user-with-pick-task-statistics-auto-complete name="assignee" allow-clear="true" ng-model="pickTaskSearch.assigneeUserId"></user-with-pick-task-statistics-auto-complete>
+                    </div>
+
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Pick Type</label>
+                        <ui-select name="types" ng-model="pickTaskSearch.pickType">
+                            <ui-select-match allow-clear="true">
+                                {{$select.selected}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="pickType in pickTypes | filter: $select.search" refresh="getPickTypes()" refresh-delay="50">
+                                <div ng-bind="pickType"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Pick Way</label>
+                        <ui-select name="types" ng-model="pickTaskSearch.pickWay">
+                            <ui-select-match allow-clear="true">
+                                {{$select.selected}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="pickWay in pickWays  | filter: $select.search" refresh="getPickWays()" refresh-delay="50">
+                                <div ng-bind="pickWay"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Status</label>
+                        <task-status-auto-complete allow-clear="true" ng-model="pickTaskSearch.status"></task-status-auto-complete>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Item</label>
+                        <itemspec-auto-complete name="itemSpec" ng-model="pickTaskSearch.itemSpecId" name="itemSpec" allow-clear="true" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <label>Location</label>
+                        <i class="fa fa-question-circle" title="e.g. ^BPK: Location start with BPK , A$: Location end with A"></i>
+                        <input type="text" ng-model="pickTaskSearch.locationName" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Order Plan ID</label>
+                        <lt-tags-input ng-model="pickTaskSearch.orderPlanIds" placeholder="Enter Order Plan ID" fill="PLAN-" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Is Pick To Order</label>
+                        <ui-select name="types" ng-model="pickTaskSearch.isPickToOrder">
+                            <ui-select-match allow-clear="true">
+                                {{$select.selected ? "Yes": "No"}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="pickWay in [true, false]">
+                                 {{pickWay ? "Yes": "No"}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Is Conveyor Pick</label>
+                        <ui-select name="types" ng-model="pickTaskSearch.isConveyorPick">
+                            <ui-select-match allow-clear="true">
+                                {{$select.selected ? "Yes": "No"}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="pickWay in [true, false]">
+                                {{pickWay ? "Yes": "No"}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <label>Long Haul</label>
+                        <multiple-longhaul-auto-complete placeholder="Enter Long Haul" ng-model="pickTaskSearch.longHaul"></multiple-longhaul-auto-complete>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Assignment Tag</label>
+                        <ui-select name="types" ng-model="pickTaskSearch.assignmentTag">
+                            <ui-select-match allow-clear="true">
+                                {{$select.selected}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="assignmentTag in assignmentTags | filter: $select.search">
+                                <div ng-bind="assignmentTag"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Virtual Location Group</label>
+                        <location-virtual-group-auto-complete placeholder="Enter Virtual Location Group" group-type="Zone" allow-clear="true" ng-model="pickTaskSearch.virtualLocationGroupId"></location-virtual-group-auto-complete>
+                    </div>
+                </div>
+
+                <div class="form-actions" permission-check="{{'task::pickTask_write'}}">
+                    <div class="col-md-8">
+                        <div class="row form-group" style="background: #ddd; padding: 10px 5px; border-radius: 10px;" ng-show="searchCompleted">
+                            <div class="col-md-3">
+                                <input type="checkbox" id="checkAll" ng-checked="isCheckAll" ng-click="checkAll()" />
+                                <label for="checkAll">Check all this page</label>
+                            </div>
+                            <div class="col-md-6">
+                                <user-with-pick-task-statistics-auto-complete name="assignee" allow-clear="true" placeholder="Batch Assign To" ng-model="batchAssigneeUserId"></user-with-pick-task-statistics-auto-complete>
+                            </div>
+                            <div class="col-md-3">
+                                <waitting-btn type="button"  btn-class="btn yellow" ng-click="batchAssign()" value="'Batch Assign'" is-loading="assigning"></waitting-btn>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="text-align: right;">
+                        <waitting-btn type="button" btn-class="btn blue" ng-click="search()" value="'Search'" is-loading="loading"></waitting-btn>
+                    </div>
+                </div>
+
+            </form>
+            <div ng-show="!searchCompleted" class="text-center">
+                <img src="assets/img/loading-spinner-grey.gif">
+                <span>&nbsp;LOADING...</span>
+            </div>
+            <pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageObj.pageSize" load-content="loadContent(currentPage)" current-page="pageObj.currentPage"></pager>
+            <div class="row" style="margin-left: 0px; margin-right:0px" ng-repeat="task in tasks" ng-show="searchCompleted">
+                <div class="portlet light bordered box-shadow-none">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <input ng-show="task.status == 'New' || task.status == 'In Progress'" type="checkbox" id="{{task.id}}" ng-checked="isChecked(task.id)"
+                                ng-click="checkTask(task.id)" />
+                            <span class="caption-subject bold">
+                                <a ng-href="{{'#/wms/task/pick-task/' + task.id}}" target="_blank">{{task.id}} ({{task.status}})</a>
+                                <span style="padding-left: 15px; ">Zone: <span style="font-weight: 500 !important;">{{task.virtualLocationName}}</span></span>
+                            </span>
+                        </div>
+                        <div style="float: right;">
+                            <progress ng-if="task.status == 'In Progress'" value="{{task.progress}}" max="100"></progress>
+                            <span ng-if="task.status == 'In Progress'">&nbsp; {{task.progress}}%</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row row-text">
+                            <div class="col-md-12">
+                                <b>Orders:</b>
+                                <span ng-repeat="orderId in task.orderIds track by $index">
+                                    <a href="{{'#/wms/outbound/order/' + orderId}}">{{orderId}}</a> &nbsp;
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row row-text">
+                            <div class="col-md-3">
+                                <b>Assignee:</b>
+                                <span>{{userMap[task.assigneeUserId].firstName + ' ' + userMap[task.assigneeUserId].lastName}}</span>
+                            </div>
+                            <div class="col-md-3">
+                                <b>Planned Assignee:</b>
+                                <span>{{userMap[task.plannedAssigneeUserId].firstName + ' ' + userMap[task.plannedAssigneeUserId].lastName}}</span>
+                            </div>
+
+                            <div class="col-md-3">
+                                <b>Pick Type:</b>
+                                <span>{{task.pickType}}</span>
+                            </div>
+                            <div class="col-md-3">
+                                <b>Pick Way:</b>
+                                <span>{{task.pickWay}}</span>
+                            </div>
+                        </div>
+                        <div class="row row-text">
+                            <div class="col-md-3">
+                                <b>Plan Method:</b>
+                                <span>{{task.planMethod}}</span>
+                            </div>
+                            <div class="col-md-3">
+                                <b>Is Pick To Order:</b>
+                                <span>{{task.isPickToOrder ? "Yes" : "No"}}</span>
+                            </div>
+                            <div class="col-md-3">
+                                <b>Priority:</b>
+                                <span>{{task.priority}}</span>
+                            </div>
+                            <div class="col-md-3">
+                                <b>Is Rush:</b>
+                                <span>{{task.isRush ? 'Yes':'No'}}</span>
+                            </div>
+                        </div>
+                        <div class="row row-text">
+                            <div class="col-md-3">
+                                <b>Start Time:</b>
+                                <span>{{task.startTime}}</span>
+                            </div>
+                            <div class="col-md-3">
+                                <b>End Time:</b>
+                                <span>{{task.endTime}}</span>
+                            </div>
+                            <span class="col-md-3">
+                                <b>Created Time: </b>{{task.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}} &nbsp;
+                                <span ng-show="task.createdBy">({{task.createdBy}})</span>
+                            </span>
+                            <span class="col-md-3">
+                                <b>Updated Time: </b>{{task.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}} &nbsp;
+                                <span ng-show="task.updatedBy">({{task.updatedBy}})</span>
+                            </span>
+                        </div>
+                        <div class="row row-text">
+                            <div class="col-md-3">
+                                <b>Assignment Tag:</b>
+                                <span ng-if="task.assignmentTag=='AUTO ASSIGNMENT'" style="display:inline-block;margin: 5px 5px;padding: 5px 10px;border-radius: 3px;" class="label-warning"> {{task.assignmentTag}}</span>
+                                <span ng-if="task.assignmentTag!='AUTO ASSIGNMENT'"> {{task.assignmentTag}}</span>
+                            </div>
+                            <div class="col-md-9 text-ellipsis" title="{{task.description}}">
+                                <b>Description:</b>
+                                <span>{{task.description}}</span>
+                            </div>
+                        </div>
+                        <div class="row row-text" ng-repeat="itemLine in task.pickItemLines">
+                            <div class="col-md-4">
+                                <b>Item:</b>
+                                <item-display item="itemSpecMap[itemLine.itemSpecId]"></item-display>
+                            </div>
+                            <div class="col-md-2">
+                                <b>Unit:</b>
+                                <span> {{itemUnitMap[itemLine.unitId].name}} </span>
+                            </div>
+                            <div class="col-md-2">
+                                <b>QTY:</b>
+                                <span> {{itemLine.qty}} </span>
+                            </div>
+                            <div class="col-md-4">
+                                <b>Location:</b>
+                                <span class="label box-shadow-none label-success" style="margin-left: 5px; padding: 5px " ng-show="locationMap[itemLine.locationId].name">
+                                    {{locationMap[itemLine.locationId].name}} </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageObj.pageSize" load-content="loadContent(currentPage)" current-page="pageObj.currentPage"></pager>
+        </div>
+    </div>
+</div>

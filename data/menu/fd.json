@@ -1,0 +1,122 @@
+[
+	{
+		"title": "Item",
+		"icon": "view_comfy",
+		"url": "",
+		"state": "fd.item",
+		"subMenu": [
+			{
+				"title": "Item Spec",
+				"icon": "personal_video",
+				"state": "fd.item.itemspec.list",
+				"url": "/fd/item/itemspec/list",
+				"permissions": "item::itemSpec_read"
+			},
+			{
+				"title": "Item Group",
+				"icon": "straighten",
+				"state": "fd.item.itemGroup.list",
+				"url": "/fd/item/ipg/list",
+				"permissions": "item::itemGroup_read"
+			},
+			{
+				"title": "Item Property",
+				"icon": "straighten",
+				"state": "fd.item.itemProperty.list",
+				"url": "/fd/item/itemproperty/list",
+				"permissions": "item::itemProperty_read"
+			},
+			{
+				"title": "Item Black SN",
+				"icon": "straighten",
+				"state": "fd.item.blackSN.list",
+				"url": "/fd/item/blackSN/list",
+				"permissions": "item::itemBlackSN_read"
+			},
+			{
+				"title": "Item LP Template Mapping",
+				"icon": "straighten",
+				"state": "fd.item.lpTemplateMapping.list",
+				"url": "/fd/item/lpTemplateMapping/list",
+				"permissions": "item::itemLpTemplateMapping_read"
+			}
+		]
+	},
+	{
+		"title": "Organization",
+		"icon": "account_box",
+		"state": "fd.organization.list",
+		"url": "/fd/organization/list",
+		"permissions": "organization_read"
+	},
+	{
+		"title": "Carrier",
+		"icon": "account_box",
+		"state": "fd.carrier.list",
+		"url": "/fd/carrier/list",
+		"permissions": "carrier_read"
+	},
+	{
+		"title": "Address",
+		"icon": "location_on",
+		"state": "fd.address.list",
+		"url": "/fd/address/list",
+		"permissions": "address_read"
+	},
+	{
+		"title": "Pending",
+		"icon": "view_comfy",
+		"state": "fd.pending.list",
+		"url": "/fd/pending/list",
+		"permissions": "pending_read"
+	},
+	{
+		"title": "UOM Definition",
+		"icon": "view_comfy",
+		"state": "fd.uomDefinition.list",
+		"url": "/fd/uomDefinition/list",
+		"permissions": "uomDefinition_read"
+	},
+	{
+		"title": "LP Configuration Template",
+		"icon": "view_comfy",
+		"state": "fd.lpConfigurationTemplate.main.singleTemplateList",
+		"url": "/fd/lp-configuration-template/main/single-template-list",
+		"permissions": "lpConfigurationTemplate_read"
+	},
+	{
+		"title": "Material Template",
+		"icon": "view_comfy",
+		"state": "fd.materialTemplate.list",
+		"url": "/fd/material-template/list",
+		"permissions": "materialTemplate_read"
+	},
+	{
+		"title": "Milk Run",
+		"icon": "view_comfy",
+		"state": "fd.milkRun.list",
+		"url": "/fd/milk-run/list",
+		"permissions": "milkRun_read"
+	},
+	{
+		"title": "Location Group",
+		"state": "fd.location-group.list",
+		"icon": "view_comfy",
+		"url": "/fd/location-group/list",
+		"permissions": "locationGroup_read"
+	},
+	{
+		"title": "Billing Code",
+		"state": "fd.billingCode.list",
+		"icon": "view_comfy",
+		"url": "/fd/billing-code/list",
+		"permissions": "billingCode_read"
+	},
+	{
+		"title": "Uom Pick Type",
+		"state": "fd.uomPickType.list",
+		"icon": "view_comfy",
+		"url": "/fd/uom-pick-type/list",
+		"permissions": "uomPickType_read"
+	}
+]

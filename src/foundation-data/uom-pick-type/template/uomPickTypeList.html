@@ -1,0 +1,95 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left"> Uom Pick Type List</h1>
+            <a class="create-button" href="#/fd/uom-pick-type/add" permission-check="{{'uomPickType_write'}}">
+                <b>Add Uom Pick Type</b>
+            </a>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container" ng-keyup="keyUpSearch($event)">
+            <div class="grid-25">
+                <label class="label-input">Name</label>
+                <input type="text" ng-model="searchInfo.name" class="form-control" placeholder="Enter Name" />
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Customer</label>
+                <organization-auto-complete name="customer" on-select="onSelect()" ng-model="searchInfo.customerId" tag="Customer" allow-clear="true"></organization-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Item</label>
+                <itemspec-auto-complete customer-id="searchInfo.customerId" on-select="onSelect()" allow-clear="true" ng-model="searchInfo.itemSpecId" ng-disabled ="searchInfo.customerId?false:true"/>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Reference Unit</label>
+                <ui-select ng-model="searchInfo.referenceUnit"  >
+                        <ui-select-match allow-clear="true">
+                           {{$select.selected.name}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="uom.name as uom in units | filter:$select.search">
+                            <div>{{uom.name}}</div>
+                        </ui-select-choices>
+                    </ui-select>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container" >
+            <div class="grid-25">
+                <label class="label-input">Type</label>
+                <ui-select name="type" ng-model="searchInfo.pickType">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item  in pickTypes| filter: $select.search">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-90">&nbsp;</div>
+            <div class="grid-10 ">
+
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr role="row">
+                        <th> Name </th>
+                        <th> Customer </th>
+                        <th> Pick Type </th>
+                        <th> Item</th>
+                        <th> Reference Unit </th>
+                        <th permission-check="{{'uomPickType_write'}}"> Actions </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="uomPickType in uomPickTypeView track by $index">
+                        <td>{{uomPickType.name}}</td>
+                        <td>{{uomPickType.customerName}}</td>
+                        <td>{{uomPickType.pickType}}</td>
+                        <td>{{uomPickType.itemSpecName}}</td>
+                        <td>{{uomPickType.referenceUnit}}</td>
+
+                        <td permission-check="{{'uomPickType_write'}}">
+                            <a ui-sref="fd.uomPickType.edit({id:uomPickType.id})">Edit</a>
+                            <a href="#" style="color: red;" ng-click="delete(uomPickType.id)">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="uomPickTypes.length" page-size="pageSize" load-content="loadContent(currentPage)">
+        </unis-pager>
+    </div>
+</div>

@@ -1,0 +1,131 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Facility</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Milk Run</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> Milk Run</span>
+                </div>
+                <div class="actions" permission-check="{{'milkRun_write'}}">
+
+                    <a ui-sref="fd.milkRun.add"><b>Add Milk Run</b></a>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <form>
+                    <div class="row form-group" ng-keyup="keyUpSearch($event)">
+                        <div class="col-md-3">
+                            <label>Customer</label>
+                            <organization-auto-complete ng-model="searchInfo.customerId" name="customer" allow-clear="true" tag="Customer"></organization-auto-complete>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Longhaul No.</label>
+                            <ui-select ng-model="searchInfo.longHaulNo">
+                                <ui-select-match allow-clear="{{allowClear}}">
+                                    <div ng-bind="$select.selected.longHaulNo"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="item.longHaulNo as item in longHauls | filter: $select.search.longHaulNo"
+                                                   refresh="getLongHaulList($select.search)" refresh-delay="50">
+                                    <div ng-bind="item.longHaulNo"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                            <!--<input type="text" name="longHaulNo" ng-model="searchInfo.longHaulNo" class="form-control" />-->
+                        </div>
+                        <div class="col-md-3">
+                            <label> Stop Address Store No.</label>
+
+                            <input type="text" name="stopAddressStoreNo" ng-model="searchInfo.stopAddressStoreNo" class="form-control" />
+                        </div>
+                        <div class="col-md-3">
+                            <label>Pick Up Week Date</label>
+                            <ui-select multiple name="longHaulShipDay" ng-model="searchInfo.longHaulShipDay" class="form-control">
+                                <ui-select-match allow-clear="true">
+                                    <div ng-bind="$item"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="longHaulShipDay in longHaulShipDays | filter: $select.search">
+                                    <div ng-bind="longHaulShipDay"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="row form-actions right">
+                        <waitting-btn type="button" btn-class="btn yellow" ng-click="export()"
+                                      value="'Export'" is-loading="exporting"></waitting-btn>
+                        <button type="submit" class="btn blue" ng-click="search()">Search</button>
+                    </div>
+                </form>
+            </div>
+            <!-- TABLE -->
+            <div class="row">
+                <div class="portlet light box-shadow-none">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject bold"> Search Results</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div ng-show="!searchMilkRunCompleted" class="text-center">
+                            <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                        </div>
+                        <div ng-show="searchMilkRunCompleted" class="dataTables_wrapper no-footer">
+                            <div class="table-scrollable">
+                                <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_1"
+                                    role="grid" aria-describedby="sample_1_info">
+                                    <thead>
+                                        <tr role="row">
+                                            <th> Customer</th>
+                                            <th> LongHaul No.</th>
+                                            <th> Pick Up Week Date</th>
+                                            <th> Stops</th>
+                                            <th> Description </th>
+                                            <th permission-check="{{'milkRun_write'}}"> Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="milkRun in milkRunView track by $index">
+                                            <!--<td><a ui-sref="cf.facility.resource.location.edit({locationId:location.id})">{{location.name}}</a></td>-->
+
+                                            <td>{{milkRun.customerName}}</td>
+                                            <td>{{ milkRun.longHaulNo}}</td>
+                                            <td>
+                                                <span ng-repeat="shipday in milkRun.longHaulShipDay">
+                                                    {{shipday}}
+                                            </span>
+                                            </td>
+                                            <td>
+                                                <li ng-repeat="stop in milkRun.stops" style="display:inline-block;">
+                                                    <span ng-if="stop" style="background-color:#f6f3e8; margin: 5px 5px;padding: 5px 10px;border-radius: 3px;">
+                                                      ({{stop.sequence}})&nbsp;{{stop.addressStoreNo}}
+                                                    </span>
+                                                </li>
+                                            </td>
+
+                                            <td>
+                                                {{milkRun.description}}
+                                            </td>
+                                            <td  permission-check="{{'milkRun_write'}}">
+                                                <a ui-sref="fd.milkRun.edit({milkRunId:milkRun.id})">Edit</a>
+                                                <a ng-click="remove(milkRun)"> | Delete</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <pager total-count="milkRuns.length" page-size="pageSize" load-content="loadContent(currentPage)"></pager>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

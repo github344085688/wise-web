@@ -1,0 +1,87 @@
+<div style="border-bottom: 1px solid #ddd;">
+    <div class="row form-group" style="margin: 10px 0px 0px 20px;">
+        <div class="bold col-md-2">
+            <span ng-if="!isShowDown">...</span>
+        </div>
+        <div class="col-md-8"></div>
+        <div class="col-md-2">
+            <div class="iconBtnBox" ng-click="showUpOrDown()">
+                <i ng-if="isShowDown" class="fa fa-angle-double-up" title="double up"></i>
+                <i ng-if="!isShowDown" class="fa fa-angle-double-down" title="double down"></i>
+            </div>
+        </div>
+    </div>
+    <div ng-show="isShowDown">
+
+
+        <div class="row form-group">
+
+            <div ng-if="activetab == 'itemSpec'" class="col-md-2"></div>
+            <div class="col-md-8">
+                <div ng-repeat="col in importFields track by $index">
+                    <div class="row form-group" ng-if="col.fieldName == 'customerId'">
+                        <div class="col-md-3" style="text-align: right;">
+                            Customer:
+                        </div>
+                        <div class="col-md-6" ng-if="col.fieldName.indexOf('.') < 0">
+
+                            <organization-auto-complete name="customer" ng-if="col.fieldName == 'customerId'" ng-model="fieldDefaultVal[col.fieldName]"
+                                tag="Customer" on-select="onSelectCustomer(org.id)" required></organization-auto-complete>
+
+                        </div>
+                    </div>
+                    <div class="row form-group" ng-if="col.fieldName == 'groupId'">
+                        <div class="col-md-3" style="text-align: right;">
+                           Group:
+                        </div>
+                        <div class="col-md-6" ng-if="col.fieldName.indexOf('.') < 0">
+
+
+                            <ui-select ng-if="col.fieldName == 'groupId'" ng-model="fieldDefaultVal[col.fieldName]" style="border-radius:4px;">
+                                <ui-select-match allow-clear="true">
+                                    <div ng-bind="$select.selected.name"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="group.id as group in availableGroups" refresh="searchAvailableGroups($select.search)">
+                                    <div ng-bind="group.name"></div>
+                                </ui-select-choices>
+                            </ui-select>
+
+
+                        </div>
+                    </div>
+                    <div class="row form-group" ng-if="col.fieldName == 'titleIds'">
+                        <div class="col-md-3" style="text-align: right;">
+                            Title:
+                        </div>
+                        <div class="col-md-6" ng-if="col.fieldName.indexOf('.') < 0">
+                            <multiple-organization-auto-complete ng-if="col.fieldName == 'titleIds'" name="title" tag="Title" ng-model="fieldDefaultVal[col.fieldName]"></multiple-organization-auto-complete>
+                        </div>
+                    </div>
+                    <div class="row form-group" ng-if="col.fieldName == 'supplierIds'">
+                        <div class="col-md-3" style="text-align: right;">
+                            Supplier:
+                        </div>
+                        <div class="col-md-6" ng-if="col.fieldName.indexOf('.') < 0">
+                            <multiple-organization-auto-complete ng-if="col.fieldName == 'supplierIds'" name="supplier" tag="Supplier" ng-model="fieldDefaultVal[col.fieldName]"></multiple-organization-auto-complete>
+
+
+
+                        </div>
+                    </div>
+                    <div class="row form-group"  ng-if="col.fieldName == 'brandId'">
+                        <div class="col-md-3" style="text-align: right;">
+                            Brand:
+                        </div>
+                        <div class="col-md-6" ng-if="col.fieldName.indexOf('.') < 0">
+
+                            <organization-auto-complete ng-if="col.fieldName == 'brandId'" name="brand" tag="Brand" allow-clear="true" ng-model="fieldDefaultVal[col.fieldName]"></organization-auto-complete>
+                        
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

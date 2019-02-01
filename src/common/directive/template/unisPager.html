@@ -1,0 +1,44 @@
+<div class="grid-100 grid-parent" ng-show="totalCount">
+    <div ng-if="!hideTotalRecord" class="grid-parent grid-33 container">
+        <div class="dataTables_info" id="sample_1_info" role="status" aria-live="polite">Showing {{ (pager.activedPage
+            -1) * pageSize + 1}} to {{ pager.activedPage * pageSize > totalCount ? totalCount : pager.activedPage *
+            pageSize}} of {{totalCount}} records
+        </div>
+    </div>
+    <div class="grid-parent grid-66 container">
+        <div class="paginate paging_bootstrap_full_number" style="float: right">
+            <ul class="pagination" style="visibility: visible;">
+
+                <li class="prev" ng-click="loadFirstPage()"><a href="#" title="First"><i
+                        class="fa fa-angle-double-left"></i></a></li>
+                <li ng-class="{'prev disabled':pager.activedPage === 1}" ng-click="loadPrevPage()"><a href="#"
+                                                                                                      title="Prev"><i
+                        class="fa fa-angle-left"></i></a></li>
+
+                <li ng-repeat="page in pages track by $index" ng-class="{'active':page.active}"
+                    ng-click="loadPage($index)"><a href="#">{{page.number}}</a></li>
+
+                <li ng-class="{'next disabled':pager.activedPage == pager.totalPage}" ng-click="loadNextPage()">
+                    <a
+                            href="#" title="Next"><i class="fa fa-angle-right"></i></a></li>
+                <li ng-class="next" ng-click="loadLastPage()"><a href="#" title="Last"><i
+                        class="fa fa-angle-double-right"></i></a></li>
+            </ul>
+        </div>
+        <div class="pull-right" style="margin-right:20px;">
+            <span>Page:</span>
+            <input type="number" ng-model="inputPage" type="text" maxlenght="5" style="width:50px;text-align:center; margin: 0 5px;">
+            <button type="button" style="width: 40px" ng-click="goToPage()">Go</button>
+
+        </div>
+        <div class="pull-right" style="display: inline-flex;margin-right:20px">
+            <span style="margin-top:5px;margin-right:5px;">View</span>
+            <select ng-model="pageSize" style="margin-bottom:0" class="custom-select" name="datatable_ajax_length"
+                    aria-controls="datatable_ajax"
+                    ng-options="pz for pz in pageSizeOptions">
+
+            </select>
+            <span style="margin-top:5px;margin-left:5px;">records</span>
+        </div>
+    </div>
+</div>

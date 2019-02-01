@@ -1,0 +1,383 @@
+<form>
+    <div class="row form-group">
+        <div class="col-md-8">
+            <div class="row form-group">
+                <div class="col-md-2">
+                    <ul class="nav nav-tabs tabs-left" style="height: 320px; width: 100px;">
+                        <li role="presentation">
+                            <a role="tab" data-toggle="tab" style="width: 5px;"> </a>
+                        </li>
+                        <li role="presentation" ng-class="{'active':bTabSelectActiveId == 'Select1'}">
+                            <a data-toggle="tab" ng-click="bTabSelActive('Select1')">Select 1</a>
+                        </li>
+                        <li role="presentation" ng-class="{'active':bTabSelectActiveId == 'Select2'}">
+                            <a data-toggle="tab" ng-click="bTabSelActive('Select2')">Select 2</a>
+                        </li>
+                        <li role="presentation" ng-class="{'active':bTabSelectActiveId == 'Select3'}">
+                            <a data-toggle="tab" ng-click="bTabSelActive('Select3')">Select 3</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-10">
+                    <div role="tabpanel" class="tab-pane active" ng-if="bTabSelectActiveId == 'Select1'">
+
+                        <div class="row form-group">
+                            <div class="col-md-6">
+                                <label>Customer <span style="color: red;">*</span></label>
+                                <organization-auto-complete name="customer" tag="Customer" ng-model="newAdjustment.customerId"
+                                                            required on-select="customerChange(org)"></organization-auto-complete>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Title</label>
+                                <ui-select ng-model="newAdjustment.titleId" on-select="titleOnSelect($select.selected)">
+                                    <ui-select-match allow-clear="true">
+                                        <span ng-bind="$select.selected.name"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item.id as item in newAdjustment.titleList | filter: $select.search">
+                                        <b>{{item.name}}</b>
+                                    </ui-select-choices>
+                                    <ui-select-no-choice>
+                                        No available item.
+                                    </ui-select-no-choice>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-6">
+                                <label>Item <span style="color: red;">*</span></label>
+                                <ui-select required ng-model="newAdjustment.itemSpecId" on-select="itemSpecIdOnSelect()">
+                                    <ui-select-match allow-clear="true">
+                                        <span ng-bind="$select.selected.name"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item.id as item in newAdjustment.itemList | filter: $select.search">
+                                        <b>{{item.name}}</b>
+                                    </ui-select-choices>
+                                    <ui-select-no-choice>
+                                        No available item.
+                                    </ui-select-no-choice>
+                                </ui-select>
+                            </div>
+                            <div class="col-md-6">
+                                <label>
+                                    LP <span style="color: red;">*</span>:
+                                    <span> {{newAdjustment.lpList.data.length}}</span>
+                                </label>
+                                <check-list ng-model="newAdjustment.lpList" on-select="getQTY()"></check-list>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-6">
+                                <label>QTY</label>
+                                <div class="adjustmentBottomBorder">{{newAdjustment.adjustmentContent.QTY}}</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div role="tabpanel" class="tab-pane active" ng-if="bTabSelectActiveId == 'Select2'">
+                        <div class="row form-group">
+                            <div class="col-md-6">
+                                <label>Location <span style="color: red;">*</span></label>
+                                <location-auto-complete required ng-model="newAdjustment.locationId"
+                                                        on-select="locationOnSelect(location)" name="location"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label>
+                                    LP <span style="color: red;">*</span>:
+                                    <span> {{newAdjustment.lpList.data.length}}</span>
+                                </label>
+                                <check-list ng-model="newAdjustment.lpList" on-select="getInventory()"></check-list>
+                            </div>
+                        </div>
+
+                        <div class="row form-group" style="height: 250px; overflow: auto;">
+                            <div ng-show="isSearching" class="text-center">
+                                <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                            </div>
+                            <table ng-show="!isSearching" class="table table-striped table-bordered">
+                                <tr>
+                                    <td>Location</td>
+                                    <td>LP</td>
+                                    <td>Customer</td>
+                                    <td>Title</td>
+                                    <td>Item</td>
+                                    <td>UOM</td>
+                                    <td>Diverse</td>
+                                    <td>Status</td>
+                                    <td>SN</td>
+                                    <td>QTY</td>
+                                </tr>
+                                <tr ng-repeat="view in newAdjustment.inventorys">
+                                    <td>{{view.locationName}}</td>
+                                    <td>{{view.lpId}}</td>
+                                    <td>{{view.customerName}}</td>
+                                    <td>{{view.titleName}}</td>
+                                    <td><item-display item="view"></item-display></td>
+                                    <td>{{view.unitName}}</td>
+                                    <td>{{view.diverseName}}</td>
+                                    <td>{{view.status}}</td>
+                                    <td>{{view.sn}}</td>
+                                    <td>{{view.qty}}</td>
+                                </tr>
+                                <tr ng-show="newAdjustment.inventorys.length > 1 || newAdjustment.adjustmentContent.childrenLps">
+                                    <td colspan="8">
+                                        <span ng-show="newAdjustment.adjustmentContent.childrenLps">LP inside:</span>
+                                        {{newAdjustment.adjustmentContent.childrenLps}}
+                                    </td>
+                                    <td>QTY:</td>
+                                    <td>{{newAdjustment.adjustmentContent.Total}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane active" ng-if="bTabSelectActiveId == 'Select3'">
+
+                        <div class="row form-group">
+                            <div class="col-md-6">
+                                <label>LP <span style="color: red;">*</span></label>
+                                <input type="text" class="form-control" ng-pattern="/^[T,H,I,C,S]{0,1}LP-[0-9]*$/" required ng-model="newAdjustment.lpId" ng-change="getInventory()" placeholder="Enter LP ID (LP-1)" />
+                            </div>
+                        </div>
+
+                        <div class="row form-group" style="height: 250px; overflow: auto;">
+                            <div ng-show="isSearching" class="text-center">
+                                <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                            </div>
+                            <table ng-show="!isSearching" class="table table-striped table-bordered">
+                                <tr>
+                                    <td>Location</td>
+                                    <td>LP</td>
+                                    <td>Customer</td>
+                                    <td>Title</td>
+                                    <td>Item</td>
+                                    <td>UOM</td>
+                                    <td>Diverse</td>
+                                    <td>Status</td>
+                                    <td>SN</td>
+                                    <td>QTY</td>
+                                </tr>
+                                <tr ng-repeat="view in newAdjustment.inventorys">
+                                    <td>{{view.locationName}}</td>
+                                    <td>{{view.lpId}}</td>
+                                    <td>{{view.customerName}}</td>
+                                    <td>{{view.titleName}}</td>
+                                    <td>{{view.itemName}}</td>
+                                    <td>{{view.unitName}}</td>
+                                    <td>{{view.diverseName}}</td>
+                                    <td>{{view.status}}</td>
+                                    <td>{{view.sn}}</td>
+                                    <td>{{view.qty}}</td>
+                                </tr>
+                                <tr ng-show="newAdjustment.inventorys.length > 1 || newAdjustment.adjustmentContent.childrenLps">
+                                    <td colspan="8">
+                                        <span ng-show="newAdjustment.adjustmentContent.childrenLps">LP inside:</span>
+                                        {{newAdjustment.adjustmentContent.childrenLps}}
+                                    </td>
+                                    <td>QTY:</td>
+                                    <td>{{newAdjustment.adjustmentContent.Total}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+            <div class="row form-group" style="border: 1px solid #ddd; border-right:none;">
+                <div class="col-md-8" style="padding-top: 10px;">
+                    <div role="tabpanel" class="tab-pane tabPanel active" ng-if="bTabActiveId == 'AdjustCustomer'">
+                        <form>
+                            <div class="row form-group">
+                                <div class="col-md-10">
+                                    <label>Adjust From Customer</label>
+                                    <div class="adjustmentBottomBorder">{{newAdjustment.adjustmentContent.Customer}}</div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-10">
+                                    <label>Adjust To Customer <span style="color: red;">*</span></label>
+                                    <organization-auto-complete name="customer" tag="Customer" ng-model="newAdjustment.adjustTo"
+                                                                required ></organization-auto-complete>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane tabPanel active" ng-if="bTabActiveId == 'AdjustTitle'">
+                        <form>
+                            <div class="row form-group">
+                                <div class="col-md-10">
+                                    <label>Adjust From Title</label>
+                                    <div class="adjustmentBottomBorder">{{newAdjustment.adjustmentContent.Title}}</div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-10">
+                                    <label>Adjust To Title <span style="color: red;">*</span></label>
+                                    <organization-auto-complete name="title" tag="Title" ng-model="newAdjustment.adjustTo"
+                                                                required ></organization-auto-complete>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane tabPanel active" ng-if="bTabActiveId == 'AdjustStatus'">
+                        <form>
+                            <div class="row form-group">
+                                <div class="col-md-10">
+                                    <label>Adjust From Status <span style="color: red;">*</span></label>
+
+                                    <ui-select ng-model="newAdjustment.adjustFrom" required on-select="getQTY()">
+                                        <ui-select-match>
+                                            <span ng-bind="$select.selected"></span>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="item in qualitys | filter: $select.search">
+                                            <b>{{item}}</b>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-10">
+                                    <label>Adjust To Status <span style="color: red;">*</span></label>
+
+                                    <ui-select ng-model="newAdjustment.adjustTo" required>
+                                        <ui-select-match>
+                                            <span ng-bind="$select.selected"></span>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="item in qualitys | filter: $select.search">
+                                            <b>{{item}}</b>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane tabPanel active" ng-if="bTabActiveId == 'MoveLocation'">
+                        <form>
+                            <div class="row form-group">
+                                <div class="col-md-10">
+                                    <label>Adjust From Location</label>
+                                    <div class="adjustmentBottomBorder">{{newAdjustment.adjustmentContent.Location}}</div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-10">
+                                    <label>Adjust To Location <span style="color: red;">*</span></label>
+                                    <location-auto-complete ng-model="newAdjustment.adjustTo" required name="location"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane tabPanel active" ng-if="bTabActiveId == 'adjustLotNo'">
+                        <form>
+                            <div class="row form-group">
+                                <div class="col-md-10">
+                                    <label>Adjust From Lot No.</label>
+                                    <div class="adjustmentBottomBorder">{{newAdjustment.batchAdjustLotNo}}</div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-10">
+                                    <label>Adjust To Lot No.<span style="color: red;">*</span></label>
+                                    <input type="text" class="form-control" required
+                                           ng-model="newAdjustment.adjustTo" placeholder="Enter Text" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane tabPanel active" ng-if="bTabActiveId == 'adjustExpDate'">
+                        <form>
+                            <div class="row form-group">
+                                <div class="col-md-10">
+                                    <label>Adjust From Expiration Date.</label>
+                                    <div class="adjustmentBottomBorder">{{newAdjustment.batchAdjustExpDate | amDateFormat:'YYYY-MM-DD'}}</div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-10">
+                                    <label>Adjust To Expiration Date.<span style="color: red;">*</span></label>
+                                    <lt-date-time value="newAdjustment.adjustTo"  date-format="yyyy-mm-dd" min-view="2" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane tabPanel active" ng-if="bTabActiveId == 'adjustMfgDate'">
+                        <form>
+                            <div class="row form-group">
+                                <div class="col-md-10">
+                                    <label>Adjust From Mfg Date.</label>
+                                    <div class="adjustmentBottomBorder">{{newAdjustment.batchAdjustMfgDate  | amDateFormat:'YYYY-MM-DD'}}</div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-10">
+                                    <label>Adjust To Mfg Date.<span style="color: red;">*</span></label>
+                                    <lt-date-time value="newAdjustment.adjustTo"  date-format="yyyy-mm-dd" min-view="2"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane tabPanel active" ng-if="bTabActiveId == 'adjustShelfLifeDays'">
+                        <form>
+                            <div class="row form-group">
+                                <div class="col-md-10">
+                                    <label>Adjust From Shelf Life Days.</label>
+                                    <div class="adjustmentBottomBorder">{{newAdjustment.batchAdjustShelfLifeDays}}</div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-10">
+                                    <label>Adjust To Shelf Life Days.<span style="color: red;">*</span></label>
+                                    <input type="number" class="form-control" required
+                                           ng-model="newAdjustment.adjustTo" placeholder="Enter Days" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-md-4" style="padding: 0px;">
+                    <ul class="nav nav-tabs tabs-right" role="tablist"
+                        style="width: 100%; float: right; margin-bottom: 0px; background: #EFEFEF;">
+                        <li role="presentation">
+                            <a role="tab" data-toggle="tab" style="width: 5px;"> </a>
+                        </li>
+
+                        <li role="presentation" ng-class="{'active':bTabActiveId == 'AdjustCustomer'}">
+                            <a role="tab" data-toggle="tab" title="True Adjustment" ng-click="bTabActive('AdjustCustomer')" style="color: red;">Adjust Customer</a>
+                        </li>
+
+                        <li role="presentation" ng-class="{'active':bTabActiveId == 'AdjustTitle'}">
+                            <a role="tab" data-toggle="tab" title="True Adjustment" ng-click="bTabActive('AdjustTitle')" style="color: red;">Adjust Title</a>
+                        </li>
+
+                        <li role="presentation" ng-class="{'active':bTabActiveId == 'AdjustStatus'}">
+                            <a role="tab" data-toggle="tab" title="True Adjustment" ng-click="bTabActive('AdjustStatus')" style="color: red;">Adjust Status</a>
+                        </li>
+                        <li role="presentation" ng-class="{'active':bTabActiveId == 'MoveLocation'}">
+                            <a role="tab" data-toggle="tab" title="Temp Adjustment" ng-click="bTabActive('MoveLocation')">Move Location</a>
+                        </li>
+                        <li role="presentation" ng-class="{'active':bTabActiveId == 'adjustLotNo'}">
+                            <a role="tab" data-toggle="tab" title="Batch Adjust Lot No." ng-click="bTabActive('adjustLotNo')">Adjust Lot No.</a>
+                        </li>
+                        <li role="presentation" ng-class="{'active':bTabActiveId == 'adjustExpDate'}">
+                            <a role="tab" data-toggle="tab" title="Batch Adjust Expiration Date" ng-click="bTabActive('adjustExpDate')">Adjust Expiration Date</a>
+                        </li>
+                        <li role="presentation" ng-class="{'active':bTabActiveId == 'adjustMfgDate'}">
+                            <a role="tab" data-toggle="tab" title="Batch Adjust Mfg Date" ng-click="bTabActive('adjustMfgDate')">Adjust Mfg Date</a>
+                        </li>
+                        <li role="presentation" ng-class="{'active':bTabActiveId == 'adjustShelfLifeDays'}">
+                            <a role="tab" data-toggle="tab" title="Batch Adjust Shelf Life Days" ng-click="bTabActive('adjustShelfLifeDays')">Adjust Shelf Life Days</a>
+                        </li>
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

@@ -1,0 +1,25 @@
+<md-dialog flex="60">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Cancel Receipt: {{receipt.id}}</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content style="overflow: hidden; padding: 20px 0px;">
+        <form novalidate name="editForm" novalidate ng-submit="editForm.$valid && submit()">
+            <div style="padding: 0px 20px;">
+                <div class="row form-group">
+                    <div class="col-md-2" style="text-align: right;">Reason:</div>
+                    <div class="col-md-8">
+                        <input-validation-message field="reason" form="editForm"></input-validation-message>
+                        <textarea name="reason" class="form-control" rows="3" required="true" ng-model="resonInfo.reason"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-self-actions" style="padding: 20px 75px 0px 0px; margin-top:20px; height: 50px; border-top: 1px solid #ddd;">
+                <div style="float: left; color: red; width: 450px; text-align: left; padding-left: 20px;">{{ errorMsg }}</div>
+                <waitting-btn type="submit" btn-class="btn blue" value="'Save'" is-loading="saving"></waitting-btn>
+                <button type="button" class="btn default" ng-click="closeDialog()">Cancel</button>
+            </div>
+        </form>
+    </md-dialog-content>
+</md-dialog>

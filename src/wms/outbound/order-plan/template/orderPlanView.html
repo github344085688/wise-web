@@ -1,0 +1,265 @@
+<div ng-if="isLoading" class="text-center">
+    <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+</div>
+<div  ng-if="!isLoading">
+    <div class="grid-100 grid-content row" style="overflow: hidden; padding-bottom: 50px;">
+        <div class="grid-parent grid-100 container">
+            <div class="grid-10"></div>
+            <h1 class="section-label pull-left">Order Plan ID: {{orderPlan.id}}</h1>
+            <div permission-check="{{'outbound::orderPlan_write'}}">
+               <unis-waitting-btn type="button" btn-class="grid-25 ripplelink pull-right button-between"
+                    ng-if=" (allowCreatePickTaskWithoutPickStrategy && orderPlan.status == 'Building')"
+                    ng-click="createTaskWithoutPickStrategy(orderPlan.id)"
+                    value="'Create Task Without Pick Strategy'"
+                    is-loading="createTaskLoading"></unis-waitting-btn>
+                <unis-waitting-btn type="button" btn-class="grid-15 ripplelink pull-right button-between"
+                        ng-if="orderPlan.status == 'Pick Suggested'"
+                        ng-click="createTask(orderPlan.id)"
+                        value="'Create Task'"
+                        is-loading="createTaskLoading"></unis-waitting-btn>
+                <unis-waitting-btn type="button" btn-class="grid-15 ripplelink pull-right button-between"
+                                 ng-if="orderPlan.status == 'Building'"
+                                 ng-click="pickStrategies(orderPlan.id)"
+                                 value="'Create Pick Strategy'"
+                                 is-loading="createPickStrategyLoading"></unis-waitting-btn>
+                <unis-waitting-btn type="button" btn-class="grid-15 ripplelink pull-right button-between"
+                        ng-if="orderPlan.status == 'Task Created'" value="'Schedule'"
+                        ng-click="schedule(orderPlan.id)"
+                        is-loading="scheduleLoading"></unis-waitting-btn>
+                <unis-waitting-btn type="button" btn-class="grid-15 ripplelink pull-right button-between"
+                        ng-if="orderPlan.status == 'Task Created' || orderPlan.status == 'Scheduled'"
+                        ng-click="release(orderPlan.id)"
+                        value="'Release'"
+                        is-loading="releaseLoading"></unis-waitting-btn>
+                <unis-waitting-btn type="button" btn-class="grid-15 ripplelink pull-right button-between"
+                        ng-if="orderPlan.status == 'Pick Suggested' || orderPlan.status == 'Task Created' || orderPlan.status == 'Scheduled'"
+                        value="'Roll Back'"
+                        is-loading="rollbackLoading"
+                        ng-click="rollback(orderPlan.id)" ></unis-waitting-btn>
+                <button type="button" class="grid-15 ripplelink pull-right"
+                        ng-if="orderPlan.status == 'Building'"
+                        ng-click="editOrderPlan(orderPlan.id)">Edit Order Plan</button>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <b style="float: left; margin-right: 10px; margin-left: 10px;">Default Pick Type: </b>
+                <ui-select ng-if="orderPlan.status == 'Building' || orderPlan.status == 'Pick Suggested'"
+                           name="pickType" ng-model="orderPlan.pickType" style="float: left; width: 160px;">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in pickTypes | filter: $select.search"
+                                       refresh="getPickTypes()" refresh-delay="50">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+                <span ng-if="orderPlan && orderPlan.status != 'Building' && orderPlan.status != 'Pick Suggested'">
+                    {{orderPlan.pickType}}
+                </span>
+            </div>
+            <div class="grid-25">
+                <span><b>Default Pick Way: </b>{{orderPlan.pickWay}}</span>
+            </div>
+            <div class="grid-25">
+                <span><b>Default Assignee: </b>{{orderPlan.assignee.firstName}} {{orderPlan.assignee.lastName}}</span>
+            </div>
+            <div class="grid-25">
+                <span><b>Status: </b>{{orderPlan.status}}</span>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <span class="grid-25"><b>Schedule Time: </b>{{orderPlan.scheduleTime | amDateFormat:'YYYY-MM-DD'}}</span>
+            <span class="grid-25"><b>Create Time: </b>{{orderPlan.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                &nbsp;<span ng-if="orderPlan.createdBy">({{orderPlan.createdBy}})</span></span>
+            <span class="grid-25"><b>Update Time: </b>{{orderPlan.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                &nbsp;<span ng-if="orderPlan.updatedBy">({{orderPlan.updatedBy}})</span></span>
+            <div class="grid-25">
+                <span><b>Enable Auto Group Pick Stragety: </b>{{orderPlan.enableAutoGroupPickStragety ? 'Yes' : 'No'}}</span>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container" style="margin-top: 10px;">
+            <span class="grid-25"><b>Customer: </b>{{orderPlan.customerName}}</span>
+            <span class="grid-60"><b>Orders: </b><span ng-repeat="orderId in orderPlan.orderIds track by $index">
+                    <a href="{{'#/wms/outbound/order/' + orderId}}" target="_blank">{{orderId}}</a> &nbsp;
+                </span></span>
+        </div>
+    </div>
+</div>
+<div ng-if="orderPlan.status === 'Building' || orderPlan.status === 'Pick Suggested'">
+    <div class="grid-100 grid-content row" style=" position: relative;"
+         ng-repeat="group in groups track by $index" ng-init="groupIndex=$index">
+        <div class="grid-100 grid-parent container">
+            <div style="font-size: 16px; display: block; float: left"><b>{{group.name}}<span ng-if="orderPlan.status == 'Pick Suggested'">&nbsp;&nbsp;|&nbsp;Estimated Weight:&nbsp;<span style="background-color:#f6f3e8; margin: 5px 5px;padding: 5px 10px;border-radius: 3px;">{{group.itemWeight?group.itemWeight:'0'}}&nbsp;(Pound)</span></span></b>
+                <span style="padding: 3px 10px 3px 10px; background-color: rgba(99, 174, 121, 0.29);"
+                ng-if="group.parentGroup">Split from {{group.parentGroup.name}}</span></div>
+            <div style="display: block; float: right">
+                <img class="btn-icon-delete" src="assets/img/Delete.png" alt="Delete" ng-if="group.parentGroup"
+                     style="width: 25px; height: 25px; margin-top: 0px;"
+                     ng-click="deleteSubGroup(group)"/>
+            </div>
+        </div>
+        <div class="grid-100 grid-parent container">
+            <div>
+            <span ng-repeat="item in orderPlan.groupItemLines.groupBy" style="margin-right:15px; float:left;">
+                <b>
+                    {{item== 'pickType' ? 'Pick Type' : ''}}
+                    {{item== 'locationGroupType' ? 'Location Group Type' : ''}}:
+                </b>&nbsp;{{group.itemLines[0][item]? group.itemLines[0][item] : 'N/A'}}&nbsp;&nbsp;&nbsp;
+            </span>
+            </div>
+            <div ng-if="orderPlan.status == 'Pick Suggested'">
+                <b style="margin-right: 10px; margin-left: 10px; float:left;">Pick Way:</b>
+                <ui-select ng-model="group.pickWay"
+                           style="width: 250px; float: left; margin-top: -5px;">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in pickWays | filter: $select.search"
+                                       refresh="getPickWays()" refresh-delay="50">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+                <b style="margin-right: 10px; margin-left: 10px; float:left;"> Planned Assignee:</b>
+                <user-auto-complete class="grid-20" name="plannedAssignee" allow-clear="true" limit='30' ng-model="group.plannedAssigneeUserId" style=" margin-top: -5px;"></user-auto-complete>
+                <b style="margin-right: 10px; margin-left: 10px; float:left;">Pick To Order:</b>
+                <md-switch  ng-disabled="group.pickToOrderIsDisabled" class="md-primary grid-10" aria-label="Pick To Order" ng-model="group.isPickToOrder" style="margin: -5px 0px 0px 0px;"></md-switch>
+                <b style="margin-right: 10px; margin-left: 10px; float:left;">Is Conveyor Pick:</b>
+                <md-switch class="md-primary grid-10" aria-label="Is Conveyor Pick" ng-model="group.isConveyorPick" style="margin: -5px 0px 0px 0px;"></md-switch>
+            </div>
+        </div>
+        <table class="table container">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th class="{{sortsClass[sorts['orderId' + $index]]}}"
+                     ng-click="sortClick('orderId', $index)">Order ID</th>
+                <th class="{{sortsClass[sorts['titleId' + $index]]}}"
+                    ng-click="sortClick('titleId', $index)">Title</th>
+                <th class="{{sortsClass[sorts['carrierId' + $index]]}}"
+                    ng-click="sortClick('carrierId', $index)">Carrier</th>
+                <th class="{{sortsClass[sorts['shipToAddress.name' + $index]]}}"
+                ng-click="sortClick('shipToAddress.name', $index)">Ship To</th>
+                <th class="{{sortsClass[sorts['itemSpecName' + $index]]}}"
+                    ng-click="sortClick('itemSpecName', $index)">Item</th>
+                <th>Unit</th>
+                <th>Qty</th>
+                <th>Base Qty</th>
+                <th class="{{sortsClass[sorts['locationName' + $index]]}}" ng-click="sortClick('locationName', $index)" ng-if="orderPlan.status == 'Pick Suggested'">Location</th>
+                <th class="{{sortsClass[sorts['virturalLocationGroupName' + $index]]}}" ng-click="sortClick('virturalLocationGroupName', $index)"
+                    ng-if="orderPlan.status == 'Pick Suggested'">Virtural Location Group</th>
+                <th class="{{sortsClass[sorts['pickStrategyWeight' + $index]]}}" ng-click="sortClick('pickStrategyWeight', $index)" ng-if="orderPlan.status == 'Pick Suggested'">Location Weight</th>
+                <th ng-if="orderPlan.status == 'Pick Suggested'"  class="{{sortsClass[sorts['topNum' + $index]]}}"
+                     ng-click="sortClick('topNum', $index)">Top Num</th>
+                <th ng-if="orderPlan.status == 'Pick Suggested'">LP</th>
+                <th>Location Group Type</th>
+                <th>Pick Type</th>
+                <th  ng-if="orderPlan.status == 'Pick Suggested'" data-toggle="popover" data-trigger="focus"
+                     data-content="And here's some amazing content. It's very engaging. Right?">
+                    <input type="checkbox" id="checkbox_{{group.name}}"  ng-click="toggleAll(group)"
+                           ng-checked="selectAllIsChecked(group)"
+                           ng-model="group.isChecked">
+                    <label class="checkbox" for="checkbox_{{group.name}}" ></label>
+                </th>
+                </tr>
+                </thead>
+                <tbody>
+                 <tr ng-repeat="itemLine in group.itemLines track by $index"
+                     ng-class="{'case-high-light':bgHighLight(itemLine)==='case-light','peice-high-light':bgHighLight(itemLine)==='peice-light'}" ng-click="checkWithShift($event,$index,group,groupIndex,orderPlan.status)" >
+                    <td>{{$index + 1}}</td>
+                    <td>{{itemLine.orderId}}</td>
+                    <td>{{itemLine.titleName}}</td>
+                     <td>{{itemLine.carrierName}}</td>
+                    <td>{{itemLine.shipToAddress.name}}({{itemLine.shipToAddress.storeNo}})</td>
+                    <td><item-display item="itemLine"></item-display></td>
+                    <td>{{itemLine.unitName}}</td>
+                    <td>{{itemLine.qty}}</td>
+                    <td>{{itemLine.baseQty}}</td>
+                    <!--<td>{{itemLine.palletQty}}</td>-->
+                    <td ng-if="orderPlan.status == 'Pick Suggested'">{{itemLine.locationName}}</td>
+                     <td ng-if="orderPlan.status == 'Pick Suggested'">{{itemLine.virturalLocationGroupName}}</td>
+                    <td ng-if="orderPlan.status == 'Pick Suggested'">{{itemLine.pickStrategyWeight}}</td>
+                    <td ng-if="orderPlan.status == 'Pick Suggested'">{{itemLine.topNum?itemLine.topNum:''}}</td>
+                    <td ng-if="orderPlan.status == 'Pick Suggested'">{{itemLine.lpId}}</td>
+                    <td>{{itemLine.locationGroupType}}</td>
+                    <td>{{itemLine.pickType}}</td>
+                    <td ng-if="orderPlan.status == 'Pick Suggested'" width="100px;">
+                        <input type="checkbox" id="checkbox_{{group.name}}_{{$index}}"  ng-click="toggle(group, itemLine,$event)"
+                               ng-model="itemLine.isChecked"  ng-checked="isChecked(group, itemLine)">
+                        <label class="checkbox" for="checkbox_{{group.name}}_{{$index}}" ></label>
+                        <img class="btn-icon-delete" src="assets/img/Delete.png" alt="Delete" ng-if="group.parentGroup"
+                             style="width: 25px; height: 25px; margin-left: 15px; margin-top: 0px;"
+                             ng-click="deleteItemLine(group, itemLine)"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        <div class="grid-parent grid-100 container" ng-if="orderPlan.status == 'Pick Suggested'">
+            <button type="button" class="ripplelink add grid-10 pull-right" ng-click="createGroup(group)"> Split To New Group
+            </button>
+            <button type="button" class="ripplelink add grid-15 pull-right" style="margin-right: 5px;"
+                    ng-repeat="subGroup in group.subGroups"
+                    ng-click="assingItemLinesToGroup(group, subGroup)"> Move To {{subGroup.name}}
+            </button>
+        </div>
+    </div>
+    <div  style="width: 100%;  text-align: right; " popup-menu>
+        <div class="menu-wrap">
+            <div style="color: #909452; text-align: left;">Selected Pick ItemLine Summary</div>
+            <div class="link-list">
+                <div ng-repeat="(key, value) in summaryUnitsMap">
+                    <span style="color: #8e44ad;font-size: 16px;margin-left: -10px;">{{key}}</span>
+                    <span>
+                         <span style="display:block; width:80px; text-align: right; float:left; margin-right:5px; color: #3b738a;">Selected:</span>
+                         <span ng-repeat="unit in value.selected">{{unit.key + ":" +  unit.value}}
+                         <span style="padding-right:10px; " ng-if='!$last'>&nbsp;</span></span>
+                    </span>
+                    <span>
+                         <span style="display:block; width:80px; text-align: right; float:left; margin-right:5px; color: #3b738a;">Remaining:&nbsp;</span>
+                         <span ng-repeat="unit in value.remaining" style="width: 50px;">{{unit.key + ":" +  unit.value}}
+                         <span style="padding-right:10px; " ng-if='!$last'>&nbsp;</span></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="menu-button">Show</div>
+    </div>
+</div>
+
+
+<div ng-if="orderPlan && orderPlan.status != 'Building' && orderPlan.status != 'Pick Suggested'">
+    <div class="grid-content grid-100">
+        <div class="grid-100 grid-parent">
+            <div class="grid-parent grid-100 container" style="margin-top: 30px;">
+                <div class="tab-container">
+                    <ul>
+                        <li data-tab-title="Section 1" ng-class="{'active':activetab == 'pickTask'}"
+                            ng-click="changeTab('pickTask')"> Pick Tasks ({{pickTaskCount}})</li>
+                        <li data-tab-title="Section 2" ng-class="{'active':activetab == 'ccTask'}"
+                            ng-click="changeTab('ccTask')"> CC Tasks ({{ccTaskCount}})</li>
+                        <li data-tab-title="Section 3" ng-class="{'active':activetab == 'replenishmentTask'}"
+                            ng-click="changeTab('replenishmentTask')" style="width: 200px;"> Replenishment Tasks ({{replenishmentTaskCount}})</li>
+                    </ul>
+                </div>
+            </div>
+            <div ng-class="{'active':activetab == 'pickTask'}" class="grid-100 tab-content" id="section1">
+                <div class="grid-100 grid-parent" style="margin-bottom: 30px;"
+                     ng-include="'wms/outbound/order-plan/template/pickTask.html'"
+                     ng-repeat="task in pickTasks"></div>
+            </div>
+            <div ng-class="{'active':activetab == 'ccTask'}" class="grid-100 tab-content" id="section2">
+                <div class="grid-100 grid-parent" style="margin-bottom: 30px;"
+                     ng-include="'wms/outbound/order-plan/template/ccTask.html'"
+                     ng-repeat="task in ccTasks"></div>
+            </div>
+            <div ng-class="{'active':activetab == 'replenishmentTask'}" class="grid-100 tab-content" id="section3">
+                <div class="grid-100 grid-parent" style="margin-bottom: 30px;"
+                     ng-include="'wms/outbound/order-plan/template/replenishmentTask.html'"
+                     ng-repeat="task in replenishmentTasks"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

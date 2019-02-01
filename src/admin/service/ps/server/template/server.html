@@ -1,0 +1,134 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Admin</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Service</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Print</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Print Server Management</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> Print Server Management </span>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <form novalidate name="serverForm">
+                    <div class="row form-group">
+                        <div class="col-md-4">
+                            <label class="bold">Server Name:</label>
+                            <div class="input-icon right" ng-show="serverForm.name.$invalid && (serverForm.$submitted || serverForm.name.$touched)">
+                                <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                        <span class="lt-tooltip-text">Required</span>
+                                    </i>
+                            </div>
+                            <input type="text" name="name" class="form-control" ng-model="server.serverName" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="bold">Warehouse:</label>
+                            <div class="input-icon right" ng-show="serverForm.warehouse.$invalid && (serverForm.$submitted || serverForm.ip.$touched)">
+                                <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                        <span class="lt-tooltip-text">Required</span>
+                                    </i>
+                            </div>
+                            <input type="text" name="warehouse" class="form-control" ng-model="server.warehouseId" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="bold">Protocol:</label>
+                            <input type="text" name="protocol" class="form-control" ng-model="server.protocol">
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-4">
+                            <label class="bold">IP:</label>
+                            <div class="input-icon right" ng-show="serverForm.ip.$invalid && (serverForm.$submitted || serverForm.ip.$touched)">
+                                <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                        <span class="lt-tooltip-text">Required</span>
+                                    </i>
+                            </div>
+                            <input type="text" name="ip" class="form-control" ng-model="server.serverIP" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="bold">Port:</label>
+                            <div class="input-icon right" ng-show="serverForm.port.$invalid && (serverForm.$submitted || serverForm.port.$touched)">
+                                <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                        <span class="lt-tooltip-text">Required</span>
+                                    </i>
+                            </div>
+                            <input type="number" name="port" class="form-control" ng-model="server.port" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="bold">URL Prefix:</label>
+                            <input type="text" name="port" class="form-control" ng-model="server.urlPrefix">
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <label class="bold">Description:</label>
+                            <input type="text" name="description" class="form-control" ng-model="server.description">
+                        </div>
+                    </div>
+                    <div class="row form-actions right">
+                        <waitting-btn type="submit" btn-class="btn blue" permission-check="{{'service::print_write'}}"
+                                      ng-click="serverForm.$valid && submit()" value="'submit'" is-loading="loading"></waitting-btn>
+
+                    </div>
+                </form>
+                <div class="panel non-border non-gutter bottom">
+                    <div class="panel-heading header-primary">
+                        <h3 class="panel-title">Print Server Result<input type="text" ng-model="searchText" class="form-control input-circle" placeholder="Enter text"></h3>
+                    </div>
+                    <div class="panel-body non-gutter bottom">
+                        <div>
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Server Name</th>
+                                        <th>Warehouse</th>
+                                        <th>Protocol</th>
+                                        <th>IP</th>
+                                        <th>Port</th>
+                                        <th>URL Prefix</th>
+                                        <th>Status</th>
+                                        <th>Description</th>
+                                        <th permission-check="{{'service::print_write'}}">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="server in servers | filter:searchText">
+                                        <td><a ng-click="toUpdate(server)">{{server.serverName}}</a></td>
+                                        <td>{{server.warehouseId}}</td>
+                                        <td>{{server.protocol}}</td>
+                                        <td>{{server.serverIP}}</td>
+                                        <td>{{server.port}}</td>
+                                        <td>{{server.urlPrefix}}</td>
+                                        <td>{{server.status}}</td>
+                                        <td>{{server.description}}</td>
+                                        <!-- <td permission-check="{{'service::print_write'}}"><a ng-click="delete(server.id)">delete</a></td> -->
+                                        <td permission-check="{{'service::print_write'}}">
+                                            <a ng-click="activeOrInactive(server,'Active')" ng-if="server.status==='Inactive'">Active</a>
+                                            <a ng-click="activeOrInactive(server,'Inactive')" ng-if="server.status==='Active'">Inactive</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

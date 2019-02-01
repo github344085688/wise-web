@@ -1,0 +1,74 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label">Pick Detail Report</h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label>Customer:<span style="color: red;">*</span></label>
+                <organization-auto-complete name="customer" ng-model="search.customerId" tag="Customer" required="true"></organization-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label>TaskID:</label>
+                <input type="text" class="form-control" input-auto-fill="TASK-" ng-model="search.taskId" ng-keyup="keyUpSearch($event)"/>
+            </div>
+            <div class="grid-25">
+                <label>OrderId:</label>
+                <input type="text" class="form-control" input-auto-fill="DN-" ng-model="search.orderId" ng-keyup="keyUpSearch($event)"/>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label>Pick Date From:</label>
+                <lt-date-time value="search.timeFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+            <div class="grid-25">
+                <label>Pick Date To:</label>
+                <lt-date-time value="search.timeTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+            <div class="grid-25">
+                <label>Shipped Time From:</label>
+                <lt-date-time value="search.shippedTimeFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+            <div class="grid-25">
+                <label>Shipped Time To:</label>
+                <lt-date-time value="search.shippedTimeTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-60">&nbsp;</div>
+            <div class="grid-20">
+                <waitting-btn type="button" is-loading="searching" btn-class="ripplelink" ng-click="searchByPaging()" value="'Search'"></waitting-btn>
+            </div>
+            <div class="grid-20">
+                <waitting-btn type="button" is-loading="exporting" btn-class="ripplelink" ng-click="export()" value="'Export'"></waitting-btn>
+            </div>
+        </div>
+
+
+        <div class=" grid-parent grid-100 container">
+            <div class="grid-parent grid-100 container" style="width: 100%; overflow-x: auto;">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th ng-repeat="head in reportHead"> {{head}} </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="report in reportData">
+                        <td ng-repeat="head in reportHead"> {{report[head]}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageSize" load-content="searchByPaging(currentPage)"> </unis-pager>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,351 @@
+<div class="row step-lines">
+    <div class="col-lg-4 step-line"></div>
+    <div class="col-lg-4 step-line"></div>
+    <div class="col-lg-4"></div>
+</div>
+<div class="row step-body">
+    <div class="portlet light box-shadow-none">
+        <div class="portlet-body form form-horizontal" style="padding-left: 5px;">
+            <div ng-show="!isLoadingComplete" class="text-center">
+                <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+            </div>
+            <!--<div class="row" ng-show="selectedTaskDocks.length > 1">
+                <table style="width: 100%; margin-bottom: 10px;">
+                    <tr>
+                        <td></td>
+                        <td style="width: 270px;">
+                            <i class="fa fa-question-circle tooltips lt-tooltip">
+                                <span class="lt-tooltip-text">The dock to go first when multiple docks are involved</span>
+                            </i>
+                            <label class="label-control bold" style="margin-top: 7px">
+                                Entry Dock (
+                                <span class="font-blue">Select dock to go first</span>
+                                ):
+                            </label>
+                        </td>
+                        <td style="width: 250px;">
+                            <ui-select ng-model="entry.dockId" name="keyword" placeholder="Dock Id">
+                                <ui-select-match placeholder="Select a dock to go first">
+                                    {{$select.selected.name}} : {{$select.selected.dockStatus}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="dock.id as dock in selectedTaskDocks">
+                                    <div class="row select-load-receipt-head" ng-show="$index == 0" style="padding: 3px;">
+                                        <div class="col-md-6 bold">
+                                            Dock Name
+                                        </div>
+                                        <div class="col-md-6 bold">
+                                            Status
+                                        </div>
+                                    </div>
+                                    <div class="row form-group" style="padding: 0px; margin: 0px;">
+                                        <div class="col-md-6">
+                                            {{dock.name}}
+                                        </div>
+                                        <div class="col-md-6">
+                                            {{dock.dockStatus}}
+                                        </div>
+                                    </div>
+                                </ui-select-choices>
+                                <ui-select-no-choice>
+                                    No Dock found !!!
+                                </ui-select-no-choice>
+                            </ui-select>
+                        </td>
+                        <td style="width: 20px;"></td>
+                    </tr>
+                </table>
+            </div>-->
+            <div class="row" ng-repeat="task in receiptTasks" style="padding-bottom: 15px;">
+                <fieldset class="bordered mt-element-ribbon">
+                    <div class="ribbon ribbon-shadow ribbon-color-primary uppercase">Company
+                        <span ng-show="task.receiptIds">: {{getReceipt(task.receiptIds[0]).companyName}}</span>
+                    </div>
+                    <div class="portlet light box-shadow-none">
+                        <div class="portlet-title task-head-style">
+                            <div class="caption">
+                                <span class="caption-subject bold" ng-show="task.id"> Receipt Task : {{task.id}} </span>
+                                <span class="caption-subject bold" ng-show="!task.id"> Receipt Task </span>
+                            </div>
+                        </div>
+                        <div class="portlet-body form form-horizontal">
+                            <div class="row form-group task-head-content-style">
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td style="width: 80px;">
+                                            <label class="bold">Status:</label>
+                                        </td>
+                                        <td style="width: 120px;">
+                                            <label>{{task.status || "New"}}</label>
+                                        </td>
+                                        <td style="width: 90px;">
+                                            <label class="bold">Assignee:</label>
+                                        </td>
+                                        <td style="width: 30%;">
+                                            <user-select-filter ng-model="task.plannedAssigneeUserId" on-select=""></user-select-filter>
+                                        </td>
+                                        <td style="width: 70px; text-align: center;">
+                                            <label class="bold">Dock:</label>
+                                        </td>
+                                        <td>
+                                            <dock-auto-complete ng-model="task.dockId" required="true"
+                                                                on-select="selectDock(dock, task)"></dock-auto-complete>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label class="bold">Description:</label></td>
+                                        <td colspan="5" style="padding-top: 5px;">
+                                            <textarea ng-model="task.description" rows="2" style="width: 100%;"></textarea>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                            <div ng-show="task.receiptIds">
+                                <div class="row form-group">
+                                    <div class="col-md-12">
+                                        <span class="bold">Receipts:</span>
+                                        <a style="float:right;padding-right:15px;" ng-click="viewOrCloseDetail(task, task.receiptIds)">{{viewOrClose}} All Items</a>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default bordered box-shadow-none" style="margin-left: 10px;" ng-repeat="receiptId in task.receiptIds" ng-init="receipt=getReceipt(receiptId)">
+                                    <div class="panel-heading" style="padding-bottom: 0;border-bottom:0;">
+                                        <div class="portlet light box-shadow-none">
+                                            <div class="portlet-title" style="margin-bottom: 0;min-height: 32px;">
+                                                <div class="caption">
+                                                    <span class="caption-subject bold">Receipt : {{receipt.id}}</span>
+                                                </div>
+                                                <div class="actions" style="padding-bottom: 6px;">
+                                                    <a href="javascript:;" ng-click="showIn($index, task)"> Show/Hide Items</a>
+                                                </div>
+                                            </div>
+                                            <div class="portlet-body">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <span class="bold">Bol: </span>{{receipt.bolNos}}
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <span class="bold">Company: </span>{{receipt.companyName}}
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <span class="bold">Customer: </span>{{receipt.customerName}}
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <span class="bold">Title: </span>{{receipt.titleName}}
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <span class="bold">Container: </span>{{receipt.containerNo}}
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <span class="bold">Reference No: </span>{{receipt.referenceNo}}
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <span class="bold">Purchase Order No.: </span>{{receipt.poNo}}
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <span class="bold">Appointment Time: </span>
+                                                        {{receipt.appointmentTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <span class="bold">Note: </span>{{receipt.note}}
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <label class="bold">Items: </label>
+                                                        <label>
+                                                            <ul class="list-unstyled list-inline">
+                                                                <li ng-repeat="itemline in receipt.itemLines">
+                                                                    <label ng-hide="$index==0">|</label>
+                                                                    <a target="_blank"><item-display item="itemline"></item-display></a>
+                                                                </li>
+                                                            </ul>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body" style="padding:0px">
+                                        <div class="panel-collapse collapse {{getIn($index, task)}}">
+                                            <div class="table-scrollable">
+                                                <table class="table table-striped table-bordered table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Item</th>
+                                                            <th>UOM</th>
+                                                            <th>QTY</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="item in receipt.itemLines">
+                                                            <td><item-display item="item"></item-display></td>
+                                                            <td>{{item.unitName}}</td>
+                                                            <td>{{item.qty}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="row" ng-repeat="task in loadTasks" style="padding-bottom: 15px;">
+                <fieldset class="bordered mt-element-ribbon">
+                    <div class="ribbon ribbon-shadow ribbon-color-primary uppercase">Company
+                        <span ng-show="task.loadIds">: {{getLoad(task.loadIds[0]).companyName}}</span>
+                    </div>
+                    <div class="portlet light box-shadow-none">
+                        <div class="portlet-title task-head-style">
+                            <div class="caption">
+                                <span class="caption-subject bold" ng-show="task.id"> Load Task : {{task.id}} </span>
+                                <span class="caption-subject bold" ng-show="!task.id"> Load Task </span>
+                            </div>
+                        </div>
+                        <div class="portlet-body form form-horizontal">
+                            <div class="row form-group task-head-content-style">
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td style="width: 80px;">
+                                            <label class="bold">Status:</label>
+                                        </td>
+                                        <td style="width: 120px;">
+                                            <label>{{task.status || "New"}}</label>
+                                        </td>
+                                        <td style="width: 90px;">
+                                            <label class="bold">Assignee:</label>
+                                        </td>
+                                        <td style="width: 30%;">
+                                            <user-select-filter ng-model="task.plannedAssigneeUserId" on-select=""></user-select-filter>
+                                        </td>
+                                        <td style="width: 70px; text-align: center;">
+                                            <label class="bold">Dock:</label>
+                                        </td>
+                                        <td>
+                                            <dock-auto-complete ng-model="task.dockId" required="true" load-ids="{{loadTasks[0].loadIds}}"
+                                                                on-select="selectDock(dock, task)"></dock-auto-complete>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label class="bold">Task Description:</label></td>
+                                        <td colspan="5" style="padding-top: 5px;">
+                                            <textarea ng-model="task.description" rows="2" style="width: 100%;"></textarea>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                            <div ng-show="task.loadIds">
+                                <div class="row form-group">
+                                    <div class="col-md-12">
+                                        <span class="bold">Loads:</span>
+                                        <a style="float:right;padding-right:15px;" ng-click="viewOrCloseDetail(task, task.loadIds)">{{viewOrClose}} All Orders</a>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default bordered box-shadow-none" style="margin-left: 10px;" ng-repeat="loadId in task.loadIds" ng-init="load=getLoad(loadId)">
+                                    <div class="panel-heading" style="padding-bottom: 0;border-bottom:0;">
+                                        <div class="portlet light box-shadow-none">
+                                            <div class="portlet-title" style="margin-bottom: 0;min-height: 32px;">
+                                                <div class="caption">
+                                                    <span class="caption-subject bold"> Load : {{load.id}}</span>
+                                                </div>
+                                                <div class="actions" style="padding-bottom: 6px;">
+                                                    <a href="javascript:;" ng-click="showIn($index, task)"> Show/Hide Orders</a>
+                                                </div>
+                                            </div>
+                                            <div class="portlet-body">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <span class="bold">Load No: </span>{{load.loadNo}}
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <span class="bold">Company: </span>{{load.companyName}}
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <span class="bold">Customer: </span>{{load.customerName}}
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <span class="bold">Status: </span>{{load.status}}
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <span class="bold">Appointment Time: </span>
+                                                        {{load.appointmentTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <span class="bold">Note: </span>{{load.note}}
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <span class="bold">Load Type: </span>{{load.type}}
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <label class="bold">Orders:</label>
+                                                        <label>
+                                                            <ul class="list-unstyled list-inline">
+                                                                <li ng-repeat="order in loadOrderLineMap[loadId]">
+                                                                    <label ng-hide="$index==0"> | </label>
+                                                                    <a target="_blank"> {{order.id}} </a>
+                                                                </li>
+                                                            </ul>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body" style="padding:0px">
+                                        <div id="collapseThree" class="panel-collapse collapse {{getIn($index, task)}}">
+                                            <div class="row" style="padding-left: 30px; padding-right:30px;">
+                                                <table class="table table-striped table-bloaded table-hover table-checkable order-column dataTable no-footer" role="grid">
+                                                    <thead>
+                                                        <th>Order</th>
+                                                        <th>Status</th>
+                                                        <th>Customer</th>
+                                                        <th>Reference</th>
+                                                        <th>Purchase Order No.</th>
+                                                        <th>Ship to</th>
+                                                        <th>Appointment</th>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="order in loadOrderLineMap[loadId]">
+                                                            <td>{{order.id}}</td>
+                                                            <td>{{order.status}}</td>
+                                                            <td>{{order.customerName}}</td>
+                                                            <td>{{order.referenceNo}}</td>
+                                                            <td>{{order.poNos}}</td>
+                                                            <td>{{order.shipTo}}</td>
+                                                            <td>{{order.appointmentTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="row form-actions right">
+                <!--<label ng-show="isWaitDock()" class="font-red" style="margin-right: 10px;">{{waitingMesg}} </label>-->
+                <label ng-show="isDockTheCheckinedDock()" class="font-blue" style="margin-right: 10px;">
+                    Dock:{{entry.dock.name}} is occupied by this entry.
+                </label>
+
+                <waitting-btn type="submit" btn-class="btn blue" ng-disabled="isCheckedOut()"
+                              ng-click="waitingConfirm()"
+                              value="'Wait'" is-loading="waitLoading"></waitting-btn>
+
+                <waitting-btn type="submit" btn-class="btn blue" ng-disabled="isCheckedOut(true)"
+                              ng-click="checkin()"
+                              value="'Check In'" is-loading="checkinLoading"></waitting-btn>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+
+<input name="{{name}}" ng-model="inputValue"  type="text" style="margin-bottom: 0" ng-change="refreshOptions()" ng-blur="hideList()" ng-focus="showList()">
+<ul style="position: absolute;float: left;z-index:999999" ng-class="{hide: orgs.length < 1}"  class="ui-menu ui-widget ui-widget-content ui-autocomplete ui-front">
+    <li class="ui-menu-item" ng-repeat='org in orgs | filter: ngModel'>
+        <div  class="ui-menu-item-wrapper"  ng-mousedown="selectItem(org)">{{org.name}}</div>
+    </li>
+</ul>

@@ -1,0 +1,97 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Task</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Plug in Step Into Task</a>
+        </li>
+    </ul>
+</div>
+<div class="portlet light bordered" style="margin: 15px">
+    <div class="portlet-body form">
+        <form name="searchForm" novalidate ng-submit="searchForm.$valid && searchTasks()">
+            <div class="row" style="margin-top:30px; margin-bottom: 30px;">
+                <div class="col-md-8">
+                    <label class="control-label" style="float: left; margin-top: 6px;">
+                        <b>Task:&nbsp;&nbsp; </b>
+                    </label>
+                    <div>
+                        <input-validation-message field="taskIds" form="searchForm"></input-validation-message>
+                        <lt-tags-input name="taskIds" ng-model="search.taskIds" fill="TASK-" required
+                                    placeholder="Enter Task ID" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <waitting-btn type="Submit" btn-class="btn blue"
+                                  value="'Search Tasks To Plugin'" is-loading="searchLoading"></waitting-btn>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="control-label">
+                        <b><span ng-show="taskType">{{taskType}}&nbsp;</span>Tasks to plug in :</b>
+                        <span ng-repeat="task in tasks">{{task.id}}&nbsp;</span>
+                        <span ng-hide="tasks.length > 0">None</span>
+                    </label>
+                </div>
+            </div>
+        </form>
+        <HR SIZE=7>
+        <div class="form-group row" id="dragContainer" style="padding-top:30px;">
+            <div class="col-md-6 sortable-list">
+                <div class="form-group">
+                     <label class="control-label"><b>General Steps</b></label>
+                     <a style="float:right; font-size: 16px;" permission-check="{{'task::pluginStep_write'}}"
+                        ng-click="openCreateStepDialog(null)"><b>Add General Step</b>
+                     </a>
+                </div>
+                <ul data-as-sortable="generalStepsDragListener" data-ng-model="generalSteps">
+                    <li data-ng-repeat="step in generalSteps" data-as-sortable-item>
+                        <div data-as-sortable-item-handle>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <span class="sortable-item-item-text"> {{step.name}}</span>
+                                </div>
+                                <a class="btn" ng-click="openCreateStepDialog(step)"
+                                   style="box-shadow:none; float:right; margin-right:15px; padding:3px" >
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6 sortable-list" name="taskSteps">
+                <div class="form-group">
+                    <label class="control-label"><b>Steps of Task</b></label>
+                </div>
+                <ul data-as-sortable="taskStepsDragListener" data-ng-model="taskSteps" >
+                    <li data-ng-repeat="step in taskSteps" data-as-sortable-item>
+                        <div data-as-sortable-item-handle>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <span class="sortable-item-item-text" ng-show="!step.id"> {{step.name}}</span>
+                                    <span class="sortable-item-item-text" ng-show="step.id">{{step.name}}</span>
+                                </div>
+                                <a class="btn" ng-click="removeTaskStep($index)" ng-show="!step.stepType || step.stepType == 'Generic'"
+                                   style="box-shadow:none; float:right; margin-right:15px; padding:3px" >
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="form-group row" style="text-align: right; padding-right:15px; margin-top:15px;">
+            <waitting-btn type="button" btn-class="btn blue" ng-click="save()" permission-check="{{'task::pluginStep_write'}}"
+                          value="'Plug in Step'" is-loading="loading"></waitting-btn>
+        </div>
+    </div>
+</div>

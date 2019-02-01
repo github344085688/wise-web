@@ -1,0 +1,142 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Outbound</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Pack</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Order to Pack</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> Order to Pack </span>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <form>
+                    <div class="row form-group">
+                        <div class="col-md-3">
+                            <label>Customers:</label>
+                            <multiple-organization-auto-complete name="customer" ng-model="order.customerIds" tag="Customer"/>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Orders:</label>
+                            <lt-tags-input ng-model="order.orderIds" fill="DN-"></lt-tags-input>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Long Haul:</label>
+                            <ui-select ng-model="order.longHaulNo">
+                                <ui-select-match allow-clear="{{allowClear}}" placeholder="Enter Long Haul">
+                                    <div ng-bind="$select.selected.longHaulNo"></div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="item.longHaulNo as item in longHauls | filter: $select.search.longHaulNo"
+                                                   refresh="getLongHaulList($select.search)" refresh-delay="50">
+                                    <div ng-bind="item.longHaulNo"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                    <div class="row form-actions right">
+                        <button class="btn blue" ng-click="search()"> Search </button>
+                    </div>
+                </form>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject font-purple bold">Order Results</span>
+
+                        </div>
+                        <div class="actions">
+                            <button type="button" class="btn blue"
+                                    ng-click="groupOrderByShipTo()">Group order by ship to</button>
+                        </div>
+                    </div>
+                    <div ng-show="!searchCompleted" class="text-center">
+                        <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                    </div>
+                    <div class="portlet-body" ng-show="searchCompleted">
+
+                        <div  ng-click="toggleAll()">
+                            <input type="checkbox" ng-checked="selectAllIsChecked()" style="width: 20px; height: 20px;"/>
+                            <span style="font-size: 18px">select All</span>
+                        </div>
+                        <div class="row form-group" style="margin-left: 0px;margin-right: 0px" ng-repeat="order in ordersView">
+                            <div class="mt-element-ribbon bg-grey-steel" style="margin-bottom: 5px;padding-bottom: 5px;">
+                                <div class="ribbon ribbon-color-info uppercase" ng-click="toggle(order)">
+                                    <input type="checkbox" ng-checked="isChecked(order)"> {{order.id}}
+                                </div>
+                                <div class="ribbon-content">
+                                    <div class="row form-group">
+                                        <div class="col-md-3">
+                                            <label class="bold">Customer:</label>
+                                            <label> {{order.customerName}} </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="bold">Status:</label>
+                                            <label> {{order.status}} </label>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-12">
+                                            <label class="bold">Ship To:</label>
+                                            <label> {{order.shipToAddressStr}} </label>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-3">
+                                            <label class="bold">Store No:</label>
+                                            <label> {{order.shipToAddress.storeNo}}</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <span class="bold">LongHaulNo:</span>
+                                            <span ng-if="order.longHaulNo">{{order.longHaulNo.join(" | ")}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group" ng-repeat="itemLine in order.itemLines">
+                                        <div class="col-md-4">
+                                            <label class="bold">Item Name:</label>
+                                            <label><item-display item="itemLine"></item-display></label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="bold">Unit:</label>
+                                            <label> {{itemLine.unit.name}} </label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="bold">QTY:</label>
+                                            <label> {{itemLine.qty}} </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="bold">Item Note:</label>
+                                            <label> {{itemLine.note}} </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <pager total-count="orders.length" page-size="pageSize"  load-content="loadContent(currentPage)"></pager>
+                    </div>
+                </div>
+                <div class="row right form-actions" permission-check="{{'outbound::packOrder_write'}}" >
+                    <button class="btn blue" ng-click="batchCreateTaskByShipTo()">Batch Create Task By Ship To</button>
+                    <button class="btn blue" ng-click="createPackTask()">Create Task</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

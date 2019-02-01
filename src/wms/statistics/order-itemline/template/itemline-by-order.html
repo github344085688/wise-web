@@ -1,0 +1,102 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Order Line Item Statistics By Order</h1>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Status</label>
+                <ui-select  multiple name="status" ng-model="searchInfo.statuses">
+                    <ui-select-match>
+                        {{$item}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item  in statusList| filter: $select.search"
+                                       refresh="getStatusList($select.search)" refresh-delay="50">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Customer</label>
+                <organization-auto-complete allow-clear="true" ng-model="searchInfo.customerId"  name="customer" tag="Customer"></organization-auto-complete>
+            </div>
+
+            <div class="grid-25">
+                <label >Date Created From</label>
+                <lt-date-time value="searchInfo.createdWhenFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+            <div class="grid-25">
+                <label >Date Created To</label>
+                <lt-date-time value="searchInfo.createdWhenTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-50">
+                <label class="label-input">Long Haul</label>
+                <multiple-longhaul-auto-complete placeholder="Enter Long Haul" customer-id="searchInfo.customerId"
+                                                 ng-model="searchInfo.longHaulNos"></multiple-longhaul-auto-complete>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-60">&nbsp;</div>
+            <div class="grid-20">
+                <waitting-btn type="button" is-loading="exporting" btn-class="ripplelink" ng-click="export()" value="'Export'"></waitting-btn>
+            </div>
+            <div class="grid-20">
+                <unis-waitting-btn ng-type="button" btn-class="ripplelink"
+                               ng-click="searchAndAnalysis(searchInfo)"
+                               value="'Search'" is-loading="isLoading"></unis-waitting-btn>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <div class="grid-20">
+                <b>Total Line Item Count</b>: {{orderItemlineSummary.totalItemLineCount}}
+            </div>
+            <div class="grid-20">
+                <b>Total Order Count</b>: {{orderItemlineSummary.orderCount}}
+            </div>
+            <div class="grid-20">
+                <b>Total Case Count</b>: {{orderItemlineSummary.totalCsQty}}
+            </div>
+            <div class="grid-20">
+                <b>Total Each Count</b>: {{orderItemlineSummary.totalEaQty}}
+            </div>
+            <div class="grid-20">
+                <b>Total Weight</b>: {{orderItemlineSummary.totalWeight}}
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Order</th>
+                    <th>Itemline Count</th>
+                    <th>Case QTY</th>
+                    <th>Each QTY</th>
+                    <th>Weight</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="itemline in orderItemlineSummary.totalItemLines track by $index">
+                    <td>{{$index + 1}}</td>
+                    <td>{{itemline.orderId}}</td>
+                    <td>{{itemline.itemLineCount}}</td>
+                    <td>{{itemline.csQty}}</td>
+                    <td>{{itemline.eaQty}}</td>
+                    <td>{{itemline.weight}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+

@@ -1,0 +1,74 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">YMS</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Report</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Equipment Report</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="portlet light bordered">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject bold"> Equipment Report</span>
+            </div>
+        </div>
+        <div class="portlet-body form form-horizontal">
+            <div class="form-group">
+                <div class="col-md-4">
+                    <b>Yard Name:</b>
+                    <label>{{equipmentReport.yardName}}</label>
+                </div>
+                <div class="col-md-4">
+                    <b>Operator:</b>
+                    <label>{{equipmentReport.operator}}</label>
+                </div>
+                <div class="col-md-4">
+                    <b>Report Time:</b>
+                    <label>{{equipmentReport.reportPeriod}}</label>
+                </div>
+            </div>
+            <table class="table table-striped table-bordered table-hover">
+                <tr>
+                    <th>Equipment Type</th>
+                    <th>Equipment No.</th>
+                    <th>Carrier Mc/DOT</th>
+                    <th>Carrier</th>
+                    <th>Come In With Car</th>
+                    <th>Gate Check In Time</th>
+                    <th>Gate Check In Entry</th>
+                    <th>Current Status</th>
+                    <th>Leave With Cargo?</th>
+                    <th>Gate Check Out Time</th>
+                    <th>Gate Check Out Entry</th>
+                    <th>Hours Stay</th>
+                    <th>Current Resource Type</th>
+                    <th>Current Resource No.</th>
+                </tr>
+                <tr ng-repeat="reportLine in equipmentReport.reportLines">
+                    <td>{{reportLine.equipmentType}}</td>
+                    <td>{{reportLine.equipmentNo}}</td>
+                    <td>{{reportLine.carrierMCDot}}</td>
+                    <td>{{reportLine.carrierName}}</td>
+                    <td>{{reportLine.comeInWithCar}}</td>
+                    <td>{{reportLine.gateCheckInTime}}</td>
+                    <td>{{reportLine.gateCheckInentry}}</td>
+                    <td>{{reportLine.currentStatus}}</td>
+                    <td>{{reportLine.leaveWithCargo}}</td>
+                    <td>{{reportLine.gateCheckOutTime}}</td>
+                    <td>{{reportLine.gateCheckOutentry}}</td>
+                    <td>{{reportLine.hourStay}}</td>
+                    <td>{{reportLine.currentResourceType}}</td>
+                    <td>{{reportLine.currentResourceNo}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

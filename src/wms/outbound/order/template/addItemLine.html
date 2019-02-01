@@ -1,0 +1,212 @@
+<md-dialog flex="60">
+    <form novalidate name="addItemLineForm" class="form-horizontal">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{formTitle}}</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="" style="padding: 40px 40px 30px 14px;">
+        <div class="form-group">
+            <label class="control-label col-md-2" style="margin-bottom: 5px;">Item:</label>
+            <div class="col-md-7">
+                <input-validation-message field="itemSpec" form="addItemLineForm"></input-validation-message>
+                <itemspec-auto-complete ng-model="currentItem.itemSpecId"
+                                        on-select="itemSpecIdOnSelect(itemSpec)"
+                                        customer-id="customerId"
+                                        ext-param="{statuses:['Active', 'Discontinue']}"
+                                        tags=['Product']
+                                        required="true"
+                                        name="itemSpec"
+                                        ng-disabled="!isAddItemline && isUpdateItemLineDisabled('itemSpec')"/>
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 15px;">
+            <span class="col-md-2"></span>
+            <span class="col-md-5"><a ui-sref="fd.item.itemspec.edit" target="_blank">Setup New Item Spec</a></span>
+        </div>
+        <div class="item-line-diverse-container" ng-show="diverseFields && diverseFields.length>0">
+            <div class="form-group">
+                <div class="col-md-7" style="text-align: right;">
+                    <button type="button" class="btn default" ng-click="resetFilter()"
+                            ng-disabled="!isAddItemline && isUpdateItemLineDisabled('itemSpec')">Reset Filter</button>
+                </div>
+            </div>
+            <div class="form-group" ng-switch on="field.itemProperty.type" ng-repeat="field in diverseFields">
+                <label class="control-label col-md-2">{{field.itemProperty.name}}:</label>
+                <div class="col-md-5">
+                    <input-validation-message field="field.{{$index}}.value" form="addItemLineForm"></input-validation-message>
+                    <ui-select name="field.{{$index}}.value" ng-model="field.selectedProduct"
+                               ng-show="field.availableDiverseValues && field.availableDiverseValues.length>0"
+                               on-select="diverseValuesSelected(field)"
+                               ng-required="field.availableDiverseValues && field.availableDiverseValues.length>0"
+                               ng-disabled="!isAddItemline && isUpdateItemLineDisabled('itemSpec')">
+                        <ui-select-match>
+                            <div>{{$select.selected.value}} {{$select.selected.unit}}</div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="diverseObj in diverseValuesMap[field.propertyId] | filter: $select.search">
+                            <div>{{diverseObj.value}} {{diverseObj.unit}}</div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <div ng-show="!field.availableDiverseValues || field.availableDiverseValues.length == 0"
+                         style="margin-top:8px;">
+                        No product in the inventory
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Title:</label>
+            <div class="col-md-7">
+                <input-validation-message field="title" form="addItemLineForm"></input-validation-message>
+                <organization-auto-complete name="Title" on-select="titleOnSelect(org)" tag="Title"
+                                            ng-model="currentItem.titleId" required="true"
+                                            customer-id="customerId"
+                                            ng-disabled="!isAddItemline && isUpdateItemLineDisabled('title')"></organization-auto-complete>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Supplier:</label>
+            <div class="col-md-7">
+                <organization-auto-complete name="supplier" on-select="supplierOnSelect(org)"
+                                            tag="Supplier" allow-clear="true"
+                                            ng-model="currentItem.supplierId"
+                                            customer-id="customerId"
+                                            ng-disabled="!isAddItemline && isUpdateItemLineDisabled('supplier')"></organization-auto-complete>
+            </div>
+        </div>
+      
+        
+        <div class="form-group">
+            <label class="control-label col-md-2">UOM:</label>
+            <div class="col-md-7">
+                <input-validation-message field="unit" form="addItemLineForm"></input-validation-message>
+                <ui-select ng-model="currentItem.unit" name="unit" REQUIRED="true"
+                           ng-disabled="!isAddItemline && isUpdateItemLineDisabled('unit')" on-select="unitOnSelect($select.selected)">
+                    <ui-select-match>
+                        <span ng-bind="$select.selected.name"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="unit in itemSpecUnits | filter: $select.search">
+                        <span ng-bind="unit.name"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2 ">Qty:</label>
+            <div class="col-md-7 ">
+                <input-validation-message field="qty" form="addItemLineForm"></input-validation-message>
+                <input type="number" name="qty" class="form-control"
+                       ng-model="currentItem.qty" REQUIRED="true"
+                       ng-disabled="!isAddItemline && isUpdateItemLineDisabled('qty')"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2 ">Pallet Qty:</label>
+            <div class="col-md-7 ">
+                <input-validation-message field="palletQty" form="addItemLineForm"></input-validation-message>
+                <input type="number" name="palletQty" class="form-control"
+                       ng-model="currentItem.palletQty" 
+                       ng-disabled="!isAddItemline && isUpdateItemLineDisabled('palletQty')"/>
+            </div>
+        </div>
+    
+        <div class="form-group" ng-show="!isAddItemline">
+            <label class="control-label col-md-2">Adjusted Pallet Qty:</label>
+            <div class="col-md-7 ">
+                <input type="number" name="adjustedPalletQty"  ng-disabled="!isAddItemline && isUpdateItemLineDisabled('adjustedPalletQty')"
+                       class="form-control" ng-model="currentItem.adjustedPalletQty" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Total Insurance Amount:</label>
+            <div class="col-md-7 ">
+                <input name="currentItem.totalInsuranceAmount" class="form-control" ng-model="currentItem.totalInsuranceAmount" type="number" />
+            </div>
+        </div>
+        <div class="form-group" ng-show="!isAddItemline">
+            <label class="control-label col-md-2">Order Weight:</label>
+            <div class="col-md-7 ">
+                <input type="number" name="OrderWeight"  class="form-control" ng-model="currentItem.orderWeight" />
+            </div>
+        </div>
+
+        <div class="form-group" ng-repeat="receiptProperty in currentItem.receiptProperties">
+            <label class="control-label col-md-2">{{receiptProperty.fieldName}}(Receipt):</label>
+            <div class="col-md-9">
+                <input type="text" name="receiptProperty" class="form-control" ng-model="receiptProperty.value"
+                       ng-disabled="!isAddItemline && isUpdateItemLineDisabled('receiptProperty')"/>
+            </div>
+        </div>
+
+        <div class="form-group" ng-repeat="(key, fieldName) in dynamicFields"
+             ng-disabled="!isAddItemline && isUpdateItemLineDisabled('dynamicProperties')">
+                <label class="control-label col-md-2" style="margin-bottom: 5px;">{{fieldName}}:</label>
+                <div class="col-md-7">
+                    <lt-date-time  value="currentItem.dynamicFields[key]" date-format="yyyy-mm-dd hh:mm:ss"
+                                   ng-if="isDataDynamicField(key)"  ng-disabled="!isAddItemline && isUpdateItemLineDisabled('dynamicProperties')"></lt-date-time>
+                    <input class="form-control" type="text" ng-model="currentItem.dynamicFields[key]"
+                           ng-if="isTxtDynamicField(key)"  ng-disabled="!isAddItemline && isUpdateItemLineDisabled('dynamicProperties')"/>
+                </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">LP Template:</label>
+            <div class="col-md-7">
+                <ui-select ng-model="currentItem.lpConfigurationId" name="lpConfigurationId"
+                           ng-disabled="!isAddItemline && isUpdateItemLineDisabled('lpConfigurationId')" on-select="lpConfigsOnSelect($select.selected)">
+                    <ui-select-match  allow-clear="true">
+                            <span ng-bind="$select.selected.name"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="lpTemplate.id as lpTemplate in orderLineLpTemplates | filter:{ name: $select.search }">
+                        <span ng-bind="lpTemplate.name"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 15px;" ng-show="currentItem.itemSpecId">
+            <span class="col-md-2"></span>
+            <span class="col-md-5"><a ui-sref="fd.item.itemspec.edit.lpConfig({itemSpecId:currentItem.itemSpecId})"
+                                      target="_blank">Setup LP Configuration</a></span>
+        </div>
+    
+        <div class="form-group">
+            <label class="control-label col-md-2 ">Lot#:</label>
+            <div class="col-md-7 ">
+                <input type="text" name="lotNo" class="form-control"  ng-disabled="!isAddItemline && isUpdateItemLineDisabled('lotNo')"
+                       ng-model="currentItem.lotNo"/>
+            </div>
+        </div>
+        <div class="form-group" ng-show="itemHasSerialNumber">
+             <label class="control-label col-md-2">SN List:</label>
+             <div class="col-md-9 ">
+                 <textarea class="form-control" ows="4" ng-model="currentItem.snList"
+                           placeholder="Enter SN,split by comma for multiple SN. E.g: 8001AB,8002AB,8003AB"></textarea>
+             </div>
+         </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Note</label>
+            <div class="col-md-9">
+                <textarea class="form-control" name="note" id="note" rows="4"
+                          ng-model="currentItem.note"
+                          ng-disabled="!isAddItemline && isUpdateItemLineDisabled('note')"></textarea>
+            </div>
+        </div>
+        <div class="form-group" ng-show="!ifProductExit">
+            <label class="control-label col-md-2"></label>
+            <div class="col-md-10" style="color:red">The select product does not exist, please check.</div>
+        </div>
+        <div class="form-group" ng-show="!ifFitStatus">
+            <label class="control-label col-md-2"></label>
+            <div class="col-md-10" style="color:red">The status of selected product is not Active Or Discontinue.</div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <div style="margin-right: 50px">
+            <button type="submit" class="btn blue" ng-click="addItemLineForm.$valid && submit()">{{submitLabel}}</button>
+            <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+        </div>
+    </md-dialog-actions>
+    </form>
+</md-dialog>
+

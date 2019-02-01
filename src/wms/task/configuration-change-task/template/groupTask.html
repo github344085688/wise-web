@@ -1,0 +1,117 @@
+<div class="portlet light bordered order-list-container" style="margin: 15px;">
+	<div class="portlet-title">
+		<div class="caption">
+			<span class="caption-subject bold">Group Configuration Change Task </span>
+		</div>
+	</div>
+	<div class="portlet-body form form-horizontal">
+		<form name="editForm">
+			<div class="form-group">
+				<div class="col-md-3">
+					<label>LP Configuration Template:</label>
+					<lp-configuration-template-auto-complete ng-model="search.singleLPTemplateId"  allow-clear="true"> </lp-configuration-template-auto-complete>
+				</div>
+				<div class="col-md-3">
+					<label>Assignee:</label>
+					<user-auto-complete name="assignee" allow-clear="true" ng-model="search.assigneeUserId"></user-auto-complete>
+				</div>
+				<div class="col-md-3">
+					<label>Task Way:</label>
+					<ui-select ng-model="search.taskWay">
+						<ui-select-match allow-clear="true">
+							<span ng-bind="$select.selected"></span>
+						</ui-select-match>
+						<ui-select-choices repeat="item in ['Batch Configuration Change', 'Traditional'] | filter: $select.search">
+							<span ng-bind="item"></span>
+						</ui-select-choices>
+					</ui-select>
+				</div>
+			</div>
+			<div class="form-group form-actions right" >
+				<waitting-btn type="button" btn-class="btn blue" ng-click="searchTask()"
+							  value="'Search'" is-loading="loading"></waitting-btn>
+			</div>
+		</form>
+		<div class="form-group" style="margin-top: 20px;">
+			<div class="col-md-3">
+				<label>Sort Current CC Tasks By:</label>
+				<ui-select ng-model="search.groupBy" on-select="onSelectGroupBy($select.selected.name)">
+					<ui-select-match allow-clear="true">
+						<span ng-bind="$select.selected.label"></span>
+					</ui-select-match>
+					<ui-select-choices repeat="option.name as option in groupByOptions | filter: $select.search">
+						<span ng-bind="option.label"></span>
+					</ui-select-choices>
+				</ui-select>
+			</div>
+		</div>
+		<div class="table-scrollable item-list-continer">
+			<table class="table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>Select</th>
+						<th>Task ID</th>
+						<th>LP Configuration Template</th>
+						<th>Item</th>
+						<th>Short Description</th>
+						<th>QTY</th>
+						<th>UOM</th>
+						<th>UPC</th>
+                        <th>NMFC</th>
+						<th>LP Material Item</th>
+						<th>LP Material UOM</th>
+						<th>Updated Time</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat-start="(key, taskList) in groupTasks track by $index">
+					</tr>
+					<tr style="background-color: #83a5ce5e;">
+						<td colspan="12">
+							<input type="checkbox" ng-checked="isGroupChecked(key) " ng-click="clickGroup(key)" name="selectAll">
+						</td>
+					</tr>
+					<tr ng-repeat="task in taskList" ng-repeat-end>
+						 <td>
+							 <input type="checkbox" ng-checked="isChecked(task.id, key) " ng-click="clickItem(task.id, key)">
+						 </td>
+						<td> <a ng-href="{{'#/wms/task/configuration-change-task/' + task.id}}" title="View" target="_blank">{{task.id}}</a></td>
+						<td>{{task.singleLPTemplate.name}}</td>
+						 <td>
+							 <item-display item="task.item"></item-display>
+						 </td>
+						 <td>
+							 {{task.item.shortDescription}}
+						 </td>
+						 <td>
+							 {{task.itemCount}}
+						 </td>
+						 <td>
+							 {{task.unit.name}}
+						 </td>
+						 <td>
+							 {{task.item.upcCode}}
+						 </td>
+						 <td>
+							 {{task.item.nmfc}}
+						 </td>
+						 <td>
+							 <item-display item="task.materialPackageItem"></item-display>
+						 </td>
+						 <td>
+							 {{task.materialPackageUnit.name}}
+						 </td>
+						 <td>
+							 {{task.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}} &nbsp;
+							 <span ng-show="task.updatedBy">({{task.updatedBy}})</span>
+						 </td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+		<div class="form-group form-actions right">
+			<waitting-btn type="button" btn-class="btn blue" value="'Group Selected'" ng-click="submitGroup()" is-loading="isMerging"></waitting-btn>
+		</div>
+	</div>
+</div>

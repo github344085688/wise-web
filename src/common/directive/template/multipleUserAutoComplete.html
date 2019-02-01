@@ -1,0 +1,14 @@
+<ui-select name="{{name}}" ng-model="$parent.ngModel" required="{{required}}" ng-disabled="ifDisabled" on-select="_onSelect($select.selected)"
+    on-remove="_onRemove($select.selected)" multiple>
+    <ui-select-match>
+        <div ng-if='$item.isAndroidOnline' style="color:green">{{getUserName($item)}}</div>
+        <div ng-if='!$item.isAndroidOnline'>{{getUserName($item)}}</div>
+    </ui-select-match>
+    <ui-select-choices repeat="user.idmUserId as user in users | filter: $select.search" refresh="getUsers($select.search)" refresh-delay="50">
+        <div  ng-if='user.isAndroidOnline' style="color:green" ng-bind="getUserName(user)"></div>
+        <div  ng-if='!user.isAndroidOnline' ng-bind="getUserName(user)"></div>
+    </ui-select-choices>
+    <ui-select-no-choice>
+        No available option.
+    </ui-select-no-choice>
+</ui-select>

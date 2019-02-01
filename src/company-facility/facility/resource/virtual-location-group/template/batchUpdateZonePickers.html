@@ -1,0 +1,39 @@
+<div class="grid-content grid-100">
+    <form class="grid-100 grid-parent" novalidate name="editForm" ng-submit="editForm.$valid && submit()">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left"> Work Group Configuration</h1>
+            <hr>
+        </div>
+
+        <div class="grid-100 row">
+            <div class="grid-content grid-100">
+                <div class="grid-parent grid-100 container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="border-right: 1px solid #ccc;"> Name</th>
+                                <th> Primary Users</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="virtualLocationGroup in virtualLocationGroups track by $index">
+                                <td>{{virtualLocationGroup.name}}</td>
+                                <td>
+                                    <multiple-user-auto-complete name="assignees" limit="30" ng-model="virtualLocationGroup.userIds">
+                                    </multiple-user-auto-complete>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="grid-parent grid-100 container">
+            <waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="'Save'" is-loading="loading"></waitting-btn>
+            <button type="button" class="grid-10 ripplelink pull-right cancel" ng-click="cancel()">Cancel</button>
+        </div>
+    </form>
+</div>

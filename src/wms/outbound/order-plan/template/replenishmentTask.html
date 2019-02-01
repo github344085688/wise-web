@@ -1,0 +1,59 @@
+<div class="grid-parent grid-100 container">
+    <h1 class="section-label pull-left">
+        <a ng-href="{{'#/wms/task/replenishment-task/view/' + task.id}}" title="View" target="_blank">{{task.id}}</a>
+    </h1>
+    <button type="button" class="grid-10 ripplelink pull-right" permission-check="{{'outbound::orderPlan_write'}}" ng-show="orderPlan.status == 'Task Created' || orderPlan.status == 'Scheduled'"
+        ng-click="editReplenishmentTask(task.id)" style="margin-left: 15px;">Edit Task</button>
+</div>
+<div class="grid-parent grid-100 container">
+    <div class="grid-25">
+        <b>Planned Assignee:</b>
+        <label>{{task.plannedAssignee.firstName + ' ' + task.plannedAssignee.lastName}}</label>
+    </div>
+    <div class="grid-25">
+        <b>Status:</b>
+        <label>{{task.status}}</label>
+    </div>
+    <div class="grid-25">
+        <b>Priority:</b>
+        <label>{{task.priority}}</label>
+    </div>
+</div>
+
+<div class="grid-parent grid-100 container">
+    <div class="table-scrollable">
+        <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_1"
+            role="grid" aria-describedby="sample_1_info">
+            <thead>
+                <tr role="row">
+                    <th> Item </th>
+                    <td> Qty </td>
+                    <td> Unit </td>
+                    <th>SN</th>
+                    <th> To Location Name </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="replenishmentItem in task.replenishmentItems track by $index">
+                    <td>
+                        <item-display item="replenishmentItem"></item-display>
+                    </td>
+                    <td>{{replenishmentItem.qty}}</td>
+                    <td>{{replenishmentItem.unitName}}</td>
+                    <td>
+                        <span ng-repeat="sn in replenishmentItem.snList">
+                            {{sn}}&nbsp;
+                        </span>
+                    </td>
+                    <td>{{replenishmentItem.toLocationName}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="grid-parent grid-100 container">
+    <div class="grid-100">
+        <label class="bold">Force Close Reason:</label>
+        <label>{{task.forceCloseReason}}</label>
+    </div>
+</div>

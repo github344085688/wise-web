@@ -1,0 +1,76 @@
+<md-dialog flex="50">
+    <form novalidate name="addItemLineForm" class="form-horizontal">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Add Tracking No</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="" style="padding: 40px 40px 30px 14px;">
+        <div class="form-group" style="  margin-top: 10px; text-align: center; color: #dd3d3d" ng-if="isTrackingNoHasOrder">
+            The tracking no "{{shipmentsTrackingNo}}" had been related the other  orders ({{shipmentsTrackingNoOrderIds}})
+        </div>
+        <div class="form-group" style="display:block;width: 100%; height: 75px;margin-top: 10px; border-bottom: solid #ddd 1px;">
+            <div class="col-md-4">
+                <label class="label-input">Tracking No</label>
+                <input-validation-message field="itemTrackingNo{{$index}}"
+                                          form="printMultipleShippingLabelForm"></input-validation-message>
+                <input type="text" class="form-control" style="height: 36px; padding-left: 15px;" name="itemTrackingNo{{$index}}"
+                       min="1" ng-model="shipments.trackingNo" required/>
+            </div>
+            <div class="col-md-4">
+                <label class="label-input">Cost</label>
+                <input-validation-message field="itemTrackingNo{{$index}}"
+                                          form="printMultipleShippingLabelForm"></input-validation-message>
+                <input type="number" class="form-control" style="height: 36px; padding-left: 15px;" name="itemTrackingNo{{$index}}"
+                       min="0" ng-model="shipments.shippingCost" required/>
+            </div>
+        </div>
+
+        <div class="form-group" style=" display:block;height: 60px" ng-repeat="itemLine in shipments.itemLineDetails track by $index ">
+            <div class="col-md-4">
+                <label class="label-input">Item Line</label>
+                <input-validation-message field="itemlineinfo{{$index}}"
+                                          form="printMultipleShippingLabelForm"></input-validation-message>
+                <ui-select ng-model="itemLine.itemSpecId" required  ng-change="changeItemLineDetail(itemLine,$select.selected)">
+                    <ui-select-match>
+                        <span>{{$select.selected.itemSpecName}}{{$select.selected.itemSpecDesc}}</span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item.itemSpecId as item in itemSpecs | filter: $select.search">
+                       <item-display item="item"/>
+                    </ui-select-choices>
+                    <ui-select-no-choice>
+                        No available item.
+                    </ui-select-no-choice>
+                </ui-select>
+            </div>
+            <div class="col-md-4">
+                <label class="label-input" style="display: block">Qty</label>
+                <input-validation-message field="itemQty{{$index}}"
+                                          form="printMultipleShippingLabelForm"></input-validation-message>
+                <input type="number" class="form-control" style="height: 36px; padding-left: 15px;" name="itemQty{{$index}}" min="1"
+                       ng-model="itemLine.qty" required/>
+            </div>
+            <div class="col-md-4">
+                <button type="button" style="margin-top: 25px;" class="btn btn-danger"
+                        ng-click="shipments.itemLineDetails.splice($index,1)">
+                    Remove
+                </button>
+            </div>
+        </div>
+        <div class="form-group" style="display:block; height: 40px;margin-top: 40px">
+            <div class="col-md-4" style="float: right">
+                <button type="button" style="width: 80px;" class="btn btn-primary "
+                        ng-click="addItemLineDetails()">Add
+                </button>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <div style="margin-right: 50px">
+            <button type="submit" class="btn blue" ng-click="addItemLineForm.$valid && submit()">Save</button>
+            <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+        </div>
+    </md-dialog-actions>
+    </form>
+</md-dialog>
+

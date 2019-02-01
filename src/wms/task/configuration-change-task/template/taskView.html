@@ -1,0 +1,50 @@
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold">Configuration Change Task: {{task.id}}</span>
+                </div>
+                <div class="actions" permission-check="{{'task::configurationChangeTask_write'}}">
+                    <button type="button" class="btn blue" ng-click="editTask(task.id)">Edit Task</button>
+                    <button type="button" class="btn yellow" ng-click="separateTask(task.id)">Separate</button>
+                    <button type="button" class="btn yellow" ng-click="mergeTask(task.id)">Merge</button>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <div class="form-group">
+                    <div class="col-md-3"><b>Priority</b>: {{task.priority}}</div>
+                    <div class="col-md-3"><b>Status</b>: {{task.status}}</div>
+                    <div class="col-md-3"><b>Task Way</b>: {{task.taskWay}}</div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3"><b>LP Configuration Template</b>: {{task.lpTemplate.name}}</div>
+                    <div class="col-md-3"><b>Assignee</b>: {{task.assignee.firstName}} {{task.assignee.lastName}}</div>
+                    <div class="col-md-3"><b>Planned Assignee</b>: {{task.plannedAssignee.firstName}} {{task.plannedAssignee.lastName}}</div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6"><b>Item</b>:  <item-display item="task"></item-display></div>
+                    <div class="col-md-3"><b>QTY</b>: {{task.itemCount}}</div>
+                    <div class="col-md-3"><b>UOM</b>: {{task.unitName}}</div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6"><b>Start Time</b>:{{task.startTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</div>
+                    <div class="col-md-6"><b>End Time</b>: {{task.endTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6"><b>Date Created</b>: {{task.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}<span ng-show="task.createdBy">({{task.createdBy}})</span></div>
+                    <div class="col-md-6"><b>Date Updated</b>: {{task.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}<span ng-show="task.updatedBy">({{task.updatedBy}})</span></div>
+                </div>
+                <div class="form-group">
+                    <span class="col-md-12">
+                        <b>Description:</b> {{task.description}}
+                    </span>
+                </div>
+                <div style="margin-bottom:20px;">
+                    <div><b>Material Line:</b></div>
+                    <material-lines search-param="materialLinesSearchParam"></material-lines>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

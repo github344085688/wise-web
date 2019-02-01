@@ -1,0 +1,343 @@
+<script type="text/ng-template" id="Offload">
+    <div class="form-group">
+        <div class="col-md-3"><b>Status</b>: {{step.status}}</div>
+        <div class="col-md-3"><b>Assignee</b>:
+            <span style="margin:5px 5px" ng-repeat="user in step.assignees">{{user.firstName}} {{user.lastName}}</span>
+        </div>
+        <div class="col-md-3"><b>Offload Type</b>: {{step.offloadType}}</div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-6"><b>Seal</b>:
+            <ul class="feeds" style="display: inline-block">
+                <li ng-repeat="sealCheck in step.sealChecks" class="feed-label" ng-class="{'green': sealCheck.isMatch, 'red': sealCheck.isMatch === false}">
+                    <span>{{sealCheck.text}}</span>
+                    <i class="fa fa-check" ng-show="sealCheck.isMatch"></i>
+                    <i class="fa fa-warning" ng-show="sealCheck.isMatch === false"></i>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-6"><b>Container</b>:
+            <ul class="feeds" style="display: inline-block">
+                <li ng-repeat="cn in step.containerNoChecks" class="feed-label" ng-class="{'green': cn.isMatch, 'red': cn.isMatch === false}">
+                    <span>{{cn.text}}</span>
+                    <i class="fa fa-check" ng-show="cn.isMatch"></i>
+                    <i class="fa fa-warning" ng-show="cn.isMatch === false"></i>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12"><b>Item Lines:</b>:
+            <div class="table-scrollable">
+                <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_1" role="grid" aria-describedby="sample_1_info">
+                    <thead>
+                        <tr role="row">
+                            <th> Item </th>
+                            <th> UOM </th>
+                            <th> Expected QTY </th>
+                            <th> Note </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="itemline in step.itemLines track by $index">
+                        <td>
+                            <item-display item="itemline.itemSpec"></item-display>
+                        </td>
+                        <td>{{itemline.unitName}}</td>
+                        <td>{{itemline.qty}}</td>
+                        <td>{{itemline.note}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+   <div class="form-group">
+       <div class="col-md-12">
+           <div><b>Container No</b>:</div>
+           <ul class="feeds"  style="display: inline-block;">
+               <li ng-repeat="p in containerNoPhotoIds" style="display: inline-block; margin: 5px 5px;">
+                   <img style="width:50px;height: 50px;" http-src="/file-app/file-download/{{p}}" title="Container No: {{step.photoMap[p].createdWhen}}" />
+               </li>
+               <li style="display: inline-block; margin: 5px 5px;">
+                   <upload-btn ng-model="containerNoPhotoIds" type="CONTAINER_NO_CHECK" step-id="step.id" app='wms' module='receive' service='takephoto' save-picture="savePicture(param)"></upload-btn>
+               </li>
+           </ul>
+           <div><b>Seal No</b>:</div>
+           <ul class="feeds"  style="display: inline-block;">
+               <li ng-repeat="p in sealNoPhotoIds" style="display: inline-block; margin: 5px 5px;">
+                   <img style="width:50px;height: 50px;" http-src="/file-app/file-download/{{p}}" title="Seal No: {{step.photoMap[p].createdWhen}}" />
+               </li>
+               <li style="display: inline-block; margin: 5px 5px;">
+                   <upload-btn ng-model="sealNoPhotoIds" type="SEAL_CHECK" step-id="step.id" app='wms' module='receive' service='takephoto' save-picture="savePicture(param)"></upload-btn>
+               </li>
+           </ul>
+       </div>
+       <div class="col-md-12">
+           <div><b>Offload</b>:</div>
+           <ul class="feeds" style="display: inline-block;">
+               <li ng-repeat="p in offLoadPhotoIds" style="display: inline-block; margin: 5px 5px;">
+                   <img style="width:50px;height: 50px;" http-src="/file-app/file-download/{{p}}" title="Offload: {{step.photoMap[p].createdWhen}}" />
+               </li>
+               <li style="display: inline-block; margin: 5px 5px;">
+                   <upload-btn ng-model="offLoadPhotoIds" type="OFFLOAD" step-id="step.id" app='wms' module='receive' service='takephoto' save-picture="savePicture(param)"></upload-btn>
+               </li>
+           </ul>
+       </div>
+   </div>
+</script>
+<script type="text/ng-template" id="LP Setup">
+    <div class="form-group">
+        <div class="col-md-3"><b>Status</b>: {{step.status}}</div>
+        <div class="col-md-3"><b>Assignee</b>:
+            <span style="margin:5px 5px" ng-repeat="user in step.assignees">{{user.firstName}} {{user.lastName}}</span>
+        </div>
+        <div class="col-md-3"><b>Total QTY</b>: <span ng-repeat="(key, value) in step.itemsQtyByUnit">{{value}}({{key}})&nbsp;</span></div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12"><b>LP Detail:</b>
+            <div class="receive-task-lp-detail" ng-show="step.lpDetails && step.lpDetails.length > 0">
+                <div class="row head">
+                    <div class="col-md-1">LP</div>
+                    <div class="col-md-1">Location</div>
+                    <div class="col-md-1">Pallet No</div>
+                    <div class="col-md-1">Type</div>
+                    <div class="col-md-2">Item </div>
+                    <div class="col-md-1">QTY</div>
+                    <div class="col-md-1">UOM</div>
+                    <div class="col-md-2">Is Repalletized</div>
+                    <div class="col-md-2">TIHI</div>
+                </div>
+                <div ng-repeat="lpDetail in step.lpDetails">
+                    <div class="row content" ng-repeat="item in lpDetail.items">
+                        <div class="col-md-1">{{lpDetail.lpId}}</div>
+                        <div class="col-md-1">{{lpDetail.location}}</div>
+                        <div class="col-md-1">{{lpDetail.palletNo}}</div>
+                        <div class="col-md-1">{{lpDetail.type}}</div>
+                        <div class="col-md-2">{{item.itemSpecName}}</div>
+                        <div class="col-md-1">{{item.qty}}</div>
+                        <div class="col-md-1">{{item.unitName}}</div>
+                        <div class="col-md-2">{{lpDetail.isRepalletized ? "yes" : "no"}}</div>
+                        <div class="col-md-2">{{lpDetail.tiHi.l}}-{{lpDetail.tiHi.w}}-{{lpDetail.tiHi.h}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="LP Verify">
+    <div class="form-group">
+        <div class="col-md-3"><b>Status</b>: {{step.status}}</div>
+        <div class="col-md-3"><b>Assignee</b>:
+            <span style="margin:5px 5px" ng-repeat="user in step.assignees">{{user.firstName}} {{user.lastName}}</span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12"><b>Verify Results:</b>
+            <div class="receive-task-lp-detail" ng-show="step.lpDetails && step.lpDetails.length > 0">
+                <div class="row head">
+                    <div class="col-md-1">LP</div>
+                    <div class="col-md-1">Location</div>
+                    <div class="col-md-1">Verified</div>
+                    <div class="col-md-1">Type</div>
+                    <div class="col-md-2">Item </div>
+                    <div class="col-md-1">QTY</div>
+                    <div class="col-md-1">UOM</div>
+                    <div class="col-md-1">TIHI</div>
+                </div>
+                <div ng-repeat="lpDetail in step.lpDetails">
+                    <div class="row content" ng-repeat="item in lpDetail.items">
+                        <div class="col-md-1">{{lpDetail.lpId}}</div>
+                        <div class="col-md-1">{{lpDetail.location}}</div>
+                        <div class="col-md-1">{{lpDetail.isVerified && 'Yes' || 'No'}}</div>
+                        <div class="col-md-1">{{lpDetail.type}}</div>
+                        <div class="col-md-2">{{item.itemSpecName}}</div>
+                        <div class="col-md-1">{{item.qty}}</div>
+                        <div class="col-md-1">{{item.unitName}}</div>
+                        <div class="col-md-1">{{lpDetail.tiHi.l}}-{{lpDetail.tiHi.w}}-{{lpDetail.tiHi.h}}</div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-left: 0px;">
+                    <div class="col-md-12" ng-repeat="lPVerify in step.verifyResults"
+                         ng-if="lPVerify.fileIds && lPVerify.fileIds.length>0">
+                        <div><b>LP:{{lPVerify.lpId}}</b>:</div>
+                        <ul class="feeds" style="display: inline-block;">
+                            <li ng-repeat="fileId in lPVerify.fileIds" style="display: inline-block; margin: 5px 5px;">
+                                <img style="width:50px;height: 50px;" http-src="/file-app/file-download/{{fileId}}" />
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    </div>
+</script>
+<script type="text/ng-template" id="SN Scan">
+    <div class="row form-group">
+        <div class="col-md-3"><b>Status</b>: {{step.status}}</div>
+        <div class="col-md-3"><b>Assignee</b>:
+            <span style="margin:5px 5px" ng-repeat="user in step.assignees">{{user.firstName}} {{user.lastName}}</span>
+        </div>
+    </div>
+    <div class="form-group">
+
+        <div class="col-md-12"><b>Verify Results:</b>
+            <div class="receive-task-lp-detail"  ng-show="step.lpDetails && step.lpDetails.length > 0">
+                <div class="row head">
+                    <div class="col-md-1">LP</div>
+                    <div class="col-md-1">Location</div>
+                    <div class="col-md-2">SN</div>
+                    <div class="col-md-1">Type</div>
+                    <div class="col-md-2">Item </div>
+                    <div class="col-md-1">QTY</div>
+                    <div class="col-md-1">UOM</div>
+                    <div class="col-md-1">TIHI</div>
+                </div>
+                <div ng-repeat="lpDetail in step.lpDetails ">
+                    <div class="row content" ng-repeat="item in lpDetail.items track by $index">
+                        <div class="col-md-1">{{lpDetail.lpId}}</div>
+                        <div class="col-md-1">{{lpDetail.location}}</div>
+                        <div class="col-md-2 popup-menu" ng-init="snList[$index]=initFilterSnDetails(item.snList,item.snDetails)">
+                            <p ng-repeat="snDetail in snList[$index]">
+                                {{snDetail.sn}}
+                                <span ng-if="snDetail.weight" style="display: inline">({{snDetail.weight}})</span>
+                            </p>
+                        </div>
+                        <div class="col-md-1">{{lpDetail.type}}</div>
+                        <div class="col-md-2">{{item.itemSpecName}}</div>
+                        <div class="col-md-1">{{item.qty}}</div>
+                        <div class="col-md-1">{{item.unitName}}</div>
+                        <div class="col-md-1">{{lpDetail.tiHi.l}}-{{lpDetail.tiHi.w}}-{{lpDetail.tiHi.h}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Task</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a ui-sref="wms.task.receiptTask.list">Receipt Task</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin-top:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> Receive Task: {{task.id}}</span>
+                </div>
+                <div class="actions">
+                    <waitting-btn type="button" btn-class="btn red" ng-click="forceClose(task.id)" is-loading="isForceClose" value="'Force Close'"
+                                  permission-check="{{'task::receiveTask:forceClose_write'}}"
+                                  ng-if="task.status != 'Force Closed' && task.status != 'Closed' && task.status != 'Cancelled'"></waitting-btn>
+                    <button type="button" class="btn blue" ng-click="editTask(task.id)" permission-check="{{'task::receiveTask_write'}}">Edit Receipt</button>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <b>Receipts</b>:
+                        <span ng-repeat="receipt in task.receipts">
+                            <a ng-href="{{'#/wms/inbound/receipt/' + receipt.id}}" target="_blank">{{receipt.id}}</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <b>Status</b>: {{task.status}}</div>
+                    <div class="col-md-3">
+                        <b>Assignee</b>: {{task.assignee.firstName}} {{task.assignee.lastName}}</div>
+                    <div class="col-md-3">
+                        <b>Entry</b>: {{task.entryId}}</div>
+                    <div class="col-md-3">
+                        <b>Dock</b>: {{task.dock.name}}</div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <b>Start Time:</b>
+                        <span>{{task.startTime}}</span>
+                    </div>
+                    <div class="col-md-3">
+                        <b>End Time:</b>
+                        <span>{{task.endTime}}</span>
+                    </div>
+                    <span class="col-md-3">
+                        <b>Created Time: </b>{{task.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}} &nbsp;
+                        <span ng-show="task.createdBy">({{task.createdBy}})</span>
+                    </span>
+                    <span class="col-md-3">
+                        <b>Updated Time: </b>{{task.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}} &nbsp;
+                        <span ng-show="task.updatedBy">({{task.updatedBy}})</span>
+                    </span>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-3">
+                        <b>Priority</b>: {{task.priority}}</div>
+                    <div class="col-md-9">
+                        <b>Description</b>: {{task.description}}</div>
+                </div>
+                <div class="tabbable-custom" style="margin-bottom: 0px; overflow: visible; margin-top:20px;">
+                    <ul class="nav nav-tabs">
+                        <li ng-class="{'active':activeMainTab == 'steps'}">
+                            <a data-toggle="tab" ng-click="changeMainTab('steps')"> Steps </a>
+                        </li>
+                        <li ng-class="{'active':activeMainTab == 'materialLine'}">
+                            <a data-toggle="tab" ng-click="changeMainTab('materialLine')"> Material Line </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" style="padding:15px;">
+                        <div ng-class="{'active':activeMainTab == 'steps'}" class="tab-pane ">
+                            <div class="panel panel-default" ng-repeat="step in task.steps track by $index">
+                                <div class="panel-heading">
+                                    <div style="display: block; float: left;line-height:34px;" class="panel-title"> STEP | {{originalSteps[$index].name}}</div>
+                                    <div class="actions" style="text-align: right;">
+                                        <button type="button" ng-show="originalSteps[$index].name == 'Offload'" permission-check="{{'task::receiveTask_write'}}"
+                                            class="btn blue" ng-click="editOffload()">Edit Offload</button>
+                                        <button type="button" class="btn blue" ng-click="reopenStep(step)" permission-check="{{'task::receiveTask_write'}}" ng-disabled="step.status!='Skipped' && step.status != 'Done' && step.status != 'Force Closed'">Reopen
+                                        </button>
+                                        <button type="button" class="btn yellow" permission-check="{{'task::receiveTask_write'}}" update-step-assignees task-step="step">Edit Assignees</button>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="tabbable-custom" style="margin-bottom: 0px; overflow: visible">
+                                        <ul class="nav nav-tabs">
+                                            <li ng-class="{'active':activeTabs[step.id] == 'content'}">
+                                                <a data-toggle="tab" ng-click="changeTab('content', step.id)"> Content </a>
+                                            </li>
+                                            <li ng-class="{'active':activeTabs[step.id] == 'stepException'}">
+                                                <a data-toggle="tab" ng-click="changeTab('stepException', step.id)"> Exception </a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content" style="padding:15px;">
+                                            <div ng-class="{'active':activeTabs[step.id] == 'content'}" class="tab-pane ">
+                                                <div ng-if="isOriginalStepName(originalSteps[$index].name)" ng-include="originalSteps[$index].name"></div>
+                                                <div ng-if="!isOriginalStepName(originalSteps[$index].name)" ng-include="'wms/task/common/template/genericStep.html'"></div>
+                                            </div>
+                                            <div ng-class="{'active':activeTabs[step.id] == 'stepException'}" class="tab-pane">
+                                                <div ng-include="'wms/task/common/template/stepException.html'"> </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-class="{'active':activeMainTab == 'materialLine'}" class="tab-pane ">
+                            <material-lines search-param="materialLinesSearchParam"></material-lines>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

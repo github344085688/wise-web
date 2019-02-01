@@ -1,0 +1,75 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Auto Report</h1>
+
+            <button type="button" class="btn blue" style="float:right; width: 120px; height: 35px;  margin-right:15px;" ng-click="popUpToTriggerReport(null)" ng-disabled="isUpdateItemLineDisabled('addItemLines')"
+            >Trigger Report</button>
+
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label>Customer</label>
+                <organization-auto-complete ng-model="search.customerId" name="customer" allow-clear="true" is-search-all-facilities="true" tag="Customer"></organization-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label>Report Type</label>
+                <ui-select ng-model="search.reportType">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in reportTypes | filter: $select.search">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25" style="margin-top: 20px;">
+                <waitting-btn type="button" btn-class="btn blue" ng-click="searchReportTraces()" value="'Search'" is-loading="isLoading"></waitting-btn>
+            </div>
+        </div>
+
+
+        <div ng-show="isLoading" class="text-center">
+            <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>
+                        #
+                    </th>
+                    <th>Report Type</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>Emails</th>
+                    <th>Created By</th>
+                    <th>Created When</th>
+                    <th>Updated By</th>
+                    <th>Updated When</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in autoReportTraces track by $index">
+                    <td>{{$index + 1}}</td>
+                    <td>{{item.reportType}}</td>
+                    <td>{{item.customerName}}</td>
+                    <td>{{item.status ? 'Succes' : 'Failed'}}</td>
+                    <td><span style="display: block" ng-repeat="email in item.emails">{{email}}</span></td>
+                    <td>{{item.createdBy}}</td>
+                    <td>{{item.createdWhen  | amDateFormat:'YYYY-MM-DD HH:mm'}}</td>
+                    <td>{{item.updatedBy}}</td>
+                    <td>{{item.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm'}}</td>
+                    <td> <waitting-btn type="submit" btn-class="btn blue"  ng-click="resendReport(item,$index)"  value="'Resend'" is-loading="item.isReportLoading" ng-show="! item.status"></waitting-btn></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+        </div>
+    </div>
+</div>

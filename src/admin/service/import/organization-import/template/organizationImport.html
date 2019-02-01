@@ -1,0 +1,35 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Admin</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Service</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Import</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Organization Import</a>
+        </li>
+    </ul>
+</div>
+
+<div class="container-fluid" style="margin:15px">
+        <template-manage  file-category="Organization"></template-manage>
+    <div class="tabbable-custom" style="margin-top: 15px;">
+        <div ng-include="'admin/service/import/template/excelUpload.html'"></div>
+        <div ng-include="'admin/service/import/template/fieldMapping.html'"></div>
+
+        <div ng-show="importUploadDataSimple.length > 0 && !isUploading">
+            <div class="row form-group" style="margin: 10px; padding: 10px; border-top: 1px solid #ddd;">
+                <div class="col-md-9" style="text-align: right; float:right">
+                    <waitting-btn type="submit" btn-class="btn blue" ng-click="submit()" value="'submit'" is-loading="loading"></waitting-btn>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

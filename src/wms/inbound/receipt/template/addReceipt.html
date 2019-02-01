@@ -1,0 +1,297 @@
+<div class="portlet light bordered add-order-container" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold">{{formReceiptTitle}}
+                <span ng-show="!isAddAction">:{{receipt.id}}</span>
+            </span>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <div ng-show="!loadComplete" class="text-center">
+            <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+        </div>
+        <form ng-show="loadComplete" name="editForm" novalidate ng-submit="editForm.$valid && submit()">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <label>Customer</label>
+                    <input-validation-message field="customer" form="editForm"></input-validation-message>
+                    <organization-auto-complete ng-model="receipt.customerId" name="customer"
+                                                on-select="onCustomerSelect(org)"
+                                                tag="Customer" required="true"></organization-auto-complete>
+                </div>
+                <div class="col-md-3">
+                    <label>Title</label>
+                    <input-validation-message field="title" form="editForm"></input-validation-message>
+                    <organization-auto-complete ng-model="receipt.titleId" name="title" tag="Title"
+                                                ng-disabled="!receipt.customerId"
+                                                custom-ctrl="titleCustomCtrl"
+                                                required="true"
+                                                customer-id="receipt.customerId"></organization-auto-complete>
+                </div>
+                <div class="col-md-3">
+                    <label>Carrier</label>
+                    <organization-auto-complete ng-model="receipt.carrierId" name="carrier" tag="Carrier"
+                                                ng-disabled="!receipt.customerId"
+                                                custom-ctrl="carrierCustomCtrl"
+                                                allow-clear="true"
+                                                customer-id="receipt.customerId"></organization-auto-complete>
+                </div>
+                <div class="col-md-3">
+                    <label>Reference</label>
+                    <input class="form-control" name="refNo" placeholder="Enter Reference"  ng-model="receipt.referenceNo" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <label>ContainerNo</label>
+                    <input class="form-control" placeholder="Enter ContainerNo" ng-model="receipt.containerNo" />
+                </div>
+                <div class="col-md-3">
+                    <label>Container Size</label>
+                    <ui-select name="receiveType" ng-model="receipt.containerSize">
+                        <ui-select-match>
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in containerSize">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="col-md-3">
+                    <label>TrailerNo</label>
+                    <input class="form-control" placeholder="Enter TrailerNo" ng-model="receipt.trailerNo" />
+                </div>
+                <div class="col-md-3">
+                    <label>Trailer Size</label>
+                    <ui-select name="receiveType" ng-model="receipt.trailerSize">
+                        <ui-select-match>
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in trailerSize">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <label>Receive Type</label>
+                    <ui-select name="receiveType" ng-model="receipt.receiveType">
+                        <ui-select-match>
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in ['Bulk Receiving', 'Regular Receiving']">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="col-md-3" ng-if="!isAddAction">
+                    <label>Status</label>
+                    <ui-select name="status" ng-model="receipt.status" ng-disabled="true">
+                        <ui-select-match>
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item  in statusList| filter: $select.search"
+                                           refresh="getStatusList($select.search)" refresh-delay="50">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="col-md-3">
+                    <label>Seal</label>
+                    <input class="form-control" placeholder="Enter Seal"  ng-model="receipt.sealNo"/>
+                </div>
+                <div class="col-md-3">
+                    <label>Total QTY</label>
+                    <input class="form-control" ng-disabled="true"  ng-model="receipt.totalQty"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3" ng-if="!isAddAction" >
+                    <label>In Yard Time</label>
+                    <lt-date-time value="receipt.inYardTime" ng-disabled="true" date-format="yyyy-mm-dd hh:ii:ss"></lt-date-time>
+                </div>
+                <div class="col-md-3" ng-if="!isAddAction">
+                    <label>Appointment Time</label>
+                    <lt-date-time value="receipt.appointmentTime" date-format="yyyy-mm-dd hh:ii" minute-step="60"></lt-date-time>
+                </div>
+                <div class="col-md-3" ng-if="!isAddAction">
+                    <label>Devanned Time</label>
+                    <lt-date-time value="receipt.devannedTime" ng-disabled="true" date-format="yyyy-mm-dd hh:ii:ss"></lt-date-time>
+                </div>
+                <div class="col-md-3">
+                    <label>ETA</label>
+                    <lt-date-time  value="receipt.eta"  date-format="yyyy-mm-dd hh:ii" minute-step="60"></lt-date-time>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <label>Purchase Order No.</label>
+                    <input-validation-message field="poNo" form="editForm"></input-validation-message>
+                    <input class="form-control" name="poNo" placeholder="Enter PO" ng-model="receipt.poNo" required="true" />
+                </div>
+                <div class="col-md-3">
+                    <label>BOL</label>
+                    <input class="form-control" placeholder="Enter Bol" ng-model="receipt.bolNo" />
+                </div>
+                <div class="col-md-3">
+                    <label>Receipt Type</label>
+                    <ui-select ng-model="receipt.receiptType" ng-change="changeReceiptType()">
+                        <ui-select-match allow-clear="true" >
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in ['Regular Receipt',
+                        'Title Transfer Receipt', 'Migo Transfer Receipt', 'Inventory Receipt', 'CrossDock', 'Return','RDN'] | filter: $select.search">
+                            <div ng-bind="item"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+
+                <div class="col-md-3" ng-if=" receipt.receiptType === 'Return' && receipt.customerId ">
+                        <label>Return Order</label>
+                        <order-auto-complete customer-id="receipt.customerId"  ng-model="receipt.returnedOrderId"  allow-clear="true"  on-select="onReturnOrderChange(order)"></order-auto-complete>
+                    </div>
+           
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                        <label>Shipping Method</label>
+                        <ui-select ng-model="receipt.shippingMethod">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in ['Truckload',
+                            'LTL', 'Small Parcel', 'Will Call'] | filter: $select.search">
+                                <div ng-bind="item"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                </div>
+                <div class="col-md-3">
+                    <label> Transload</label>
+                    <md-switch class="md-primary" aria-label=" Transload" ng-model="receipt.isTransload" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label>Note (Instruction)</label>
+                    <textarea class="form-control" name="description" id="description" form-groups="1" ng-model="receipt.note"></textarea>
+                </div>
+            </div>
+            <div class="form-group" ng-show="receipt.files && receipt.files.length>0">
+                <div class="col-md-12">
+                    <div class="upload-file-item" ng-repeat="file in receipt.files track by $index">
+                        <i class="fa fa-file-{{file.type}}-o" style="line-height:34px; font-size: 34px;"></i>
+                        <span class="file-name">{{file.name}}</span>
+                        <i class="material-icons" style="font-size:16px; float:right;" ng-click="removeFile($index)" title="Remove">clear</i>
+                    </div>
+                </div>
+            </div>
+            <div class="tabbable-custom" style="margin-bottom: 0px; overflow: visible">
+                <ul class="nav nav-tabs">
+                    <li ng-class="{'active':activetab == 'itemLine'}" >
+                        <a data-toggle="tab" ng-click="changeTab('itemLine')"> Item Lines </a>
+                    </li>
+                    <li ng-class="{'active':activetab == 'materialLine'}">
+                        <a data-toggle="tab" ng-click="changeTab('materialLine')"> Material Lines </a>
+                    </li>
+                </ul>
+                <div class="tab-content" style="padding:15px;">
+                    <div ng-class="{'active':activetab == 'itemLine'}" class="tab-pane ">
+                        <div  style="margin-bottom: 15px;">
+                            <button type="button" class="btn blue"
+                                    style="float:right; margin-bottom:15px; margin-right:15px;"
+                                    ng-click="popUpToCreateItemLine(null)"
+                                    ng-disabled="isDisabledMap.addItemLines || !receipt.customerId">Add Item Line</button>
+                        </div>
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Item</th>
+                                    <th>UOM</th>
+                                    <th>Expected Qty</th>
+                                    <th>Received Qty</th>
+                                    <th>Lot#</th>
+                                    <th>Pallet Qty</th>
+                                    <th>Supplier</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="item in itemLineView track by $index">
+                                    <td>{{(($index + 1) + (current_page_item - 1) *pageSize)}}</td>
+                                    <td><item-display item="item"></item-display></td>
+                                    <td>{{item.unit.name ||item.unitName }}</td>
+                                    <td>{{item.qty}}</td>
+                                    <td>{{item.receivedQty}}</td>
+                                    <td>{{item.lotNo}}</td>
+                                    <td>{{item.palletQty}}</td>
+                                    <td>{{item.supplierName}}</td>
+                                    <td>
+                                        <div class="receipt-order-item-actions">
+                                            <a role="button" ng-click="popUpToCreateItemLine(item)" title="Edit">Edit </a>
+                                            <a role="button" ng-click="deleteItemLine(item)" ng-show="!isDisabledMap.deleteItemLines"
+                                               title="Delete">|Delete </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <pager total-count="receipt.itemLines.length"  page-size="pageSize"
+                               load-content="loadContent_itemLines(currentPage)"></pager>
+                    </div>
+                    <div ng-class="{'active':activetab == 'materialLine'}" class="tab-pane">
+                        <div style="margin-bottom: 15px;">
+                            <button type="button" class="btn blue" style="float:right; margin-bottom:15px;"
+                                    ng-click="createMaterialLine(null)"
+                                    ng-disabled="isDisabledMap.addMaterialLines"
+                            >Add Material Line</button>
+                        </div>
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Item</th>
+                                    <th>UOM</th>
+                                    <th>Qty</th>
+                                    <th>Title</th>
+                                    <th>Supplier</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="item in materialLineView track by $index1">
+                                    <td>{{(($index1 + 1) + (current_page_material - 1) *pageSize)}}</td>
+                                    <td><item-display item="item"></item-display></td>
+                                    <td>{{item.unitName}}</td>
+                                    <td>{{item.qty}}</td>
+                                    <td>{{item.titleName}}</td>
+                                    <td>{{item.supplierName}}</td>
+                                    <td>
+                                        <div class="receipt-order-item-actions">
+                                            <a role="button" ng-click="createMaterialLine(item)"
+                                               ng-show="!isDisabledMap.editMaterialLines" title="Edit">Edit </a>&nbsp;
+                                            <a role="button" ng-click="deleteMaterialLine(item)"
+                                               ng-show="!isDisabledMap.deleteMaterialLines" title="Delete">Delete </a>&nbsp;
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <pager total-count="receipt.materialLines.length"
+                               page-size="pageSize"
+                               load-content="loadContent_materialLines(currentPage)"></pager>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-actions right">
+                <waitting-btn type="submit" btn-class="btn blue" value="submitLabel" is-loading="loading"></waitting-btn>
+                <button type="button" class="btn default" ng-click="cancel(editForm)">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

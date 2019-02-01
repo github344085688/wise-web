@@ -1,0 +1,48 @@
+<div class="grid-content grid-100" >
+    <form class="grid-100 grid-parent" novalidate name="editForm" ng-submit="editForm.$valid && save()">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Edit Transload Task: {{task.id}}</h1>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container" style="margin-top:50px;">
+            <label class="grid-25 label-input" style="text-align: right;">Assignee: </label>
+            <div class="grid-50">
+                <input-validation-message field="assignee" form="editForm"></input-validation-message>
+                <user-auto-complete name="assignee" ng-model="task.assigneeUserId" required="true"></user-auto-complete>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <label class="grid-25 label-input" style="text-align: right;">Apply Assignee To All Task Steps: </label>
+            <div class="grid-50">
+                <md-switch class="md-primary" style="margin: 0px" ng-model="task.isUpdateStepAssignee"
+                           aria-label="Apply Assignee To All Task Steps"></md-switch>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <label class="grid-25 label-input" style="text-align: right;">Priority: </label>
+            <div class="grid-50">
+                <task-priority-auto-complete ng-model="task.priority"></task-priority-auto-complete>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <label class="grid-25 label-input" style="text-align: right;">Status: </label>
+            <div class="grid-50">
+                <input-validation-message field="Status" form="editTaskForm"></input-validation-message>
+                <task-status-auto-complete name="Status" ng-model="task.status" required="true"></task-status-auto-complete>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <label class="grid-25 label-input" style="text-align: right;">Description: </label>
+            <div class="grid-50">
+                <textarea type="text" ng-model="task.description"/>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between"
+                          value="'Submit'" is-loading="loading"></waitting-btn>
+            <button type="button" class="grid-10 ripplelink pull-right cancel" ng-click="cancel(editForm)">Cancel</button>
+        </div>
+    </form>
+</div>

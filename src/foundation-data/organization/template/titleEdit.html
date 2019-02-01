@@ -1,0 +1,49 @@
+<form novalidate name="titleForm">
+   <div class="grid-parent grid-100 container">
+        <div class="grid-33">
+            <label class="label-input">Localtion Name</label>
+        </div>
+    </div>
+   <div class="grid-parent grid-100 container">
+        <div class="grid-33">
+            <ui-select name="name" ng-model="location.id">
+                <ui-select-match allow-clear="true">
+                    {{$select.selected.name}}
+                </ui-select-match>
+                <ui-select-choices repeat="locationitem.id as locationitem in locations| filter: $select.search" refresh="searchLocation($select.search)"
+                    refresh-delay="50">
+                    {{locationitem.name}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="grid-10">
+            <unis-waitting-btn btn-type="button" btn-class="ripplelink" permission-check="{{'organizationAdd_write'}}"
+                          value="submitLabel" ng-click="addLocation()" is-loading="loading"></unis-waitting-btn>
+        </div>
+       <div class="grid-10">
+           <button type="button" class="cancel" ng-click="cancelEditTitle()">Cancel</button>
+       </div>
+    </div>
+    <table class="table" style="margin-top: 50px;">
+        <thead>
+            <tr>
+                <th>location Name</th>
+                <th>Company</th>
+                <th>Organization</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="location in locationLists track by $index">
+                <td>{{location.name}}</td>
+                <td>{{company}}</td>
+                <td>{{organization}}</td>
+                <td>
+                    <a href="#" ng-click="btnDel($index)" permission-check="{{'organizationUpdate_write'}}"><b>Delete</b></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+</form>

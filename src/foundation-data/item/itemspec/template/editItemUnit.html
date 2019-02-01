@@ -1,0 +1,175 @@
+<form class="form-horizontal" novalidate name="forms.unitForm"
+      ng-submit="forms.unitForm.$valid && ctrl.saveOrUpdateItemUnit()">
+    <div class="form-group">
+        <div class="col-md-2">
+            <label>UOM Name</label>
+            <!--<input name="unit.name" class="form-control" ng-model="unit.name" required/>-->
+            <ui-select ng-model="unit.name" style="border-radius: 4px;" required>
+                <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="uomDefinition.name as uomDefinition in uomDefinitions">
+                    {{uomDefinition.name}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="col-md-2" ng-if="!unit.isBaseUnit">
+            <label>&nbsp;</label>
+            <span class="form-control text-center" style="border:0">=</span>
+        </div>
+        <div class="col-md-2" ng-if="!unit.isBaseUnit">
+            <label>QTY</label>
+            <input name="unit.qty" class="form-control" ng-model="unit.qty" required size="5" type="number" />
+        </div>
+        <div class="col-md-2" ng-if="!unit.isBaseUnit">
+            <label>Inside UOM</label>
+            <ui-select ng-model="unit.insideUnitId" ng-change="ctrl.insideUnitSelect($select.selected)"
+                       style="border-radius: 4px;" required>
+                <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="unit.id as unit in item.units">
+                    {{unit.name}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="col-md-1">
+            <label>Default</label>
+            <md-switch class="md-primary" aria-label="Default" ng-model="unit.isDefaultUnit" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+        </div>
+        <div class="col-md-2">
+            <label>Basic UOM</label>
+            <md-switch class="md-primary" aria-label="Basic UOM"  ng-model="unit.isBaseUnit"
+                       style="margin-top: 0;margin-bottom: 0;" ng-change="setQtyAndUom()"></md-switch>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-3">
+                    <label> Length</label>
+                    <input name="unit.length" class="form-control" ng-model="unit.length" type="number" required/>
+                </div>
+                <div class="col-md-3">
+                    <label> Width</label>
+                    <input name="unit.width" class="form-control" ng-model="unit.width" type="number" required/>
+                </div>
+                <div class="col-md-3">
+                    <label> Height</label>
+                    <input name="unit.height" class="form-control" ng-model="unit.height" type="number" required/>
+                </div>
+                <div class="col-md-3">
+                    <label>&nbsp;</label>
+                    <select ng-model="unit.linearUnit" class="form-control">
+                        <option ng-repeat="item in fieldUnits['Linear']">{{item}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label>UOM Weight</label>
+            <div class="row">
+                <div class="col-md-6">
+                    <input name="unit.weight" class="form-control" ng-model="unit.weight" type="number"/>
+                </div>
+                <div class="col-md-6">
+                    <select ng-model="unit.weightUnit" class="form-control">
+                        <option ng-repeat="item in fieldUnits['Weight']">{{item}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4">
+            <label>Price</label>
+            <div class="row">
+                <div class="col-md-6">
+                    <input name="unit.price" class="form-control" ng-model="unit.price" type="number"/>
+                </div>
+                <div class="col-md-6">
+                    <select ng-model="unit.priceUnit" class="form-control">
+                        <option ng-repeat="item in fieldUnits['Currency']">{{item}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label>Volume</label>
+            <div class="row">
+                <div class="col-md-6">
+                    <input name="unit.volumn" class="form-control" ng-model="unit.volume" type="number"/>
+                </div>
+                <div class="col-md-6">
+                    <select ng-model="unit.volumeUnit" class="form-control">
+                        <option ng-repeat="item in ['cu in', 'cu ft', 'cbm']">{{item}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+                 <div class="col-md-6">
+                     <label>Insurance Amount</label>
+                     <input name="unit.insuranceAmount" class="form-control" ng-model="unit.insuranceAmount" type="number" />
+                </div>
+                 <div class="col-md-6">
+                     <label>Billing UOM</label>
+                     <select ng-model="unit.billingUOM" class="form-control">
+                            <option ng-repeat="UOM in ['case', 'each']">{{UOM}}</option>
+                     </select>
+                 </div>
+             </div>
+        </div>
+    </div>
+    <div style="text-align:right;" permission-check="{{'item::itemSpec_write'}}">
+        <button type="submit" class="btn blue"  >{{submitLabel}}</button>
+        <button ng-click="ctrl.resetItemUnit()" type="button" class="btn grey">Reset</button>
+    </div>
+</form>
+<div class="portlet light box-shadow-none" ng-show="item.units.length > 0 "
+     style="padding-left:0px; padding-right:0px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold uppercase">Item UOMS</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="table-scrollable">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>UOM Name</th>
+                        <th>QTY</th>
+                        <th>Inside UOM</th>
+                        <th>Length*Width*Height</th>
+                        <th>Weight</th>
+                        <th>Price</th>
+                        <th>Volume</th>
+                        <th>Status</th>
+                        <th> Default</th>
+                        <th> Basic UOM </th>
+                        <th> Insurance Amount </th>
+                        <th> Billing UOM</th>
+                        <th permission-check="{{'item::itemSpec_write'}}">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="unit in item.units track by $index" ng-class="{'bg-light-green':hightLights[$index]}">
+                        <td>{{unit.name}}</td>
+                        <td>{{unit.qty}}</td>
+                        <td>{{ctrl.getUnitName(unit.insideUnitId)}}</td>
+                        <td>{{unit.length}} * {{unit.width}} * {{unit.height}}({{unit.linearUnit}}) </td>
+                        <td>{{unit.weight}} {{unit.weightUnit}}</td>
+                        <td>{{unit.price}} {{unit.priceUnit}}</td>
+                        <td>{{unit.volume}} {{unit.volumeUnit}}</td>
+                        <td>{{unit.status}}</td>
+                        <th ng-if="unit.isDefaultUnit"> Yes</th>
+                        <th ng-if="!unit.isDefaultUnit"> No</th>
+                        <th ng-if="unit.isBaseUnit">Yes</th>
+                        <th ng-if="!unit.isBaseUnit"> No</th>
+                        <td>{{unit.insuranceAmount}}</td>
+                        <td>{{unit.billingUOM}}</td>
+                        <td  permission-check="{{'item::itemSpec_write'}}"><a ng-click="ctrl.editItemUnit($index)">Edit</a> | <a ng-click="unit.status==='DISABLE'?ctrl.enableItemUnit($index):ctrl.deleteItemUnit($index)">{{unit.status==='DISABLE'?'Enable':'Disable'}}</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,178 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Task</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Pick Task</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div ng-show="isLoading" class="text-center">
+        <img src="assets/img/loading-spinner-grey.gif">
+        <span>&nbsp;LOADING...</span>
+    </div>
+    <div class="portlet light bordered" ng-show="!isLoading">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject bold">Pick Task: {{task.id}}</span>
+            </div>
+        </div>
+        <div class="portlet-body form form-horizontal">
+            <div class="form-group" style="margin-top: 25px;">
+                <div class="col-md-12">
+                    <b>Order</b>:
+                    <span ng-repeat="orderId in task.orderIds">
+                        <a ng-href="{{'#/wms/outbound/order/' + orderId}}" target="_blank">{{orderId}}</a>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <b style="float: left; margin-right: 10px; margin-left: 10px;">Pick Type: </b>
+                    <ui-select ng-if="task.status == 'New'" ng-model="task.pickType" style="float: left; width: 160px;">
+                        <ui-select-match>
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in pickTypes | filter: $select.search" refresh="getPickTypes()" refresh-delay="50">
+                            <div ng-bind="item"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <span ng-if="task.status != 'New'">
+                        {{task.pickType}}
+                    </span>
+
+                </div>
+                <div class="col-md-3">
+                    <b>Pick Way</b>: {{task.pickWay}}</div>
+                <div class="col-md-3">
+                    <b>Status</b>: {{task.status}}</div>
+                <div class="col-md-3">
+                    <b>Plan Method</b>: {{task.planMethod}}</div>
+            </div>
+            <div class="table-scrollable">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th> Item </th>
+                            <th> Title </th>
+                            <th> Base QTY </th>
+                            <th> qty </th>
+                            <th> Unit </th>
+                            <th> Location </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="itemLine in task.pickItemLines">
+                            <td>
+                                <item-display item="itemLine"></item-display>
+                            </td>
+                            <td>{{itemLine.titleName}}</td>
+                            <td>{{itemLine.baseQty}}</td>
+                            <td>{{itemLine.qty}}</td>
+                            <td>{{itemLine.unitName}}</td>
+                            <td>{{itemLine.locationName}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <form name="addPickTaskForm" novalidate ng-submit="addPickTaskForm.$valid && save()" style="margin: 35px 15px 0px;">
+                <div class="row form-group">
+                    <label class="col-md-3 control-label">Assignee:</label>
+                    <div class="col-md-6">
+                        <input-validation-message field="assignee" form="addPickTaskForm"></input-validation-message>
+                        <user-auto-complete name="assignee" ng-model="task.assigneeUserId" required="true"></user-auto-complete>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-3 control-label">Apply Assignee To All Task Steps:</label>
+                    <div class="col-md-6">
+                        <md-switch class="md-primary" style="margin: 0px" ng-model="task.isUpdateStepAssignee"></md-switch>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-3 control-label">Priority</label>
+                    <div class="col-md-6">
+                        <task-priority-auto-complete ng-model="task.priority"></task-priority-auto-complete>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-3 control-label"> staging Location: </label>
+                    <div class="col-md-6">
+                        <location-auto-complete ng-model="task.stagingLocation" />
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <label class="col-md-3 control-label"> Rush: </label>
+                    <div class="col-md-6">
+                        <md-switch class="md-primary" style="margin: 0px" ng-model="task.isRush"></md-switch>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-3 control-label"> Description: </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" ng-model="task.description" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-md-3 control-label"> Pick Rounds: </label>
+                    <div class="col-md-6">
+                        <div style="padding: 15px 15px 20px;background-color: rgba(198, 228, 230, 0.36); max-height: 300px; width: 100%; overflow: auto;">
+                         <div class="row form-group">
+                                <div class="col-md-1">
+                                    &nbsp;
+                                </div>
+                                <div class="col-md-5">
+                                    <label>Weight</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Unit</label>
+                                </div>
+                                <div class="col-md-2">
+                                </div>
+                            </div>
+                            <div class="row form-group" ng-repeat="pickRound in task.pickRounds track by $index">
+                                <div class="col-md-1" style="line-height: 30px;text-align: right;">
+                                    <label>{{$index+1}}</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="number" class="form-control" ng-model="pickRound.weight" required/>
+                                </div>
+                                <div class="col-md-4">
+                                    <ui-select ng-model="pickRound.weightUnit" required>
+                                        <ui-select-match>{{$select.selected}}</ui-select-match>
+                                        <ui-select-choices repeat="unitName in weightUnits">
+                                            {{unitName}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn red" ng-click="remove($index)">Remove</button>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="col-md-10 control-label"> &nbsp; </label>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn green" ng-click="add()">Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row form-actions right">
+                    <waitting-btn type="submit" btn-class="btn blue" value="submitLabel" is-loading="loading"></waitting-btn>
+                    <button type="button" class="btn gray" ng-click="cancel()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

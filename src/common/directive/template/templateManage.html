@@ -1,0 +1,7 @@
+<button type="button"  class="export-link btn-css" style="position: relative">Template Download
+    <div class="dis-bl"  style="display: none;position: absolute; background:#4D7F89;right: 0; left:0;  top: 28px;z-index: 1;">
+       <div ng-repeat="template in templateManage track by $index">
+        <waitting-btn type="button" btn-class="ripplelink" ng-click="getDownload(template)" value="getTemplateName(template)"></waitting-btn>
+      </div>
+    </div>
+</button>

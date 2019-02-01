@@ -1,0 +1,35 @@
+<form class="form-horizontal" novalidate name="forms.pickRuleForm"
+      ng-submit="forms.pickRuleForm.$valid && ctrl.saveOrUpdatePickRule(forms.pickRuleForm)">
+    <div class="form-group">
+        <div class="col-md-4">
+            <label>Pick Rule</label>
+            <input-validation-message field="pickRule" form="forms.pickRuleForm"></input-validation-message>
+            <ui-select name="pickRule" ng-model="pickRule.pickRule" required="true" style="border-radius: 4px;">
+                <ui-select-match>{{$select.selected}}</ui-select-match>
+                <ui-select-choices repeat="item in ['Order Pick']">
+                    {{item}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="col-md-4">
+            <label>UOM</label>
+            <input-validation-message field="unit" form="forms.pickRuleForm"></input-validation-message>
+            <ui-select name="unit" ng-model="pickRule.unitId" required="true" style="border-radius: 4px;">
+                <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="unit.id as unit in units" refresh="ctrl.searchAvailableItemUnits()" refresh-delay="1000">
+                    {{unit.name}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="col-md-4">
+            <label>Limit QTY</label>
+            <input-validation-message field="pickRule.limitQty" form="forms.pickRuleForm"></input-validation-message>
+            <input name="pickRule.limitQty" class="form-control" ng-model="pickRule.limitQty" required="true" size="5" type="number" />
+        </div>
+    </div>
+    <div style="text-align: right;">
+        <waitting-btn type="submit" btn-class="btn blue"  permission-check="{{'item::itemSpec_write'}}"
+                      value="submitLabel" is-loading="loading"></waitting-btn>
+        <button ng-click="ctrl.removeItemPickRule()" type="button" class="btn red" ng-show="isShowRemoveBtn">Remove</button>
+    </div>
+</form>

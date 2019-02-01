@@ -1,0 +1,382 @@
+<header class="page-header navbar navbar-fixed-top"></header>
+<!-- END HEADER -->
+<!-- BEGIN CONTAINER -->
+<div class="home-page" style=" background: #2f333d;">
+    <div class="home-page-wrappe">
+        <div class="page-wrappe">
+              <div class="home-page-bg">
+            <img src="assets/img/home-page-icon/home-page-bg.svg" alt="" style="width:100%; height:auto;">
+            <div class="titles titles-01">
+                CSR
+            </div>
+            <div class="titles titles-02">
+                OPERATION
+            </div>
+            <div class="titles titles-03">
+                ACCOUNTING
+            </div>
+            <div class="page-nav nav-01">
+                <div class="nav">
+                    <a ng-href="{{'#/' + 'fd/organization/list'}}" target="_blank">
+                        <div class="nav-icon animation-up">
+                            <div class="position-re">
+                                <img src="assets/img/home-page-icon/account-manage/icon.svg">
+                            </div>
+                        </div>
+                        <div class="nav-title">
+                            Account Manage
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="page-nav nav-02">
+                <div class="nav">
+                    <a ng-href="{{'#/' + 'wms/outbound/inventory-commitment/commitmentReport'}}" target="_blank">
+                        <div class="nav-icon animation-up">
+                            <div class="position-re">
+                                <img src="assets/img/home-page-icon/inventory-cmmitment/icon.svg">
+                            </div>
+                        </div>
+                        <div class="nav-title">
+                            <span class="br">Inventory</span>
+                            <span class="br" style="margin-top: -4px;">Commitment</span>
+
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+            <div class="page-nav nav-03">
+                <div class="nav">
+                    <a ng-href="{{'#/' + 'wms/outbound/order-plan/list'}}" target="_blank">
+                        <div class="nav-icon animation-up">
+                            <div class="position-re">
+                                <img src="assets/img/home-page-icon/wave-plan/icon.svg">
+                            </div>
+                        </div>
+                        <div class="nav-title">
+                            Wave Plan
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+            <div class="page-nav nav-04">
+                <div class="nav">
+                   <a ng-href="{{'#/' + 'wms/task/pick-task/list'}}" target="_blank">
+                        <div class="nav-icon animation-up">
+                            <div class="position-re">
+                                <img src="assets/img/home-page-icon/pick-pack/icon.svg" >
+                            </div>
+                        </div>
+                        <div class="nav-title">
+                            Pick & Pack
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+            <div class="page-nav nav-05">
+                <div class="nav">
+                    <a ng-href="{{'#/' + 'wms/outbound/order/list'}}" target="_blank">
+                        <div class="nav-icon animation-up">
+                            <div class="position-re">
+                                <img src="assets/img/home-page-icon/outbound-order/icon.svg">
+                            </div>
+                        </div>
+                        <div class="nav-title">
+                            Outbound Order
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="page-nav nav-06">
+                <div class="nav" ng-mouseover="isDispatch = true">
+                    <div class="parent-popup">
+                        <div class="nav-icon animation-up">
+                            <div class="position-re">
+                                <img src="assets/img/home-page-icon/dispatch/icon.svg">
+                            </div>
+                        </div>
+                        <div class="nav-title">
+                            Dispatch
+                            <i class="fa fa-angle-right" style="margin-left: 8px;margin-top: 2px;"></i>
+                        </div>
+                    </div>
+                    <div class="dispatch" ng-if="isDispatch">
+                        <div class="subset">
+                            <a href="https://ship.unisco.com/v2/index.html#/getquote?isEdit=true&quoteNumber=5507123" target="_blank">
+                                Request<br>Pick</a>
+                        </div>
+                        <div class="subset">
+                            <a href="https://wise.logisticsteam.com/yms/#/yms/task/yard-check-task" target="_blank">
+                            Yard Check</a>
+                        </div>
+                        <div class="subset">
+                            <a ng-href="{{'#/' + 'cf/facility/appointment/makeAppointment'}}" target="_blank">
+                            Make<br>Appointment</a>
+                        </div>
+                        <div class="subset">
+                            <div class="chinNoUrl">
+                            Return<br>Container</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="page-nav nav-07">
+                <div class="nav">
+                    <a ng-href="{{'#/' + 'wms/outbound/load/list'}}" target="_blank">
+                        <div class="nav-icon animation-up">
+                            <div class="position-re">
+                                <img src="assets/img/home-page-icon/build-load/icon.svg">
+                            </div>
+                        </div>
+                        <div class="nav-title">
+                            Build Load
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+            <div class="page-nav nav-08">
+                <div class="nav">
+                    <a ng-href="{{'#/' + 'wms/inbound/receipt/list'}}" target="_blank">
+                        <div class="nav-icon animation-up">
+                            <div class="position-re">
+                                <img src="assets/img/home-page-icon/inbound-receipt/icon.svg">
+                            </div>
+                        </div>
+                        <div class="nav-title">
+                            Inbound Receipt
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+            <div class="page-nav nav-09">
+                <div class="nav">
+                    <a ng-href="{{'#/' + 'cf/facility/window/entry/entryList'}}" target="_blank">
+                        <div class="nav-icon animation-up">
+                            <div class="position-re">
+                                <img src="assets/img/home-page-icon/window-check-in/icon.svg" class="down">
+                            </div>
+                        </div>
+                        <div class="nav-title">
+                            Window Check-in
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="page-nav nav-10">
+                <div class="nav">
+                    <a ng-href="{{'#/' + 'wms/task/load-task/general/list'}}" target="_blank">
+                        <div class="nav-icon animation-up">
+                            <div class="position-re">
+                                <img src="assets/img/home-page-icon/load-shipment/icon.svg" class="up">
+                            </div>
+                        </div>
+                        <div class="nav-title">
+                            Load Shipment
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+            <div class="page-nav nav-11">
+                <div class="nav">
+                    <a href="http://sct.servicecenterteam.com/BillandPay/" target="_blank">
+                        <div class="nav-icon animation-up">
+                            <div class="position-re">
+                                <img src="assets/img/home-page-icon/bill-iInvoice/icon.svg" >
+                            </div>
+                        </div>
+                        <div class="nav-title">
+                            Bill & Invoice
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="page-nav nav-12">
+                <div class="nav">
+                    <a ng-href="{{'#/' + 'wms/task/receive-task/list'}}" target="_blank">
+                        <div class="nav-icon animation-up">
+                            <div class="position-re">
+                                <img src="assets/img/home-page-icon/receive-inventory/icon.svg">
+                            </div>
+                        </div>
+                        <div class="nav-title">
+                            Receive Inventory
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="page-nav nav-13">
+                <div class="nav">
+                    <a class="noUrl" ng-if="!enabledApplication['yms']">
+                        <div class="nav-icon animation-up">
+                            <div class="position-re">
+                                <img src="assets/img/home-page-icon/register-process/icon.svg" class="down">
+                                <img src="assets/img/home-page-icon/register-process/icon-on.svg" class="up">
+                            </div>
+                        </div>
+                        <div class="nav-title">
+                            Register & Process
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="page-nav nav-14" >
+                <div class="nav" ng-mouseover="isInventoryCenter = true">
+                    <div class="parent-popup" style="background: none; box-shadow:none;-webkit-box-shadow:none">
+                        <a ng-href="{{'#/inventory/inventory/list '}}" target="_blank" ng-class="{'z-index':isInventoryCenter}">
+                        <div class="nav-icon animation-up">
+                            <div class="position-re">
+                                <img src="assets/img/home-page-icon/inventory-center/icon.svg">
+                            </div>
+                        </div>
+                        <div class="nav-title">
+                            Inventory Center
+                            <i class="fa fa-angle-right" style="margin-left: 8px;margin-top: 2px;"></i>
+                        </div>
+                        </a>
+                    </div>
+
+                    <div class="dispatch inventory-center" ng-if="isInventoryCenter">
+                       <div class="subset">
+                            <a ng-href="{{'#/inventory/inventorycount/basic'}}" target="_blank">
+                                CYCLE<br>COUNT
+                            </a>
+                       </div>
+                        <div class="subset">
+                            <a ng-href="{{'#/wms/task/replenishment-task/list'}}" target="_blank">
+                                REPLENI<br>SHMENT
+                            </a>
+                        </div>
+                        <div class="subset">
+                            <a ng-href="{{'#/wms/task/inventory-movement-task/list'}}" target="_blank">
+                                 MOVEMENT
+                            </a>
+                        </div>
+                        <div class="subset">
+                            <div class="chinNoUrl">PARTS TEAR<br> DOWN</div>
+                        </div>
+                        <div class="subset">
+                            <div class="chinNoUrl">REPORT <br> DAMAGED</div>
+                        </div>
+                        <div class="subset">
+                            <div class="chinNoUrl">PHYSICAL<br> COUNT</div>
+                        </div>
+                        <div class="subset">
+                            <div class="chinNoUrl">PALLET<br>CONFIGURATION <br>CHANGE</div>
+                        </div>
+                        <div class="subset">
+                            <a ng-href="{{'#/inventory/adjustment/list'}}" target="_blank">
+                                 ADJUSTMENT
+                            </a>
+                        </div>
+                        <div class="subset">
+                            <div class="chinNoUrl">KITTING<br>ASSEMBLY</div>
+                        </div>
+                        <div class="subset">
+                            <div class="chinNoUrl">ON HOLD</div>
+                        </div>
+                        <div class="subset" style="background:none; flex: 1" ng-mousemove="onclickDispatch()"></div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="page-nav nav-15">
+
+                <div class="nav">
+                    <a class="noUrl" ng-if="!enabledApplication['yms']">
+                        <div class="nav-icon animation-up">
+                            <div class="position-re">
+                                <img src="assets/img/home-page-icon/settle-inbound/icon.svg" class="down">
+                                <img src="assets/img/home-page-icon/settle-inbound/icon-on.svg" class="up">
+                            </div>
+                        </div>
+                        <div class="nav-title">
+                            Settle Inbound
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="page-nav-icons edi edi-01">
+                <a href="http://restful.logisticsteam.com/WMSWebsite/RequestLog.htm" target="_blank">
+                    <div class="icon-box animation-down">
+                        <img src="assets/img/home-page-icon/edi/edi-circle.svg"
+                             class="circle">
+                        <img src="assets/img/home-page-icon/edi/edi-file.svg">
+                        <img src="assets/img/home-page-icon/edi/edi-arrow-right.svg"
+                             class="right">
+                        <img src="assets/img/home-page-icon/edi/edi-arrow-left.svg"
+                             class="left">
+                    </div>
+                </a>
+            </div>
+            <div class="page-nav-icons edi edi-02">
+                <a href="http://restful.logisticsteam.com/WMSWebsite/RequestLog.htm" target="_blank">
+                    <div class="icon-box animation-down">
+                        <img src="assets/img/home-page-icon/edi/edi-circle.svg"
+                             class="circle">
+                        <img src="assets/img/home-page-icon/edi/edi-file.svg">
+                        <img src="assets/img/home-page-icon/edi/edi-arrow-right.svg"
+                             class="right">
+                        <img src="assets/img/home-page-icon/edi/edi-arrow-left.svg"
+                             class="left">
+                    </div>
+                </a>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="additional_functions">
+        <div class="additional">
+            <div class="more-links" >
+                <div class="icon"><img src="assets/img/home-page-icon/additional-functions.svg"></div>
+                <div class="text">Additional Functions</div>
+            </div>
+            <div class="more_additional"  >
+                <ul class="ulLIsts">
+                    <li><div class="chinNoUrl">Customer<br>Drop-off</div></li>
+                    <li><div class="chinNoUrl">Claims</div></li>
+                    <li><a ng-href="{{'#/' + 'wms/task/general-task/list'}}" target="_blank">Project</a></li>
+                    <li><div class="chinNoUrl">Outbound<br> POS</div></li>
+                    <li><div class="chinNoUrl">Bill & Pay</div></li>
+                    <li><a ng-href="{{'#/' + 'admin/service/item-import/config'}}" target="_blank">Batch Import</a></li>
+                    <li><div class="chinNoUrl">Transfer</div></li>
+                    <li><div class="chinNoUrl">Issue RMA</div></li>
+                    <li><a ng-href="{{'#/' + 'cl'}}" target="_blank">Conveyor Line</a></li>
+                    <li><a href="https://ship.unisco.com/v2/index.html#/getquote" target="_blank">Create Quote</a></li>
+                </ul>
+
+            </div>
+        </div>
+        <div style="width: 100%; height: 10px;"></div>
+        <div class="report-learning">
+            <div class="more-links" ng-mouseover="reportAndLearningCenter()" >
+                <div class="icon"><img src="assets/img/home-page-icon/report-and-learning.svg"></div>
+                <div class="text">Report and Learning</div>
+            </div>
+            <div class="more_additional">
+                <ul class="ulLIsts">
+                    <li><a href="http://18.236.74.119:8080/moodle/" target="_blank">Training<br> Center</a></li>
+                    <li><a ng-href="{{'#/' + 'rc'}}"  target="_blank">Report</a></li>
+                    <li><div class="chinNoUrl">KPI</div></li>
+                    <li><a ng-href="{{'#/' + 'dashboard/monitor/new-dashboards'}}" target="_blank">Dashboard</a></li>
+                    <li><a ng-href="{{'#/' + 'admin/service/ps/label-template'}}" target="_blank">Label Library</a></li>
+                    <li><div class="chinNoUrl">Doc Library</div></li>
+                    <li><a href="https://ship.unisco.com/v2/index.html#/Track" target="_blank">Shipment<br>Tracking</a></li>
+                    <li><div class="chinNoUrl">Serialized<br>Tracking</div></li>
+                </ul>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="popus" ng-if="isDispatch || isInventoryCenter"  ng-mousemove="onclickDispatch()"></div>
+</div>
+
+<!-- END CONTAINER -->
+<!-- BEGIN FOOTER -->

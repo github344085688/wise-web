@@ -1,0 +1,22 @@
+<div ng-show="importUploadDataSimple.length > 0 && !isUploading">
+    <div class="row form-group">
+        <label class="bold col-md-2" style="padding-left: 20px; padding-top: 5px;">File Mapping:</label>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-4" ng-repeat="field in fields track by $index">
+            <div class="row form-group">
+                <div class="col-md-5">{{field}}</div>
+                <div class="col-md-7">
+                    <ui-select ng-model="fieldMapping[field]" on-select="fieldMappingSelect($select.selected, field)">
+                        <ui-select-match allow-clear="true">
+                            <span ng-bind="$select.selected"></span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in getUnMapped() | filter: $select.search">
+                            <b>{{item}}</b>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

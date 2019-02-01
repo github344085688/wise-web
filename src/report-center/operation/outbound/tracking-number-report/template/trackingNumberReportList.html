@@ -1,0 +1,91 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Tracking Number Report</h1>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Order ID</label>
+                <lt-tags-input placeholder="Enter Order ID" ng-model="search.orderIds" fill="DN-"></lt-tags-input>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Status</label>
+                <ui-select name="status" ng-model="search.status">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item  in statusList| filter: $select.search">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                <label>Customer:</label>
+                <organization-auto-complete name="customer" ng-model="search.customerId" tag="Customer" allow-clear="true"></organization-auto-complete>
+            </div>
+        </div>
+        <div  class="grid-parent grid-100 container">
+            <div class="grid-50">
+                <label>Tracking No</label>
+                <lt-tags-input placeholder="Enter Tracking Number" ng-model="search.trackingNos"></lt-tags-input>
+            </div>
+            <div class="grid-50">
+                <label>Reference No.</label>
+                <lt-tags-input placeholder="Enter Tracking Number" ng-model="search.referenceNos"></lt-tags-input>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Created When From</label>
+                <lt-date-time value="search.createdWhenFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Created When To</label>
+                <lt-date-time  value="search.createdWhenTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Shipped Time From</label>
+                <lt-date-time  value="search.shippedTimeFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Shipped Time To</label>
+                <lt-date-time  value="search.shippedTimeTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-80">&nbsp;</div>
+            <div class="grid-10">
+                <button type="button" class="ripplelink" ng-click="clearQuery()">Clear Query</button>
+            </div>
+            <div class="grid-10">
+                <waitting-btn type="button"  style="width: 100%;" btn-class="ripplelink" value="'Search'" ng-click="searchReports()" is-loading="loading"></waitting-btn>
+            </div>
+        </div>
+        <div class=" grid-parent grid-100 container">
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="export()" value="'Export to XLSX'" is-loading="exporting"></waitting-btn>
+            </div>
+            <div class="grid-90 ">
+            </div>
+        </div>
+        <div class=" grid-parent grid-100 container">
+            <div class="grid-parent grid-100 container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th ng-repeat="head in reportHead"> {{head}} </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="report in reportData">
+                            <td ng-repeat="head in reportHead"> {{report[head]}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <unis-pager total-count="paging.totalCount"  current-page ="paging.pageNo" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+        </div>
+    </div>
+</div>

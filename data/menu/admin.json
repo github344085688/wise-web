@@ -1,0 +1,161 @@
+[
+  {
+    "title": "Config",
+    "icon": "settings",
+    "url": "",
+    "state": "admin.config",
+    "subMenu": [
+      {
+        "title": "Inventory",
+        "icon": "view_module",
+        "url": "/admin/config/inventory",
+        "state": "admin.config.inventory",
+        "permissions": "config::inventory_read",
+        "subMenu": [
+          {
+            "title": "Field Priority",
+            "icon": "sort",
+            "state": "admin.config.inventory.commitFieldConf",
+            "url": "/admin/config/inventory/cfc"
+          }
+        ]
+      },
+      {
+        "title": "Pick",
+        "icon": "dashboard",
+        "url": "",
+        "state": "admin.config.pick",
+        "permissions": "config::pick_read",
+        "subMenu": [
+          {
+            "title": "Pick Rule",
+            "icon": "sort",
+            "state": "admin.config.pick.pick-rule",
+            "url": "/admin/config/pick/pick-rule"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Service",
+    "icon": "group_work",
+    "url": "",
+    "state": "admin.service",
+    "subMenu": [
+      {
+        "title": "Print",
+        "icon": "print",
+        "url": "#/admin/service/ps",
+        "permissions": "service::print_read",
+        "subMenu": [
+          {
+            "title": "Template",
+            "icon": "crop_portrait",
+            "state": "admin.service.ps.template",
+            "url": "/admin/service/ps/template"
+          },
+          {
+            "title": "Server",
+            "icon": "computer",
+            "state": "admin.service.ps.server",
+            "url": "/admin/service/ps/server"
+          },
+          {
+            "title": "Printer",
+            "icon": "print",
+            "state": "admin.service.ps.printer",
+            "url": "/admin/service/ps/printer"
+          },
+          {
+            "title": "Module Template",
+            "icon": "label",
+            "state": "admin.service.ps.moduleTemplate",
+            "url": "/admin/service/ps/module-template"
+          },
+          {
+            "title": "Label Template",
+            "icon": "label",
+            "state": "admin.service.ps.labelTemplate",
+            "url": "/admin/service/ps/label-template"
+          },
+          {
+            "title": "Template Field Config",
+            "icon": "settings",
+            "state": "admin.service.ps.templateFieldConfig",
+            "url": "/admin/service/ps/template-field-config"
+          }
+        ]
+      },
+      {
+        "title": "Import",
+        "icon": "assignment",
+        "url": "",
+        "state": "admin.service.itemImport",
+        "permissions": "service::import_write",
+        "subMenu": [
+          {
+            "title": "Item Import Setup",
+            "icon": "assignment",
+            "state": "admin.service.itemImport.config",
+            "url": "/admin/service/item-import/config"
+          },
+          {
+            "title": "Import Item",
+            "icon": "assignment",
+            "state": "admin.service.itemImport.upload",
+            "url": "/admin/service/item-import/upload"
+          },
+          {
+            "title": "Import Organization",
+            "icon": "assignment",
+            "state": "admin.service.organizationImport",
+            "url": "/admin/service/organization-import"
+          },
+          {
+            "title": "Import Address",
+            "icon": "assignment",
+            "state": "admin.service.addressImport",
+            "url": "/admin/service/address-import"
+          },
+          {
+            "title": "Import LongHaul",
+            "icon": "assignment",
+            "state": "admin.service.longHaulImport",
+            "url": "/admin/service/longhaul-import"
+          },
+          {
+            "title": "Import Location",
+            "icon": "assignment",
+            "state": "admin.service.locationImport",
+            "url": "/admin/service/location-import"
+          },
+          {
+            "title": "Import Tracking# ",
+            "icon": "assignment",
+            "state": "admin.service.trackingNumberImport",
+            "url": "/admin/service/trackingNumber-import"
+          },
+          {
+            "title": "Import Inventory",
+            "icon": "assignment",
+            "state": "admin.service.inventoryImport",
+            "url": "/admin/service/inventory-import"
+          },
+          {
+            "title": "Template Manage",
+            "icon": "assignment",
+            "state": "admin.service.templateManagement.list",
+            "url": "/admin/service/template-management/list"
+          },
+          {
+            "title": "Import Load",
+            "icon": "assignment",
+            "state": "admin.service.loadImport",
+            "url": "/admin/service/load-import"
+          }
+        ]
+      }
+    ]
+  }
+]

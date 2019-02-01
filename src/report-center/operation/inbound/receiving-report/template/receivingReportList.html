@@ -1,0 +1,83 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Receiving Report</h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-30">
+                <label>Customer:</label>
+                <organization-auto-complete name="customer" ng-model="search.customerId" tag="Customer"
+                                            allow-clear="true"></organization-auto-complete>
+            </div>
+            <div class="grid-30">
+                <label> Start Time:</label>
+                <lt-date-time value="search.startTime" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+            <div class="grid-30">
+                <label> End Time:</label>
+                <lt-date-time value="search.endTime" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+
+            <div class="grid-90">
+
+                <label>Status</label>
+                <ui-select name="statuses" multiple ng-model="search.receiptStatuses">
+                    <ui-select-match>
+                        {{$item.name}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item.dbName as item in receiptStatus| filter: $select.search">
+                        {{item.name}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-80">&nbsp;</div>
+            <div class="grid-10 ">
+                <button type="button" btn-class="btn yellow" class="export-link" style="position: relative">Export
+                    <div class="ball-pulse" style="display:inline-block;" ng-show="exporting">
+                        <div style="width:6px; height:6px;"></div>
+                        <div style="width:6px; height:6px;"></div>
+                        <div style="width:6px; height:6px;"></div>
+                    </div>
+                    <div class="dis-bl"style="display: none;position: absolute; background:#4D7F89;right: 0; left:0;  top: 28px;z-index: 1;">
+                        <waitting-btn type="button" btn-class="ripplelink" ng-click="export('Receipt Level')" value="'Receipt Level'" ></waitting-btn>
+                        <waitting-btn type="button" btn-class="ripplelink" ng-click="export('Item Level')" value="'Item Level'" ></waitting-btn>
+                        <waitting-btn type="button" btn-class="ripplelink" ng-click="export('LP Level')" value="'LP Level'" ></waitting-btn>
+                        <waitting-btn type="button" btn-class="ripplelink" ng-click="export('SN Level')" value="'SN Level'" ></waitting-btn>
+                    </div>
+                </button>
+            </div>
+
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="searchReports()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+
+        </div>
+        <div class=" grid-parent grid-100 container">
+            <div class="grid-parent grid-100 container">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th ng-repeat="head in reportHead"> {{head}} </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="report in reportData">
+                        <td ng-repeat="head in reportHead"> {{report[head]}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <unis-pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,93 @@
+<div class="grid-100" style="background-color: rgba(77, 127, 137, 0.4)">
+
+    <div class="grid-100" style=" line-height: 50px;background-color: rgba(255, 255, 255, 0.87);padding-top: 20px;padding-bottom: 20px">
+        <div class="grid-40" style="text-align:center;">
+            <h1 class="section-label pull-left" style="font-size:40px">Exceptional Handling</h1>
+        </div>
+    </div>
+
+    <div class="grid-100" style="margin-top:20px ;background-color: rgba(255, 255, 255, 0.87);margin-bottom: 30px">
+
+        <div class="grid-100" style="margin-top: 20px;margin-bottom:20px">
+            <div class="grid-10">
+                <input type="text" ng-model="param.searchClp" ng-keyup="enterEvent($event)" class="form-control"
+                    placeholder="CLP to search" />
+            </div>
+        </div>
+
+        <div class="grid-100" style="margin-bottom:20px">
+            <div class="grid-25">
+                <b style="font-size:20px">DN: </b><span style="font-size:20px">{{lpList.orderId}}</span>
+            </div>
+            <div class="grid-25">
+                <b style="font-size:20px">LongHaul No: </b><span style="font-size:20px">{{lpList.longHaulNo}}</span>
+            </div>
+            <div class="grid-50">
+                <b style="font-size:20px">Scheduled Delivery Date:</b> <span style="font-size:20px">{{lpList.scheduleDate}}</span>
+            </div>
+        </div>
+
+        <div class="grid-100" style="margin-bottom:20px">
+            <div class="grid-25">
+                <b style="font-size:20px">STORE: </b><span style="font-size:20px">{{lpList.store}}</span>
+            </div>
+            <div class="grid-25">
+                <b style="font-size:20px">Pack Task: </b><span style="font-size:20px">{{lpList.packTaskId}}</span>
+            </div>
+            <div class="grid-25">
+                <b style="font-size:20px">Branch Assigned:</b><span style="font-size:20px">{{branchName}}</span>
+            </div>
+            <div class="grid-25">
+                <b style="font-size:20px">Item QTY: </b><span style="font-size:20px">{{qtySum}} EA</span>
+            </div>
+        </div>
+
+
+        <div class="grid-100" style="margin-bottom:30px">
+            <div class="grid-80">
+                &nbsp;
+            </div>
+            <div class="grid-20" style="line-height: 50px;position: relative;">
+                <waitting-btn type="button" is-loading="exporting" btn-class="ripplelink" ng-click="click()" value="'Re-Assign Branch'"></waitting-btn>
+                <div ng-show="isShow" style="position: absolute;left:10px;right: 10px;">
+                    <div ng-repeat="branch in converyLine.branches" ng-show="branch.type === 'NORMAL' && branch.status === 'AVAILABLE'">
+                        <waitting-btn type="button" btn-class="ripplelink button-font-backgroud"
+                            ng-click="reAssignBranches(branch.name)" value="'Branch: '+ branch.name + '&nbsp;&nbsp;&nbsp;' + ' StoreNo:'+ branch.occupiedBy + ' '"></waitting-btn>
+                    </div>
+                    <div ng-show="!converyLine.branches">
+                        <waitting-btn type="button" btn-class="ripplelink button-font-backgroud" value="'No Branch'"></waitting-btn>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-100" style="background-color: rgba(255, 255, 255, 0.87);margin-bottom: 20px;">
+        <div class="grid-100" style="margin-top: 20px;margin-bottom: 20px;">
+            <label style="font-size:30px">LP Detail</label>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="font-size:24px">#</th>
+                        <th style="font-size:24px">Description</th>
+                        <th style="font-size:24px">Qty</th>
+                        <th style="font-size:24px">Status</th>
+                    </tr>
+                </thead>
+                <tbody ng-show="!isLoading">
+                    <tr ng-repeat="lp in lpList.inventories track by $index">
+                        <td style="font-size:24px">{{$index + 1}}</td>
+                        <td style="font-size:24px">{{lp.itemSpec.name}}</td>
+                        <td style="font-size:24px">{{lp.qty}}{{lp.unit.name}}</td>
+                        <td style="font-size:24px">{{lp.status}}</td>
+                    </tr>
+                </tbody>
+                <div ng-show="isLoading" class="text-center">
+                    <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                </div>
+            </table>
+        </div>
+    </div>
+
+</div>

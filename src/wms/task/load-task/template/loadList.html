@@ -1,0 +1,53 @@
+<md-dialog flex="80">
+	<md-dialog-content class="md-dialog-content">
+		<h4 class="md-title">Loads</h4>
+		<div style="margin-bottom: 20px;">
+			<load-search-form is-loading="isLoading" search-loads="searchLoads(searchParam)"
+							  hide-properties="['status']" ></load-search-form>
+		</div>
+		<div class="table-scrollable">
+	        <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" role="grid">
+	            <thead>
+	            <tr role="row">
+	            	<th><input type="checkbox" ng-checked="selectAll" ng-click="toggleSelection()"  name="selectAll"></th>
+					<th>Load ID</th>
+					<th>Load NO</th>
+                    <th>Status</th>
+                    <th>MBOL</th>
+                    <th>Customer</th>
+                    <th>Carrier</th>
+                    <th>Load Type</th>
+                    <th>Freight Term</th>
+                    <th>Appointment Time</th>
+                    <th>Create Time</th>
+                    <th>Create By</th>
+	            </tr>
+	            </thead>
+	            <tbody>
+	                <tr ng-repeat="record in recordList track by $index">
+	            		<td><input type="checkbox" value="{{record.id}}" ng-checked="ctrl.selectedRecordIds.indexOf(record.id) > -1" ng-click="toggleSelection(record.id)" name="selectedOrders"></td>
+						<td>{{record.id}}</td>
+						<td>{{record.loadNo}}</td>
+                        <td>{{record.status}}</td>
+                        <td>{{record.masterBolNo}}</td>
+                        <td>{{organizations[record.customerId].name}}</td>
+                        <td>{{organizations[record.carrierId].name}}</td>
+                        <td>{{record.type}}</td>
+                        <td>{{record.freightTerm}}</td>
+                        <td>{{record.appointmentTime}}</td>
+                        <td>{{record.createdWhen}}</td>
+                        <td>{{record.createdBy}}</td>
+	                </tr>
+	            </tbody>
+	        </table>
+	    </div>
+	</md-dialog-content>
+	<md-dialog-actions>
+		<div class="form-group">
+			<div class="col-md-12"  style="text-align: right;">
+				<button class="btn blue" ng-click="confirm()">Confirm</button>&nbsp;&nbsp;
+				<button class="btn default" ng-click="cancel()">Cancel</button>
+			</div>
+		</div>
+	</md-dialog-actions>
+</md-dialog>

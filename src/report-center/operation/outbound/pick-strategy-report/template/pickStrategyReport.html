@@ -1,0 +1,56 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label">Pick Strategy Report</h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-80">&nbsp;</div>
+            <div class="grid-20">
+                <waitting-btn type="button" is-loading="exporting" btn-class="ripplelink" ng-click="export()" value="'Export'"></waitting-btn>
+            </div>
+        </div>
+        <div ng-show="isLoading" class="grid-parent grid-100 container text-center">
+            <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+        </div>
+
+        <div class="grid-parent grid-100 container" style="overflow: auto;">
+            <table class="table"  ng-show="!isLoading">
+                <thead>
+                <tr style="font-size:15px">
+                    <th>#</th>
+                    <th>Location</th>
+                    <th>LP</th>
+                    <th>TaskId</th>
+                    <th>TaskStatus</th>
+                    <th>Order</th>
+                    <th>Item</th>
+                    <th>UOM</th>
+                    <th>Qty</th>
+                    <th>AssigneeUser</th>
+                    <th>CreateWhen</th>
+                    <th>CreatedBy</th>
+                </tr>
+                </thead>
+                <tbody style="font-size:15px">
+                <tr ng-repeat="line in pickStrategy track by $index">
+                    <td>{{$index + 1}}</td>
+                    <td>{{line.location}}</td>
+                    <td>{{line.lpId}}</td>
+                    <td>{{line.taskId}}</td>
+                    <td>{{line.status}}</td>
+                    <td>{{line.orderId}}</td>
+                    <td>{{line.item}}</td>
+                    <td>{{line.uom}}</td>
+                    <td>{{line.qty}}</td>
+                    <td>{{line.assigneeUser}}</td>
+                    <td>{{line.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                    <td>{{line.createdBy}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

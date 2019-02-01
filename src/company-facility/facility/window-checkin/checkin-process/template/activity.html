@@ -1,0 +1,193 @@
+<div class="row step-lines">
+    <div class="col-lg-4 step-line"></div>
+    <div class="col-lg-4"></div>
+    <div class="col-lg-4 step-line"></div>
+</div>
+<div class="row step-body">
+    <div class="portlet light box-shadow-none">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject bold"></span>
+            </div>
+            <div class="actions col-md-12" ng-hide="isCheckedOut()">
+                <ui-select ng-model="load.selected" name="keyword" on-select="addLoadOrReceipt($select.selected)">
+                    <ui-select-match placeholder="Type to search Receipt or Load">
+                        <div ng-bind="$select.selected.id"></div>
+                    </ui-select-match>
+                    <ui-select-choices  repeat="item in loadAndReceipts" group-by="item.itemType"
+                                       refresh="searchLoadAndReceipts($select.search)" refresh-delay="300">
+                        <div class="row select-load-receipt-head" ng-show="item.isLoad && item.isLoadHead">
+                            <div class="col-md-1">ID</div>
+                            <div class="col-md-1">Load No.</div>
+                            <div class="col-md-2">Company</div>
+                            <div class="col-md-2">Customer</div>
+                            <div class="col-md-2">Carrier</div>
+                            <div class="col-md-2">Status</div>
+                            <div class="col-md-1">Type</div>
+                            <div class="col-md-1">Is Transload</div>
+                            <!--<div class="col-md-2">Appointment Time</div>-->
+                        </div>
+                        <div class="form-group border-bottom" ng-show="item.isLoad">
+                            <div class="col-md-1">{{item.id}}</div>
+                            <div class="col-md-1">{{item.loadNo}}</div>
+                            <div class="col-md-2">{{item.companyName}}</div>
+                            <div class="col-md-2">{{item.customerName}}</div>
+                            <div class="col-md-2">{{item.carrierName}}</div>
+                            <div class="col-md-2">{{item.status}}</div>
+                            <div class="col-md-1">{{item.type}}</div>
+                            <div class="col-md-1">{{item.isTransload? 'Yes' : 'No'}}</div>
+                            <!--<div class="col-md-2">{{item.appointmentTime}}</div>-->
+                        </div>
+
+
+                        <div class="row select-load-receipt-head" ng-show="!item.isLoad && item.isReceiptHead">
+                            <div class="col-md-1">ID</div>
+                            <div class="col-md-1">Company</div>
+                            <div class="col-md-2">Reference</div>
+                            <div class="col-md-2">Customer</div>
+                            <div class="col-md-1">Carrier</div>
+                            <div class="col-md-1">Status</div>
+                            <div class="col-md-1">Container No.</div>
+                            <div class="col-md-1">Purchase Order No.</div>
+                            <div class="col-md-1"> Status </div>
+                            <div class="col-md-1">Is Transload</div>
+                            <!--<div class="col-md-2">Appointment Time</div>-->
+                        </div>
+                        <div class="form-group border-bottom" ng-show="!item.isLoad">
+                            <div class="col-md-1">{{item.id}}</div>
+                            <div class="col-md-1">{{item.companyName}}</div>
+                            <div class="col-md-2">{{item.referenceNo}}</div>
+                            <div class="col-md-2">{{item.customerName}}</div>
+                            <div class="col-md-1">{{item.carrierName}}</div>
+                            <div class="col-md-1">{{item.status}}</div>
+                            <div class="col-md-1">{{item.containerNo}}</div>
+                            <div class="col-md-1">{{item.poNo}}</div>
+                            <div class="col-md-1">{{item.status}}</div>
+                            <div class="col-md-1">{{item.isTransload? 'Yes' : 'No'}}</div>
+                            <!--<div class="col-md-2">{{formatTime(item.appointmentTime)}}</div>-->
+                        </div>
+                    </ui-select-choices>
+                    <ui-select-no-choice>
+                        Dang! Please input proper key word to search.
+                    </ui-select-no-choice>
+                </ui-select>
+            </div>
+        </div>
+
+        <div class="portlet-body form form-horizontal">
+            <div ng-show="!isLoadingComplete" class="text-center">
+                <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+            </div>
+            <div ng-if="receiptList.length > 0" class="form-group">
+                <fieldset style="border-color: #e7ecf1;">
+                    <legend>Receipt List</legend>
+                    <div class="col-md-12">
+                        <table class="table table-striped table-bordered">
+                            <tr class="bold">
+                                <td style="width: 100px;">Receipt Id</td>
+                                <td>Company</td>
+                                <td>Customer</td>
+                                <td>Reference No.</td>
+                                <td>Container No.</td>
+                                <td>Appointment Time</td>
+                                <td>Status</td>
+                                <td>Is Transload</td>
+                                <td style="width: 80px;">Actions</td>
+                            </tr>
+                            <tr ng-repeat="receipt in receiptList">
+                                <td><a ng-href="{{'#/wms/inbound/receipt/' + receipt.id}}" target="_blank">{{receipt.id}}</a></td>
+                                <td>{{receipt.companyName}}</td>
+                                <td>{{receipt.customerName}}</td>
+                                <td>
+                                    <span ng-if="!receipt.needCollectReceiptReferenceNoOnWindowCheckin">{{receipt.referenceNo}} </span>
+                                    <input ng-if="receipt.needCollectReceiptReferenceNoOnWindowCheckin" type="text"  class="form-control"  ng-model="receipt.referenceNo" ng-disabled="receipt.status==='Closed'||receipt.status==='Force Closed'" required/></td>
+                                <td>{{receipt.containerNo}}</td>
+                                <td>{{receipt.appointmentTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                                <td>{{receipt.status}} </td>
+                                <td>{{receipt.isTransload? 'Yes' : 'No'}}</td>
+                                <td>
+                                    <span class="text-right" ng-show="receiptRemovable(receipt)">
+                                        <a ng-click="removeItem(receiptList, $index)">Remove</a>
+                                    </span>
+                                    <span  ng-show="receiptForceRemovable(receipt)">
+                                        <a style="color:red" ng-click="forceRemoveItem(receiptList, $index)">Force Remove</a>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </fieldset>
+            </div>
+            <div ng-if="loadList.length > 0" class="form-group">
+                <fieldset style="border-color: #e7ecf1;">
+                    <legend>Load List</legend>
+                    <div class="col-md-12">
+                        <div style="float:right">
+                            <label style="top: -13px;position: relative;">Enable Load Sequence:</label>
+                            <md-switch class="md-primary" style="display: inline-block;padding-left: 15px; margin: 0" aria-label="" ng-model="loadParam.enableLoadSequence" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <table class="table table-striped table-bordered">
+                            <tr class="bold">
+                                <td ng-if="loadParam.enableLoadSequence">Sequence</td>
+                                <td style="width: 100px;">Load ID</td>
+                                <td>Company</td>
+                                <td>Customer</td>
+                                <td>Load No.</td>
+                                <td>Location</td>
+                                <td>Suggested Dock</td>
+                                <td>Status</td>
+                                <td>Appointment Time</td>
+                                <td>Is Transload</td>
+                                <td style="width: 180px;">Actions</td>
+                            </tr>
+                            <tr ng-repeat="load in loadList track by $index">
+                                <td style="width:70px;text-align:center;line-height:30px" ng-if="loadParam.enableLoadSequence">
+                                        {{$index+1}}
+
+                                        <div style="width: 16px;float: right;" ng-if= " loadList.length > 1">
+                                            <a ng-if="$index == 0" style="float:right;height:16px;width:14px"> </a>
+                                            <a ng-if="$index > 0" style="float:right" class="expand-a expand" ng-click="changeAheadSequence($index)"> </a>
+                                            <a style="float:right" ng-if="$index+1 != loadList.length" class="expand-a collapse" ng-click="changeBehindSequence($index)"> </a>
+                                        </div>
+                                </td>
+                                <td style="vertical-align:middle"> <a ng-href="{{'#/wms/outbound/load/' + load.id}}" target="_blank">{{load.id}}</a></td>
+                                <td style="vertical-align:middle">{{load.companyName}}</td>
+                                <td style="vertical-align:middle">{{load.customerName}}</td>
+                                <td style="vertical-align:middle">{{load.loadNo}}</td>
+                                <td style="vertical-align:middle">{{ formateLoaction(load.locationNames) }}</td>
+                                <td style="vertical-align:middle">{{load.dock.name}}</td>
+                                <td style="vertical-align:middle">{{load.status}}</td>
+                                <td style="vertical-align:middle">{{load.appointmentTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                                <td style="vertical-align:middle">{{load.isTransload? 'Yes' : 'No'}}</td>
+                                <td style="vertical-align:middle">
+                                    <span class="text-right"><a ng-click="printCountingSheet(load)">Counting Sheet</a> | </span>
+                                 <span class="text-right" ng-show="loadRemovable(load)">
+                                        <a ng-click="removeItem(loadList, $index)">Remove</a>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!--<div class="dropzone box">-->
+                            <!--&lt;!&ndash; The dropzone also uses the list template &ndash;&gt;-->
+                            <!--<div ng-include="'loadList.html'"></div>-->
+                        <!--</div>-->
+
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="row form-actions right">
+            <waitting-btn type="submit" btn-class="btn blue" ng-disabled="isCheckedOut()"
+                          ng-click="save()"
+                          value="'Save'" is-loading="saveLoading"></waitting-btn>
+
+            <waitting-btn type="submit" btn-class="btn blue" ng-disabled="!hasActivity()"
+                          ng-click="continue()"
+                          value="'Continue'" is-loading="continueLoading"></waitting-btn>
+        </div>
+    </div>
+</div>

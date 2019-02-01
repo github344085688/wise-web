@@ -1,0 +1,136 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Foundation Data</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Handling SOP</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold">Handling SOP</span>
+                </div>
+                <div class="actions">
+                    <a href="#/fd/sop/add">
+                        <b>Add Handling SOP</b>
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <form>
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <label><b>Organization</b></label>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>Customer</label>
+                                    <organization-auto-complete ng-model="searchInfo.customerId" tag="Customer" allow-clear="true" />
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Title</label>
+                                    <organization-auto-complete ng-model="searchInfo.titleId" tag="Title" allow-clear="true" />
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Supplier</label>
+                                    <organization-auto-complete ng-model="searchInfo.supplierId" tag="Supplier" allow-clear="true" />
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Brand</label>
+                                    <organization-auto-complete ng-model="searchInfo.brandId" tag="Brand" allow-clear="true" />
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Carrier</label>
+                                    <organization-auto-complete ng-model="searchInfo.carrierId" tag="Carrier" allow-clear="true" />
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Retailer</label>
+                                    <organization-auto-complete ng-model="searchInfo.retailerId" tag="Retailer" allow-clear="true" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-4">
+                            <label>Item</label>
+                            <itemspec-auto-complete ng-model="searchInfo.itemSpecId" name="keyword" allow-clear="true"></itemspec-auto-complete>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Step</label>
+                            <ui-select multiple ng-model="searchInfo.steps" ng-disabled="disabled" title="Customer">
+                                <ui-select-match placeholder="Step">{{$item}}</ui-select-match>
+                                <ui-select-choices repeat="step in ctrl.taskSteps | filter:$select.search">
+                                    <small>
+                                        {{step}}
+                                    </small>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Content</label>
+                            <input type="text" ng-model="searchInfo.content" class="form-control" placeholder="Content" />
+                        </div>
+                    </div>
+                    <div class="row form-actions right">
+                        <button type="submit" class="btn blue" ng-click="ctrl.search()">Search</button>
+                    </div>
+                </form>
+            </div>
+            <!-- TABLE -->
+            <div class="row">
+                <div class="portlet light box-shadow-none">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject bold"> Search Results</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div ng-show="!ctrl.searchSopCompleted" class="text-center">
+                            <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                        </div>
+                        <div ng-show="ctrl.searchSopCompleted" class="dataTables_wrapper no-footer">
+                            <div class="table-scrollable">
+                                <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_1"
+                                    role="grid" aria-describedby="sample_1_info">
+                                    <thead>
+                                        <tr role="row">
+                                            <th width="35%"> Organization </th>
+                                            <th width="15%"> Item </th>
+                                            <th width="10%"> Step </th>
+                                            <th width="25%"> Content </th>
+                                            <th width="15%"> Actions </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="sop in ctrl.sops track by $index">
+                                            <td>
+                                                <li ng-show="sop.customerId" class="sop-organization-list">Customer:{{ctrl.organizationMap[sop.customerId].name}}</li>
+                                                <li ng-show="sop.titleId" class="sop-organization-list">Title:{{ctrl.organizationMap[sop.titleId].name}}</li>
+                                                <li ng-show="sop.supplierId" class="sop-organization-list">Supplier:{{ctrl.organizationMap[sop.supplierId].name}}</li>
+                                                <li ng-show="sop.brandId" class="sop-organization-list">Brand:{{ctrl.organizationMap[sop.brandId].name}}</li>
+                                                <li ng-show="sop.retailerId" class="sop-organization-list">Retailer:{{ctrl.organizationMap[sop.retailerId].name}}</li>
+                                                <li ng-show="sop.carrierId" class="sop-organization-list">Carrier:{{ctrl.organizationMap[sop.carrierId].name}}</li>
+                                            </td>
+                                            <td><span ng-show="sop.itemSpecId">{{ctrl.itemMap[sop.itemSpecId].name}}</span></td>
+                                            <td><span ng-show="sop.steps">{{sop.steps}}</span></td>
+                                            <td>{{sop.content}}</td>
+                                            <td>
+                                                <a ui-sref="fd.sop.edit({sopId:sop.id})">Edit</a>
+                                                <a href="#" ng-click="ctrl.remove($index)">Delete</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

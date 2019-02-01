@@ -1,0 +1,54 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Pending</h1>
+
+            <hr>
+        </div>
+
+    </div>
+</div>
+
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr role="row">
+                        <th> Source</th>
+                        <th> Module</th>
+                        <!--<th> ID</th>-->
+                        <th> Name</th>
+                        <th> Status</th>
+                        <th> Date</th>
+                        <th permission-check="{{'pending_write'}}"> Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="pending in ctrl.pendingView track by $index">
+                        <td>{{pending.channel}}</td>
+                        <td>{{pending.dataType}}</td>
+                        <!--<td>{{pending.dataId}}</td>-->
+                        <td>{{pending.name}}</td>
+                        <td>{{pending.status == 'ENABLE'?"New":"Had Handled"}}</td>
+                        <td>{{pending.createdWhen | amDateFormat:'YYYY-MM-DD'}}</td>
+                        <td permission-check="{{'pending_write'}}">
+                            <a target="_blank" ng-click="ctrl.handle($index)">Handle</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="grid-100">
+        <div class="grid-content grid-100">
+            <unis-pager total-count="ctrl.pending.length" page-size="ctrl.pageSize" load-content="ctrl.loadContent(currentPage)"> </unis-pager>
+        </div>
+    </div>
+
+
+
+
+

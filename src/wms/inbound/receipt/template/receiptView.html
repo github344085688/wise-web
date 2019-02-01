@@ -1,0 +1,338 @@
+<div class="portlet light bordered" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold">ReceiptId: {{receipt.id}}</span>
+        </div>
+        <div class="actions" ng-show="!loading">
+            <span permission-check="{{'inbound::receipt_write'}}">
+                <button ng-if="receipt.isTransload" ng-click="printPalletLabel(receipt.id)" class="btn gray right">
+                    <span class="glyphicon glyphicon-print" aria-hidden="true"></span>Placard
+                </button>
+                <button  ng-click="printTallySheet(receipt.id)" class="btn gray right">
+                        <span class="glyphicon glyphicon-print"></span> Inbound Receipt
+                </button>
+                <button  ng-if="!receipt.isTransload" ng-click="printReceiptWithDetail(receipt.id)" class="btn gray right">
+                        <span class="glyphicon glyphicon-print"></span> Inbound Receipt With Detail
+                </button>
+                <waitting-btn type="submit" btn-class="btn blue" value="'Close'" is-loading="closing" ng-click="close(receipt.id)" ng-show="!isDisabledMap.closeReceipt">
+                </waitting-btn>
+                <button type="button" class="btn red" ng-click="cancel(receipt.id)" ng-show="!isDisabledMap.cancelReceipt">Cancel Receipt
+                </button>
+                <button type="button" class="btn blue" ng-click="edit(receipt.id)" ng-show="!isDisabledMap.editReceipt">Edit
+                </button>
+
+            </span>
+            <span  permission-check="{{'inbound::receiptReopen_write'}}">
+                <button type="button" class="btn blue" ng-click="reopen(receipt.id)" ng-show="!isDisabledMap.reopenReceipt">Reopen
+                </button>
+            </span>
+            <span>
+            <button type="button" class="btn" style="background-color: #a769b3; border-color: #a769b3; color:#fff;" ng-click="attachment()"> Attachment</button>
+            </span>
+
+        </div>
+    </div>
+
+    <div ng-show="loading" class="text-center">
+        <img src="assets/img/loading-spinner-grey.gif">
+        <span>&nbsp;LOADING...</span>
+    </div>
+
+    <div ng-show="!loading" class="portlet-body form form-horizontal">
+        <div class="tabbable-line">
+            <ul class="nav nav-tabs">
+                <li ng-class="{'active': activeTab == 'info'}">
+                    <a ng-click="changeTab('info')" data-toggle="tab" aria-expanded="false">Info</a>
+                </li>
+                <li ng-class="{'active': activeTab == 'photo'}">
+                    <a ng-click="changeTab('photo')" data-toggle="tab" aria-expanded="false">Photos</a>
+                </li>
+                <li ng-class="{'active': activeTab == 'dynamicFields'}">
+                    <a ng-click="changeTab('dynamicFields')" data-toggle="tab" aria-expanded="false">Dynamic Fields</a>
+                </li>
+                <li ng-class="{'active': activeTab == 'billingManual'}">
+                    <a ng-click="changeTab('billingManual')" data-toggle="tab" aria-expanded="false">Manual Billing</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane" ng-class="{'active': activeTab == 'info'}" id="info">
+                    <div class="view-container">
+                        <div class="row">
+                            <span class="col-md-3">
+                                <b>Customer: </b>{{receipt.customerName}}</span>
+                            <span class="col-md-3">
+                                <b>Carrier: </b>{{receipt.carrierName}}</span>
+                            <span class="col-md-3">
+                                <b>Title: </b>{{receipt.titleName}}</span>
+                            <span class="col-md-3">
+                                <b>TransLoad: </b>{{receipt.isTransload ? "Yes":"No"}}</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-3">
+                                <b>Status: </b>{{receipt.status}}</span>
+                            <span class="col-md-3">
+                                <b>Source: </b>{{receipt.source}}</span>
+                            <span class="col-md-3">
+                                <b>Receive Type: </b>{{receipt.receiveType}}</span>
+                             <span class="col-md-3">
+                                <b>Receipt Type: </b>{{receipt.receiptType}}</span>
+
+                        </div>
+                        <div class="row">
+                            <span class="col-md-3">
+                                <b>ContainerNo: </b>{{receipt.containerNo}}</span>
+                            <span class="col-md-3">
+                                <b>Container Size: </b>{{receipt.containerSize}}</span>
+
+                            <span class="col-md-3">
+                                <b>TrailerNo: </b>{{receipt.trailerNo}}</span>
+                            <span class="col-md-3">
+                                <b>Trailer Size: </b>{{receipt.trailerSize}}</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-3">
+                                <b>Purchase Order No.: </b>{{receipt.poNo}}</span>
+                            <span class="col-md-3">
+                                <b>Reference: </b>{{receipt.referenceNo}}</span>
+                            <span class="col-md-3">
+                                <b>BOL: </b>{{receipt.bolNo}}</span>
+                            <span class="col-md-3">
+                                <b>Seal: </b> {{receipt.sealNo}}</span>
+                        </div>
+
+                        <div class="row">
+                             <span class="col-md-3">
+                                <b>ETA: </b>{{receipt.eta | amDateFormat:'YYYY-MM-DD HH:00'}}</span>
+
+                            <span class="col-md-3">
+                                <b>In Yard Time: </b>{{receipt.inYardTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</span>
+                            <span class="col-md-3">
+                                <b>Create Time: </b>{{receipt.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}} &nbsp;
+                                <span ng-show="receipt.source != 'FTP' && receipt.source != 'EDI'">({{receipt.createdBy}})</span>
+                                <span ng-show="receipt.source == 'FTP'">(FTP)</span>
+                                <span ng-show="receipt.source == 'EDI'">(EDI)</span>
+                            </span>
+                            <span class="col-md-3">
+                                <b>Update Time: </b>{{receipt.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}} &nbsp;
+                                <span ng-show="receipt.updatedBy">({{receipt.updatedBy}})</span>
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-3">
+                                <b>Appointment Time: </b>{{receipt.appointmentTime | amDateFormat:'YYYY-MM-DD HH:00'}}</span>
+                            <span class="col-md-3">
+                                <b>Devanned Time: </b>{{receipt.devannedTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</span>
+                            <span class="col-md-3">
+                                <b>Tracking No.: </b>{{receipt.trackingNo}}</span>
+                            <span class="col-md-3">
+                                <b>Shipping Method: </b>{{receipt.shippingMethod}}</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-3">
+                                <b>Entry: </b>
+                                <span ng-repeat="entryId in receipt.entryIds">
+                                    {{entryId}}&nbsp;
+                                </span>
+                            </span>
+                            <span class="col-md-3">
+                                <b>Total QTY: </b>{{receipt.totalQty}}</span>
+                            <span class="col-md-3" ng-if="IsShowTransferOrder(receipt.receiptType)">
+                                <b>Transfer Order : </b>{{receipt.transferOrderId}}</span>
+                            <span class="col-md-3" ng-if="IsShowReturnedOrder(receipt.receiptType)">
+                                <b>Returned Order : </b>{{receipt.returnedOrderId}}</span>
+                        </div>
+                        <div class="row">
+                                <span class="col-md-3">
+                                    <b>Received Time: </b>{{receipt.receivedTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                                </span>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-12 text-pre">
+                                <b>Note: </b>{{receipt.note}}</span>
+                        </div>
+                    </div>
+                    <div class="tabbable-custom" style="margin-bottom: 0px; overflow: visible">
+                        <ul class="nav nav-tabs">
+                            <li ng-class="{'active':activeTab_line == 'itemLine'}">
+                                <a data-toggle="tab" ng-click="changeTab_line('itemLine')"> Item Lines </a>
+                            </li>
+                            <li ng-class="{'active':activeTab_line == 'materialLine'}">
+                                <a data-toggle="tab" ng-click="changeTab_line('materialLine')"> Material Lines </a>
+                            </li>
+                            <li ng-if="receipt.isTransload" ng-class="{'active':activeTab_line == 'cartons'}">
+                                <a data-toggle="tab" ng-click="changeTab_line('cartons')"> Cartions ({{receipt.allSerialNumbers.length}}) </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" style="padding:15px;">
+                            <div ng-class="{'active':activeTab_line == 'itemLine'}" class="tab-pane">
+                                <div class="table-scrollable">
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Item</th>
+                                                <th>UOM</th>
+                                                <th>Expected Qty</th>
+                                                <th>Received Qty</th>
+                                                <th>Received UOM</th>
+                                                <th>Lot#</th>
+                                                <th>Pallet Qty</th>
+                                                <th>Supplier</th>
+                                                <th>SN Detail</th>
+                                                <th ng-if="receipt.isTransload ">Cartons</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="item in itemLineView track by $index">
+                                                <td>{{(($index + 1) + (current_page_item - 1) *pageSize)}}</td>
+                                                <td>
+                                                    <item-display item="item" ></item-display>
+                                                </td>
+                                                <td>{{item.unit.name}}</td>
+                                                <td>{{item.qty}}</td>
+                                                <td>{{item.receivedQty}}</td>
+                                                <td>{{item.receivedUnit.name}}</td>
+                                                <td>{{item.lotNo}}</td>
+                                                <td>{{item.palletQty}}</td>
+                                                <td>{{item.supplierName}}</td>
+                                                <td>
+                                                    <a href="" ng-click="editSNDetail($index,  receipt.status.indexOf('Closed') > -1)"> Show Detail</a>
+                                                </td>
+                                                <td ng-if="receipt.isTransload">
+                                                    <a href="" ng-click="editCartonDetail(item)" > Cartons Detail</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <pager total-count="receipt.itemLines.length" page-size="pageSize" load-content="loadContent_itemLines(currentPage)"></pager>
+                            </div>
+                            <div ng-class="{'active':activeTab_line == 'materialLine'}" class="tab-pane ">
+                                <div class="table-scrollable">
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Item</th>
+                                                <th>UOM</th>
+                                                <th>Qty</th>
+                                                <th>Title</th>
+                                                <th>Supplier</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="item in materialLineView track by $index" ng-init="materialIndex = $index">
+                                                <td>{{((materialIndex + 1) + (current_page_material - 1) *pageSize)}}</td>
+                                                <td>
+                                                    <item-display item="item"></item-display>
+                                                </td>
+                                                <td>{{item.unitName}}</td>
+                                                <td>{{item.qty}}</td>
+                                                <td>{{item.titleName}}</td>
+                                                <td>{{item.supplierName}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <pager total-count="receipt.materialLines.length" page-size="pageSize" load-content="loadContent_materialLines(currentPage)"></pager>
+                            </div>
+                            <div ng-if="receipt.isTransload" ng-class="{'active':activeTab_line == 'cartons'}" class="tab-pane ">
+                                <div class="form-group" style="text-align: right; padding-right:30px;">
+                                    <button type="button" id="copyBtn" class="btn green btn-outline" data-clipboard-text="{{receipt.cartonStr}}">Copy To Clip Board</button>
+                                </div>
+                                <div class="form-group" style="display:inline-block;width:100%">
+                                    <span class="col-md-2" ng-repeat="carton in receipt.allSerialNumbers track by $index">{{carton}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" ng-class="{'active': activeTab == 'photo'}" id="photo" ng-include="'wms/inbound/receipt/template/receiptPhoto.html'">
+                </div>
+                <div class="tab-pane" ng-class="{'active': activeTab == 'dynamicFields'}" id="dynamicFields">
+                    <div class="view-container">
+                        <div class="row">
+                            <span class="col-md-3" ng-repeat="(key, fieldName) in dynamicFields">
+                                <b>{{fieldName}}: </b>{{receipt.dynamicFields[key]}}</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="tab-pane" ng-class="{'active': activeTab == 'billingManual'}">
+                    <div class="view-container">
+                        <div class="row" ng-repeat="billing in receipt.billingManualViews track by $index">
+                            <div ng-if="billing.status !== 'Sent'" class="col-md-2">
+                                <label>Account Item</label>
+                                <ui-select ng-model="billing.billingCode" required
+                                           on-select="accountItemselect($select.selected, billing)">
+                                    <ui-select-match>
+                                        <span ng-bind="$select.selected.AccountItem"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="code.AccountItem as code in accountItems | filter: $select.search">
+                                        {{code.AccountItem}}
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div ng-if="billing.status === 'Sent'" class="col-md-2">
+                                <label>Billing Code</label>
+                                <div style="height: 35px;">
+                                    {{billing.billingCode}}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Description</label>
+                                <div style="height: 35px;">
+                                    {{billing.billingDesc}}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Note</label>
+                                <input class="form-control" type="text"  ng-model="billing.note"/>
+                            </div>
+                            <div ng-if="billing.status !== 'Sent'" class="col-md-1">
+                                <label>Qty</label>
+                                <input type="number" class="form-control" required ng-model="billing.qty" />
+                            </div>
+                            <div ng-if="billing.status === 'Sent'" class="col-md-1">
+                                <label>Qty</label>
+                                <div style="height: 35px;">
+                                    {{billing.qty}}
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <label>UOM</label>
+                                <div style="height: 35px;">
+                                    {{billing.billingUom}}
+                                </div>
+                            </div>
+                            <div class="col-md-2" style="padding-top: 20px;">
+                                <div ng-if="billing.status !== 'Sent'"  class="cycle-button" ng-click="removeBilling($index, billing)">
+                                    <i class="material-icons" style="color: red; font-weight: bold;">
+                                        clear
+                                    </i>
+                                </div>
+                                <div ng-if="$last" class="cycle-button" ng-click="addBilling()">
+                                    <i class="material-icons" style="color: #fff; font-weight: bold;">
+                                        add
+                                    </i>
+                                </div>
+                                <span ng-if="billing.status === 'Sent'" style="font-weight: bold;font-size:20px;color: #ffa203;">{{billing.status}}</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-9"></div>
+                            <div class="col-md-3">
+                                <waitting-btn type="submit" btn-class="btn blue" value="'Save Billing'" is-loading="savingBilling" ng-click="saveBilling()">
+                                </waitting-btn>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

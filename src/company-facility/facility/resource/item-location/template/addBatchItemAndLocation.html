@@ -1,0 +1,107 @@
+<md-dialog id="unis" flex="80" ng-cloak>
+    <form class="light-theme" novalidate name="forms.itemLocation" ng-submit="forms.itemLocation.$valid && saveOrUpdatItemLocation()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1> Batch Add Item & Location</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="overflow: auto;min-height: 350px;">
+            <div class="md-dialog-content">
+
+                <div class="grid-100">
+                    <div class="grid-parent container" style="    background: rgb(221, 221, 221);
+                    padding: 10px 5px;
+                    border-radius: 10px;">
+
+                        <div class="grid-10">
+                            <label class="label-input" style="float: right;">Location：</label>
+                        </div>
+                        <div class="grid-30">
+                            <location-auto-complete ng-model="batchParams.locationId" allow-clear="true" />
+                        </div>
+                        <div class="grid-10">
+                            <label class="label-input" style="float: right;">Item：</label>
+                        </div>
+                        <div class="grid-30">
+                            <itemspec-auto-complete ng-model="batchParams.itemSpecId" name="itemSpec" allow-clear="true" />
+                        </div>
+                
+                        <div class="grid-20">
+                            <button type="button" ng-click="batchItemLocation()" style="background-color: #c49f47; border-color: #c49f47;">Batch Params</button>
+                        </div>
+
+
+                    </div>
+                    <div class="grid-content" style=" background-color: rgba(198, 228, 230, 0.36);">
+
+                        <div class="grid-parent grid-100 container">
+
+                            <div class="grid-20">
+                                <label class="label-input">Location</label>
+                            </div>
+                            <div class="grid-30">
+                                <label class="label-input">Item</label>
+                            </div>
+                      
+                            <div class="grid-15">
+                                <label class="label-input">Type</label>
+                            </div>
+
+                        </div>
+                        <div class="grid-parent grid-100 container" ng-repeat="itemLocationParam in itemLocationLists track by $index">
+
+                            <div class="grid-20">
+                                <input-validation-message field="li{{$index}}locationId" form="forms.itemLocation"></input-validation-message>
+                                <location-auto-complete name="li{{$index}}locationId" ng-model="itemLocationParam.locationId" allow-clear="true" required
+                                    on-select="locationOnSelect(location)" />
+                            </div>
+                            <div class="grid-30">
+
+                                <input-validation-message field="li{{$index}}itemSpecId" form="forms.itemLocation"></input-validation-message>
+                                <itemspec-auto-complete name="li{{$index}}itemSpecId" ng-model="itemLocationParam.itemSpecId" name="itemSpec" on-select="itemSpecIdOnSelect(itemLocationParam.itemSpecId)"
+                                    allow-clear="true" required />
+                            </div>
+                            <div class="grid-15">
+                                <input-validation-message field="li{{$index}}type" form="forms.itemLocation"></input-validation-message>
+                                <ui-select ng-model="itemLocationParam.type" name="li{{$index}}type" required>
+                                    <ui-select-match allow-clear="true">
+                                        <span ng-bind="$select.selected"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="type in types | filter: $select.search">
+                                        <div>{{type}}</div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+
+                            <div class="grid-20">
+                                <button type="button" class="grid-40 green" ng-click="addItemLocation()">Add</button>
+                                <div class="grid-5"> &nbsp;</div>
+                                <button type="button" class=" grid-40 " ng-show="!$first" ng-click="removeItemLocation($index)" aria-hidden="false" style="background:#e7505a">Remove</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-80">&nbsp;</div>
+                        <div class="grid-10">
+                            <waitting-btn type="submit" btn-class="btn blue" value="'Save'" is-loading="loading" style="width: 150px;"></waitting-btn>
+                        </div>
+                        <div class="grid-10">
+                            <button type="button" ng-click="cancel()" class="ripplelink">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>

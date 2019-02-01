@@ -1,0 +1,196 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Print Shipping Label</h1>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container">
+
+            <div class="grid-25">
+                <label class="label-input">
+                    <span>DN Order List:</span>
+                    <span style="float:right">{{hasPrintedOrder.length}}/{{task.orderIds.length}} Shipping</span>
+                </label>
+                <div class="grid-100" style="border:1px solid #ccc;min-height:453px;overflow:auto;max-height: 455px; padding:0">
+                    <div ng-class="{'case-high-light':orderIsHighLight(order.id)}" ng-repeat="order in task.orders track by $index" style="line-height: 30px;font-size: 16px;padding-left:10px"
+                        ng-click="selectedOrder($event,order,$index)">{{order.id}}</div>
+                </div>
+            </div>
+            <form name="printShippingLabelForm" novalidate ng-submit="printShippingLabelForm.$valid && selectShippingLabel()" onkeydown="if(event.keyCode==13){return false;}">
+                <div class="grid-75">
+                    <div style="min-height:245px;display: inline-block; width: 100%;">
+                        <div class="grid-33" style="padding:0">
+                            <label class="label-input">
+                                Intruction:
+                            </label>
+                            <div class="grid-100" style="border:1px solid #ccc;min-height:230px">
+                            </div>
+                        </div>
+                        <div class="grid-33">
+
+                            <div class="grid-100 container">
+                                <label class="label-input">Scan Picket Ticket:</label>
+                                <div class="grid-10">
+                                    <i class="fa fa-arrow-circle-right" style="font-size: 30px"></i>
+                                </div>
+                                <div class="grid-90">
+                                    <input type="text" ng-model="printShippingLabel.taskIdOrPickTicketId" ng-keyup="keyUpSearch($event,'ScanPicketTicket')" ng-blur="getPickTask(printShippingLabel.taskIdOrPickTicketId)"
+                                    />
+                                </div>
+
+                            </div>
+                            <div class="grid-100 container">
+                                <label class="label-input">Scan UPC/Serial numbber:</label>
+                                <div class="grid-10">
+                                    <i class="fa fa-arrow-circle-right" style="font-size: 30px"></i>
+                                </div>
+                                <div class="grid-90">
+                                    <input type="text" id="upcCode" ng-model="printShippingLabel.upc" ng-keyup="keyUpSearch($event,'ScanUPC')" ng-blur="searchUpcOrder(printShippingLabel.upc)"
+                                    />
+                                </div>
+
+                            </div>
+                            <div class="grid-100 container">
+                                <label class="label-input">Input Box:</label>
+                                <div class="grid-10">&nbsp;</div>
+                                <div class="grid-90">
+                                    <input-validation-message field="printShippingLabelBox" form="printShippingLabelForm"></input-validation-message>
+                                    <itemspec-auto-complete name="printShippingLabelBox" ng-model="printShippingLabel.packageId" tags="['Material']"
+                                        on-select="itemSpecIdOnSelect(itemSpec)"  required/>
+                                </div>
+
+                            </div>
+                            <div class="grid-100 container">
+                                <label class="label-input">Package Weight:</label>
+                                <div class="grid-10">&nbsp;</div>
+                                <div class="grid-40">
+                                    <input-validation-message field="itemWeight" form="printShippingLabelForm"></input-validation-message>
+                                    <input id="package" type="number" name="itemWeight" ng-model="printShippingLabel.itemWeight"  required/>
+                                </div>
+                                <div class="grid-20">
+                                    <md-switch class="md-primary" aria-label="Use Scan" ng-model="printShippingLabel.isUseScan" style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                                </div>
+                                <div class="grid-30" style="margin-top: 5px;padding: 0;">
+                                    <label>Use Scale</label>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="grid-33" style="background-color: rgba(198, 228, 230, 0.36); min-height: 270px;">
+                            <div class="grid-100 container">
+                                <label>Batch Label Print</label>
+                                <md-switch class="md-primary" aria-label="Batch Label Print" ng-model="printShippingLabel.batchLabelPrint" ng-change="batchlabelPrintChange(printShippingLabel.batchLabelPrint)"
+                                    style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                            </div>
+
+                            <div class="grid-100 container">
+                                <label class="label-input">Order Qty:</label>
+                                <div class="grid-10">&nbsp;</div>
+                                <div class="grid-50">
+                                    <input type="number" min="1" ng-model="printShippingLabel.orderQty" ng-disabled="!printShippingLabel.batchLabelPrint" />
+                                </div>
+                            </div>
+                            <div class="grid-100 container">
+                                <label class="label-input">Batch Label Qty:</label>
+                                <div class="grid-10">&nbsp;</div>
+                                <div class="grid-50">
+                                    <input type="number" min="1" ng-model="printShippingLabel.batchLabelQty" ng-disabled="!printShippingLabel.batchLabelPrint" />
+
+                                </div>
+                            </div>
+
+
+                            <div class="grid-100" style="padding-top: 30px">
+                                <div class="grid-50">
+                                    <waitting-btn type="button" btn-class="btn" value="'Void Label'" is-loading="isVoidLabelLoading"  ng-click="voidLabel()"></waitting-btn>
+
+                                </div>
+                                <div class="grid-50">
+                                    <waitting-btn type="submit" btn-class="btn" value="'Print Shipping Label'" is-loading="isLoading"></waitting-btn>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="border:1px solid #ccc;min-height:200px">
+                        <div class="grid-33" style="height:200px;border-right:1px solid #ccc;">
+                            <div class="grid-100 container" style="padding-top: 5px; ">
+                                <b>Carrier: </b>{{order.carrierName}}</span>
+                            </div>
+                            <div class="grid-100 container" style="padding-top: 5px; ">
+                                <b>Service Type: </b>{{order.deliveryService}}</span>
+                            </div>
+                            <div class="grid-100 container" style="padding-top: 5px; ">
+                                <b>Box: </b>{{printShippingLabel.boxInfo}}</span>
+                            </div>
+                            <div class="grid-100 container" style="padding-top: 5px; ">
+                                <b>User: </b>{{user.username}}</span>
+                            </div>
+                            <div class="grid-100 container" style="padding-top: 5px; ">
+                                <b>Work Station: </b>{{selectPrinter.printerName}}</span>
+                            </div>
+                        </div>
+                        <div class="grid-33" style="height:200px;border-right:1px solid #ccc;">
+                            <div class="grid-100 container" style="padding-top: 5px; line-height: 30px;font-size: 17px;">
+                                <b>Ship To: </b>
+                                <div>{{getAddressInfo(order.shipToAddress)}}</div>
+                            </div>
+                        </div>
+                        <div class="grid-33">
+                            <div class="grid-100 container" style="padding-top: 5px; line-height: 30px;font-size: 17px;">
+                                <b>Ship From: </b>
+                                <div> {{order.shipFrom}}</div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div ng-if="isLoadingTable" class="grid-parent grid-100 container text-center">
+            <img src="assets/img/loading-spinner-grey.gif">
+            <span>&nbsp;LOADING...</span>
+        </div>
+
+        <div class="grid-parent grid-100 container" ng-if="!isLoadingTable">
+            <div class="grid-content grid-100">
+                <div class="grid-parent grid-100 container">
+                    <table class="table">
+                        <thead>
+                            <tr role="row">
+                                <th> DN </th>
+                                <th> Item </th>
+                                <th> Description </th>
+                                <th> Picked </th>
+                                <th> Scanned</th>
+                                <th> UPC or Serial Number </th>
+                                <th> Box Count </th>
+                                <th> Tracking Number </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="itemLine in order.itemLines track by $index" ng-click="selectedTrackingNo($event,order,$index)">
+
+                                <td>{{itemLine.orderId}}</td>
+                                <td>{{itemLine.itemSpecName}}</td>
+                                <td>{{itemLine.itemSpecDesc}}</td>
+                                <td>{{itemLine.pickQty}}</td>
+                                <td>{{itemLine.scanQty}}</td>
+                                <td>{{itemLine.upcCode}}</td>
+                                <td>{{itemLine.boxCount}}</td>
+                                <td>{{order.trackingNo}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="grid-100" ng-if="!isLoadingTable">
+            <div class="grid-content grid-100">
+                <unis-pager total-count="order.itemLines.length" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+            </div>
+        </div>
+
+
+    </div>
+</div>

@@ -1,0 +1,4 @@
+{
+    "defaultPickRules":["FIFO", "LP Configuration"],
+    "orderedPickRules":["FILO"]
+}

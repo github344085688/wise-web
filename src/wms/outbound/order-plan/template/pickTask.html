@@ -1,0 +1,105 @@
+<div class="grid-parent grid-100 container" ng-if="$index === 0">
+    <div class="grid-50">
+        <input type="checkbox" id="task" name="task" ng-click="onClickSelectAllTask()" ng-checked="checkedAllStatus">
+        <label class="checkbox" for="task">
+            <span class="text" style="font-size: 0.75rem">Select All</span>
+        </label>
+    </div>
+    <div class="grid-20">
+        <button type="button" class="btn yellow" ng-click="popUpBatchPrintDialog()">Batch Print (for Regular Order) </button>
+    </div>
+    <div class="grid-20">
+        <waitting-btn type="button" btn-class="btn yellow" ng-click="batchPrePrintShippingLabel()" value="'Batch Print (for Drop Ship Order)'"
+            is-loading="batchPrinting"></waitting-btn>
+    </div>
+    <div class="grid-10">
+            <button type="button" class="btn" ng-click="viewTrackNo()">View Tracking# </button>
+    </div>
+</div>
+<div class="grid-parent grid-100 container">
+    <h1 class="section-label pull-left">
+        <input type="checkbox" id="task{{$index}}" name="task{{$index}}" ng-click="onClickTask(task)" ng-checked="isCheckedTask(task.id)">
+        <label class="checkbox" for="task{{$index}}"></label>
+        <a ng-href="{{'#/wms/task/pick-task/' + task.id}}" title="View" target="_blank">{{task.id}}</a>
+    </h1>
+    <button type="button" class="grid-10 ripplelink pull-right" ng-show="orderPlan.status == 'Task Created' || orderPlan.status == 'Scheduled'"
+        permission-check="{{'outbound::orderPlan_write'}}" ng-click="editPickTask(task.id)" style="margin-left: 15px;">Edit Task</button>
+</div>
+<div class="grid-parent grid-100 container">
+    <div class="grid-100">
+        <b>Orders:</b>
+        <label ng-repeat="orderId in task.orderIds track by $index">
+            <a href="{{'#/wms/outbound/order/' + orderId}}" target="_blank">{{orderId}}
+            </a>
+            <span ng-show="orderMap[orderId].longHaulNo">({{orderMap[orderId].longHaulNo}})</span> &nbsp;
+
+        </label>
+    </div>
+</div>
+<div class="grid-parent grid-100 container">
+    <div class="grid-25">
+        <b>Planned Assignee:</b>
+        <label>{{userMap[task.plannedAssigneeUserId].firstName + ' ' + userMap[task.plannedAssigneeUserId].lastName}}</label>
+    </div>
+    <div class="grid-25">
+        <b>Pick Type:</b>
+        <label>{{task.pickType}}</label>
+    </div>
+    <div class="grid-25">
+        <b>Pick Way:</b>
+        <label>{{task.pickWay}}</label>
+    </div>
+    <div class="grid-25">
+        <b>Is Conveyor Pick:</b>
+        <label>{{task.isConveyorPick?'Yes':'No'}}</label>
+    </div>
+</div>
+<div class="grid-parent grid-100 container">
+    <div class="grid-25">
+        <b>Status:</b>
+        <label>{{task.status}}</label>
+    </div>
+    <div class="grid-25">
+        <b>Priority:</b>
+        <label>{{task.priority}}</label>
+    </div>
+    <div class="grid-25">
+        <b>Is Rush:</b>
+        <label>{{task.isRush ? 'Yes':'No'}}</label>
+    </div>
+</div>
+<div class="grid-parent grid-100 container">
+    <div class="grid-100">
+        <label class="bold">Description:</label>
+        <label style="word-break: break-all">{{task.description}}</label>
+    </div>
+</div>
+<div class="grid-parent grid-100 container" ng-repeat="itemLine in task.pickItemLines">
+    <div class="grid-30">
+        <label class="bold">Item:</label>
+        <label>
+            <item-display item="itemSpecMap[itemLine.itemSpecId]"></item-display>
+        </label>
+    </div>
+    <div class="grid-10">
+        <label class="bold">Unit:</label>
+        <label> {{itemUnitMap[itemLine.unitId].name}} </label>
+    </div>
+    <div class="grid-10">
+        <label class="bold">QTY:</label>
+        <label> {{itemLine.qty}} </label>
+    </div>
+    <div class="grid-10">
+        <label class="bold">Base QTY:</label>
+        <label> {{itemLine.baseQty}} </label>
+    </div>
+    <div class="grid-20">
+        <label class="bold">Location:</label>
+        <span class="label box-shadow-none label-success" style="margin-left: 5px; padding: 5px" ng-show="locationMap[itemLine.locationId].name">
+            {{locationMap[itemLine.locationId].name}} </span>
+    </div>
+    <div class="grid-20">
+        <label class="bold">Location Group Type:</label>
+        <span>{{locationMap[itemLine.locationId].locationGroupType}}</span>
+    </div>
+</div>

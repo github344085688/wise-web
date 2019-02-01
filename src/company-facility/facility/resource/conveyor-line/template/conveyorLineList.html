@@ -1,0 +1,91 @@
+<div class="grid-100 row" ng-keyup="keyUpSearch($event)">
+  <div class="grid-content grid-100">
+      <div class="grid-parent grid-100 container">
+          <h1 class="section-label pull-left">Conveyor Line List</h1>
+          <a class="create-button"  ui-sref="cf.facility.resource.conveyorLine.add">
+              <b>Add Conveyor Line</b></a>
+          <hr>
+      </div>
+      <div class="grid-parent grid-100 container" >
+          <div class="grid-33">
+              <label class="label-input">Name:</label>
+              <input type="text" ng-model="conveyorLineParam.name" placeholder="Name"/>
+          </div>
+          <div class="grid-33">
+                <label class="label-input">Status:</label>
+                <ui-select ng-model="conveyorLineParam.status" class="form-control">
+                        <ui-select-match allow-clear="true">
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="status in ['AVAILABLE','UNAVAILABLE'] | filter: $select.search">
+                            <div ng-bind="status"></div>
+                        </ui-select-choices>
+                    </ui-select>
+            </div>
+      </div>
+      <div class="grid-parent grid-100 container">
+          <div class="grid-80">&nbsp;</div>
+          <div class="grid-10">
+              &nbsp;
+          </div>
+          <div class="grid-10">
+              <waitting-btn type="button" btn-class="ripplelink" ng-click="search()"
+                            is-loading="loading" value="'Search'"></waitting-btn>
+          </div>
+      </div>
+  </div>
+</div>
+<div class="grid-100 row">
+  <div class="grid-content grid-100">
+      <div class="grid-parent grid-100 container">
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th> Name </th>
+                      <th> Status </th>
+                      <th> CreatedBy </th>
+                      <th> CreatedWhen </th>
+                      <th> UpdatedBy </th>
+                      <th> UpdatedWhen</th>
+                      <th> Action </th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr ng-repeat="line in conveyorLineList track by $index">
+                      <!-- <td>
+                          <span ng-repeat="item in organization.roles" style="margin-left: 5px; padding: 5px">{{item}}</span>
+                      </td> -->
+                      <td>{{line.name}}</td>
+                      <td>{{line.status}}</td>
+                      <td>{{line.createdBy}}</td>
+                      <td>{{line.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm'}}</td>
+                      <td>{{line.updatedBy}}</td>
+                      <td>{{line.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm'}}</td>
+
+                      <!-- <th>
+                          <div class="grid-parent grid-100 container" ng-repeat="contact in organization.extend.contacts">
+                              <div class="grid-25">{{contact.name}}</div>
+                              <div class="grid-25">{{contact.phone}}</div>
+                              <div class="grid-35">{{contact.email}}</div>
+                              <div class="grid-15">{{contact.type}}</div>
+                          </div>
+                      </th> -->
+                      <!-- <td>{{organization.extend.note}}</td> -->
+                      <td>
+                          <a ui-sref="cf.facility.resource.conveyorLine.edit({lineId:line.id})">Edit</a>
+                             &nbsp;| &nbsp;  
+                          <a href="#" ng-click="delete(line.id)">Delete</a>
+                             &nbsp;| &nbsp;  
+                          <a ui-sref="cf.facility.resource.conveyorBranch.add({lineId:line.id})">Add Branch</a>                                                &nbsp;
+                          &nbsp;
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+  </div>
+</div>
+
+
+
+

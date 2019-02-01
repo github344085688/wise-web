@@ -1,0 +1,179 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Report Configuration List</h1>
+            <a class="create-button" ui-sref="rc.configuration.add">
+                <b>Add Configuration</b></a>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label>Report Level</label>
+                <ui-select ng-model="search.reportLevel">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in reportLevel | filter: $select.search">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                <label>Facility</label>
+                <ui-select ng-model="search.facilityId">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected.name"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item.id as item in activatedFacilities | filter: $select.search">
+                        <div ng-bind="item.name"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                <label>Customer</label>
+                <organization-auto-complete ng-model="search.customerId" name="customer" allow-clear="true" is-search-all-facilities="true" tag="Customer"></organization-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label>Report Type</label>
+                <ui-select ng-model="search.reportType">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in reportTypes | filter: $select.search">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label>Send</label>
+                <ui-select ng-model="search.sendStatus">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in reportSendStatus | filter: $select.search">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                <label>Status</label>
+                <ui-select ng-model="search.status">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in reportStatus | filter: $select.search">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-50">
+                <label>Report Title</label>
+                <input class="form-control" placeholder="Enter Report Title" ng-keyup="keyUpSearch($event)" ng-model="search.reportTitle" />
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label>Schedule Type</label>
+                <ui-select ng-model="search.scheduleType">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in scheduleTypes | filter: $select.search">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                <label>Report Media</label>
+                <ui-select ng-model="search.reportMedia">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in reportMedia | filter: $select.search">
+                        <div ng-bind="item"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-50">
+                <label>Email</label>
+                <input class="form-control" placeholder="Enter Email" ng-keyup="keyUpSearch($event)" ng-model="search.email" />
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-75">&nbsp;</div>
+            <div class="grid-25">
+                <waitting-btn type="button" btn-class="btn blue" ng-click="searchConfigurations()" value="'Search'" is-loading="isLoading"></waitting-btn>
+            </div>
+        </div>
+
+        <div ng-show="isLoading" class="text-center">
+            <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+        </div>
+
+        <div class="grid-parent grid-100 container" style="overflow: auto;">
+            <table class="table" style="table-layout:fixed">
+                <thead>
+                <tr>
+                    <th style="width: 30px;">#</th>
+                    <th>Report Level</th>
+                    <th>Customer</th>
+                    <th>Facility</th>
+                    <th style="width: 60px;">Media</th>
+                    <th style="width: 150px;">Report Type</th>
+                    <th>Schedule Type</th>
+                    <th>Report Title</th>
+                    <th>Email To</th>
+                    <th style="width: 80px;">Send</th>
+                    <th style="width: 80px;">Status</th>
+                    <th>Created By</th>
+                    <th>Created When</th>
+                    <th>Last Execute Time</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in configurationView track by $index">
+                    <td>{{$index + 1}}</td>
+                    <td>{{item.reportLevel}}</td>
+                    <td>{{item.customerName}}</td>
+                    <td>{{item.facility}}</td>
+                    <td>{{item.reportMedia}}</td>
+                    <td>{{item.reportType}}</td>
+                    <td>{{item.scheduleType}}</td>
+                    <td>{{item.reportTitle}}</td>
+                    <td ng-if="item.reportMedia !== 'Email'"></td>
+                    <td ng-if="item.reportMedia === 'Email'" style="word-wrap:break-word;word-break:break-all;">{{item.consigneeTo}}</td>
+                    <td ng-class="{'font-red':item.sendStatus == 'Failed'}">
+                        {{item.sendStatus}}
+                        <i ng-if="item.sendStatus == 'Failed'" class="material-icons"
+                           style="color: red; cursor: pointer;" title="{{item.errorMesg}}">
+                            error_outline
+                        </i>
+                    </td>
+                    <td ng-class="{'font-red':item.status == 'DISABLE'}">{{item.status}}</td>
+                    <td>{{item.createdBy}}</td>
+                    <td>{{item.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm'}}</td>
+                    <td>{{item.lastExecuteTime | amDateFormat:'YYYY-MM-DD HH:mm'}}</td>
+                    <td>
+                        <a ui-sref="rc.configuration.edit({id:item.id})">Edit</a>
+                        <a ng-show="item.status === 'ENABLE' && !downloading(item)" ng-click="download(item)">Download</a>
+                        <a ng-show="downloading(item)">Downloading...</a>
+                        <a ng-show="item.status === 'ENABLE' && !reSending(item)" ng-click="reSend(item)">ReSend</a>
+                        <a ng-show="reSending(item)">ReSending...</a>
+                        <a ng-show="item.status === 'DISABLE' || item.status === 'PENDING'" ng-click="enable(item.id)" title="enable">Enable</a>
+                        <a ng-show="item.status === 'ENABLE'" style="color: red;" ng-click="disabled(item.id)" title="disabled">Disabled</a>
+                        <a ng-click="delete(item.id)" style="color: red;" title="Delete">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <unis-pager  total-count="totalCount" page-size="pageSize"  load-content="loadContent(currentPage)"></unis-pager >
+        </div>
+    </div>
+</div>

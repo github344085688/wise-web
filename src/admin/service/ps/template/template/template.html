@@ -1,0 +1,122 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Admin</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Service</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Print</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Template management</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject bold"> Template Management </span>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <form novalidate name="templateForm">
+                    <div class="row form-group">
+                        <label class="bold col-md-2">Template Name:</label>
+                        <div class="col-md-6">
+                            <div class="input-icon right" ng-show="templateForm.name.$invalid && (templateForm.$submitted || templateForm.name.$touched)">
+                                <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                        <span class="lt-tooltip-text">Required</span>
+                                    </i>
+                            </div>
+                            <input type="text" name="name" ng-disabled="update" class="form-control" ng-model="template.name" required>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="bold col-md-2">Template File:</label>
+                        <div class="col-md-6">
+                            <div class="input-icon right" ng-show="templateForm.templateFile.$invalid && (templateForm.$submitted || templateForm.templateFile.$touched)">
+                                <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                        <span class="lt-tooltip-text">Required</span>
+                                    </i>
+                            </div>
+                            <input type="file" id="templateFile" name="templateFile" class="form-control" ng-model="templateFilePath" onchange="angular.element(this).scope().templateFileChange(this)" ng-readonly="true" required>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="bold col-md-2">Sample File:</label>
+                        <div class="col-md-6">
+                            <input type="file" id="sampleFile" name="sampleFile" class="form-control" ng-model="sampleFilePath" onchange="angular.element(this).scope().sampleFileChange(this)" ng-readonly="true">
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="bold col-md-2">Paper Size:</label>
+                        <div class="col-md-6">
+                            <div class="input-icon right" ng-show="templateForm.paperSize.$invalid && (templateForm.$submitted || templateForm.paperSize.$touched)">
+                                <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                        <span class="lt-tooltip-text">Required</span>
+                                    </i>
+                            </div>
+                            <input type="text" name="paperSize" class="form-control" ng-model="template.paperSize" required>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="bold col-md-2">Description:</label>
+                        <div class="col-md-6">
+                            <input type="text" name="description" class="form-control" ng-model="template.description" required>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 15px;">
+                        <div class="col-md-8" style="text-align: right;">
+                            <waitting-btn type="submit" btn-class="btn blue"
+                                          permission-check="{{'service::print_write'}}"
+                                          ng-click="templateForm.$valid && submit()"
+                                          value="'submit'" is-loading="loading"></waitting-btn>
+                        </div>
+
+
+                    </div>
+                </form>
+                <div class="panel non-border non-gutter bottom">
+                    <div class="panel-heading header-primary">
+                        <h3 class="panel-title">Template Results<input type="text" ng-model="searchText" class="form-control input-circle" placeholder="Enter text"></h3>
+                    </div>
+                    <div class="panel-body non-gutter bottom">
+                        <div>
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Template ID</th>
+                                        <th>Template Name</th>
+                                        <th>Template File</th>
+                                        <th>Sample File</th>
+                                        <th>Paper Size</th>
+                                        <th>Description</th>
+                                        <th permission-check="{{'service::print_write'}}">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="template in templates | filter:searchText">
+                                        <td><a ng-click="toUpdate(template)">{{template.id}}</a></td>
+                                        <td>{{template.name}}</td>
+                                        <td>{{template.contentPath}}</td>
+                                        <td>{{template.samplePath}}</td>
+                                        <td>{{template.paperSize}}</td>
+                                        <td>{{template.description}}</td>
+                                        <td permission-check="{{'service::print_write'}}"><a ng-click="delete(template.id)">delete</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

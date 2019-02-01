@@ -1,0 +1,338 @@
+<md-dialog id="unis" flex="60" style="max-height:80%" ng-cloak>
+    <div class="light-theme">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Documents for Entry ID#: {{entry.id}}</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="display: block; min-height: 320px;">
+            <div class="md-dialog-content">
+                <div class="grid-100">
+                    <div class="grid-content">
+                        <div class="grid-100 grid-parent container" >
+                            <div class="alert alert-danger" style="padding:10px;" ng-show="errors.length > 0">
+                                <div ng-repeat="err in errors">{{err}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form name="printForm" novalidate ng-submit="printForm.$valid && print()">
+                <div class="grid-100">
+                    <div class="grid-content">
+                        <div class="grid-100 grid-parent container">
+                            <div class="grid-100">
+                                <div class="grid-40">
+                                    <printer-auto-complete name="printerName" ng-model="printerName" on-select="printerSelect(printer)"
+                                                           show-type="true"></printer-auto-complete>
+                                </div>
+                                <div class="grid-20">
+                                    <waitting-btn type="submit"  btn-class="ripplelink fix-width-btn" ng-click="searchEntrys()" value="'Print'"
+                                                  is-loading="!printCompleted"></waitting-btn>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </form>
+                <div class="grid-100">
+                    <div class="grid-content">
+                        <div class="grid-100 grid-parent ">
+                            <div class="tab-container" style="width:100%">
+                                <ul style="margin:0 -5px">
+                                    <li style="width:33%" data-tab-title="section1"
+                                        ng-class="{'active':activetab == 'entry'}" ng-click="changeTab('entry')">
+                                        ENTRY
+                                    </li>
+                                    <li style="width:33%" data-tab-title="section2"
+                                        ng-class="{'active':activetab == 'inbound'}" ng-click="changeTab('inbound')">
+                                        INBOUND
+                                    </li>
+                                    <li style="width:33%" data-tab-title="section3"
+                                        ng-class="{'active':activetab == 'outbound'}" ng-click="changeTab('outbound')">
+                                        OUTBOUND
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div ng-class="{'active':activetab == 'entry'}" class="grid-100 tab-content" id="section1" style="background:#b1c7cc">
+                            <div class="grid-100">
+                                <div ng-class="{'active':entryActivetab == 'entryTicket'}" class="grid-100 tab-content">
+                                    <div class="grid-content " style="background-color:#b1c7cc">
+                                        <div class="grid-parent container">
+                                            <div class="grid-30" style="padding-top: 6px;">
+                                                <div class="table">
+                                                    <input type="checkbox" id="entry_{{entry.id}}"
+                                                           name="profile-subtheme"
+                                                           ng-click="checkEntry(entry.id)">
+                                                    <label class="checkbox" for="entry_{{entry.id}}"></label>
+                                                </div>
+                                                <label style="padding-left:10px">Entry ID#：{{entry.id}}</label>
+                                            </div>
+                                            <div class="grid-10">
+                                                <button type="button" class="ripplelink print" ng-click="previewEntry(entry.id)">Preview</button>
+                                            </div>
+                                        </div>
+                                        <div class="grid-parent container">
+                                            <div class="grid-30" style="padding-top: 6px;">
+                                                <div class="table">
+                                                    <input type="checkbox" id="entry_gateCheckoutLable"
+                                                           name="profile-subtheme"
+                                                           ng-click="onPrintLabelChecked('gateCheckOutLabel')" 
+                                                           ng-checked="printLabelSelection.gateCheckOutLabel">
+                                                    <label class="checkbox" for="entry_gateCheckoutLable"></label>
+                                                </div>
+                                                <label style="padding-left:10px">Gate Check Out Lable</label>
+                                            </div>
+                                            <div class="grid-10">
+                                                <button type="button" class="ripplelink print" ng-click="previewEntryTicketCheckout(entry.id)">Preview</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-class="{'active':activetab == 'inbound'}" class="grid-100 tab-content" id="section2"
+                             style="background-color:#b1c7cc">
+                        </div>
+                        <div ng-class="{'active':activetab == 'outbound'}" class="grid-100 tab-content" id="section3" style="background-color:#b1c7cc">
+                            <div class="grid-content grid-100" style="background-color:#b1c7cc">
+                                <div class=" grid-100 container">
+                                    <div class="tab-container">
+                                        <ul>
+                                            <li data-tab-title="Section8"
+                                                ng-class="{'active':outboundActivetab == 'shipinglable'}"
+                                                ng-click="changeOutboundTab('shipinglable')">
+                                                SHIPPING LABEL
+                                            </li>
+                                            <li data-tab-title="Section9"
+                                                ng-class="{'active':outboundActivetab == 'bol'}"
+                                                ng-click="changeOutboundTab('bol')">
+                                                BOL
+                                            </li>
+                                            <li data-tab-title="Section10"
+                                                ng-class="{'active':outboundActivetab == 'packinglist'}"
+                                                ng-click="changeOutboundTab('packinglist')">
+                                                PACKING LIST
+                                            </li>
+                                            <li data-tab-title="Section11"
+                                                ng-class="{'active':outboundActivetab == 'countingsheet'}"
+                                                ng-click="changeOutboundTab('countingsheet')">
+                                                COUNTING SHEET
+                                            </li>
+                                            <li data-tab-title="Section12"
+                                                ng-class="{'active':outboundActivetab == 'cartonlabel'}"
+                                                ng-click="changeOutboundTab('cartonlabel')">
+                                                CARTON LABEL
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="grid-100 grid-parent container">
+                                    <div ng-class="{'active':outboundActivetab == 'shipinglable'}" class="grid-100 tab-content" id="section8">
+                                        <div class="grid-content" style="background-color:#b1c7cc;">
+                                            <div class="grid-100 grid-parent container" ng-show="entry.loads.length > 0" style="margin-bottom: 0px;">
+                                                <div class="grid-100">
+                                                    <div class="grid-40">
+                                                        <div class="table">
+                                                            <input type="checkbox" id="shipping_all" ng-checked="isAllOutboundChecked"
+                                                                   ng-click="checkAllOutbound()">
+                                                            <label class="checkbox" for="shipping_all"></label>
+                                                        </div>
+                                                        <label style="padding-left:10px"> Select All</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="grid-100 grid-parent container" ng-repeat="load in entry.loads" style="margin-bottom: 10px;">
+                                                <div class="grid-100"  style="margin-bottom: 10px;">
+                                                    <div class="grid-30" style="padding-top: 6px;">
+                                                        <div class="table">
+                                                            <input type="checkbox" id="shipping_{{load.id}}"
+                                                                   ng-checked="isLoadChecked(load.id)"
+                                                                   ng-click="checkLoad(load.id)">
+                                                            <label class="checkbox" for="shipping_{{load.id}}"></label>
+                                                        </div>
+                                                        <label style="padding-left:10px"> Load#: {{load.id}}</label>
+                                                    </div>
+                                                </div>
+                                                <div class="grid-100" ng-repeat="orderLine in load.orderLines" style="margin-bottom: 10px;">
+                                                    <div class="grid-30" style="padding-left: 30px; padding-top: 6px;">
+                                                        <div class="table">
+                                                            <input type="checkbox" id="shipping_{{orderLine.orderId}}"
+                                                                   name="profile-subtheme"
+                                                                   ng-checked="isOrderChecked(orderLine.orderId)"
+                                                                   ng-click="checkOrder(orderLine.orderId)">
+                                                            <label class="checkbox"
+                                                                   for="shipping_{{orderLine.orderId}}"></label>
+                                                        </div>
+                                                        <label style="padding-left:10px"> Order#:
+                                                            {{orderLine.orderId}}</label>
+                                                    </div>
+                                                    <div class="grid-10">
+                                                        <button type="button" class="ripplelink print" ng-click="previewEntry(entry.id)">Preview</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div ng-class="{'active':outboundActivetab == 'bol'}" style="padding-left:0"
+                                         class="grid-100 tab-content" id="section9">
+                                        <div class="grid-content" style="background-color:#b1c7cc">
+                                            <div class="grid-100 grid-parent container" ng-show="entry.loads.length > 0 " style="margin-bottom: 0px;">
+                                                <div class="grid-100">
+                                                    <div class="grid-40">
+                                                        <div class="table">
+                                                            <input type="checkbox" id="bol_all" ng-checked="isAllOutboundChecked"
+                                                                   ng-click="checkAllOutbound()">
+                                                            <label class="checkbox" for="bol_all"></label>
+                                                        </div>
+                                                        <label style="padding-left:10px"> Select All </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="grid-100 grid-parent container" ng-repeat="load in entry.loads">
+                                                <div class="grid-100"  style="margin-bottom: 10px;">
+                                                    <div class="grid-30" style="padding-top: 6px;">
+                                                        <div class="table">
+                                                            <input type="checkbox" id="bol_{{load.id}}"
+                                                                   ng-checked="isLoadChecked(load.id)"
+                                                                   ng-click="checkLoad(load.id)">
+                                                            <label class="checkbox" for="bol_{{load.id}}"></label>
+                                                        </div>
+                                                        <label style="padding-left:10px"> Load#: {{load.id}}</label>
+                                                    </div>
+                                                    <div class="grid-10">
+                                                        <button type="button" class="ripplelink print" ng-click="previewMasterBOL(load.id)">Preview</button>
+                                                    </div>
+                                                    <div class="grid-30" ng-if="load.carrierSignature">
+                                                        <button type="button" class="ripplelink print" ng-click="printFile(load.carrierSignature)">Print Carrier Signature</button>
+                                                    </div>
+                                                    <div class="grid-30" ng-if="load.shipperSignature">
+                                                        <button type="button" class="ripplelink print" ng-click="printFile(load.shipperSignature)">Print Shipper Signature</button>
+                                                    </div>
+                                                    <div class="grid-30" ng-if="!load.shipperSignature && !load.carrierSignature">
+                                                        <button type="button" class="ripplelink print" ng-click="printBolByOrder(load.id)">Print BOL By Order</button>
+                                                    </div>
+                                                    <div class="grid-30" ng-if="!load.shipperSignature && !load.carrierSignature">
+                                                        <button type="button" class="ripplelink print" ng-click="printBolByShipTo(load.id)">Print BOL By Ship To</button>
+
+                                                    </div>
+                                                </div>
+                                                <div class="grid-100" ng-repeat="orderLine in load.orderLines" style="margin-bottom: 10px;">
+                                                    <div class="grid-30" style="padding-left: 30px; padding-top: 6px;">
+                                                        <div class="table">
+                                                            <input type="checkbox" id="bol_{{orderLine.orderId}}"
+                                                                   name="profile-subtheme"
+                                                                   ng-checked="isOrderChecked(orderLine.orderId)"
+                                                                   ng-click="checkOrder(orderLine.orderId)">
+                                                            <label class="checkbox"
+                                                                   for="bol_{{orderLine.orderId}}"></label>
+                                                        </div>
+                                                        <label style="padding-left:10px"> Order#:
+                                                            {{orderLine.orderId}}</label>
+                                                    </div>
+                                                    <div class="grid-10">
+                                                        <button type="button" class="ripplelink print" ng-click="previewOrderBol(load.id, orderLine.orderId)">Preview</button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div ng-class="{'active':outboundActivetab == 'packinglist'}" style="padding-left:0"
+                                         class="grid-100 tab-content" id="section10">
+                                        <div class="grid-content" style="background-color:#b1c7cc">
+                                            <div class="grid-100 grid-parent container" ng-show="entry.loads.length > 0" style="margin-bottom: 0px;">
+                                                <div class="grid-100">
+                                                    <div class="grid-40">
+                                                        <div class="table">
+                                                            <input type="checkbox" id="packinglist_all" ng-checked="isAllOutboundChecked"   ng-click="checkAllOutbound()">
+                                                            <label class="checkbox" for="packinglist_all"></label>
+                                                        </div>
+                                                        <label style="padding-left:10px"> Select All</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="grid-100 grid-parent container" ng-repeat="load in entry.loads" style="margin-bottom: 10px;">
+                                                <div class="grid-100">
+                                                    <div class="grid-30" style="padding-top: 6px;">
+                                                        <div class="table">
+                                                            <input type="checkbox" id="packinglist_{{load.id}}"
+                                                                   ng-checked="isLoadChecked(load.id)"
+                                                                   ng-click="checkLoad(load.id)">
+                                                            <label class="checkbox" for="packinglist_{{load.id}}"></label>
+                                                        </div>
+                                                        <label style="padding-left:10px"> Load#: {{load.id}}</label>
+                                                    </div>
+                                                </div>
+                                                <div class="grid-100" ng-repeat="orderLine in load.orderLines" style="margin-bottom: 10px;">
+                                                    <div class="grid-30" style="padding-left: 30px; padding-top: 6px;">
+                                                        <div class="table">
+                                                            <input type="checkbox" id="packinglist_{{orderLine.orderId}}"
+                                                                   name="profile-subtheme"
+                                                                   ng-checked="isOrderChecked(orderLine.orderId)"
+                                                                   ng-click="checkOrder(orderLine.orderId)">
+                                                            <label class="checkbox"
+                                                                   for="packinglist_{{orderLine.orderId}}"></label>
+                                                        </div>
+                                                        <label style="padding-left:10px"> Order#:
+                                                            {{orderLine.orderId}}</label>
+                                                    </div>
+                                                    <div class="grid-10">
+                                                        <button type="button" class="ripplelink print"
+                                                                ng-click="printOrderPackingListPrint(orderLine.orderId)">Preview</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div ng-class="{'active':outboundActivetab == 'countingsheet'}"
+                                         style="padding-left:0;"
+                                         class="grid-100 tab-content" id="section11">
+                                        <div class="grid-content" style="background-color:#b1c7cc">
+                                            <div class="grid-100 grid-parent container" ng-show="entry.loads.length > 0"  style="margin-bottom: 0px;">
+                                                <div class="grid-100">
+                                                    <div class="grid-40">
+                                                        <div class="table">
+                                                            <input type="checkbox" id="countingsheet_all"
+                                                                   ng-checked="isAllOutboundChecked" ng-click="checkAllOutbound(load.id)">
+                                                            <label class="checkbox" for="countingsheet_all"></label>
+                                                        </div>
+                                                        <label style="padding-left:10px;"> Select All</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="grid-100 grid-parent container" ng-repeat="load in entry.loads" style="margin-bottom: 10px;">
+                                                <div class="grid-100">
+                                                    <div class="grid-30" style="padding-top: 6px;">
+                                                        <div class="table">
+                                                            <input type="checkbox" id="counting_{{load.id}}"
+                                                                   ng-checked="isLoadChecked(load.id)"
+                                                                   ng-click="checkLoad(load.id)">
+                                                            <label class="checkbox" for="counting_{{load.id}}"></label>
+                                                        </div>
+                                                        <label style="padding-left:10px"> Load#: {{load.id}}</label>
+                                                    </div>
+                                                    <div class="grid-10">
+                                                        <button type="button" class="ripplelink print" ng-click="previewCountingSheet(entry.id, load.id)">Preview</button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div ng-class="{'active':outboundActivetab == 'cartonlabel'}" style="padding-left:0"
+                                         class="grid-100 tab-content" id="section12">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+    </div>
+</md-dialog>

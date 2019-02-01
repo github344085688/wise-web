@@ -1,0 +1,52 @@
+<md-dialog flex="60">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{ title }}</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content style="overflow: hidden; padding: 20px 0px;">
+        <form novalidate name="stepInfo"
+              ng-submit="stepInfo.$valid && submitStep()">
+            <div style="padding: 0px 20px;">
+                <div class="row form-group">
+                    <div class="col-md-5">
+                        <label>Name <span style="color: red;">*</span></label>
+                        <input-validation-message field="name" form="stepInfo"></input-validation-message>
+                        <input name="name" class="form-control" required="true" ng-model="step.name"/>
+                    </div>
+                    <div class="col-md-5">
+                        <label>Assignees <span style="color: red;">*</span></label>
+                        <input-validation-message field="assignees" form="stepInfo"></input-validation-message>
+                        <ui-select name="assignees" multiple ng-model="step.assigneeUserIds" required="true">
+                            <ui-select-match allow-clear="{{allowClear}}">
+                                <div ng-bind="$item.firstName + ' ' + $item.lastName">
+                                    <!--{{$select.selected.firstName}}  {{$select.selected.lastName}}-->
+                                </div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="user.idmUserId as user in userList | filter: $select.search.username"
+                                               refresh="getUsers($select.search)" refresh-delay="50">
+                                <div ng-bind="user.firstName + ' ' + user.lastName"></div>
+                            </ui-select-choices>
+                            <ui-select-no-choice>
+                                No available option.
+                            </ui-select-no-choice>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <label>Description <span style="color: red;">*</span></label>
+                        <input-validation-message field="description" form="stepInfo"></input-validation-message>
+                        <textarea name="description" class="form-control" rows="4"
+                                  ng-model="step.description" required="true"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" style="text-align: right; padding-right:15px;">
+                <!--<div style="float: left; color: red; width: 450px; text-align: left; padding-left: 20px;">{{ errorMsg }}</div>-->
+                <button type="submit" class="btn blue" style="margin-right: 15px;">Save</button>
+                <button type="button" class="btn default" ng-click="closeDialog()">Cancel</button>
+            </div>
+        </form>
+    </md-dialog-content>
+</md-dialog>

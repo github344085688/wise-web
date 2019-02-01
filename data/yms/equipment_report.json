@@ -1,0 +1,51 @@
+{
+    "yardName": "Valley",
+    "operator": "wang lan",
+    "reportPeriod": "2016-01-01 00:00:00 - 2016-01-01 23:59:59 PST",
+    "reportLines": [{
+        "equipmentType": "Tractor",
+        "equipmentNo": "9EFY20021",
+        "carrierMCDot": 1717174,
+        "carrierName": "Versa",
+        "comeInWithCar":"N",
+        "gateCheckInTime": "2016-01-01 10:00:00",
+        "gateCheckInentry": "400001",
+        "currentStatus": "Not in yard",
+        "leaveWithCargo":"N",
+        "gateCheckOutTime": "2016-01-01 14:00:00",
+        "gateCheckOutentry": "400001",
+        "hourStay":"9",
+        "currentResourceType": "",
+        "currentResourceNo": ""
+    },{
+        "equipmentType": "Container",
+        "equipmentNo": "CCLU1234561",
+        "carrierMCDot": 1717174,
+        "carrierName": "Versa",
+        "comeInWithCar":"Y",
+        "gateCheckInTime": "2016-01-01 10:00:00",
+        "gateCheckInentry": "400001",
+        "currentStatus": "In yard",
+        "leaveWithCargo":"N",
+        "gateCheckOutTime": "",
+        "gateCheckOutentry": "",
+        "hourStay":"24",
+        "currentResourceType": "Parking Space",
+        "currentResourceNo": "P001"
+    },{
+        "equipmentType": "Container",
+        "equipmentNo": "TCNU9876549",
+        "carrierMCDot": 122321,
+        "carrierName": "NRT",
+        "comeInWithCar":"Y",
+        "gateCheckInTime": "2016-01-01 10:00:00",
+        "gateCheckInentry": "400002",
+        "currentStatus": "Not in yard",
+        "leaveWithCargo":"N",
+        "gateCheckOutTime": "2016-01-01 14:00:00",
+        "gateCheckOutentry": "400002",
+        "hourStay":"2",
+        "currentResourceType": "",
+        "currentResourceNo": ""
+    }]
+}

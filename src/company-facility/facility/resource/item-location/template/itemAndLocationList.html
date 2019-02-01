@@ -1,0 +1,87 @@
+<div class="grid-100 row">
+    <div class=" grid-100 grid-content">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left"> Item & Location List</h1>
+            <a class="create-button" permission-check="{{'facility::itemLocation_write'}}" ui-sref="cf.facility.resource.itemAndLocation.add">
+                <b>Add Item & Location</b>
+            </a>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-30">
+                <label class="label-input">Type</label>
+                <ui-select ng-model="searchParam.itemLocationType">
+                    <ui-select-match allow-clear="true">
+                        <span ng-bind="$select.selected"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="type in types | filter: $select.search">
+                        <div>{{type}}</div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-30">
+                <label class="label-input">Item:</label>
+                <itemspec-auto-complete name="itemSpecId" ng-model="searchParam.itemSpecId" name="itemSpec" allow-clear="true" />
+            </div>
+
+            <div class="grid-30">
+                <label class="label-input">Location</label>
+                <multiple-location-auto-complete ng-model="searchParam.locationIds"/>
+            </div>
+
+
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-80">&nbsp;</div>
+            <div class="grid-10">
+                <waitting-btn type="button" btn-class="btn yellow" ng-click="export()" value="'Export'" is-loading="exporting"></waitting-btn>
+            </div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Item Spec</th>
+                        <th>Location Name</th>
+                        <th permission-check="{{'facility::itemLocation_write'}}">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="itemLocation  in itemLocationView  track by $index">
+                        <td>
+                            {{itemLocation.itemLocationType}}
+                        </td>
+                        <td>
+                            <item-display item="itemLocation"></item-display>
+                        </td>
+                        <td>
+                            <span ng-repeat="locationId in itemLocation.locationIds" ng-if="locationId" style="background-color:#f6f3e8; margin: 5px 5px;padding: 5px 10px;border-radius: 3px;">
+                                {{locationMap[locationId].name}}&nbsp;
+                            </span>
+                        </td>
+                        <td permission-check="{{'facility::itemLocation_write'}}">
+                            <a ng-href="{{'#/cf/facility/resource/itemAndLocation/edit/' + itemLocation.id}}" target="_blank" title="Edit">Edit</a> |
+                            <a ng-click="delete(itemLocation.id)" title="Delete">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="itemLocations.length" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+    </div>
+</div>

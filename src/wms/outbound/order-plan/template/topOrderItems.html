@@ -1,0 +1,275 @@
+<div class="grid-content grid-100 row" style="overflow: hidden">
+    <div class="grid-parent grid-100 container">
+        <div class="tab-container">
+            <ul>
+                <li ng-class="{'active':activetab == 'create'}" style="width: 300px;" ng-click="changeTab('create')"> Create Order Item Top </li>
+                <li ng-class="{'active':activetab == 'view'}" style="width: 300px;" ng-click="changeTab('view')"> Order Item Top View </li>
+                <li ng-class="{'active':activetab == 'relation'}" style="width: 400px;" ng-click="changeTab('relation')"> Item Prefered Pick Virtual Location Group </li>
+            </ul>
+        </div>
+    </div>
+
+    <div ng-if="activetab == 'create'" style="width: 100%;">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Search Order</h1>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label>Order ID</label>
+                    <lt-tags-input placeholder="Enter Order ID" ng-model="search.orderIds" fill="DN-"></lt-tags-input>
+                </div>
+                <div class="grid-25">
+                    <label>Customer
+                        <span style="color: red;">*</span>
+                    </label>
+                    <organization-auto-complete name="customer" ng-model="search.customerId" tag="Customer" required="true"></organization-auto-complete>
+                </div>
+                <div class="grid-25">
+                    <label>Status</label>
+                    <ui-select multiple name="status" ng-model="search.statuses">
+                        <ui-select-match>
+                            {{$item}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in statusList | filter: $select.search">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="grid-25">
+                    <label>Retailer</label>
+                    <organization-auto-complete name="retailer" ng-model="search.retailerId" tag="Retailer" allow-clear="true"></organization-auto-complete>
+                </div>
+            </div>
+
+            <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label>Customer Sales Order No</label>
+                    <lt-tags-input placeholder="Enter  Sales Order No" ng-model="search.eqSoNos" ></lt-tags-input>
+                </div>
+                <div class="grid-25">
+                    <label>Reference </label>
+                    <lt-tags-input placeholder="Enter Reference" ng-model="search.referenceNos" ></lt-tags-input>
+                </div>
+                <div class="grid-25">
+                    <label>Purchase Order No.</label>
+                    <lt-tags-input placeholder="Enter PO" ng-model="search.poNos" ></lt-tags-input>
+                </div>
+                <div class="grid-25">
+                    <label>Load No.</label>
+                    <lt-tags-input placeholder="Enter Load" ng-model="search.loadNos" ></lt-tags-input>
+                </div>
+            </div>
+
+
+
+            <div class="grid-parent grid-100 container">
+                <div class="grid-75">
+                    <label>Long Haul</label>
+                    <multiple-longhaul-auto-complete placeholder="Enter Long Haul" ng-model="search.longHauls"></multiple-longhaul-auto-complete>
+                </div>
+                <div class="grid-25">
+                    <label >Top Number </label>
+                    <input type="number" ng-model="search.topNumber"  />
+                </div>
+            </div>
+
+            <div class="grid-parent grid-100 container">
+                <div class="grid-25">
+                    <label >Date Created From:</label>
+                    <lt-date-time  value="search.createdWhenFrom"></lt-date-time>
+                </div>
+                <div class="grid-25">
+                    <label >Date Created To:</label>
+                    <lt-date-time  value="search.createdWhenTo"></lt-date-time>
+                </div>
+                <div class="grid-25">
+                    <label>Delivery Request Date From</label>
+                    <lt-date-time value="search.mabdFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                </div>
+                <div class="grid-25">
+                    <label>Delivery Request Date To</label>
+                    <lt-date-time value="search.mabdTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                </div>
+            </div>
+
+            <div class="grid-parent grid-100 container">
+                <div class="grid-75">
+                    &nbsp;
+                </div>
+                <div class="grid-25">
+                    <waitting-btn type="button" btn-class="btn blue" ng-click="searchOrders()" value="'Search'" is-loading="isLoading"></waitting-btn>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left" style="font-size: 1.1rem">Search Results:</h1>
+            <hr/>
+        </div>
+
+
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>ID</th>
+                    <th>Status</th>
+                    <th>Customer</th>
+                    <th>Ship To</th>
+                    <th>Store No</th>
+                    <th>Line Haul</th>
+                    <th>Delivery Request Date</th>
+                    <th>Date Created</th>
+                    <th>
+                        <input type="checkbox" id="checkAll"  ng-click="toggleAll()" ng-checked="selectAllIsChecked()">
+                        <label class="checkbox" for="checkAll" ></label>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="order in orders track by $index">
+                        <td>{{$index + 1}}</td>
+                        <td>{{order.id}}</td>
+                        <td>{{order.status}}</td>
+                        <td>{{order.customerName}}</td>
+                        <td>{{order.shipToAddress.name}}</td>
+                        <td>{{order.shipToAddress.storeNo}}</td>
+                        <td>
+                            <span ng-repeat="longhaul in order.longHauls">
+                                {{longhaul.longHaulNo}} ({{longhaul.description}})
+                            </span>
+                        </td>
+                        <td>{{order.mabd | amDateFormat:'YYYY-MM-DD HH:00'}}</td>
+                        <td>{{order.createdWhen | amDateFormat:'YYYY-MM-DD HH:00'}}</td>
+                        <td>
+                            <input type="checkbox" id="check{{order.id}}" ng-click="toggle($event, order)" ng-checked="order.isChecked">
+                            <label class="checkbox" for="check{{order.id}}"></label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-75">
+                &nbsp;
+            </div>
+            <div class="grid-25">
+                <waitting-btn type="button" btn-class="btn blue" ng-click="add()" value="'Create Item Top'" is-loading="creating"></waitting-btn>
+            </div>
+        </div>
+    </div>
+
+
+    <div ng-if="activetab == 'view'" style="width: 100%;">
+        <div class="grid-parent grid-100 container">
+            <div class="grid-60">
+                <input type="radio" name="showTop" ng-click="topShowChange('csTop')" checked="checked" id="csTop" style="display: inline;"
+                />
+                <label for="csTop">Show CS Top</label>
+                <input type="radio" name="showTop" ng-click="topShowChange('eaTop')" id="eaTop" style="display: inline;" />
+                <label for="eaTop">Show EA Top</label>
+            </div>
+            <div class="grid-20">
+                <waitting-btn type="button" btn-class="btn red" ng-click="removeTop()" value="'Remove'" is-loading="deleting"></waitting-btn>
+            </div>
+            <div class="grid-20">
+                <waitting-btn type="button" btn-class="btn yellow" ng-click="export()" value="'Export'" is-loading="exporting"></waitting-btn>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <table class="table" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>item</th>
+                        <th class="order-sorting" ng-click="sortClick('frequency')">Order Count</th>
+                        <th ng-if="showTop=='csTop'" class="order-sorting" ng-click="sortClick('csQty')">CS QTY</th>
+                        <th ng-if="showTop=='eaTop'" class="order-sorting" ng-click="sortClick('eaQty')">EA QTY</th>
+                        <th class="order-sorting" ng-click="sortClick('baseQty')">Base QTY</th>
+                        <th ng-if="showTop=='csTop'" class="order-sorting" ng-click="sortClick('csTopNum')">Top Num</th>
+                        <th ng-if="showTop=='eaTop'" class="order-sorting" ng-click="sortClick('eaTopNum')">Top Num</th>
+                        <th>
+                            <input type="checkbox" id="checkAllTop" ng-click="toggleAllTop()" ng-checked="selectAllTopIsChecked()">
+                            <label class="checkbox" for="checkAllTop"></label>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in itemTops track by $index">
+                        <td>{{$index + 1}}</td>
+                        <td>
+                            <item-display item="item"></item-display>
+                        </td>
+                        <td>{{item.frequency}}</td>
+                        <td ng-if="showTop=='csTop'">{{item.csQty}}</td>
+                        <td ng-if="showTop=='eaTop'">{{item.eaQty}}</td>
+                        <td>{{item.baseQty}}</td>
+                        <td ng-if="showTop=='csTop'">
+                            {{item.csTopNum}}
+                        </td>
+                        <td ng-if="showTop=='eaTop'">
+                            {{item.eaTopNum}}
+                        </td>
+                        <td>
+                            <input type="checkbox" id="check{{item.id}}" ng-click="toggleTop($event, item)" ng-checked="item.isChecked">
+                            <label class="checkbox" for="check{{item.id}}"></label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div ng-if="activetab == 'relation'" style="width: 100%;">
+
+        <div class="grid-parent grid-100 container">
+
+            <div class="grid-parent grid-100 container">
+                <div class="grid-50">
+                    <label style="float:left;line-height: 30px;">Use Item Prefered Pick Virtual Location Group：</label>
+                    <md-switch class="md-primary" aria-label="Use Item & Virtual Location GroupItem And Virtual Location Group" ng-model="VLGparam.flag"
+                        style="margin-top: 0;margin-bottom: 0;" ng-change="VLGChange()"></md-switch>
+                </div>
+
+                <div class="grid-50" style="float:right">
+                    <a class="create-button" ng-click="addItemPreferedPickVLG()" permission-check="{{'outbound::orderPlan_write'}}">
+                        <b>Add Item Prefered Pick Virtual Location Group</b>
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="grid-parent grid-100 container">
+                <h1 class="section-label pull-left" style="font-size: 1.1rem">Result:</h1>
+                <hr/>
+            </div>
+
+            <div class="grid-parent grid-100 container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>item</th>
+                            <th>virtual Location Group</th>
+                            <th>CS QTY</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="itemVirtualLocation in itemVirtualLocationGroups track by $index">
+                            <th>
+                                <item-display item="itemVirtualLocation"></item-display>
+                            </th>
+                            <th>{{itemVirtualLocation.VLGName}}</th>
+                            <th>{{itemVirtualLocation.csQty}}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+</div>

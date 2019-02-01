@@ -1,0 +1,123 @@
+<md-dialog flex="60" ng-cloak id="unis">
+    <form class="light-theme">
+
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Entry Photos Page</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div id="files" class="row">
+                    <div class="grid-100">
+                        <div class="grid-content">
+
+                            <div class="grid-parent grid-100 file-container">
+                                <div class="grid-parent grid-30" style="border: 1px solid #ddd; margin-right:20px">
+                                    <div class="file-name-list" style="height:400px">
+                                        <div ng-if="entryPhotoTypes.length>0">
+                                            <div style="padding: 5px ; overflow: hidden; text-overflow: ellipsis;white-space: nowrap; border-bottom:1px solid #ddd;">
+                                                <span><b> Entry </b></span>
+
+                                            </div>
+                                            <div ng-class="{'bg-light-lgreen':hightLights[groupPhoto]}" ng-repeat="groupPhoto in entryPhotoTypes" style=" overflow: hidden; text-overflow: ellipsis;white-space: nowrap;  border-bottom:1px solid #ddd;">
+                                                <p style="line-height: 30px; padding: 5px 5px 5px 20px;" ng-click="entryPhotosView(groupPhoto)">
+                                                    <a>{{groupPhoto}}</a>
+                                                </p>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="grid-parent grid-65" style="border: 1px solid #ddd;position: relative; ">
+                                    <ul class="file-list" style="height:400px">
+                                        <li style="width: 100%; margin: 0px;padding: 5px 10px;height: auto; border: none;text-align: left;" ng-if="isPhotoTypes">
+                                            <div class="btn blue" style="float: right; width: 150px;">
+                                                <button type="button" ng-click="newPhoto()" class="btn blue" style="width: 100%;">Take Photo</button>
+                                            </div>
+                                                <div class="btn blue" style="width: 150px; position: relative;">
+                                                    <input type="file" multiple="multiple" style="width: 100%; display: block;opacity:0; filter:alpha(opacity=0);height: 100%;position: absolute;left: 0; top:0;z-index:1; cursor: pointer; " onchange="angular.element(this).scope().uploadFileChange(this)"
+                                                           accept="image/*" />
+                                                    <waitting-btn type="button" btn-class="ripplelink" value="'Upload File'"
+                                                                  is-loading="FileLoading">
+                                                    </waitting-btn>
+                                                </div>
+                                        </li>
+                                        <li ng-repeat="photo in photoLists">
+                                            <div class="file">
+                                                <img http-src="{{photo.url}}" ng-click="viewPhotos($event)">
+                                                <div class="file-overlay">
+                                                    <button class="ripplelink" style="bottom: 10px;position: absolute;left: 20px;" ng-click="remove($index)"><i class="fa fa-times" style="top:5px"></i>Delete</button>
+
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li ng-repeat="photo in batchPhotoLists" ng-if="isBatchPhotos">
+                                            <div class="file">
+                                                <img http-src="{{photo.img}}" ng-click="viewPhotos($event)">
+                                                <div class="file-overlay">
+
+                                                    <button class="ripplelink" style="bottom: 10px;position: absolute;left: 20px;" ng-click="removeBatchPhoto($index)"><i class="fa fa-times" style="top:5px"></i>Delete</button>
+
+                                                </div>
+
+                                            </div>
+                                        </li>
+                                    </ul>
+
+                                    <div ng-show="cameraStart" style="position: absolute;bottom: 5px;right: 5px;">
+                                        <video id="video" autoplay="true" http-src="{{videoSrc}}" style="width:300px"></video>
+                                        <div>
+                                            <button type="button" ng-click="snap()" class="btn blue" style="width: 40%;">Snap Photo</button>
+                                            <button type="button" ng-click="closeCamera()" style="width: 40%;float: right;" class="btn default">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+           
+
+            </div>
+
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+
+     
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-80">&nbsp;</div>
+                        <div class="grid-10">
+                            <div style="margin-right: 10px" ng-show="batchPhotos.length > 0">
+                                <button type=" button " ng-click="savePhotos()" class="btn blue ">Save</button>
+                            </div>
+
+                        </div>
+                        <div class="grid-10" style="float:right">
+                            <button type="button " ng-click="cancel() " class="btn default ">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+    </form>
+
+</md-dialog>
+<div ng-show="isViewPhoto">
+    <div style="position:fixed;z-index:998;top:0;left:0;right:0;bottom: 0;background:black; opacity:0.7" ng-click="closePhotoView()">
+    </div>
+    <div ng-style="{'margin-top':photoHeight,'margin-left':photoWidth}" style="position:absolute;z-index:999; top: 50%;left: 50%;">
+        <img src="{{photoView}}" />
+        <i class="material-icons" style="position: absolute;top: -20px;color: white;right: -20px;font-size: 30px;cursor: pointer; background: black;border-radius: 50%;"
+            ng-click="closePhotoView()">close</i>
+    </div>
+</div>

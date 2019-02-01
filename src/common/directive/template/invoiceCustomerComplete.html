@@ -1,0 +1,14 @@
+<ui-select name="{{name}}" ng-model="$parent.ngModel" required="{{required}}"
+           on-select="_onSelect($select.selected)"
+           on-remove="_onRemove($select.selected)" multiple>
+    <ui-select-match>
+        {{$item.VendorName}}
+    </ui-select-match>
+    <ui-select-choices repeat="invoiceCustomer.AccountID as invoiceCustomer in invoiceCustomers | filter: $select.search "
+                       refresh="searchItemGroup($select.search)" refresh-delay="50">
+        <div ng-bind="invoiceCustomer.VendorName"></div>
+    </ui-select-choices>
+    <ui-select-no-choice>
+        No available option.
+    </ui-select-no-choice>
+</ui-select>

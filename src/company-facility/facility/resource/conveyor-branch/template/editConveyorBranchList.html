@@ -1,0 +1,85 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">
+                <span ng-show="isAddAction" class="caption-subject bold"> Add Conveyor Branch</span>
+                <span ng-show="!isAddAction" class="caption-subject bold"> Edit Conveyor Branch</span>
+            </h1>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <form novalidate name="conveyorBranchForm" ng-submit="conveyorBranchForm.$valid && addOrUpdateConveyorBranch()">
+                <div class="grid-parent grid-100 container">
+
+                    <label class="label-input grid-10">Name:</label>
+                    <div class="grid-60">
+                        <div class="input-icon right" ng-show="conveyorBranchForm.name.$invalid && (conveyorBranchForm.$submitted || conveyorBranchForm.name.$touched)">
+                            <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                <span class="lt-tooltip-text">Required.</span>
+                            </i>
+                        </div>
+                        <input type="number" placeholder="please input numbers" name="name" ng-model="conveyorBranch.name" required>
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+
+                    <label class="label-input grid-10">Status:</label>
+                    <div class="grid-60">
+                        <ui-select ng-model="conveyorBranch.status" class="form-control">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="status in ['AVAILABLE','UNAVAILABLE'] | filter: $select.search">
+                                <div ng-bind="status"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="grid-parent grid-100 container">
+
+                    <label class="label-input grid-10">Type:</label>
+                    <div class="grid-60">
+                        <input-validation-message field="type" form="conveyorBranchForm"></input-validation-message>
+                        <ui-select name="type" ng-model="conveyorBranch.type" class="form-control" required="true">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="type in ['NORMAL','EXCEPTION'] | filter: $select.search">
+                                <div ng-bind="type"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                 <div ng-show="isAddAction">
+                <div class="grid-parent grid-100 container">
+
+                    <label class="label-input grid-10">ConveyorLineName:</label>
+                    <div class="grid-60">
+                        <input-validation-message field="conveyorLineId" form="conveyorBranchForm"></input-validation-message>
+                        <ui-select name="conveyorLineId" ng-model="conveyorBranch.conveyorLineId" class="form-control" required="true">
+                            <ui-select-match allow-clear="true">
+                                <div ng-bind="$select.selected.name"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="Line.id as Line in ConveyorLineList | filter: $select.search">
+                                <div ng-bind="Line.name"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+              </div>
+
+                <div class="grid-parent grid-100 container">
+                    <unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="submitLabel"
+                        is-loading="loading"></unis-waitting-btn>
+                    <button type="button" class="grid-10 pull-right cancel" ng-click="cancelEditConveyor()">Cancel</button>
+
+
+
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

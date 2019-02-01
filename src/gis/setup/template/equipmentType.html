@@ -1,0 +1,120 @@
+<md-dialog flex="60" ng-cloak>
+    <md-toolbar>
+	    <div class="md-toolbar-tools">
+	        <h2>Equipment Types Setup</h2>
+	        <span flex></span>
+	        <md-button class="md-icon-button" ng-click="cancel()">
+	            <i class="material-icons">close</i>
+	        </md-button>
+	    </div>
+	</md-toolbar>
+	<md-dialog-content class="gis gis-equipment-type">
+	   <div>
+	       <h4 class="grey">Active</h4>
+	       <div>
+	           <div ng-repeat="eqp in equipmentTypes track by $index" ng-if="eqp.orgIds.indexOf(currWh.id) > -1" class="equipment active auto-box">
+    	           <span class="hover-blue" ng-class="{'badge bg-green': eqp.id==newType.id}" ng-dblclick="editEquipment(eqp)">
+    	               <img style="height: 12px;" http-src="/file-app/file-download/2877">
+    	               {{eqp.name}}
+    	           </span>
+    	           <span class="glyphicon glyphicon-eye-close grey hover-red auto-hidden" ng-click="removeCurrWh(eqp)"></span>
+    	           <span class="glyphicon glyphicon-trash grey hover-red auto-hidden" ng-click="removeEquipmentType(eqp)"></span>
+	           </div>
+	           <div class="clearfix"></div>
+	       </div>
+	   </div>
+	   <hr/>
+	   <div>
+           <h4 class="grey">Inactive</h4>
+           <div>
+               <div ng-repeat="eqp in equipmentTypes track by $index" ng-if="eqp.orgIds.indexOf(currWh.id) == -1" class="equipment inactive auto-box">
+                   <span class="hover-blue" ng-class="{'badge bg-green': eqp.id==newType.id}" ng-dblclick="editEquipment(eqp)">{{eqp.name}}</span>
+                   <span class="glyphicon glyphicon-eye-open grey hover-green auto-hidden" ng-click="addCurrWh(eqp)"></span>
+                   <span class="glyphicon glyphicon-trash grey hover-red auto-hidden" ng-click="removeEquipmentType(eqp)"></span>
+               </div>
+               <div class="clearfix"></div>
+           </div>
+       </div>
+       <hr/>
+       <h4 class="grey">{{newType.id ? 'Modify' : 'Create New'}} Equipment Type</h4>
+       <div class="form-horizontal">
+           <div class="form-group">
+               <div class="col-sm-6">
+	               <label class="control-label">Name</label>
+                   <input class="form-control" ng-model="newType.name"/>
+               </div>
+           </div>
+           <div class="form-group">
+               <div class="col-sm-12">
+                   <label class="control-label">Icon (.png)</label>
+                   <div>
+                       <div class="col-sm-6">
+                           <span>Normal Icon: </span>
+                           <img id="equipment_img_1" ng-src="{{newType.iconUrl}}" style="height: 24px; margin-right: 10px;"/>
+                           <a href="javascript:;" style="position: absolute;">
+                               <i class="material-icons green">add_circle_outline</i>
+                               <input id="equipment_file_1" type="file" accept="image/png" onChange="gisUploadImg(true)" style="position: absolute; top: 0; left: 0; opacity: 0; width: 24px; height: 24px;"/>
+                           </a>
+                       </div>
+                       <div class="col-sm-6">
+                           <span>Highlight Icon: </span>
+                           <img id="equipment_img_2" ng-src="{{newType.iconEditUrl}}" style="height: 24px; margin-right: 10px;"/>
+                           <a href="javascript:;" style="position: absolute;">
+                               <i class="material-icons green">add_circle_outline</i>
+                               <input id="equipment_file_2" type="file" accept="image/png" onChange="gisUploadImg()" style="position: absolute; top: 0; left: 0; opacity: 0; width: 24px; height: 24px;"/>
+                           </a>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <div class="form-group">
+               <div class="col-sm-3">
+                   <label class="control-label">Active Warehouses</label>
+                   <div>
+	                   <md-checkbox md-no-ink aria-label="Checkbox" ng-model="newType.common" class="md-primary">
+	                      All
+	                   </md-checkbox>
+                   </div>
+               </div>
+               <div class="col-sm-9" ng-disable="!newType.common">
+                   <label class="control-label">&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                   <div>
+                       <span class="btn btn-xs" style="margin: 5px;" 
+                             ng-class="{'blue': newType.common || newType.orgIds.indexOf(wh.id) > -1}" 
+                             ng-repeat="wh in whs track by $index"
+                             ng-click="addOrg(wh.id)">{{wh.name}}</span>
+                   </div>
+               </div>
+           </div>
+           <div class="form-group">
+               <div class="col-sm-3">
+                   <label class="control-label">Properties</label>
+                   <input class="form-control" ng-model="_proper"/>
+               </div>
+               <div class="col-sm-1">
+                   <label class="control-label">&nbsp;&nbsp;&nbsp;</label>
+                   <i class="material-icons green" style="cursor: pointer;" ng-click="newType.properties.push(_proper)">add_circle_outline</i>
+               </div>
+               <div class="col-sm-8">
+                   <label class="control-label">&nbsp;&nbsp;&nbsp;</label>
+                   <div>
+	                   <span class="btn btn-xs btn-default" style="margin: 5px;">name</span>
+	                   <span class="btn btn-xs btn-default auto-box" style="margin: 5px;" ng-repeat="pro in newType.properties track by $index">
+	                       {{pro}}
+	                       <span class="glyphicon glyphicon-remove auto-hidden grey hover-red" ng-click="delProperty(pro)"></span>
+	                   </span>
+                   </div>
+               </div>
+           </div>
+       </div>
+       <div ng-show="!saveCompleted" class="text-center" style="position: absolute; width: 100%; bottom: 0;">
+            <img src="assets/img/loading-spinner-grey.gif">
+            <span>&nbsp;SAVING...</span>
+        </div>
+       <div style="text-align: right;">
+           <span style="color: red; float: left;">{{errorInfo}}</span>
+           <input type="button" class="btn blue" ng-click="save()" ng-disabled="!saveCompleted" value="Save"/>
+           <input type="button" class="btn gray" ng-click="reset()" ng-disabled="!saveCompleted" value="Reset"/>
+       </div>
+	</md-dialog-content>
+</md-dialog>

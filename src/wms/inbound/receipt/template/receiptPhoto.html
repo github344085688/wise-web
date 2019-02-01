@@ -1,0 +1,25 @@
+<div class="row form-group">
+    <div class="col-md-12" style="margin-bottom: 20px;">
+        <div class="col-md-12 form-group" ng-repeat="(key, values) in offloadPhotos">
+            <div><b>{{getPhotoType(key)}}</b>:</div>
+            <ul class="feeds" ng-repeat="photo in values" style="display: inline-block;">
+                <li ng-repeat="p in photo.photoIds"  style="display: inline-block; margin: 5px 5px;" >
+                    <img style="width:250px;height: 250px;" http-src="/file-app/file-download/{{p}}" title="{{getPhotoType(key)}}: {{formatTime(photoMap[p].createdWhen)}}" />
+                </li>
+            </ul>
+        </div>
+        <span ng-show="!offloadPhotos && !loadingPhoto"> No Off Load Photo.</span>
+        <span ng-show="loadingPhoto"> Loading Off-Load Photo.</span>
+    </div>
+
+    <div class="col-md-12"><b>LP Setup</b>:
+        <ul class="feeds" ng-repeat="pg in lpSetupPhotos" style="display: inline-block">
+            <li ng-repeat="p in pg.damagePhotoIds" style="display: inline-block; margin: 5px 5px;">
+                <img style="width:250px;height: 350px;" http-src="/file-app/file-download/{{p}}"
+                     title="Damage {{formatTime(photoMap[p].createdWhen)}}"/>
+            </li>
+        </ul>
+        <span ng-show="(!lpSetupPhotos && !loadingPhoto) || lpSetupPhotos.length < 1"> No LP Setup Photo.</span>
+        <span ng-show="loadingPhoto"> Loading LP Setup Photo.</span>
+    </div>
+</div>

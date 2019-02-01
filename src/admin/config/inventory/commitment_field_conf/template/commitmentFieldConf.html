@@ -1,0 +1,135 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Admin</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Config</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Inventory</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Field Priority</a>
+        </li>
+    </ul>
+</div>
+<div id="commitment-field-priority-config" class="portlet light bordered" style="margin: 15px">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-gift"></i>Commitment Field Configuration
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="form-group customer">
+            <label class="control-label"> <b>Customer: </b></label>
+            <div style="display: inline-block; width: 200px;">
+                <organization-auto-complete ng-model="config.id" name="customer" tag="Customer"></organization-auto-complete>
+            </div>
+
+        </div>
+        <form novalidate ng-submit="saveConfiguration()" class="horizontal-form">
+            <div class="form-body">
+                <div class="row">
+                    <div class="col-xs-12 field-priority-header">Field Priority Configuration</div>
+                </div>
+                <div class="row" id="field-priority-container">
+                    <div class="col-xs-6 sortable-list">
+                        <div class="form-group">
+                            <label class="control-label"> <b>Field Options</b></label>
+                        </div>
+                        <ul data-as-sortable="getFieldDragListener" data-ng-model="config.defaultFields">
+                            <li data-ng-repeat="item in config.defaultFields" data-as-sortable-item>
+                                <div data-as-sortable-item-handle>{{item}}</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-6 sortable-list">
+                        <div class="form-group">
+                            <label class="control-label"> <b>Field Priority (High to Low)</b></label>
+                        </div>
+                        <ul data-as-sortable="getFieldDragListener" data-ng-model="config.orderedFields">
+                            <li data-ng-repeat="item in config.orderedFields" data-as-sortable-item>
+                                <div data-as-sortable-item-handle>{{item}}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row" ng-if="hasOrderedFields()">
+                    <div class="col-xs-12 field-value-priority-header">Field Value Priority Configuration</div>
+                </div>
+                <div class="row field-value-priority-container" id="field-value-priority-container-1" ng-if="orderedFieldHas('Freight Term')">
+                    <div class="col-xs-12">
+                        <div class="title">
+                            Freight Term
+                        </div>
+                    </div>
+                    <div class="col-xs-12 sortable-list">
+                        <div class="form-group">
+                            <label class="control-label"> <b>Field Value Priority (High to Low)</b></label>
+                        </div>
+                        <ul data-as-sortable="getFieldValueDragListener(1)" data-ng-model="config.freightTerms">
+                            <li data-ng-repeat="item in config.freightTerms" data-as-sortable-item>
+                                <div data-as-sortable-item-handle>{{item}}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row field-value-priority-container" id="field-value-priority-container-2" ng-if="orderedFieldHas('Ship To')">
+                    <div class="col-xs-12">
+                        <div class="title">
+                            Ship To
+                        </div>
+                    </div>
+                    <div class="col-xs-12 sortable-list">
+                        <div class="form-group">
+                            <label class="control-label"> <b>Field Value Priority (High to Low)</b></label>
+                        </div>
+                        <ul data-as-sortable="getFieldValueDragListener(2)" data-ng-model="config.shipTos">
+                            <li data-ng-repeat="item in config.shipTos" data-as-sortable-item>
+                                <div data-as-sortable-item-handle>{{item}}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row field-value-priority-container" id="field-value-priority-container-3" ng-if="orderedFieldHas('MABD')">
+                    <div class="col-xs-12">
+                        <div class="title">
+                            Delivery Request Date
+                        </div>
+                    </div>
+                    <div class="radio-group">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label class="radio-inline">
+                                    <div class="radio">
+                                        <input type="radio" ng-model="config.mabd" value="asc">
+                                    </div>
+                                    Sort lowest to highest
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label class="radio-inline">
+                                    <div class="radio">
+                                        <input type="radio" ng-model="config.mabd" value="desc">
+                                    </div>
+                                    Sort highest to lowest
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions right">
+                    <waitting-btn type="submit" btn-class="btn blue"
+                                  permission-check="{{'config::inventory_write'}}"
+                                  value="'Save'" is-loading="loading"></waitting-btn>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

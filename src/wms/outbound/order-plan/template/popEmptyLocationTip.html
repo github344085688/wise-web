@@ -1,0 +1,43 @@
+<md-dialog id="unis" flex="80" ng-cloak>
+    <form class="light-theme">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Empty Location Tip</h1>
+                <b flex></b>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <b style="font-size: 17px;">Below itemlines LP locations are empty ,  please make sure they have locations before create pick task.</b>
+                    </div>
+                    <div class="grid-100 grid-parent container">
+                        <table class="table">
+                            <thead>
+                                <tr style="background: #9a9a68;">
+                                    <th>Group Name</th>
+                                    <th>Order ID</th>
+                                    <th>Item</th>
+                                    <th>LP</th>
+                                    <th>Additional Note</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in emptyLocationItemlines">
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.orderId}}</td>
+                                    <td>{{item.itemSpecName}}</td>
+                                    <td>{{item.lpId}}</td>
+                                    <td>{{item.additionalNote}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

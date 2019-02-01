@@ -1,0 +1,76 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">WMS</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Task</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Pack</a>
+        </li>
+        <li>
+            <i class="fa fa-circle"></i>
+            <a href="#">Create Pack Task</a>
+        </li>
+    </ul>
+</div>
+<div class="container-fluid" style="margin:15px">
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                     <span class="caption-subject bold">{{formTitle}}
+                         <span ng-show="!isAddAction">:{{packTask.id}}</span>
+                     </span>
+                </div>
+            </div>
+            <div class="portlet-body form form-horizontal">
+                <form  name="editForm" novalidate ng-submit="editForm.$valid && save()">
+                        <div class="row form-group">
+                            <label class="col-md-4" style="text-align: right;"> Orders: </label>
+                            <div class="col-md-4">
+                                <label style="margin-right: 8px;" ng-repeat="orderId in packTask.orderIds"><a>{{orderId}}</a></label>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-md-4" style="text-align: right;"> Assignee: </label>
+                            <div class="col-md-4">
+                                <input-validation-message field="assignee" form="editForm"></input-validation-message>
+                                <user-auto-complete name="assignee" ng-model="packTask.assigneeUserId" required="true"></user-auto-complete>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-md-4" style="text-align: right;">Apply Assignee To All Task Steps: </label>
+                            <div class="col-md-4">
+                                <md-switch class="md-primary" style="margin: 0px"   aria-label="Apply Assignee To All Task Steps"
+                                           ng-model="packTask.isUpdateStepAssignee"></md-switch>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-md-4"  style="text-align: right;"> Priority: </label>
+                            <div class="col-md-4">
+                                <task-priority-auto-complete ng-model="packTask.priority" required="true"></task-priority-auto-complete>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-md-4"  style="text-align: right;"> Description: </label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" ng-model="packTask.description"/>
+                            </div>
+                        </div>
+                        <div class="row form-actions">
+                            <div class="col-md-8" style="text-align: right;">
+                                <waitting-btn type="submit" btn-class="btn blue"
+                                              value="'Save'" is-loading="loading"></waitting-btn>
+                                <div class="btn gray" ng-click="cancel()">Cancel</div>
+                            </div>
+
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

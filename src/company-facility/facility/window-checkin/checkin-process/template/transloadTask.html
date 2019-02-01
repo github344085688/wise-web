@@ -1,0 +1,328 @@
+<script type="text/ng-template" id="Receiving">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div style="line-height:34px;" class="panel-title"> STEP | {{step.name}}</div>
+        </div>
+        <div class="panel-body">
+            <div class="form-group row">
+                <div class="col-md-6" ng-show="step.isCurrentEntryStep">
+                    <span style="float: left;font-weight: 600;line-height: 31px;">Assignee:</span>
+                    <div class="col-md-8">
+                        <div  ng-show="step.isCurrentEntryStep">
+                                <multiple-user-auto-complete name="assignees" limit="30" ng-model="step.assigneeUserIds" >
+                                    </multiple-user-auto-complete>
+                        </div>
+                     
+                    </div>
+                </div>
+                <div class="col-md-6" ng-show="!step.isCurrentEntryStep">
+                    <b>Assignee:</b> <span ng-repeat="user in step.assignees">
+                           {{user.firstName}} {{user.lastName}} <span ng-show="!$last">, </span></span>
+                </div>
+
+                <div class="col-md-6" ng-show="step.isCurrentEntryStep && step.name =='Receiving'">
+                    <span style="float: left;font-weight: 600;line-height: 31px;">Dock:</span>
+                    <div class="col-md-8">
+                        <dock-auto-complete ng-model="step.dockId" on-select="selectDock(dock)"></dock-auto-complete>
+                    </div>
+                </div>
+                <div class="col-md-6" ng-show="!step.isCurrentEntryStep || step.name =='Offload' || step.name =='LPN'">
+                    <b>Dock:</b> {{step.dock.name}}
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-3"><b>Status:</b>{{step.status}}</div>
+                <div class="col-md-3"><b>Priority:</b>{{step.priority}}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <b>Entry: </b>
+                    <a ng-href="{{'#/cf/facility/window/checkin/' + step.entryId + '/' + step.entryId + '/carrier-info'}}" target="_blank">{{step.entryId}}</a>
+                </div>
+                <div class="col-md-3">
+                    <b>RN: </b><a  ng-href="{{'#/wms/inbound/receipt/' + receipt.id}}" target="_blank">{{receipt.id}}</a>
+                </div>
+                <div class="col-md-3">
+                    <b>Company: </b>{{receipt.companyName}}
+                </div>
+                <div class="col-md-3">
+                    <b>Customer: </b>{{receipt.customerName}}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <b>Appointment Time: </b>
+                    {{receipt.appointmentTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                </div>
+                <div class="col-md-3">
+                    <b>Start Time:</b>
+                    <span>{{step.startTime}}</span>
+                </div>
+                <div class="col-md-3">
+                    <b>End Time:</b>
+                    <span>{{step.endTime}}</span>
+                </div>
+                <div class="col-md-3">
+                    <b>Duration:</b>
+                    <span>{{step.duration}}</span>&nbsp; <a href="#" ng-click="popUpDurationDetail(step.id, step.name)">Detail</a>
+                </div>
+            </div>
+            <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer"
+                   id="sample_1" role="grid" aria-describedby="sample_1_info">
+                <thead>
+                <tr role="row">
+                    <th> Item</th>
+                    <th> UOM</th>
+                    <th> Expected Item QTY</th>
+                    <th> Expected Carton Qty</th>
+                    <th> Note</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="itemline in receipt.itemLines track by $index">
+                    <td>
+                        <item-display item="itemline"></item-display>
+                    </td>
+                    <td>{{itemline.unitName}}</td>
+                    <td>{{itemline.qty}}</td>
+                    <td>{{itemline.snList.length}}</td>
+                    <td>{{itemline.note}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="PutAway">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div style="line-height:34px;" class="panel-title"> STEP | {{step.name}}</div>
+        </div>
+        <div class="panel-body">
+            <div class="form-group row">
+                <div class="col-md-6" ng-show="step.isCurrentEntryStep">
+                    <span style="float: left;font-weight: 600;line-height: 31px;">Assignee:</span>
+                    <div class="col-md-8">
+                        <div  ng-show="step.isCurrentEntryStep">
+                            <multiple-user-auto-complete name="assignees" limit="30" ng-model="step.assigneeUserIds" >
+                            </multiple-user-auto-complete>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" ng-show="!step.isCurrentEntryStep">
+                    <b>Assignee:</b> <span ng-repeat="user in step.assignees">
+                           {{user.firstName}} {{user.lastName}} <span ng-show="!$last">, </span></span>
+                </div>
+                <div class="col-md-6">
+                    <b>Dock:</b> {{step.dock.name}}
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-3"><b>Status:</b>{{step.status}}</div>
+                <div class="col-md-3"><b>Priority:</b>{{step.priority}}</div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <b>Entry: </b>
+                    <a ng-href="{{'#/cf/facility/window/checkin/' + step.entryId + '/' + step.entryId + '/carrier-info'}}" target="_blank">{{step.entryId}}</a>
+                </div>
+                <div class="col-md-3">
+                    <b>RN: </b><a  ng-href="{{'#/wms/inbound/receipt/' + receipt.id}}" target="_blank">{{receipt.id}}</a>
+                </div>
+                <div class="col-md-3">
+                    <b>Company: </b>{{receipt.companyName}}
+                </div>
+                <div class="col-md-3">
+                    <b>Customer: </b>{{receipt.customerName}}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <b>Appointment Time: </b>
+                    {{receipt.appointmentTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                </div>
+                <div class="col-md-3">
+                    <b>Start Time:</b>
+                    <span>{{step.startTime}}</span>
+                </div>
+                <div class="col-md-3">
+                    <b>End Time:</b>
+                    <span>{{step.endTime}}</span>
+                </div>
+                <div class="col-md-3">
+                    <b>Duration:</b>
+                    <span>{{step.duration}}</span>&nbsp; <a href="#" ng-click="popUpDurationDetail(step.id, step.name)">Detail</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="Shipping">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div  class="panel-title" style="line-height:34px;" > STEP | {{step.name}}</div>
+        </div>
+        <div class="panel-body">
+            <div class="form-group row">
+                <div class="col-md-6" ng-show="step.isCurrentEntryStep">
+                    <span style="float: left;font-weight: 600;line-height: 31px;">Assignee:</span>
+                    <div class="col-md-8">
+                            <div  ng-show="step.isCurrentEntryStep">
+                                    <multiple-user-auto-complete name="assignees" limit="30" ng-model="step.assigneeUserIds" >
+                                        </multiple-user-auto-complete>
+                            </div>
+                    </div>
+                </div>
+                <div class="col-md-6" ng-show="!step.isCurrentEntryStep">
+                    <b>Assignee:</b> <span ng-repeat="user in step.assignees">
+                           {{user.firstName}} {{user.lastName}} <span ng-show="!$last">, </span></span>
+                </div>
+
+                <div class="col-md-6" ng-show="step.isCurrentEntryStep">
+                    <span style="float: left;font-weight: 600;line-height: 31px;">Dock:</span>
+                    <div class="col-md-8">
+                        <dock-auto-complete ng-model="step.dockId"  ></dock-auto-complete>
+                    </div>
+                </div>
+                <div class="col-md-6" ng-show="!step.isCurrentEntryStep">
+                    <b>Dock:</b> {{step.dock.name}}
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-3"><b>Status:</b>{{step.status}}</div>
+                <div class="col-md-3"><b>Priority:</b>{{step.priority}}</div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-3"><b>Entry: </b>{{step.entryId}} </div>
+                <div class="col-md-3"><b>Load ID:</b><a ng-href="{{'#/wms/outbound/load/' + step.loadId}}" target="_blank">{{step.loadId}}</a></div>
+                <div class="col-md-3">
+                    <b>Load No: </b>{{loadMap[step.loadId].loadNo}}
+                </div>
+                <div class="col-md-3">
+                    <b>Load Type: </b>{{loadMap[step.loadId].type}}
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <b>Company: </b>{{loadMap[step.loadId].companyName}}
+                </div>
+                <div class="col-md-3">
+                    <b>Customer: </b>{{loadMap[step.loadId].customerName}}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <b>Appointment Time: </b>
+                    {{loadMap[step.loadId].appointmentTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                </div>
+                <div class="col-md-3">
+                    <b>Start Time:</b>
+                    <span>{{step.startTime}}</span>
+                </div>
+                <div class="col-md-3">
+                    <b>End Time:</b>
+                    <span>{{step.endTime}}</span>
+                </div>
+                <div class="col-md-3">
+                    <b>Duration:</b>
+                    <span>{{step.duration}}</span>&nbsp; <a href="#" ng-click="popUpDurationDetail(step.id, step.name)">Detail</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <span class="bold">Orders: </span>
+                    <span ng-repeat="orderLine in loadMap[step.loadId].orderLines">
+                        <span ng-hide="$index==0"> | </span>
+                       <a ng-href="{{'#/wms/outbound/order/' + orderLine.orderId}}" target="_blank"> {{orderLine.orderId}} </a>
+            </span>
+                </div>
+            </div>
+            <table class="table table-striped table-bloaded table-hover table-checkable order-column dataTable no-footer">
+                <thead>
+                <th>Order</th>
+                <th>Status</th>
+                <th>Customer</th>
+                <th>Reference</th>
+                <th>Purchase Order No.</th>
+                <th>Ship to</th>
+                <th>Appointment</th>
+                </thead>
+                <tbody>
+                <tr ng-repeat="orderLine in loadMap[step.loadId].orderLines">
+                    <td>{{orderLine.orderId}}</td>
+                    <td>{{orderMap[orderLine.orderId].status}}</td>
+                    <td>{{orderMap[orderLine.orderId].customerName}}</td>
+                    <td>{{orderMap[orderLine.orderId].referenceNo}}</td>
+                    <td>{{orderMap[orderLine.orderId].poNo}}</td>
+                    <td>{{generateShipToAddressStr(orderMap[orderLine.orderId].shipToAddress)}}</td>
+                    <td>{{orderMap[orderLine.orderId].appointmentTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</script>
+
+
+<div class="portlet light box-shadow-none">
+    <div class="portlet-title task-head-style">
+        <div class="caption">
+            <span class="caption-subject bold">Transload Task : {{task.id}}</span>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <div class="alert alert-warning display-hide" ng-if="task.cartonNotMatch" style="display: block;">
+            <span>
+                WARNING: Carton Qty in DNs are not matched with RN ! Please check with customer.
+            </span>
+        </div>
+        <div style="padding: 20px 20px; margin-bottom: 20px;background-color: rgba(198, 228, 230, 0.36);">
+            <div style="margin-left: -13px; margin-bottom: 30px; font-size: 15px; color: #739a9c;">
+                <b>Task Info</b>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <b>Status:</b>{{task.status}}</div>
+                <div class="col-md-3">
+                    <b>Priority:</b>{{task.priority}}</div>
+                <div class="col-md-4">
+                    <span style="float:left; font-weight:600">Assignee:</span>
+                    <div class="col-md-10" style="margin-top: -5px;">
+                        <user-auto-complete ng-model="task.assigneeUserId"></user-auto-complete>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <span style="float:left; font-weight:600">Note:</span>
+                    <div class="col-md-10" style="margin-top: -5px;">
+                        <input class="form-control" ng-model="task.description" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-repeat="step in task.steps">
+            <div ng-if="step.name == 'Offload' || step.name == 'Receiving' || step.name == 'LPN'" ng-include="'Receiving'"></div>
+            <div ng-if="step.name == 'Shipping'" ng-include="'Shipping'"></div>
+            <div ng-if="step.name == 'PutAway'" ng-include="'PutAway'"></div>
+        </div>
+
+        <div class="row form-actions right">
+            <label ng-show="isDockTheCheckinedDock()" class="font-blue" style="margin-right: 10px;">
+                Dock:{{entry.dock.name}} is occupied by this entry.
+            </label>
+
+            <waitting-btn type="submit" btn-class="btn blue" ng-disabled="isCheckedOut()" ng-click="waitingConfirm()" value="'Wait'"
+                is-loading="waitLoading"></waitting-btn>
+
+            <waitting-btn type="submit" btn-class="btn blue" ng-disabled="isCheckedOut()" ng-click="transloadCheckin()" value="'Check In'"
+                is-loading="checkinLoading"></waitting-btn>
+        </div>
+    </div>
+</div>

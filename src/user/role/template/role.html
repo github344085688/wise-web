@@ -1,0 +1,37 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">User</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Role</a>
+        </li>
+    </ul>
+</div>
+<div id="user-tags" class="portlet light bordered" style="margin: 15px">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-gift"></i>Role Management
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="form">
+            <div class="form-group">
+                <input type="text" class="form-control tag-label-input" ng-model="name" placeholder="Please input role label">
+                <button class="btn blue" ng-click="addRole()"   permission-check="{{'user::role_write'}}">Add Role</button>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div ng-repeat="role in roles" class="tag" style="float:left; padding-right:20px" >
+                    <span class="label label-default text-transform-none">
+                        {{role.name}}<i class="material-icons"
+                                        permission-check="{{'user::role_write'}}"
+                                        ng-click="removeRole(role)">clear</i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

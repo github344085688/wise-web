@@ -1,0 +1,34 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th> Organization </th>
+                    <th> Name </th>
+                    <th> State </th>
+                    <th> City </th>
+                    <th> Zipcode </th>
+                    <th> Fax </th>
+                    <th> Address1 </th>
+                    <th  permission-check="{{'organizationUpdate_write'}}">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="address in addresses track by $index">
+                    <td>{{address.organizationName}}</td>
+                    <td>{{address.name}}</td>
+                    <td>{{address.state}}</td>
+                    <td>{{address.city}}</td>
+                    <td>{{address.zipCode}}</td>
+                    <td>{{address.fax}}</td>
+                    <td>{{address.address1}}</td>
+                    <td  permission-check="{{'organizationUpdate_write'}}"><a ui-sref="fd.address.edit({addressId:address.id})">Edit</a>
+                        <a href="#" ng-click="remove($index)">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

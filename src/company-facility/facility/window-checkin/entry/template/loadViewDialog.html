@@ -1,0 +1,65 @@
+<md-dialog id="unis" flex="80" ng-cloak>
+    <form class="light-theme">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Load: {{load.loadNo}}</h1>
+                <b flex></b>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-25">
+                            <b class="b-input">Status: </b>
+                            {{load.status}}
+                        </div>
+                        <div class="grid-25">
+                            <b class="b-input">Customer: </b>
+                            {{load.customerName}}
+                        </div>
+                        <div class="grid-25">
+                            <b class="b-input">Carrier: </b>
+                            {{load.carrierName}}
+                        </div>
+                        <div class="grid-25">
+                            <b class="b-input">Load Type: </b>
+                            {{load.type}}
+                        </div>
+                    </div>
+                    <div class="grid-100 grid-parent container">
+                        <span class="col-md-12"><b>Ship To: </b>{{getAddressInfo(load.shipToAddress)}}</span>
+                    </div>
+
+                    <div class="grid-100 grid-parent container">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Order</th>
+                                <th>Customer</th>
+                                <th>Reference</th>
+                                <th>Delivery Request Date</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="order in load.orders">
+                                <td>{{$index + 1}}</td>
+                                <td><a ng-href="{{'#/wms/outbound/order/' + order.id}}" target="_blank">{{order.id}}</a></td>
+                                <td>{{order.customerName}}</td>
+                                <td>
+                                    <span ng-repeat="ref in order.referenceNos">{{ref}}&nbsp; </span>
+                                </td>
+                                <td>{{order.mabd}}</td>
+                                <td>{{order.status}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

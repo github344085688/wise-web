@@ -1,0 +1,50 @@
+<div ng-if="isLoading" class="text-center">
+    <img src="assets/img/loading-spinner-grey.gif">
+    <span>&nbsp;LOADING...</span>
+</div>
+
+<div class="grid-content grid-100" ng-if="!isLoading">
+    <form class="grid-100 grid-parent" novalidate name="editForm" ng-submit="editForm.$valid && submit()">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">
+                Replenish Group to Group Setting
+            </h1>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr role="row" style="background: #fff;color: #000; border: 1px solid #eee;">
+                        <th colspan="{{virtualLocationGroups.length+3}}" style="text-align: center;font-size: 16px;">From</th>
+                    </tr>
+                    <tr role="row" style=" border-left: 1px solid #eee;">
+                         <th colspan="1" style="background: #fff;border-color: #fff; "></th>
+                         <th></th>
+                        <th ng-repeat="virtualLocationGroup in virtualLocationGroups track by $index">{{virtualLocationGroup.name}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+        
+                    <tr ng-repeat="virtualLocationGroup in virtualLocationGroups track by $index" ng-class="{'table-hover-white': $index===0}">
+                        <th ng-if="$index===0" rowspan="{{virtualLocationGroups.length+1}}" class="" style="border: 1px solid #eee;text-align: center;font-size: 16px;width: 10%;vertical-align: middle;">To</th>
+                        <th >{{virtualLocationGroup.name}}</th>
+                        <th ng-repeat=" replenishPathCost in replenishPathCostsGroupByToVlgID[virtualLocationGroup.id] track by $index"  ng-click="clickReplenish(replenishPathCost)" ng-style="{'width':100/(virtualLocationGroups.length+1) +'%'}">
+                            <label  ng-if="!replenishPathCost.isclick">{{replenishPathCost.cost}}</label>
+                            <input ng-if="replenishPathCost.isclick" class="form-control" ng-model="replenishPathCost.cost" /> 
+                        </th>
+               
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <unis-pager total-count="locations.length" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" permission-check="{{'facility::virtualLocationGroup_write'}}"
+                value="'Save'" is-loading="loading" ng-click="save()"  ></waitting-btn>
+            <button type="button" class="grid-10 ripplelink pull-right cancel" ng-click="cancel(editForm)">Cancel</button>
+        </div>
+    </form>
+</div>

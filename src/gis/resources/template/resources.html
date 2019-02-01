@@ -1,0 +1,61 @@
+<script type="text/javascript" src="//cdn.goeasy.io/goeasy.js"></script>
+
+<div id="gis_main" class="gis gis-map-full">
+	<div id="jsmap" style="height:100%; width: 100%;"></div>
+	<div id="store_3d" style="height:100%; width: 100%; z-index: 10;"></div>
+	<div class="close-3d" ng-if="_3DInfo.status"><i class="material-icons hover-red" ng-click="inventory_3d()">close</i></div>
+    <div ng-include="'gis/resources/template/3d_help.html'"  ng-if="_3DInfo.status" class="help-3d"></div>
+    <div ng-include="'gis/resources/template/3d_info.html'"  ng-if="_3DInfo.currLocId" class="info-3d"></div>
+    <div ng-include="'gis/resources/template/menu_simple.html'" class="simple-menu"></div>
+    <div ng-include="'gis/resources/template/menu_children.html'" ng-if="childrenMenuOpen()" ng-mouseleave="mouseOutChildMenu()" class="float-menu" style="{{childernMenuPos}}"></div>
+	
+	<div id="infowindow"  class="right-infowindow full-size block" style="background-color: #eeeeee; height: 70% !important;" ng-show="autoInfo.selectWarehouse != 'All'">
+        <span id="ctrl" class="glyphicon glyphicon-triangle-left ctrl"></span>
+        <div id="info-content" class="info-content" ng-include="'gis/resources/template/autoInfo.html'"></div>
+    </div>
+    
+	<div class="bottom-infowindow block" ng-if="!autIinfoIsEmpty() && !autoInfo.bottomInfoClose" style="height: 230px;">
+        <div class="info-content" ng-include="'gis/resources/template/autoInfo_bottom.html'"></div>
+    </div>
+    <div class="bottom-infowindow-ctrl hover-blue" ng-click="autoInfo.bottomInfoClose = !autoInfo.bottomInfoClose || autIinfoIsEmpty()" ng-class="{'ctrl-close': autIinfoIsEmpty() || !autIinfoIsEmpty() && autoInfo.bottomInfoClose}">
+	    <span class="glyphicon glyphicon-menu-down" ng-class="{'glyphicon-menu-up': autIinfoIsEmpty() || !autIinfoIsEmpty() && autoInfo.bottomInfoClose}"></span>
+    </div>
+	<div id="webcam_video" class="bottom-infowindow">
+        <span id="ctrl" class="ctrl"></span>
+        <div id="video-content" ng-include="'gis/resources/template/webcamPlayer.html'"></div>
+    </div>
+    
+    <div class='resource-search'>   <!-- ng-if="currentWh" -->
+        <span ng-click="showMenu()" style="float: left;">
+            <i class="material-icons" style="margin: 8px 5px 0 5px;">menu</i>
+        </span>
+        <input id="refrence_num" style="float: left;" class="input-box" placeholder='Refrence No.'
+                ng-model="globalSearch.keyWord" 
+                ng-keyup="globalSearch.wordChange($event)"
+                ng-blur="globalSearch.blur($event)"
+                ng-focus="globalSearch.wordChange()">
+        <span ng-click="globalSearch.search()">
+            <i class="material-icons" style="margin: 8px 5px 0 5px;">search</i>
+        </span>
+        <div>
+            <div id="resource-search-item" ng-repeat="item in globalSearch.list" ng-click="" data-index="{{$index}}" class="result" ng-class="{'focus' : globalSearch.focusOn == $index}">{{item.label}}</div>
+        </div>
+        <!-- 
+        <span class='glyphicon glyphicon-question-sign help' style="position: absolute; top: 10px; right: -20px;">
+            <md-tooltip md-direction="right">{{searchConfig.tips[searchConfig.index]}}</md-tooltip>
+        </span>
+         -->
+        <!-- 
+        <a href="#/gis/setup" target="_blank">
+            <span class="glyphicon glyphicon-cog hover-green" style="position: absolute; top: 10px; right: -45px; font-size: 18px;"></span>
+        </a>
+         -->
+    </div>
+    <div style="height:100%; width: 100%; position: absolute; top: 0; background-color: grey;"
+         ng-if="!menus.ship.disabled && menus.ship.checked">
+        <span style="position: absolute; top: 50px; right: 10px; background-color: white; padding: 8px 6px 4px 6px;" 
+              class="glyphicon glyphicon-remove hover-red" ng-click="menus.ship.checked=false"></span>
+	    <iframe style="height:100%; width: 100%;" src="//www.shipmap.org"></iframe>
+    </div>
+</div>
+

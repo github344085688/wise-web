@@ -1,0 +1,35 @@
+<ui-select name="{{name}}" ng-model="$parent.ngModel" required="{{required}}" ng-disabled="ifDisabled"
+           on-select="_onSelect($select.selected)">
+    <ui-select-match allow-clear="{{allowClear}}">
+        <span  ng-class="{'font-green':$select.selected.isAndroidOnline}" style="width: auto;">{{$select.selected.username}}</span>
+        <span>,&nbsp;&nbsp;{{$select.selected.totalTask}}(Pick Task),&nbsp;&nbsp;{{$select.selected.totalItemLine}}(Item Line)</span>
+    </ui-select-match>
+    <ui-select-choices repeat="user.idmUserId as user in users | filter: $select.search"
+                       refresh="getUsers($select.search)" refresh-delay="50">
+        <div class="row select-load-receipt-head" ng-show="$index == 0" style="padding: 3px;">
+            <div class="col-md-6 bold">
+                User Name
+            </div>
+            <div class="col-md-3 bold" style="text-align: center">
+                Pick Task Count
+            </div>
+            <div class="col-md-3 bold" style="text-align: center">
+                Item Line Count
+            </div>
+        </div>
+        <div class="row form-group" style="padding: 0px; margin: 0px;">
+            <div class="col-md-6 bold" ng-class="{'font-green':user.isAndroidOnline}">
+                {{user.username}}
+            </div>
+            <div class="col-md-3 bold" style="text-align: center">
+                {{user.totalTask}}
+            </div>
+            <div class="col-md-3 bold" style="text-align: center">
+                {{user.totalItemLine}}
+            </div>
+        </div>
+    </ui-select-choices>
+    <ui-select-no-choice>
+        No available option.
+    </ui-select-no-choice>
+</ui-select>

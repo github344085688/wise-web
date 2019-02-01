@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="27px" height="16px" viewBox="0 0 27 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>A1D013AE-2680-40CB-9FF5-8D167D56EE11</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="27" height="16" rx="2"></rect>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="27" height="16" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+    </defs>
+    <g id="Global-Search-Hotkeys" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="White---Hotkeys" transform="translate(-622.000000, -213.000000)">
+            <g id="Search-Dropdown" transform="translate(494.000000, 40.000000)">
+                <g id="ic_Alt" transform="translate(128.000000, 173.000000)">
+                    <path d="M5.484,12 L6.078,12 L7.057,9.844 L11.6,9.844 L12.579,12 L13.206,12 L9.62,4.245 L9.07,4.245 L5.484,12 Z M7.299,9.327 L9.334,4.872 L11.358,9.327 L7.299,9.327 Z M14.79,12 L15.329,12 L15.329,3.97 L14.79,3.97 L14.79,12 Z M19.322,12.099 C19.674,12.099 19.949,12.033 20.235,11.901 L20.235,11.395 C19.916,11.538 19.685,11.593 19.41,11.593 C18.761,11.593 18.288,11.307 18.288,10.504 L18.288,6.885 L20.257,6.885 L20.257,6.39 L18.288,6.39 L18.288,4.597 L17.749,4.597 L17.749,6.39 L16.935,6.39 L16.935,6.885 L17.749,6.885 L17.749,10.559 C17.749,11.626 18.453,12.099 19.322,12.099 Z" id="Alt" fill-opacity="0.7" fill="#333333"></path>
+                    <use id="Rectangle-2" stroke="#979797" mask="url(#mask-2)" stroke-width="2" xlink:href="#path-1"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

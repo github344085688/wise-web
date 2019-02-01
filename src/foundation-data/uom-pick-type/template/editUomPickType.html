@@ -1,0 +1,71 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">
+                <span ng-show="isAddAction" class="caption-subject bold"> Add Uom Pick Type </span>
+                <span ng-show="!isAddAction" class="caption-subject bold"> Edit Uom Pick Type </span>
+            </h1>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <form novalidate name="editForm" ng-submit="editForm.$valid && submitUomPickType()">
+                <div class="grid-parent grid-100 container">
+
+                    <div class="grid-25">
+                        <label class="label-input">Name</label>
+                        <input-validation-message field="id" form="editForm"></input-validation-message>
+                        <input type="text" name="id" ng-model="uomPickType.name" class="form-control" required="true"
+                            placeholder="Enter Name" />
+                    </div>
+                    <div class="grid-25">
+                        <label class="label-input">Customer</label>
+                        <organization-auto-complete name="customer" ng-model="uomPickType.customerId" tag="Customer" on-select="onSelect()" allow-clear="true" ></organization-auto-complete>
+                    </div>
+
+                    <div class="grid-25">
+                        <label class="label-input">Item</label>
+                        <input-validation-message field="item" form="editForm"></input-validation-message>
+                        <itemspec-auto-complete name="Item" customer-id="uomPickType.customerId" on-select="onSelect()"
+                            allow-clear="true" ng-model="uomPickType.itemSpecId" ng-disabled="uomPickType.customerId?false:true" />
+
+                    </div>
+
+                    <div class="grid-25">
+                        <label class="label-input">Reference Unit</label>
+                        <input-validation-message field="referenceUnit" form="editForm"></input-validation-message>
+                        <ui-select name="referenceUnit" ng-model="uomPickType.referenceUnit" required="true">
+                            <ui-select-match allow-clear="true">
+                                {{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="uom.name as uom in units | filter:$select.search">
+                                <div>{{uom.name}}</div>
+                            </ui-select-choices>
+                        </ui-select>
+
+                    </div>
+
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-25">
+                        <label class="label-input">Pick Type</label>
+                        <input-validation-message field="type" form="editForm"></input-validation-message>
+                        <ui-select name="type" ng-model="uomPickType.pickType" required="true">
+                            <ui-select-match>
+                                <div ng-bind="$select.selected"></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item  in pickTypes| filter: $select.search">
+                                {{item}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container" style="margin-top:50px;">
+
+                    <unis-waitting-btn btn-type="submit" btn-class="grid-10 ripplelink pull-right button-between" value="submitLabel"
+                        is-loading="loading"></unis-waitting-btn>
+                    <button type="button" class="grid-10 pull-right cancel" ng-click="cancel()">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

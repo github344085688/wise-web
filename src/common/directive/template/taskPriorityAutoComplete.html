@@ -1,0 +1,12 @@
+<ui-select name="{{name}}" ng-model="$parent.ngModel" required="{{required}}" ng-disabled="isDisabled" >
+    <ui-select-match allow-clear="{{allowClear}}">
+        <div ng-bind="$select.selected"></div>
+    </ui-select-match>
+    <ui-select-choices repeat="priority in priorityList | filter: $select.search"
+                       refresh="getPriorityList($select.search)" refresh-delay="50">
+        <div ng-bind="priority"></div>
+    </ui-select-choices>
+    <ui-select-no-choice>
+        No available option.
+    </ui-select-no-choice>
+</ui-select>

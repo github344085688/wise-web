@@ -1,0 +1,351 @@
+<div id="sso-landing">
+    <div class="page-header navbar navbar-fixed-top" style="height:90px;background-color: #333333">
+        <div class="page-header-inner">
+            <!-- BEGIN LOGO -->
+            <div class="page-logo">
+                <a href="javascript:void(0)" style="margin-left: 74px;">
+                    <img src="assets/img/sso/unis.png" alt="logo" class="logo-default"/>
+                </a>
+            </div>
+
+            <div class="top-menu">
+
+                <!-- END HEADER SEARCH BOX -->
+                <ul class="nav navbar-nav pull-right user-dropdown" style="margin-top:17px;padding-bottom:30px;">
+                    <li class="dropdown dropdown-user">
+                        <a href="#" class="dropdown-toggle" dropdown-menu-hover data-toggle="dropdown"
+                           data-close-others="true" style="padding:0">
+                            <img alt="" class="img-circle"
+                                 style="margin-top:0px;width: 50px;margin-right:21px;height: 50px; border-radius: 100px; box-shadow: 0 0 2px 2px rgba(255, 255, 255, 0.9); border: solid 1px #ffffff;"
+                                 src="assets/img/sso/avartar.png"/>
+                            <span class="username username-hide-on-mobile"
+                                  style="margin-top:17px;margin-right:20px;font-size: 26px;font-weight: 500;letter-spacing: 0.3px;color: #ffffff;"> {{firstName}} {{lastName}}</span>
+                            <i class="fa fa-angle-down" style="font-size: 20px;font-weight:600;margin-right:10px;"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a ng-click="signOut()" style="padding-bottom:30px;height:50px;">
+                                    <i class="material-icons"
+                                       style="font-size: 30px; color: red; float: left; margin-left: 10px;margin-top:5px;">power_settings_new</i>
+                                    <span style="float: left; margin-left: 15px;font-size: 20px;font-weight: 500;margin-top:10px;">Log Out</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- END TOP NAVIGATION MENU -->
+        </div>
+    </div>
+
+    <div class="home-page" style=" background: #2f333d;">
+        <div class="homecontent-wrappe">
+            <div class="home-page-bg">
+                <img src="assets/img/home-nav-icon/client-home-bg.svg" alt="" style="width:100%; height:auto;">
+                <div class="page-nav nav-01">
+                    <div class="nav">
+                        <a class="noUrl">
+                            <div class="nav-icon animation-up">
+                                <div class="position-re">
+                                    <img src="assets/img/home-nav-icon/port-of-Loading.svg"
+                                         class="down">
+                                    <img src="assets/img/home-nav-icon/port-of-Loading-on.svg"
+                                         class="up">
+                                </div>
+                            </div>
+                            <div class="nav-title">
+                                Port of Loading
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="page-nav nav-02">
+                    <div class="nav">
+                        <a class="noUrl">
+                            <div class="nav-icon animation-up">
+                                <div class="position-re">
+                                    <img src="assets/img/home-nav-icon/port-of-discharge.svg"
+                                         class="down">
+                                    <img src="assets/img/home-nav-icon/port-of-discharge-on.svg"
+                                         class="up">
+                                </div>
+
+                            </div>
+                            <div class="nav-title">
+                                Port of Discharge
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="page-nav nav-03">
+                    <div class="nav">
+                        <a class="noUrl" ng-if="!enabledApplication['fms']">
+                            <div class="nav-icon animation-up">
+                                <div class="position-re">
+                                    <img src="assets/img/home-nav-icon/depot-repair.svg" class="down">
+                                    <img src="assets/img/home-nav-icon/depot-repair-on.svg" class="up">
+                                </div>
+                            </div>
+                            <div class="nav-title">
+                                RTV/Depot Repair
+                            </div>
+                        </a>
+                        <a href="{{systemLink('fms')}}" target="_blank" ng-if="enabledApplication['fms']">
+                            <div class="nav-icon animation-up">
+                                <div class="position-re">
+                                    <img src="assets/img/home-nav-icon/depot-repair.svg">
+                                </div>
+                            </div>
+                            <div class="nav-title">
+                                RTV/Depot Repair
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="page-nav nav-04">
+                    <div class="nav">
+                        <a class="noUrl" ng-if="!enabledApplication['rms']">
+                            <div class="nav-icon animation-up">
+                                <div class="position-re">
+                                    <img src="assets/img/home-nav-icon/recycle-manage.svg" class="down">
+                                    <img src="assets/img/home-nav-icon/recycle-manage-on.svg" class="up">
+                                </div>
+                            </div>
+                            <div class="nav-title">
+                                Recycle Manage
+                            </div>
+                        </a>
+                        <a href="{{systemLink('rms')}}" target="_blank"  ng-if="enabledApplication['rms']">
+                            <div class="nav-icon animation-up">
+                                <div class="position-re">
+                                    <img src="assets/img/home-nav-icon/recycle-manage.svg">
+                                </div>
+                            </div>
+                            <div class="nav-title">
+                                Recycle Manage
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="page-nav nav-05">
+                    <div class="nav">
+                        <a class="noUrl">
+                            <div class="nav-icon animation-up">
+                                <div class="position-re">
+                                    <img src="assets/img/home-nav-icon/retail-DC-store.svg"
+                                         class="down">
+                                    <img src="assets/img/home-nav-icon/retail-DC-store-on.svg"
+                                         class="up">
+                                </div>
+                            </div>
+                            <div class="nav-title">
+                                Retail/DC Store
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="page-nav nav-06">
+                    <div class="nav">
+                        <a ng-href="{{'#/wms/task/transload-task/list'}}" target="_blank" >
+                            <div class="nav-icon animation-up">
+                                <div class="position-re">
+                                    <img src="assets/img/home-nav-icon/transload-hub.svg">
+                                </div>
+
+                            </div>
+                            <div class="nav-title">
+                                Transload Hub
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="page-nav nav-07">
+                    <div class="nav">
+                        <a class="noUrl">
+                            <div class="nav-icon animation-up">
+                                <div class="position-re">
+                                    <img src="assets/img/home-nav-icon/call-center.svg"
+                                         class="down">
+                                    <img src="assets/img/home-nav-icon/call-center-on.svg"
+                                         class="up">
+                                </div>
+                            </div>
+                            <div class="nav-title">
+                                Call Center
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="page-nav nav-08">
+                    <div class="nav">
+                        <a class="noUrl" ng-if="!enabledApplication['fms']">
+                          <div class="nav-icon animation-up">
+                                <div class="position-re">
+                                    <img src="assets/img/home-nav-icon/field-manage.svg" class="down">
+                                    <img src="assets/img/home-nav-icon/field-manage-on.svg" class="up">
+                                </div>
+                            </div>
+                            <div class="nav-title">
+                                Field Manage
+                            </div>
+                        </a>
+                        <a href="{{systemLink('fms')}}" target="_blank" ng-if="enabledApplication['fms']">
+                            <div class="nav-icon animation-up">
+                                <div class="position-re">
+                                    <img src="assets/img/home-nav-icon/field-manage.svg">
+                                </div>
+                            </div>
+                            <div class="nav-title">
+                                Field Manage
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="page-nav nav-09">
+                    <div class="nav">
+                        <a ng-href="{{'/client-portal/#/login'}}" target="_blank">
+                            <div class="nav-icon animation-up">
+                                <div class="position-re">
+                                    <img src="assets/img/home-nav-icon/client-portal.svg">
+                                </div>
+                            </div>
+                            <div class="nav-title">
+                                Client Portal
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="page-nav nav-10">
+                    <div class="nav">
+                        <a class="noUrl" ng-if="!enabledApplication['wise-v2']">
+                            <div class="nav-icon animation-up">
+                                <div class="position-re">
+                                    <img src="assets/img/home-nav-icon/warehouse-manage.svg"  class="down">
+                                    <img src="assets/img/home-nav-icon/warehouse-manage-on.svg" class="up">
+                                </div>
+                            </div>
+                            <div class="nav-title">
+                                <p>Warehouse</p>
+                                <p>Manage</p>
+                            </div>
+                        </a>
+                        <a ng-if="enabledApplication['wise-v2']" href="{{systemLink('wise-v2')}}"  target="_blank">
+                            <div class="nav-icon animation-up">
+                                <div class="position-re">
+                                    <img src="assets/img/home-nav-icon/warehouse-manage.svg">
+                                </div>
+                            </div>
+                            <div class="nav-title">
+                                <p>Warehouse</p>
+                                <p>Manage</p>
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="page-nav nav-11">
+                    <div class="nav">
+                        <a class="noUrl" ng-if="!enabledApplication['yms']">
+                            <div class="nav-icon animation-up">
+                                <div class="position-re">
+                                    <img src="assets/img/home-nav-icon/yard-manage.svg" class="down">
+                                    <img src="assets/img/home-nav-icon/yard-manage-on.svg" class="up">
+                                </div>
+                            </div>
+                            <div class="nav-title">
+                                Yard Manage
+                            </div>
+                        </a>
+                        <a href="{{systemLink('yms')}}" target="_blank" ng-if="enabledApplication['yms']">
+                            <div class="nav-icon animation-up">
+                                <div class="position-re">
+                                    <img src="assets/img/home-nav-icon/yard-manage.svg">
+                                </div>
+                            </div>
+                            <div class="nav-title">
+                                Yard Manage
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="page-nav-icons icon-01">
+                    <a ng-href="{{'#/gis/resources'}}" target="_blank">
+                        <div class="icon-box animation-down">
+                            <img src="assets/img/home-nav-icon/gis/git.svg">
+                            <img src="assets/img/home-nav-icon/gis/git-on.svg" class="translate">
+                        </div>
+                    </a>
+                </div>
+                <div class="page-nav-icons icon-02">
+                    <a href="http://restful.logisticsteam.com/WMSWebsite/RequestLog.htm" target="_blank">
+                        <div class="icon-box animation-down">
+                            <img src="assets/img/home-nav-icon/edi/edi-circle.svg"
+                                 class="circle">
+                            <img src="assets/img/home-nav-icon/edi/edi-file.svg">
+                            <img src="assets/img/home-nav-icon/edi/edi-arrow-right.svg"
+                                 class="right">
+                            <img src="assets/img/home-nav-icon/edi/edi-arrow-left.svg"
+                                 class="left">
+                        </div>
+                    </a>
+                </div>
+                <div class="page-nav-icons icon-03">
+                    <a href="https://tms.freightapp.com/dashboard_dispatch_v2.php" target="_blank">
+                    <div class="icon-box animation-down">
+                        <img src="assets/img/home-nav-icon/drayage/drayage-truck.svg">
+                        <img src="assets/img/home-nav-icon/drayage/wall-cupboard.svg"
+                             class="top">
+                    </div>
+                    </a>
+                </div>
+                <div class="page-nav-icons icon-04">
+                    <a href="https://tms.freightapp.com/dev.html#dashboardTMSDispatchControl" target="_blank">
+                        <div class="icon-box animation-down">
+                            <img src="assets/img/home-nav-icon/ltl/ltl-truck.svg"
+                                 class="top">
+                            <img src="assets/img/home-nav-icon/ltl/ltl-truck-bg.svg">
+                        </div>
+                    </a>
+                </div>
+                <div class="page-nav-icons icon-05">
+                    <a href="http://portal.serviceapp.com/KendoUI/Tracking.html" target="_blank">
+                        <div class="icon-box animation-down">
+                            <img src="assets/img/home-nav-icon/smallparcel/smallparcel.svg"
+                                 class="top-right">
+                            <img src="assets/img/home-nav-icon/smallparcel/smallparcel-box2.svg"
+                                 class="bottom-left">
+                            <img src="assets/img/home-nav-icon/smallparcel/smallparcel-box1.svg">
+                        </div>
+                    </a>
+                </div>
+                <div class="page-nav-icons icon-06">
+                    <a href="https://tms.freightapp.com/dashboard_tms_lh.php" target="_blank">
+                        <div class="icon-box animation-down">
+                            <img src="assets/img/home-nav-icon/longhaul/longhaul.svg">
+                            <img src="assets/img/home-nav-icon/longhaul/longhaul-location.svg" class="top">
+                        </div>
+                    </a>
+                </div>
+                <div class="page-nav-icons icon-07">
+                    <a href="https://tms.freightapp.com/dev.html#dashboardTms" target="_blank">
+                        <div class="icon-box animation-down">
+                            <img src="assets/img/home-nav-icon/ftl/ftl-truck.svg"
+                                 class="top">
+                            <img src="assets/img/home-nav-icon/ftl/ftl-bg.svg">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,250 @@
+<div ng-if="autoInfo.selectedLocs">
+	<div>
+		<h4>Selected Locations</h4>
+	</div>
+	<div style="max-height: 200px; overflow-y: auto; position: relative; padding: 10px 0;">
+		<div ng-repeat="(type, locs) in autoInfo.selectedLocs track by $index">
+			<div ng-if="locs.length > 0" class="auto-box" style="position: relative;">
+				<p style="margin: 0;">{{type}} [{{locs.length}}]</p>
+				<span ng-click="cancelSaveLocation(locs, $event)" style="position: absolute; right: 25px; font-size: 14px;" class="glyphicon glyphicon-ban-circle ctrl-btn auto-hidden"></span>
+				<span ng-click="editLocation(locs, $event)" style="position: absolute; right: 0px; font-size: 14px;" class="glyphicon glyphicon-edit ctrl-btn auto-hidden"></span>
+				<span ng-repeat="loc in locs track by $index" ng-click="editLocation(loc, $event)" ng-right-click="cancelSaveLocation(loc, $event)"
+				    on="{{loc._on ? 'on' : 'off'}}" class="badge" style="color:white; margin:3px;">
+					{{loc.name}}
+					<span ng-if="type=='ZONE'" class="badge" style="display:none; background-color: darkorange; height: 12px; width: 12px; padding: 0; margin-top:-4px">L</span>
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
+<div ng-if="autoInfo.newLocs">
+	<div>
+		<h4>New Locations</h4>
+	</div>
+	<div style="max-height: 200px; overflow-y: auto; position: relative; padding: 10px 0;">
+		<div ng-repeat="(type, locs) in autoInfo.newLocs track by $index">
+			<div ng-if="locs.length > 0" class="auto-box" style="position: relative;">
+				<p style="margin: 0;">{{(!type || type == "undefined") ? "*NEW" : type}} [{{locs.length}}]</p>
+				<span ng-click="cancelSaveLocation(locs, $event)" style="position: absolute; right: 25px; font-size: 14px;" class="glyphicon glyphicon-ban-circle ctrl-btn auto-hidden"></span>
+				<span ng-click="editLocation(locs, $event)" style="position: absolute; right: 0px; font-size: 14px;" class="glyphicon glyphicon-edit ctrl-btn auto-hidden"></span>
+				<span ng-repeat="loc in locs track by $index" ng-click="editLocation(loc, $event)" 
+				    on="{{loc._on ? (loc._preId ? 'ghost' : 'on') : 'off'}}" class="badge" style="color:white; margin:3px;">{{loc.name}}</span>
+			</div>
+		</div>
+	</div>
+	<div style="font-size: smaller; color: grey;">
+	   <span>Note: </span>
+	   <span on="ghost" class="badge" style="height: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+	   <span>Existed location without coordinate in map.</span>
+	</div>
+</div>
+<div ng-if="autoInfo.editLoc.loc">
+	<div>
+		<h4>
+			Edit {{autoInfo.editLoc.multiple ? "Multiple" : "Single"}}
+			<span ng-if="autoInfo.editLoc.multiple" class="label label-success">{{autoInfo.editLoc.locList.length}}</span>
+			<span ng-if="!autoInfo.editLoc.multiple && !autoInfo.editLoc.loc._isNew && autoInfo.editLoc.loc.type == 'LOCATION' && autoInfo.editLoc.loc.subType == '3D'"
+				style="margin: 0px 0px 0px 90px; padding:3px; background: #a2a92b; float: right;" class="badge" ng-click="openGridDialog(autoInfo.editLoc.loc)">Grid Setup</span>
+		</h4>
+	</div>
+	<div style="overflow-y: auto; position: relative; padding: 10px 0;">
+        <form name="editLoc">
+	        <md-input-container class="md-block" ng-if="!autoInfo.editLoc.multiple">
+	            <label>Name</label>
+	            <input type="text" required md-maxlength='10' ng-pattern="/^[a-zA-Z0-9]+([-_][a-zA-Z0-9]+)*$/" ng-model="autoInfo.editLoc.loc.name" ng-change="markGhostLocations()"/>
+            </md-input-container>
+            <div layout="row" ng-if="autoInfo.editLoc.multiple">
+		        <md-input-container>
+		            <label>Prefix</label>
+		            <input type="text" ng-blur="previewLocNames()" ng-pattern="/^[a-zA-Z0-9]+([-_a-zA-Z0-9]+)*$/" ng-model="autoInfo.editLoc.name.prefix"/>
+		        </md-input-container>
+		        <md-input-container>
+		            <label>Increase</label>
+		            <input type="text" ng-blur="previewLocNames()" ng-pattern="/^[a-zA-Z0-9]*$/" ng-model="autoInfo.editLoc.name.increase"/>
+		        </md-input-container>
+		        <md-input-container>
+		            <label>Suffix</label>
+		            <input type="text" ng-blur="previewLocNames()" ng-pattern="/^([-_a-zA-Z0-9]+)*$/" ng-model="autoInfo.editLoc.name.suffix"/>
+		        </md-input-container>
+		        <md-button ng-click="previewLocNames(true)" class="md-icon-button" md-no-ink style="width:50px;">
+                    <md-icon>repeat</md-icon>
+			    </md-button>
+	        </div>
+			<md-input-container class="md-block">
+                <label>Type</label>
+                <md-select ng-model="autoInfo.editLoc.loc.type" required ng-change="markGhostLocations()">
+                    <md-option ng-repeat="type in locationType" value="{{type}}">{{type}}</md-option>
+                </md-select>
+	        </md-input-container>
+			<md-input-container class="md-block" ng-if="locationSubType[autoInfo.editLoc.loc.type]">
+                <label>Sub Type</label>
+                <md-select ng-model="autoInfo.editLoc.loc.subType" required>
+                    <md-option ng-repeat="type in locationSubType[autoInfo.editLoc.loc.type]"
+                        ng-class="{'grey': !type}" value="{{type}}">{{type || 'None'}}</md-option>
+                </md-select>
+	        </md-input-container>
+			<md-input-container class="md-block" ng-if="locationParent[autoInfo.editLoc.loc.type]">
+                <label>Parent Loc</label>
+                <md-select ng-model="autoInfo.editLoc.loc.parentId" required>
+                    <md-option ng-repeat="parent in locations[locationParent[autoInfo.editLoc.loc.type]]" value="{{parent.id}}">{{parent.name}}</md-option>
+                </md-select>
+	        </md-input-container>
+			<md-input-container class="md-block" ng-if="locationStatus[autoInfo.editLoc.loc.type]">
+                <label>Status</label>
+                <md-select ng-model="autoInfo.editLoc.loc.status" required>
+                    <md-option ng-repeat="status in locationStatus[autoInfo.editLoc.loc.type]" value="{{status}}">{{status}}</md-option>
+                </md-select>
+	        </md-input-container>
+	        <div ng-if="!autoInfo.editLoc.multiple && autoInfo.editLoc.loc.type == 'ZONE'" class="auto-box" style="position: relative;">
+	            <p style="margin: 10px 0;">People</p>
+                <span ng-click="clearPeopleInZone(autoInfo.editLoc.loc)" style="position: absolute; right: 0px; font-size: 14px;" 
+                        class="glyphicon glyphicon-trash ctrl-btn auto-hidden"></span>
+                <div style="max-height: 160px; overflow-y: auto; position: relative;">
+    	            <span ng-repeat="p in baseData.people track by $index" ng-click="togglePeopleInZone(autoInfo.editLoc.loc, p)" 
+                        on="{{autoInfo.editLoc.loc.workers.indexOf(p.idmUserId) >= 0 ? 'on' : 'off'}}" 
+                        class="badge" style="color:white; margin:3px;text-transform: capitalize;">{{p.firstName +" " + p.lastName}}</span>
+                </div>
+	        </div>
+	        <div>
+                <md-button ng-click="saveLocation(autoInfo.editLoc.locList)" style="margin: 0; padding:0;" class="md-primary"><b>Save</b></md-button>
+                <md-button ng-click="cancelSaveLocation()" style="margin: 0; padding:0;"><b>Cancel</b></md-button>
+	        </div>
+        </form>
+	</div>
+</div>
+
+<div ng-if="autoInfo.equipment" ng-repeat="(type, eqts) in autoInfo.equipment track by $index" class="auto-box" style="position: relative;">
+    <span ng-click="editEquipment(eqts, $event)" ng-if="type!='WEBCAM' && type!='HUMITURE'" style="float: right; font-size: 14px;" class="glyphicon glyphicon-edit ctrl-btn auto-hidden"></span>
+    <span ng-click="cancelSaveEquipment(eqts)" style="float:right; font-size: 14px;" class="glyphicon glyphicon-ban-circle ctrl-btn auto-hidden"></span>
+    <div>
+        <h4>{{_.startCase(_.camelCase(type))}}</h4>
+    </div>
+    <div style="max-height: 150px; overflow-y: auto; position: relative; padding: 10px 0;">
+        <span ng-repeat="eqt in eqts track by $index" ng-click="editEquipment(eqt, $event)"
+             on="{{eqt._on ? 'on' : 'off'}}" class="badge" style="color:white; margin:3px;">{{eqt.name}}</span>
+    </div>
+</div>
+
+<div ng-if="autoInfo.editEquipment.curr">
+    <div class="auto-box">
+        <h4>
+            Edit {{_.startCase(_.camelCase(autoInfo.editEquipment.type))}}
+            <span ng-if="autoInfo.editEquipment.multiple" class="label label-success">{{autoInfo.editEquipment.list.length}}</span>
+        </h4>
+    </div>
+    <div style="overflow-y: auto; overflow-x: hidden; position: relative; padding: 10px 0;">
+        <form ng-if="autoInfo.editEquipment.type=='WEBCAM'">
+            <div layout="row">
+                <md-input-container class="md-block">
+                    <label>Ip</label>
+                    <input type="text" required ng-pattern="/^([1-9][0-9]{0,2}\.){3}([1-9][0-9]{0,2})$/" ng-model="autoInfo.editEquipment.curr.ip"/>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>Port</label>
+                    <input type="text" required ng-pattern="/^[0-9]{1,4}$/" ng-model="autoInfo.editEquipment.curr.port"/>
+                </md-input-container>
+            </div>
+            <div layout="row">
+                <md-input-container class="md-block">
+                    <label>User Name</label>
+                    <input type="text" ng-model="autoInfo.editEquipment.curr.username"/>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>Password</label>
+                    <input type="text" ng-model="autoInfo.editEquipment.curr.password"/>
+                </md-input-container>
+            </div>
+            <md-input-container class="md-block col-sm-12">
+                <label style="margin-bottom: 20px;">Direction</label>
+                <md-slider flex ng-change="setWebcamDirection(autoInfo.editEquipment.curr)" ng-model="autoInfo.editEquipment.curr.direction" min="-180" max="180" step="30" class="md-primary"></md-slider>
+            </md-input-container>
+        </form>
+        <form ng-if="autoInfo.editEquipment.type!='WEBCAM'">
+            <md-input-container class="md-block" ng-if="!autoInfo.editEquipment.multiple">
+                <label>Name</label>
+                <input type="text" required md-maxlength='10' ng-pattern="/^[a-zA-Z0-9]+([-_][a-zA-Z0-9]+)*$/" ng-model="autoInfo.editEquipment.curr.name"/>
+            </md-input-container>
+            <div layout="row" ng-if="autoInfo.editEquipment.multiple">
+                <md-input-container>
+                    <label>Prefix</label>
+                    <input type="text" ng-pattern="/^[a-zA-Z0-9]+([-_a-zA-Z0-9]+)*$/" ng-model="autoInfo.editEquipment.curr.prefix"/>
+                </md-input-container>
+                <md-input-container>
+                    <label>Increase</label>
+                    <input type="text" ng-pattern="/^[a-zA-Z0-9]*$/" ng-model="autoInfo.editEquipment.curr.increase"/>
+                </md-input-container>
+                <md-input-container>
+                    <label>Suffix</label>
+                    <input type="text" ng-pattern="/^([-_][a-zA-Z0-9]+)*$/" ng-model="autoInfo.editEquipment.curr.suffix"/>
+                </md-input-container>
+                <md-button ng-click="refreshEquipmentNames()" class="md-icon-button" md-no-ink style="width:50px;">
+                    <md-icon>refresh</md-icon>
+                </md-button>
+            </div>
+            <md-input-container class="md-block col-sm-12" ng-if="autoInfo.editEquipment.type=='HUMITURE'">
+                <label>Sensor Mac</label>
+                <input type="text" required ng-model="autoInfo.editEquipment.curr.mac"/>
+            </md-input-container>
+        </form>
+        <div>
+            <md-button ng-click="saveEquipment()" style="margin: 0; padding:0;" class="md-primary"><b>Save</b></md-button>
+            <md-button ng-click="cancelSaveEquipment()" style="margin: 0; padding:0;"><b>Cancel</b></md-button>
+        </div>
+    </div>
+</div>
+
+<div ng-if="autoInfo.createWh">
+    <div>
+        <h4>Coord Sys</h4>
+    </div>
+    <div>
+        <md-input-container md-no-float class="md-block">
+            <!-- <p style="margin: 0;">Name</p> -->
+            <label>Name</label>
+            <input ng-model="autoInfo.createWh.whInfo.name" placeholder="Warehouse name" disabled>
+        </md-input-container>
+        <md-input-container class="md-block" ng-if="autoInfo.createWh.points">
+            <label>Coord origin</label>
+            <md-select ng-model="autoInfo.createWh.pointOrigin" required>
+                <md-option ng-repeat="point in autoInfo.createWh.pointsName" value="{{point}}">
+                {{point}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container class="md-block" ng-if="autoInfo.createWh.points">
+            <label>X axis</label>
+            <md-select ng-model="autoInfo.createWh.pointX" required>
+                <md-option ng-repeat="point in autoInfo.createWh.pointsName" value="{{point}}" 
+                    ng-if="point!=autoInfo.createWh.pointY && point!=autoInfo.createWh.pointOrigin">
+                {{autoInfo.createWh.pointOrigin + point}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container class="md-block" ng-if="autoInfo.createWh.points">
+            <label>Y axis</label>
+            <md-select ng-model="autoInfo.createWh.pointY" required>
+                <md-option ng-repeat="point in autoInfo.createWh.pointsName" value="{{point}}"
+                    ng-if="point!=autoInfo.createWh.pointX && point!=autoInfo.createWh.pointOrigin">
+                {{autoInfo.createWh.pointOrigin + point}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+    <div>
+        <md-button ng-click="saveWhBase()" style="margin: 0; padding:0;" class="md-primary"><b>Save</b></md-button>
+        <md-button ng-click="cancelWhBase()" style="margin: 0; padding:0;"><b>Clear</b></md-button>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,86 @@
+<div class="portlet light bordered add-parking" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold"> {{formTitle}}</span>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <form novalidate name="editForm" class="edit-form">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <label>Renter</label>
+                    <div class="input-icon right" ng-show="editForm.renter.$invalid && (editForm.$submitted || editForm.renter.$touched)">
+                        <i class="fa fa-warning tooltips lt-tooltip has-error">
+                            <span class="lt-tooltip-text">Required.</span>
+                        </i>
+                    </div>
+                    <input type="text" class="form-control" name="renter"  ng-model="parking.renter" required />
+                </div>
+                <div class="col-md-3">
+                    <label>Phone</label>
+                    <div class="input-icon right" ng-show="editForm.phone.$invalid && (editForm.$submitted || editForm.phone.$touched)">
+                        <i class="fa fa-warning tooltips lt-tooltip has-error">
+                            <span class="lt-tooltip-text">Required.</span>
+                        </i>
+                    </div>
+                    <input type="text" name="phone" class="form-control" ng-model="parking.phone" required />
+                </div>
+                <div class="col-md-3">
+                    <label>Email</label>
+                    <div class="input-icon right" ng-show="editForm.email.$invalid && (editForm.$submitted || editForm.email.$touched)">
+                        <i class="fa fa-warning tooltips lt-tooltip has-error">
+                            <span class="lt-tooltip-text">Required, please input an valid email.</span>
+                        </i>
+                    </div>
+                    <input type="email" class="form-control" name="email" ng-model="parking.email" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label style="min-width: 130px; margin-left: 15px;margin-top:5px;">ParkingGroups</label>
+                        <button type="button" class="btn blue" ng-click="addGroup()">Add Parking Group</button>
+                    </div>
+                    <div class="form-group"  ng-repeat="group in parking.parkingGroups track by $index">
+                        <div class="col-md-2">
+                            <div class="col-md-2" style="padding:5px 0px">
+                                 <i class="material-icons"  ng-click="removeGroup($index)" title="Remove"
+                                    style="font-size: 20px">clear</i>
+                            </div>
+                            <div class="col-md-10" style="padding:0px;">
+                                <div class="input-icon right" ng-show="editForm.locCount.$invalid && (editForm.$submitted || editForm.locCount.$touched)">
+                                    <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                        <span class="lt-tooltip-text">Required.</span>
+                                    </i>
+                                </div>
+                                <input type="text" class="form-control" name="locCount" placeholder="Location Count" title="Location Count" ng-model="group.count" required />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-icon right" ng-show="editForm.locations.$invalid && (editForm.$submitted || editForm.locations.$touched)">
+                                <i class="fa fa-warning tooltips lt-tooltip has-error">
+                                    <span class="lt-tooltip-text">Required.</span>
+                                </i>
+                            </div>
+                            <lt-tags-input name="locations" placeholder="Parking Locations" title="Parking Locations"
+                                        ng-model="group.locations"></lt-tags-input>
+                        </div>
+                        <div class="col-md-3">
+                            <lt-date-time  placeholder="Parking Start Date" title="Parking Start Date" value="group.rsd"></lt-date-time>
+
+                        </div>
+                        <div class="col-md-3">
+                            <lt-date-time  placeholder="Parking End Date" title="Parking End Date" value="group.red"></lt-date-time>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-actions right">
+                <waitting-btn type="submit" btn-class="btn blue"  ng-click="editForm.$valid && submit()"
+                              value="submitLabel" is-loading="loading"></waitting-btn>
+                <button type="button" class="btn default" ng-click="cancel(editForm)">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,114 @@
+<md-dialog id="unis" flex="50" ng-cloak>
+    <form class="light-theme">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Entry Photo (#Entry ID :{{entry.id}})</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div id="files" class="row">
+                    <div class="grid-100">
+                        <div class="grid-content">
+
+
+                            <div class="grid-parent grid-100 file-container">
+                                <div class="grid-parent grid-30" style="border: 1px solid #ddd; margin-right:20px">
+                                    <div class="file-name-list">
+                                        <div ng-if="entryPhotoTypes.length>0">
+                                            <div style="padding: 5px ; overflow: hidden; text-overflow: ellipsis;white-space: nowrap; border-bottom:1px solid #ddd;">
+                                                <span><b> Entry </b></span>
+
+                                            </div>
+                                            <div ng-class="{'bg-light-lgreen':hightLights[groupPhoto]}" ng-repeat="groupPhoto in entryPhotoTypes" style=" overflow: hidden; text-overflow: ellipsis;white-space: nowrap;  border-bottom:1px solid #ddd;">
+                                                <p style="line-height: 30px; padding: 5px 5px 5px 20px;" ng-click="entryPhotosView(groupPhoto)"><a>{{groupPhoto}}</a></p>
+
+                                            </div>
+                                        </div>
+
+                                        <div ng-if="receiveTasksPhotos.length>0" ng-repeat="receiveTasksPhoto in receiveTasksPhotos">
+
+                                            <div style="padding: 5px ; overflow: hidden; text-overflow: ellipsis;white-space: nowrap; border-bottom:1px solid #ddd;">
+                                                <span><b> Receipt Task:{{receiveTasksPhoto.taskId}}  </b></span>
+
+                                            </div>
+                                            <div ng-if="receiveTasksPhoto.photoGroups.length>0" style=" overflow: hidden; text-overflow: ellipsis;white-space: nowrap;  border-bottom:1px solid #ddd;">
+                                                <p ng-class="{'bg-light-lgreen':hightLights[photoGroup.type]}" ng-click="receivePhotoView(photoGroup)" style="line-height: 30px; padding: 5px 5px 5px 20px;"
+                                                    ng-repeat="photoGroup in receiveTasksPhoto.photoGroups">
+                                                    <a>{{getPhotoType(photoGroup.type)}}</a>
+                                                </p>
+
+                                            </div>
+
+
+                                        </div>
+
+                                        <div ng-if="loadTaskIds.length>0" ng-repeat="taskId in loadTaskIds">
+                                            <div style="padding: 5px ; overflow: hidden; text-overflow: ellipsis;white-space: nowrap; border-bottom:1px solid #ddd; ">
+                                                <span><b>  LoadTask:{{taskId}} </b></span>
+                                            </div>
+                                            <div style=" overflow: hidden; text-overflow: ellipsis;white-space: nowrap;  border-bottom:1px solid #ddd;">
+                                                <p ng-class="{'bg-light-lgreen':hightLights[fieldIds]}" style="line-height: 30px;padding: 5px 5px 5px 20px;" ng-repeat="(keyName, fieldIds) in loadTasksPhotoMaps[taskId]"
+                                                    ng-click="LoadPhotosView(fieldIds)">
+                                                    <a>{{keyName}}</a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div ng-if="entryPhotoTypes.length==0&&receiveTasksPhotos.length==0&&loadTaskIds.length===0" style="line-height:300px;text-align:center">
+                                            <span> No  Photos </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="grid-parent grid-65" style="border: 1px solid #ddd;">
+
+
+                                    <ul class="file-list">
+                                        <li ng-repeat="photo in photoLists">
+                                            <div class="file">
+                                                <img http-src="{{photo.url}}" ng-click="previewPhotos($event)">
+
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </md-dialog-content>
+        <md-dialog-actions style="padding: 0">
+
+
+            <div class="grid-100">
+                <div class="grid-content">
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-80">&nbsp;</div>
+                     
+                        <div class="grid-20">
+                              <button type="button" ng-click="ok()" class="ripplelink">&nbsp;OK&nbsp;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+<div ng-show="isViewPhoto">
+    <div style="position:fixed;z-index:998;top:0;left:0;right:0;bottom: 0;background:black; opacity:0.7" ng-click="closePhotoView()">
+    </div>
+    <div ng-style="{'margin-top':photoHeight,'margin-left':photoWidth}" style="position:absolute;z-index:999; top: 50%;left: 50%;">
+        <img src="{{photoView}}" />
+
+        <i class="material-icons" style="position: absolute;top: -20px;color: white;right: -20px;font-size: 30px;cursor: pointer; background: black;border-radius: 50%;"
+            ng-click="closePhotoView()">close</i>
+    </div>
+</div>

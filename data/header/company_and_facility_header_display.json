@@ -1,0 +1,10 @@
+[
+    {"state": "user", "display": []},
+    {"state": "fd", "display": ["company"]},
+    {"state": "cf.company", "display": ["company"]},
+    {"state": "cf.facility", "display": ["facility"]},
+    {"state": "cf.facility.facility-management", "display": []},
+    {"state": "cf.company.company-management", "display": []},
+    {"state": "gis.resources", "display": ["facility"]},
+    {"state": "gis.setup", "display": ["facility"]}
+]

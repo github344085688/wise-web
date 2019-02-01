@@ -1,0 +1,13 @@
+[{
+  "title": "Demand analysis",
+  "icon": "insert_chart",
+  "url": ""
+}, {
+    "title": "Shipping analysis",
+    "icon": "insert_chart",
+    "url": ""
+  },{
+  "title": "Replenishment  analysis",
+  "icon": "insert_chart",
+  "url": ""
+}]

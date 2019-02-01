@@ -1,0 +1,17 @@
+<ul>
+    <li class="nav-item" permission-check="{{menuItem.permissions}}" ng-repeat="menuItem in menuData" style="position: relative">
+        <div ng-init="hasSubMenu = menuItem.subMenu && menuItem.subMenu.length > 0"></div>
+        <a href="#{{menuItem.url}}" class="nav-link nav-toggle "  >
+            <!--ng-class="menuItem.subMenu ? '' : 'col-md-10'"-->
+            <i class="material-icons {{menuItem.iconClass}}" style="margin-left: 4px;">{{menuItem.icon}}</i>
+            <span class="title">{{menuItem.title}}</span>
+            <span class="arrow" ng-if="hasSubMenu"></span>
+
+        </a>
+        <div  style="position: absolute; top: 0; bottom: 0; left: 5px; width: 12px; height: 18px; margin: auto ;text-align: center;" ng-if="! menuItem.subMenu" ng-click="addFavorite(menuItem.title,menuItem.url)">
+            <i class="glyphicon  "ng-class="isInFavorite(menuItem.title) ? 'glyphicon-star-empty' : 'glyphicon-star'"  ng-style="{color:isInFavorite(menuItem.title) ? '#9aa9bf':'#5bbac4'}" title="Add Favorites" ></i>
+        </div>
+
+        <sidebar-menu-item ng-model="menuItem" ng-if="hasSubMenu" class="sub-menu"></sidebar-menu-item>
+    </li>
+</ul>

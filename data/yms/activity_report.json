@@ -1,0 +1,46 @@
+{
+    "yardName": "Valley",
+    "operator": "wang lan",
+    "reportPeriod": "2016-01-01 00:00:00 - 2016-01-01 23:59:59 PST",
+    "reportLines": [{
+        "activityTime": "2016-01-01 12:00:00",
+        "equipmentType": "Tractor",
+        "equipmentNo": "9EFY20021",
+        "activityType":"Gate Check In",
+        "hasCargo": "N",
+        "entryNo": "400001",
+        "currentStatus": "Not in yard",
+        "currentResourceType": "",
+        "currentResourceNo": ""
+    },{
+        "activityTime": "2016-01-01 12:00:00",
+        "equipmentType": "Container",
+        "equipmentNo": "CCLU1234561",
+        "activityType":"Gate Check In",
+        "hasCarg": "Y",
+        "entryNo": "400001",
+        "currentStatus": "In yard",
+        "currentResourceType": "Parking Space",
+        "currentResourceNo": "P001"
+    },{
+        "activityTime": "2016-01-01 12:00:00",
+        "equipmentType": "Container",
+        "equipmentNo": "TCNU9876549",
+        "activityType":"Shuttle",
+        "hasCargo": "Y",
+        "entryNo": "400002",
+        "currentStatus": "In yard",
+        "currentResourceType": "Loading Dock",
+        "currentResourceNo": "D001"
+    },{
+        "activityTime": "2016-01-01 15:00:00",
+        "equipmentType": "Tractor",
+        "equipmentNo": "9EFY20021",
+        "activityType":"Gate Check Out",
+        "hasCargo": "N",
+        "entryNo": "400001",
+        "currentStatus": "Not in yard",
+        "currentResourceType": "",
+        "currentResourceNo": ""
+    }]
+}

@@ -1,0 +1,78 @@
+<md-dialog flex="80">
+    <form novalidate name="orderPickTaskForm" class="form-horizontal">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Create Order Pick Task</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content class="" style="padding: 40px 40px 30px 14px;">
+
+            <div class="row">
+                <div class="portlet light bordered box-shadow-none">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject font-purple bold">Pick Summary</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body" style="padding-left:15px; padding-right:15px;">
+                        <div class="row form-group">
+                            <label class="bold">Order:</label>
+                                        <span class="label box-shadow-none label-success location-style">
+                                            {{orderId}}
+                                        </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-md-2"> Assignee: </label>
+                <div class="col-md-10">
+                    <input-validation-message field="assignee" form="orderPickTaskForm"></input-validation-message>
+                    <user-auto-complete name="assignee" ng-model="subTask.assigneeUserId" required="true"></user-auto-complete>
+                    <!--<ui-select name="assignee" ng-model="subTask.assigneeUserId" required="true">-->
+                        <!--<ui-select-match>-->
+                            <!--<div ng-bind="$select.selected.firstName + ' ' + $select.selected.lastName"></div>-->
+                        <!--</ui-select-match>-->
+                        <!--<ui-select-choices repeat="user.idmUserId as user in userList | filter: $select.search"-->
+                                           <!--refresh="getUsers($select.search)" refresh-delay="50">-->
+                            <!--<div ng-bind="user.firstName + ' ' + user.lastName"></div>-->
+                        <!--</ui-select-choices>-->
+                    <!--</ui-select>-->
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-md-2"> Start Time: </label>
+                <div class="col-md-10">
+                    <lt-date-time value="subTask.startTime"></lt-date-time>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-md-2"> End Time: </label>
+                <div class="col-md-10">
+                    <lt-date-time value="subTask.endTime"></lt-date-time>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-md-2"> Note: </label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" ng-model="subTask.note"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-md-2"> Rush: </label>
+                <div class="col-md-10">
+                    <md-switch class="md-primary" style="margin: 0px" ng-model="isRush"></md-switch>
+                </div>
+            </div>
+
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <div style="margin-right: 50px">
+                <button type="submit" class="btn blue" ng-click="orderPickTaskForm.$valid && createPickTask()">{{submitLabel}}
+                </button>
+                <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+

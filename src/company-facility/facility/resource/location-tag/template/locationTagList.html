@@ -1,0 +1,65 @@
+<div class="grid-100 row">
+    <div class=" grid-100 grid-content">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Location Tag List</h1>
+            <a class="create-button" permission-check="{{'facility::locationTag_write'}}" ui-sref="cf.facility.resource.locationTag.add">
+                <b>Create Location Tag</b>
+            </a>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container">
+
+            <div class="grid-25">
+                <label class="label-input">Location Tag</label>
+                <input type="text" placeholder="Enter Virtual Location Group Tag" ng-model="searchParam.regexName" />
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Location</label>
+                <multiple-location-auto-complete ng-model="searchParam.locationIds"/>
+            </div>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-90">&nbsp;</div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Note</th>
+                        <th>Loction Count</th>
+                        <th permission-check="{{'facility::locationTag_write'}}">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="virtualGroup  in locationTagView  track by $index">
+                        <td>
+                            <a ng-href="{{'#/cf/facility/resource/locationTag/edit/' + virtualGroup.id}}" target="_blank">{{virtualGroup.name}}</a>
+                        </td>
+                        <td>{{virtualGroup.desc}}</td>
+                        <td>{{virtualGroup.locationIds.length}}</td>
+                        <td permission-check="{{'facility::locationTag_write'}}">
+                            <a ng-click="delete(virtualGroup.id)" title="Delete">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="locationTags.length" page-size="pageSize" load-content="loadContent(currentPage)"></unis-pager>
+    </div>
+</div>

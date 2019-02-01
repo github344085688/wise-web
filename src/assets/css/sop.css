@@ -1,0 +1,9 @@
+.ul-col-2{
+	list-style: none;
+	padding: 0;
+	margin: 0；
+}
+.ul-col-2 li{
+	float: left;
+	min-width: 140px;
+}

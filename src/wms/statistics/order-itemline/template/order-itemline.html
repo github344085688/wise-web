@@ -1,0 +1,98 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Order Line Item Statistics By Item</h1>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-25">
+                <label class="label-input">Status</label>
+                <ui-select  multiple name="status" ng-model="searchInfo.statuses">
+                    <ui-select-match>
+                        {{$item}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item  in statusList| filter: $select.search"
+                                       refresh="getStatusList($select.search)" refresh-delay="50">
+                        {{item}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="grid-25">
+                <label class="label-input">Customer</label>
+                <organization-auto-complete allow-clear="true" ng-model="searchInfo.customerId"  name="customer" tag="Customer"></organization-auto-complete>
+            </div>
+            <div class="grid-25">
+                <label class="label-input" >From Order ID Number</label>
+                <input type="number" placeholder="Enter number" ng-model="searchInfo.fromOrderIdNumber">
+            </div>
+            <div class="grid-25">
+                <label class="label-input" >To Order ID Number</label>
+                <input type="number" placeholder="Enter number" ng-model="searchInfo.toOrderIdNumber">
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-50">
+                <label class="label-input">Long Haul</label>
+                <!--<longhaul-auto-complete placeholder="Enter Long Haul" allow-clear="true" customer-id="order.customerId"-->
+                <!--on-select="selectLongHaul(longHaul)" ng-model="order.longHaulId"></longhaul-auto-complete>-->
+                <multiple-longhaul-auto-complete placeholder="Enter Long Haul" customer-id="searchInfo.customerId"
+                                                 ng-model="searchInfo.longHaulNos"></multiple-longhaul-auto-complete>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <unis-waitting-btn ng-type="button" btn-class="grid-10 ripplelink pull-right"
+                               ng-click="searchAndAnalysis(searchInfo)"
+                               value="'Search'" is-loading="isLoading"></unis-waitting-btn>
+        </div>
+
+
+
+    </div>
+</div>
+<div class="grid-100 row">
+
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+               <b>Total Itemline Count</b>: {{orderItemlineSummary.totalItemLineCount}}   <button ng-click="showOrder = !showOrder" type="button" class="grid-20 ripplelink pull-right">{{showOrder? "Hide Summary Order": "Show Summary Order"}}</button>
+        </div>
+        <div class="grid-parent grid-100 container" ng-show="showOrder">
+            <b>Orders For Summary</b>:
+                    <span ng-repeat="orderId in orderIds">
+                            {{orderId}}&nbsp;
+                    </span>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Item</th>
+                    <th>UOM</th>
+                    <th>QTY</th>
+                    <th style="width: 150px">Upper UOM QTY</th>
+                    <th>Involved Order Count </th>
+                    <th>Involved Order</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="itemline in orderItemlineSummary.totalItemLines track by $index">
+                    <td>{{$index + 1}}</td>
+                    <td><item-display item="itemline.itemSpec"></item-display></td>
+                    <td>{{itemline.unitName}}</td>
+                    <td>{{itemline.qty}}</td>
+                    <td>{{itemline.assembleUnitQtyString}}</td>
+                    <td>{{itemline.orderIds.length}}</td>
+                    <td>
+                        <span ng-repeat="orderId in itemline.orderIds">
+                            {{orderId}}&nbsp;
+                    </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+

@@ -1,0 +1,173 @@
+<md-dialog id="unis" flex="60" ng-cloak>
+    <form class="light-theme" novalidate name="printShippingLabelForm" ng-submit="printShippingLabelForm.$valid && newPrint($event)">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h1>Batch Pre-Print Shipping Label</h1>
+                <span flex></span>
+                <i class="fa fa-times" ng-click="cancel()"></i>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" style="min-height:200px">
+
+                <div class="grid-100 grid-parent container">
+
+                    <div class="grid-100 grid-content" style="background-color: rgba(198, 228, 230, 0.36);margin-bottom: 20px;padding:12px 0">
+                        <div class="grid-100 container">
+                            <div class="grid-50">
+                                <label class="label-input"> ZPL Printer</label>
+                                <input-validation-message field="zplprinterName" form="printShippingLabelForm"></input-validation-message>
+                                <printer-auto-complete name="zplprinterName" ng-model="zplPrinterName" on-select="ZplPrinterSelect(printer)"
+                                    types="['ZPL','RAW']" required="true"></printer-auto-complete>
+                            </div>
+
+
+                            <div class="grid-50">
+                                <label class="label-input"> PDF Printer </label>
+                                <input-validation-message field="pdfPrinterName" form="printShippingLabelForm"></input-validation-message>
+                                <printer-auto-complete name="pdfPrinterName" ng-model="pdfPrinterName" on-select="PdfPrinterSelect(printer)"
+                                    types="['PDF']" required="true"></printer-auto-complete>
+                            </div>
+                        </div>
+                        <div class="grid-100 container">
+                            <div class="grid-30">
+                                <input type="checkbox" id="packingListTogetherWithLabel" name="packingListTogetherWithLabel"
+                                    ng-click="onPrintLabelChecked('packingListTogetherWithLabel')" ng-checked="printLabelSetUp.packingListTogetherWithLabel">
+                                <label class="checkbox" for="packingListTogetherWithLabel">
+                                    <span class="text" style="font-size: 0.75rem">Print Packing List (Combined With
+                                        Label)</span>
+                                </label>
+                            </div>
+                            <!-- <div class="grid-30">
+                                <input type="checkbox" id="printPickTicket_PDF" name="printPickTicket_PDF" ng-click="onPrintLabelChecked('pickTicket_PDF')"
+                                    ng-checked="printLabelSetUp.pickTicket_PDF">
+                                <label class="checkbox" for="printPickTicket_PDF">
+                                    <span class="text" style="font-size: 0.75rem">Print Pick Ticket (PDF)</span>
+                                </label>
+                            </div>
+                            <div class="grid-30">
+                                <input type="checkbox" id="printPickTicket_ZPL" name="printPickTicket_ZPL" ng-click="onPrintLabelChecked('pickTicket_ZPL')"
+                                    ng-checked="printLabelSetUp.pickTicket_ZPL">
+                                <label class="checkbox" for="printPickTicket_ZPL">
+                                    <span class="text" style="font-size: 0.75rem">Print Pick Ticket (ZPL)</span>
+                                </label>
+                            </div> -->
+                            <!-- <div class="grid-30 ">
+                                <input type="checkbox" id="packingTicket_ZPL" name="packingTicket_ZPL" ng-checked="printLabelSetUp.packingTicket_ZPL">
+                                <label class="checkbox" for="packingTicket_ZPL">
+                                    <span class="text" style="font-size: 0.75rem">Print Packaging Ticket (ZPL)</span>
+                                </label>
+                            </div> -->
+                        </div>
+
+                        <div class="grid-100 container">
+
+                            <div class="grid-30">
+                                <input type="checkbox" ng-click="onPrintLabelChecked('shippingLabel')" id="shippingLabel"
+                                    name="shippingLabel" ng-checked="printLabelSetUp.shippingLabel">
+                                <label class="checkbox" for="shippingLabel">
+                                    <span class="text" style="font-size: 0.75rem">Print Shipping Label</span>
+                                </label>
+                            </div>
+                            <div class="grid-30">
+                                <input type="checkbox" id="packagingLabel" name="packagingLabel" ng-click="onPrintLabelChecked('packagingLabel')"
+                                    ng-checked="printLabelSetUp.packagingLabel">
+                                <label class="checkbox" for="packagingLabel">
+                                    <span class="text" style="font-size: 0.75rem">Print Package Label</span>
+                                </label>
+                            </div>
+                            <div class="grid-30">
+                                <input type="checkbox" id="packingListByOrder" name="packingListByOrder" ng-click="onPrintLabelChecked('packingListByOrder')"
+                                    ng-checked="printLabelSetUp.packingListByOrder">
+                                <label class="checkbox" for="packingListByOrder">
+                                    <span class="text" style="font-size: 0.75rem">Print Packing List By Order</span>
+                                </label>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-90" style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap">
+                            <span>Orders :
+                                <span title="{{orderIds}}">{{orderIds}}</span>
+                            </span>
+                        </div>
+
+                    </div>
+                    <!-- <div class="grid-100 grid-parent container">
+                        <div class="grid-90" style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap">
+                            <span>Tasks :
+                                <span title="{{pickTaskIds}}">{{taskIds}}</span>
+                            </span>
+                        </div>
+
+                    </div> -->
+                    <div class="grid-100 grid-parent container">
+                        <div class="grid-75">
+                            &nbsp;
+                        </div>
+                        <div style="float:right">
+                            <waitting-btn type="submit" btn-class="btn blue" is-ready="loadingComplete" value="'Batch Print'"
+                                is-loading="isPrinting"></waitting-btn>
+                        </div>
+                    </div>
+                    <div>Print Information:</div>
+                    <div class="grid-100 grid-parent container" style="overflow: auto; min-height: 400px;border: 1px solid #eee; max-height: 450px;position: relative">
+                        <div ng-if="isLoading" style="position: absolute;top: 0;left: 0;right:0;bottom: 0;background: #eee"></div>
+                        <div ng-if="isLoading" class="text-center" style="position: absolute;top: 40%;left: 45%;">
+                            <img src="assets/img/loading-spinner-grey.gif">
+                            <span style=" position: relative;top: -5px;">&nbsp;Fetching Tracking#...</span>
+                        </div>
+                        <div class="grid-100 Valley" style=" font-size: 15px;padding: 20px 10px;line-height: 30px;font-weight: 300">
+                            <div ng-repeat="log in loggers track by $index">
+                                <div ng-if="log.allPrintedInfo">
+                                    <b style="color:olivedrab">{{log.allPrintedInfo}}</b>
+                                </div>
+                                <div ng-if="!log.allPrintedInfo">
+                                    <div ng-if='log.source.trackingNo'>
+                                        <span ng-if="log.source.trackingNo">
+                                                <b>Tracking No :</b> {{log.source.trackingNo}} &nbsp; <b ng-if="log.printed" ng-style="{'color': log.printed ==='Success'?'olivedrab':'red' }"> --- Print {{log.printed}}</b>
+                                        </span>
+
+                                    </div>
+                                    <div ng-if='!log.source.trackingNo && !log.source.itemLineDetails'>
+                                        <b>Order ID :</b> {{log.source}}
+                                    </div>
+                                    <div style="border-bottom: 1px solid #c4baba; padding: 10px 30px">
+                                        <div style="background: #eee">
+                                            <p ng-repeat="itemDetail in log.source.itemLineDetails track by $index"
+                                                style=" padding-left: 15px;">
+                                              Order Id: {{itemDetail.orderId}} , Item : <item-display item="itemKeyByItemId[itemDetail.itemSpecId]"></item-display> ,Qty:{{itemDetail.qty}},Unit:{{UnitKeyByUnitId[itemDetail.unitId].name}}
+                                            </p>
+                                        </div>
+
+                                        <p  ng-repeat="pro in log.res track by $index" ng-style="{'color': pro.printStatus ==='success'?'olivedrab':'red'}">
+                                            <span ng-if="!log.source.trackingNo && !pro.labelType">
+                                                   <span> Create  Tracking# Fail  {{transferError(pro.err)}}</span>
+                                            </span>
+                                            <span>
+                                                    Label Type: {{pro.labelType}} --- print {{pro.printStatus}}  {{transferError(pro.err)}}
+                                            </span>
+                                          
+                                        </p>
+                                    </div>
+                                </div>
+
+
+
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

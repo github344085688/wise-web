@@ -1,0 +1,164 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Schedule Report</h1>
+            <a class="create-button" ui-sref="rc.operation.inbound.scheduleReport.add"
+               permission-check="{{'report::schedule_write'}}">
+                    <b>Add Report</b></a>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+
+            <div class="grid-50">
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-50">
+                        <label>Customer:</label>
+                        <organization-auto-complete name="customer" ng-model="search.customerId" tag="Customer" allow-clear="true"></organization-auto-complete>
+                    </div>
+                    <div class="grid-50">
+                        <label>Status</label>
+                        <ui-select name="statuses" multiple ng-model="search.statuses">
+                            <ui-select-match>
+                                {{$item}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in ['New', 'Running', 'Done','Exception']| filter: $select.search">
+                                {{item}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-50">
+                        <label>Title:</label>
+                        <organization-auto-complete name="title" ng-model="search.titleId" tag="Title" allow-clear="true"></organization-auto-complete>
+                    </div>
+                    <div class="grid-50">
+                        <label>Supplier:</label>
+                        <organization-auto-complete ng-model="search.supplierId" name="supplier" tag="Supplier" allow-clear="true"></organization-auto-complete>
+                    </div>
+                </div>
+
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-50">
+                        <label>Start Devanned Date From:</label>
+                        <lt-date-time value="search.startTimeFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                    </div>
+                    <div class="grid-50">
+                        <label>Start Devanned Date To:</label>
+                        <lt-date-time value="search.startTimeTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                    </div>
+                </div>
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-50">
+                        <label>End Devanned Date From:</label>
+                        <lt-date-time value="search.endTimeFrom" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                    </div>
+                    <div class="grid-50">
+                        <label>End Devanned Date To:</label>
+                        <lt-date-time value="search.endTimeTo" date-format="yyyy-mm-dd" min-view="2"></lt-date-time>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="grid-50">
+
+                <div class="grid-parent grid-100 container">
+                    <div class="grid-100">
+                        <label>Item:</label>
+                        <itemspec-auto-complete ng-model="search.itemSpecId" name="itemSpec" customer-id="search.customerId" on-select="itemSpecIdOnSelect(search.itemSpecId)"
+                            allow-clear="true" />
+                    </div>
+                </div>
+                <div ng-show=" diverseFields && diverseFields.length>0" style="background-color: rgba(93, 204, 214, 0.188235); padding:15px 25px 5px 5px; margin-bottom: 15px; margin-right:-15px;">
+                    <div class="grid-parent grid-100 container" ng-switch on="field.itemProperty.type" ng-repeat="field in diverseFields">
+                        <label class="control-label col-md-3">{{field.itemProperty.name}}:</label>
+                        <div class="col-md-9">
+                            <input-validation-message field="field.{{$index}}.value" form="addItemLineForm"></input-validation-message>
+                            <ui-select name="field.{{$index}}.value" ng-model="field.selectedProduct" ng-show="field.availableDiverseValues && field.availableDiverseValues.length>0"
+                                on-select="diverseValuesSelected(field)">
+                                <ui-select-match allow-clear="true">
+                                    <div>{{$select.selected.value}} {{$select.selected.unit}}</div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="diverseObj in field.availableDiverseValues">
+                                    <div>{{diverseObj.value}} {{diverseObj.unit}}</div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-80">&nbsp;</div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="clearQuery()" value="'Clear Query'"></waitting-btn>
+            </div>
+
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="searchReports()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+
+        </div>
+
+        <div class=" grid-parent grid-100 container">
+            <div class="grid-parent grid-100 container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Type</th>
+                            <th>Customer</th>
+                            <th>Title</th>
+                            <th>Supplier</th>
+                            <th>Item</th>
+                            <th>CreatedBy</th>
+                            <th>Start {{timeName}} Date</th>
+                            <th>End {{timeName}} Date</th>
+                            <th>Created Time</th>
+                            <th width="180px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="report in reportView">
+                            <td>{{report.status}}</td>
+                            <td>{{report.type}}</td>
+                            <td>{{report.customerName}}</td>
+                            <td>{{report.titleName}}</td>
+                            <td>{{report.supplierName}}</td>
+                            <td>
+                                <item-display item="itemMap[report.itemSpecId]"></item-display>
+                            </td>
+                            <td>{{report.createdBy}}</td>
+                            <td>{{report.startTime | amDateFormat:'YYYY-MM-DD'}}</td>
+                            <td>{{report.endTime | amDateFormat:'YYYY-MM-DD'}}</td>
+                            <td>{{report.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                            <td>
+                                <a ui-sref="rc.operation.inbound.scheduleReport.view({reportId:report.id})"
+                                   ng-show="report.status == 'Done'"  target="_blank">View Report |</a>
+                                <a href="#" ng-click="deleteReport(report.id)"
+                                   permission-check="{{'report::schedule_write'}}">>Delete</a>
+                                <a http-src="/file-app/file-download/{{report.fileId}}" ng-click="getDownload(report)"
+                                   download="{{download}}" ng-show="report.status == 'Done'" > | Download </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <unis-pager total-count="reports.length" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+        </div>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,63 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left">Template Management List</h1>
+            <a class="create-button" ui-sref="admin.service.templateManagement.add">
+                <b>Add Task Template</b></a>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-33">
+                <label class="label-input">Template:</label>
+                <ui-select name="fileCategory" ng-model="searchInfo.fileCategory" class="form-control">
+                    <ui-select-match allow-clear="true">
+                        <div ng-bind="$select.selected"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat=" type in fileCategorys | filter: $select.search">
+                        <div ng-bind="type"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-90">&nbsp;</div>
+            <div class="grid-10 ">
+                <waitting-btn type="button" btn-class="ripplelink" ng-click="search()" value="'Search'" is-loading="loading"></waitting-btn>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th> Template</th>
+                        <th> Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="template in templateManageView track by $index">
+                        <td>{{template.fileCategory}}</td>
+                        <td>
+                            <a   ui-sref="admin.service.templateManagement.edit({fileEntryId:template.id})">Edit</a>
+                            <a  http-src="/file-app/file-download/{{template.fileId}}" download="{{download}}"
+                                ng-click="getDownload(template)" target="_blank">| Download</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="grid-100">
+    <div class="grid-content grid-100">
+        <unis-pager total-count="templateManage.length" page-size="pageSize" load-content="loadContent(currentPage)"> </unis-pager>
+    </div>
+</div>
+

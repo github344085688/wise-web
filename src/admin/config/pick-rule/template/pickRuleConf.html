@@ -1,0 +1,83 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="#">Admin</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Pick</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a href="#">Pick Rule</a>
+        </li>
+    </ul>
+</div>
+<div id="commitment-field-priority-config" class="portlet light bordered" style="margin: 15px">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-gift"></i>Pick Rule Configuration
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="row form-group customer">
+            <div class="col-md-6">
+                <label class="control-label"> <b>Customer: </b></label>
+                <div style="display: inline-block; width: 200px;">
+                    <organization-auto-complete ng-model="rule.organizationId" name="customer" tag="Customer" on-select="loadNewConfig()"></organization-auto-complete>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <label class="control-label" style="position: relative;top: -12px;"> <b>Item: </b></label>
+                <div style="display: inline-block; width: 200px;">
+                    <ui-select ng-model="rule.itemSpecId" name="item" autoFocus="true">
+                        <ui-select-match>
+                            <div ng-bind="$select.selected.name"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item.id as item in items"
+                                           refresh="getItems( $select.search)"
+                                           refresh-delay="50">
+                            <div ng-bind="item.name"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </div>
+        <form action="" class="horizontal-form">
+            <div class="form-body">
+                <div class="row" style="margin-left: 0px; margin-right: 0px">
+                    <div class="col-md-12 field-priority-header">Pick Rule Priority Configuration</div>
+                </div>
+                <div class="row" style="margin-left: 0px; margin-right: 0px" id="field-priority-container">
+                    <div class="col-md-6 sortable-list">
+                        <div class="form-group">
+                            <label class="control-label"> <b>Pick Rule Options</b></label>
+                        </div>
+                        <ul data-as-sortable="getFieldDragListener" data-ng-model="defaultPickRules">
+                            <li data-ng-repeat="item in defaultPickRules" data-as-sortable-item>
+                                <div data-as-sortable-item-handle>{{item}}</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 sortable-list">
+                        <div class="form-group">
+                            <label class="control-label"> <b>Pick Rule Priority (High to Low)</b></label>
+                        </div>
+                        <ul data-as-sortable="getFieldDragListener" data-ng-model="orderedPickRules">
+                            <li data-ng-repeat="item in orderedPickRules" data-as-sortable-item>
+                                <div data-as-sortable-item-handle>{{item}}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-actions right">
+                    <waitting-btn type="button" btn-class="btn blue"
+                                  permission-check="{{'config::pick_write'}}"
+                                  ng-click="save()"
+                                  value="'Save'" is-loading="loading"></waitting-btn>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

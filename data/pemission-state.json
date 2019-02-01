@@ -1,0 +1,4 @@
+[{"receipt_read": ["wms.inbound.receipt.list", "wms.inbound.receipt.view"]},
+ {"receipt_edit": ["wms.inbound.receipt.edit", "wms.inbound.receipt.add"]}
+ ]
+

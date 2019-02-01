@@ -1,0 +1,89 @@
+<div class="portlet light bordered" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold">Edit Order Plan
+                <span ng-show="orderPlan.id">: {{orderPlan.id}}</span>
+            </span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row row-text">
+            <span class="col-md-3"><b>Pick Type: </b>{{orderPlan.pickType}}</span>
+            <span class="col-md-3"><b>Pick Way: </b>{{orderPlan.pickWay}}</span>
+            <span class="col-md-3"><b>Assignee: </b>{{orderPlan.assignee.firstName}} {{orderPlan.assignee.lastName}}</span>
+            <span class="col-md-3"><b>Status: </b>{{orderPlan.status}}</span>
+        </div>
+        <div class="row row-text">
+            <span class="col-md-3"><b>Schedule Time: </b>{{orderPlan.scheduleTime | amDateFormat:'YYYY-MM-DD'}}</span>
+            <span class="col-md-4"><b>Create Time: </b>{{orderPlan.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                &nbsp;<span ng-show="orderPlan.createdBy">({{orderPlan.createdBy}})</span></span>
+            <span class="col-md-4"><b>Update Time: </b>{{orderPlan.updatedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                &nbsp;<span ng-show="orderPlan.updatedBy">({{orderPlan.updatedBy}})</span></span>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn blue"
+                    style="float:right; margin-bottom:15px; margin-right:15px;"
+                    ng-click="selectOrders()">Select Orders
+            </button>
+        </div>
+        <div class="table-scrollable item-list-continer">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Entry</th>
+                    <th>Status</th>
+                    <th>Load</th>
+                    <th>Customer</th>
+                    <th>Ship To ID</th>
+                    <th>Ship To</th>
+                    <th>Reference</th>
+                    <th>Purchase Order No.</th>
+                    <th>Customer Sales Order No.</th>
+                    <th>Delivery Request Date</th>
+                    <th>Carrier</th>
+                    <th>Freight Term</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in orderView">
+                    <td><a ng-href="{{'#/wms/outbound/order/' + item.id}}" target="_blank">{{item.id}}</a> </td>
+                    <td>{{item.entryId}}</td>
+                    <td ng-class="{'font-red':item.status == 'Commit Blocked'}">
+                        {{item.status}}
+                    </td>
+                    <td><a ng-href="{{'#/wms/outbound/load/' + item.loadId}}" target="_blank">{{item.loadNo}}</a></td>
+                    <td>{{item.customerName}}</td>
+                    <td>{{item.shipToAddress.organizationName}}</td>
+                    <td>{{item.shipToAddress.name}}</td>
+                    <td>{{item.referenceNo}}</td>
+                    <td>{{item.poNo}}</td>
+                    <td>
+                        <span ng-repeat="soNo in item.soNos">
+                            {{soNo}}&nbsp;
+                        </span>
+                    </td>
+                    <td>{{item.mabd | amDateFormat:'YYYY-MM-DD HH:00'}}</td>
+                    <td>{{item.carrierName}}</td>
+                    <td>{{item.freightTerm}}</td>
+                    <td >
+                        <a ng-click="deleteOrder(item.id)" title="Delete">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <pager total-count="orders.length" page-size="pageSize"  load-content="loadContent_orders(currentPage)"></pager>
+        <div class="form-group" style="text-align: right;">
+            <waitting-btn type="button" btn-class="btn blue"
+                          value="submitLabel" is-loading="loading" ng-click="saveOrderPlan()" ></waitting-btn>
+            <button type="button" class="btn default" ng-click="cancel()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+

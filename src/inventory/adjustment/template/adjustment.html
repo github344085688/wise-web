@@ -1,0 +1,258 @@
+<div ui-view>
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <a href="javascript:;">Inventory</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a href="#">Adjustment</a>
+            </li>
+        </ul>
+    </div>
+    <div class="container-fluid" style="margin:15px">
+        <div class="row">
+            <div class="portlet light bordered box-shadow-none">
+                <div class="portlet-title">
+                    <div class="caption" style="width: 100%;">
+                        <span class="caption-subject bold">Adjustment Search</span>
+                        <button type="button" class="btn green" style="float: right;"
+                                permission-check="{{'adjustment::adjustment_write'}}"
+                                ng-click="addAdjustment()">Create Adjustment</button>
+                    </div>
+                </div>
+
+                <div class="portlet-body form form-horizontal">
+                    <form>
+                        <div class="row form-group">
+                            <div class="col-md-3">
+                                <label>Adjust ID</label>
+                                <lt-tags-input fill="ADJUST-" placeholder="Enter Adjust ID" ng-model="adjustmentSearch.ids" ng-keyup="keyUpSearch($event)"></lt-tags-input>
+                            </div>
+                            <div class="col-md-3">
+                                <label>LP</label>
+                                <input type="text" class="form-control" ng-pattern="/^[T,H,I,C,S]{0,1}LP-[0-9]*$/" ng-model="adjustmentSearch.lpId" placeholder="Enter LP ID (LP-1)" />
+                            </div>
+                            <div class="col-md-3">
+                                <label>Customer</label>
+                                <organization-auto-complete name="customer" ng-model="adjustmentSearch.customerId" tag="Customer" allow-clear="true"></organization-auto-complete>
+                            </div>
+                            <div class="col-md-3">
+                                <label >Title:</label>
+                                <organization-auto-complete name="title" ng-model="adjustmentSearch.titleId" tag="Title" allow-clear="true"></organization-auto-complete>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-3">
+                                <label>Item</label>
+                                <itemspec-auto-complete ng-model="adjustmentSearch.itemSpecId" name="itemSpec" customer-id="adjustmentSearch.customerId" allow-clear="true"/>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Type</label>
+
+                                <ui-select ng-model="adjustmentSearch.type">
+                                    <ui-select-match allow-clear="true">
+                                        <span ng-bind="$select.selected"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item in adjustmentType | filter: $select.search">
+                                        {{item}}
+                                    </ui-select-choices>
+                                </ui-select>
+
+                            </div>
+                            <div class="col-md-3">
+                                <label>Source</label>
+
+                                <ui-select ng-model="adjustmentSearch.source">
+                                    <ui-select-match allow-clear="true">
+                                        <span ng-bind="$select.selected"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item in adjustmentSource | filter: $select.search">
+                                        {{item}}
+                                    </ui-select-choices>
+                                </ui-select>
+
+                            </div>
+                            <div class="col-md-3">
+                                <label>Reason</label>
+
+                                <ui-select ng-model="adjustmentSearch.reason">
+                                    <ui-select-match allow-clear="true">
+                                        <span ng-bind="$select.selected"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item in adjustmentReasons | filter: $select.search">
+                                        {{item}}
+                                    </ui-select-choices>
+                                </ui-select>
+
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-3">
+                                <label>Progress</label>
+
+                                <ui-select ng-model="adjustmentSearch.progress">
+                                    <ui-select-match allow-clear="true">
+                                        <span ng-bind="$select.selected"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item in adjustmentProgress | filter: $select.search">
+                                        {{item}}
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Status</label>
+
+                                <ui-select ng-model="adjustmentSearch.status">
+                                    <ui-select-match allow-clear="true">
+                                        <span ng-bind="$select.selected"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item in adjustmentStatus | filter: $select.search">
+                                        {{item}}
+                                    </ui-select-choices>
+                                </ui-select>
+
+                            </div>
+                            <div class="col-md-3">
+                                <label>Time From</label>
+                                <lt-date-time value="adjustmentSearch.timeFrom"></lt-date-time>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Time To</label>
+                                <lt-date-time value="adjustmentSearch.timeTo"></lt-date-time>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-6">
+                                <label>Notes</label>
+                                <input type="text" class="form-control" ng-model="adjustmentSearch.regexNotes" />
+                            </div>
+                            <div class="col-md-6" style="text-align: right; padding-top: 20px;">
+                                <waitting-btn type="button" btn-class="btn yellow" ng-click="export()" value="'Export'" is-loading="exporting"></waitting-btn>
+                                <waitting-btn type="submit" btn-class="btn blue" ng-click="search(1)" value="'Search'" is-loading="isSearching"></waitting-btn>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="row">
+                    <div class="portlet light  box-shadow-none">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <span class="caption-subject bold"> Adjustment List: </span>
+                            </div>
+                        </div>
+
+                        <div ng-show="isSearching" class="text-center">
+                            <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+                        </div>
+
+                        <div class="portlet-body" ng-show="!isSearching">
+
+                            <div class="portlet light bordered" style="padding-left: 0px;" ng-repeat="adjustment in adjustments track by $index">
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td ng-if="adjustment.status == 'Temp adjust'" style="background: #36c6d3; width: 5px;"></td>
+                                        <td ng-if="adjustment.status == 'True adjust'" style="background: #f9a18e; width: 5px;"></td>
+                                        <td style="padding-left: 20px;">
+
+                                            <div class="portlet-title">
+                                                <div class="caption" style="width: 100%;;">
+                                                    <span class="caption-subject bold">
+                                                        <span ng-if="adjustment.status == 'Temp adjust'" class="tempAdjustmentTxt">
+                                                            {{adjustment.status}}
+
+                                                        </span>
+                                                        <span ng-if="adjustment.status == 'True adjust'" class="trueAdjustmentTxt">
+                                                            {{adjustment.status}}
+                                                        </span>
+                                                        {{adjustment.id}} | {{adjustment.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}
+                                                        <span ng-if="adjustment.approveWhen && adjustment.progress == 'Complete'" style="color: #f3b404;">
+                                                            (Approve Time:{{adjustment.approveWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}})
+                                                        </span>
+                                                    </span>
+                                                    <i ng-click="delete(adjustment.id)" ng-if="adjustment.progress != 'Complete'" class="material-icons adjustmentDeleteBtn" title="delete"  permission-check="{{'adjustment::adjustment_write'}}">delete_forever</i>
+                                                    <a ng-if="adjustment.progress == 'New'" class="adjustmentApprove" ng-click="approve(adjustment.id)"  permission-check="{{'adjustment::adjustment_write'}}">√ APPROVE</a>
+                                                    <div ng-if="adjustment.progress != 'New'" style="width: 90px;float: right;">&nbsp;</div>
+
+                                                    <span ng-if="adjustment.progress == 'Complete'" class="adjustmentStatus complete">Progress: {{adjustment.progress}}</span>
+                                                    <span ng-if="adjustment.progress == 'Closed'" class="adjustmentStatus close">Progress: {{adjustment.progress}}</span>
+                                                    <span ng-if="adjustment.progress == 'Exception'" title="{{adjustment.errorMsg}}" class="adjustmentStatus exception">Progress: {{adjustment.progress}}</span>
+                                                    <span ng-if="adjustment.progress == 'New'" class="adjustmentStatus new">Progress: {{adjustment.progress}}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="portlet-body">
+                                                <div class="row form-group">
+                                                    <div class="col-md-3">
+                                                        <b>Reporter:</b>
+
+                                                        <label>{{adjustment.createdBy}}</label>
+                                                    </div>
+
+                                                    <div class="col-md-3" ng-if="adjustment.progress == 'Complete'">
+                                                        <b>Approver:</b>
+                                                        <label>{{adjustment.approveBy}}</label>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <b>Type:</b>
+                                                        <label>{{adjustment.type}}</label>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <b>Source:</b>
+                                                        <label>{{adjustment.source}}</label>
+                                                    </div>
+                                                </div>
+                                                <div class="row form-group">
+                                                    <div class="col-md-6">
+                                                    <div class="col-md-6" style="padding-left:0">
+                                                        <b>Reason:</b>
+                                                        <label>{{adjustment.reason}}</label>
+                                                    </div>
+                                                        <div class="col-md-6" ng-if="adjustment.receiptId">
+                                                            <b>Receipt Id:</b>
+                                                            <label>{{adjustment.receiptId}}</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <b>Notes:</b>
+                                                        <label>{{adjustment.notes}}</label>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="mt-element-ribbon bg-grey-steel" style="margin-bottom: 5px;padding-bottom: 5px;">
+                                                            <div class="ribbon ribbon-color-info uppercase">
+                                                                <input type="checkbox" id="check-{{adjustment.id}}" ng-if="adjustment.progress != 'Complete'" ng-checked="isChecked(adjustment.id)" ng-click="checkOrUnCheck(adjustment.id)"/>
+                                                                <label for="check-{{adjustment.id}}">{{adjustment.note}}</label>
+                                                            </div>
+                                                            <div class="ribbon-content">
+                                                                <div class="row">
+                                                                    <div ng-class="{'col-md-12': key == 'Diverse' || key == 'ToDiverse', 'col-md-3': key != 'Diverse' && key != 'ToDiverse'}"
+                                                                         ng-repeat="(key, value) in adjustment.adjustmentContent">
+                                                                        <b>{{key}}:</b>
+                                                                        <label>{{value}}</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+
+                            <pager total-count="paging.totalCount"  current-page ="paging.pageNo" page-size="page.pageSize" load-content="loadContent(currentPage)"></pager>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

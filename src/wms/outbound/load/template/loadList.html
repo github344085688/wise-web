@@ -1,0 +1,113 @@
+<div ui-view>
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <a href="#">WMS</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a href="#">Outbound</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a href="#">Load</a>
+                <i class="fa fa-circle"></i>
+            </li>
+            <li>
+                <a href="#">Load List</a>
+            </li>
+        </ul>
+    </div>
+    <div class="container-fluid" style="margin:15px">
+        <div class="row">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">Load List</span>
+                    </div>
+                    <div class="actions">
+                        <a ui-sref="wms.outbound.load.add" permission-check="{{'outbound::load_write'}}">
+                            <b>Add Load</b>
+                        </a>
+                    </div>
+                </div>
+                <div class="portlet-body form form-horizontal">
+                    <load-search-form is-loading="isLoading" search-loads="searchLoads(searchParam)"></load-search-form>
+                    <button type="button" class="btn yellow" style="float:right" ng-click="printMasterBOL()">
+                        <span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print Master BOL By Load</button>
+                </div>
+                <div class="row">
+                    <div class="portlet light box-shadow-none">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <span class="caption-subject bold"> Search Results</span>
+                            </div>
+                        </div>
+                        <div ng-show="!searchCompleted" class="text-center">
+                            <img src="assets/img/loading-spinner-grey.gif">
+                            <span>&nbsp;LOADING...</span>
+                        </div>
+                        <div class="portlet-body" ng-show="searchCompleted">
+                            <div class="dataTables_wrapper no-footer">
+                                <div class="table-scrollable">
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <input type="checkbox" ng-checked="selectAll" ng-click="checkAllILoads()" name="selectAll">
+                                                </th>
+                                                <th>Load ID</th>
+                                                <th>Load No.</th>
+                                                <th>Entry</th>
+                                                <th>Status</th>
+                                                <th>Customer</th>
+                                                <th>Carrier</th>
+                                                <th>Trailers</th>
+                                                <th>Load Type</th>
+                                                <th>Freight Term</th>
+                                                <th>Master Bol No.</th>
+                                                <th>Appointment Time</th>
+                                                <th>Create Time</th>
+                                                <th>Create By</th>
+                                                <th permission-check="{{'outbound::load_write'}}">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="load in loads">
+                                                <td>
+                                                    <input type="checkbox" ng-checked="isChecked(load) " ng-click="checkLoad(load)">
+                                                </td>
+                                                <td>
+                                                    <a ng-href="{{'#/wms/outbound/load/' + load.id}}" target="_blank">{{load.id}}</a>
+                                                </td>
+                                                <td>{{load.loadNo}}</td>
+                                                <td>
+                                                    <span ng-repeat="entryId in load.entryIds">
+                                                       <a ng-href="{{'#/cf/facility/window/checkin/' + entryId + '/' + entryId + '/carrier-info'}}" target="_blank">{{entryId}}</a>&nbsp;
+                                                    </span>
+                                                </td>
+                                                <td>{{load.status}}</td>
+                                                <td>{{load.customerName}}</td>
+                                                <td>{{load.carrierName}}</td>
+                                                <td><span ng-repeat="trailer in load.trailers">{{trailer}} </span></td>
+                                                <td>{{load.type}}</td>
+                                                <td>{{load.freightTerm}}</td>
+                                                <td> <a ng-href="{{'#/lmbol-print/' + masterBolGroup[load.masterBolNo]}}" target="_blank">{{load.masterBolNo}}</a></td>
+                                                <td>{{load.appointmentTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                                                <td>{{load.createdWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                                                <td>{{load.createdBy}}</td>
+                                                <td permission-check="{{'outbound::load_write'}}">
+                                                    <a ng-show="load.status == 'New'" ng-click="deleteLoad(load.id)">Delete</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <pager total-count="paging.totalCount" current-page ="paging.pageNo" page-size="pager.pageSize" load-content="loadContent(currentPage)"></pager>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

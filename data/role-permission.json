@@ -1,0 +1,12 @@
+[
+  {
+    "roleId":1,
+    "name":"WAREHOUSE_LABOR",
+    "permissions": ["RECEIPT_REOPEN","RECEIPT_EDIT"]
+  },
+  {
+    "roleId":2,
+    "name":"WAREHOUSE_SUPERVISOR",
+    "permissions":  ["RECEIPT_EDIT","RECEIPT_REOPEN","ORDER_REOPEN","ORDER_EDIT","USER_MANAGEMENT"]
+  }
+]

@@ -1,0 +1,109 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label">Pick Task Statistics</h1>
+            <hr>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-80">&nbsp;</div>
+            <div class="grid-20">
+                <waitting-btn type="button" is-loading="exporting" btn-class="ripplelink" ng-click="export()" value="'Export'"></waitting-btn>
+            </div>
+        </div>
+
+        <div ng-show="isLoading" class="text-center">
+            <img src="assets/img/loading-spinner-grey.gif">
+            <span>&nbsp;LOADING...</span>
+        </div>
+
+        <div class="grid-parent grid-100 container">
+
+            <div class="grid-25">
+                <b>Total Task Count</b>: {{pickTaskData.taskCount}}
+            </div>
+            <div class="grid-25">
+                <b>Total ItemLine Count</b>: {{pickTaskData.totalItemLineCount}}
+            </div>
+            <div class="grid-25">
+                <b>Progress Task Count</b>: {{pickTaskData.progressTaskCount}}
+            </div>
+            <div class="grid-25">
+                <b>Open Task Count</b>: {{pickTaskData.openTaskCount}}
+            </div>
+
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-100">
+                <b>Auto Assignment Remaining Task Count</b>: {{pickTaskData.autoAssignmentTaskQty}}
+            </div>
+        </div>
+        <div class="grid-parent grid-100 container" style="overflow-x: scroll">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="max-width: 160px;">User</th>
+                        <th style="max-width: 160px;">Zone</th>
+                        <th style="max-width: 160px;" class="order-sorting" ng-click="pickTasksSortClick('progressTaskCount')">Progress Task</th>
+                        <th style="max-width: 200px;" class="order-sorting" ng-click="pickTasksSortClick('progressTaskItemLine')">Progress Task ItemLine</th>
+                        <th style="max-width: 200px;" class="order-sorting" ng-click="pickTasksSortClick('openTaskCount')">Open Task</th>
+                        <th style="max-width: 160px;" class="order-sorting" ng-click="pickTasksSortClick('openTaskItemLine')">Open Task ItemLine</th>
+                        <th style="max-width: 160px;" class="order-sorting" ng-click="pickTasksSortClick('taskCount')">Task Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="line.isOnline || line.taskCount > 0" ng-repeat="line in pickTaskData.pickerList track by $index" ng-class="{'case-high-light':line.highLight}">
+                        <td ng-class="{'fontred': !line.isOnline && line.taskCount >0,'font-green':line.isOnline && line.taskCount == 0}">{{line.picker}}</td>
+                        <td>{{line.virtualLocationName}}</td>
+                        <td>
+                            {{line.progressTaskCount}}
+                            <a ng-if="line.progressTaskCount > 0" ng-click="pickTaskSelectLine(line.progressTasks, line.picker, 'progress', $event)" style="float: right;">detail...</a>
+                        </td>
+                        <td>{{line.progressTaskItemLine}}</td>
+                        <td>
+                            {{line.openTaskCount}}
+                            <a ng-if="line.openTaskCount > 0" ng-click="pickTaskSelectLine(line.openTasks, line.picker, 'open', $event)" style="float: right;">detail...</a>
+                        </td>
+                        <td>{{line.openTaskItemLine}}</td>
+                        <td>{{line.taskCount}}</td>
+                    </tr>
+                    <tr id="pickTaskInfo" ng-show="selTasks != null">
+                        <td colspan="8">
+                            <div ng-if="selTaskType === 'open'" style="text-align: center; padding-bottom: 10px; font-size: 15px; font-weight: bold;">Open Task Detail</div>
+                            <div ng-if="selTaskType === 'progress'" style="text-align: center; padding-bottom: 10px; font-size: 15px; font-weight: bold;">Progress Task Detail</div>
+                            <table style="width: 100%;">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>LH#</th>
+                                    <th>Order#</th>
+                                    <th>Task</th>
+                                    <th ng-if="selTaskType === 'open'">Assign Time</th>
+                                    <th ng-if="selTaskType === 'progress'">Start Time</th>
+                                    <!--<th>Change Assign</th>-->
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="selTask in selTaskView track by $index">
+                                    <td>{{$index + 1}}</td>
+                                    <td><span ng-repeat="longHaulNo in selTask.longHaulNos">{{longHaulNo}} </span></td>
+                                    <td><span ng-repeat="orderId in selTask.orderIds">{{orderId}} </span></td>
+                                    <td>{{selTask.id}}</td>
+                                    <td ng-if="selTaskType === 'open'">{{selTask.lastAssignedWhen | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                                    <td ng-if="selTaskType === 'progress'">{{selTask.startTime | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                                    <!--<td style="width: 300px;">-->
+                                        <!--<multiple-user-auto-complete name="assignees" ng-model="step.assigneeUserIds"-->
+                                                                     <!--on-select="onSelectUser(user)"></multiple-user-auto-complete>-->
+                                    <!--</td>-->
+                                </tr>
+                                </tbody>
+                            </table>
+                            <pager total-count="totalCount" page-size="pageSize" load-content="loadContent(currentPage)"></pager>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

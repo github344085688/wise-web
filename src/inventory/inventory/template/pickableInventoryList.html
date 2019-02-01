@@ -1,0 +1,84 @@
+<div class="grid-100 row">
+    <div class="grid-content grid-100 ">
+        <div class="grid-parent grid-100 container">
+            <h1 class="section-label pull-left"> Pickable Inventory </h1>
+            <hr>
+        </div>
+        <div class="grid-parent grid-100 container">
+            <div class="grid-33">
+                <label class="label-input">item</label>
+                <itemspec-auto-complete name="itemSpec" ng-model="search.itemSpecIds" required="true" allow-clear="true" required="true"
+                />
+            </div>
+            <div class="grid-33">
+                <label class="label-input">Location</label>
+                <location-auto-complete ng-model="search.locationId" allow-clear="true" />
+            </div>
+            <div class="grid-33">
+                <label class="label-input">Pick Task ID</label>
+                <input class="form-control" input-auto-fill="TASK-" placeholder="Enter Pick Task ID" ng-model="search.taskId" />
+            </div>
+        </div>
+
+
+        <div class="grid-parent grid-100 container">
+            <div class="grid-80">&nbsp;</div>
+
+            <div class="grid-20">
+                <waitting-btn type="button" btn-class="btn yellow" ng-click="searchPickableInventories()" value="'Search Pickable Inventory'"
+                    is-loading="pickableLoading"></waitting-btn>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid-100 row">
+    <div class="grid-content grid-100">
+        <div class="grid-100 grid-parent">
+
+
+            <div class="row" style="overflow: auto;">
+                <div class="grid-parent grid-100 ">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Title</th>
+                                <th>Customer</th>
+                                <th>LP ID</th>
+                                <th>Location</th>
+                                <th>Qty</th>
+                                <th>UOM</th>
+                                <th>SN</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="pickStragety in pickableListView track by $index">
+                                <td>
+                                    <item-display item="pickStragety"></item-display>
+                                </td>
+                                <td>{{pickStragety.titleName}}</td>
+                                <td>{{pickStragety.customerName}}</td>
+                                <td>{{pickStragety.lpId}}</td>
+                                <td>
+                                    {{pickStragety.locationName}}
+                                </td>
+                                <td>{{pickStragety.qty}}</td>
+                                <td>{{pickStragety.unitName}}</td>
+                                <td>{{pickStragety.sn}}</td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="grid-100">
+                <div class="grid-content grid-100">
+                    <unis-pager total-count="pickableInventory.length" page-size="pageSize" load-content="loadPickableInventorContent(currentPage)"></unis-pager>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

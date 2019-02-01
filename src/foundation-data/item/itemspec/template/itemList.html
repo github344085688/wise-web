@@ -1,0 +1,153 @@
+<div class="portlet light bordered order-list-container" style="margin: 15px;">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject bold"> Item List </span>
+        </div>
+        <div class="actions">
+            <div style="float: left;width: 350px; margin-right: 25px;">
+                <itemspec-auto-complete ng-model="currentItem.itemSpecId" on-select="itemSpecIdOnSelect(itemSpec)"
+                    placeholder="Quick Access" ng-keyup="keyUpSearch($event)"></itemspec-auto-complete>
+            </div>
+            <a ui-sref="fd.item.itemspec.edit" style="line-height: 35px;" permission-check="{{'item::itemSpec_write'}}"><b>Add
+                    Item</b></a> |
+            <a ng-click="getDownload()" style="line-height: 35px;"><b>Download Item Template</b></a>
+        </div>
+    </div>
+    <div class="portlet-body form form-horizontal">
+        <div ng-keyup="keyUpSearch($event)">
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label>Keyword</label>
+                    <input class="form-control" placeholder="Enter ID /UPCCode /UpcCodeCase /EanCode /Name /Description /ShortDescription"
+                        ng-model="search.keyword" />
+                </div>
+                <div class="col-md-3">
+                    <label>Name</label>
+                    <input class="form-control" ng-model="search.eqName" />
+                </div>
+                <div class="col-md-3">
+                    <label>Status</label>
+                    <ui-select multiple name="status" ng-model="search.statuses">
+                        <ui-select-match>
+                            {{$item}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="item in ['Active', 'Inactive', 'Discontinue']| filter: $select.search">
+                            {{item}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <label>Item Group</label>
+                    <multiple-item-group-auto-complete name="group" ng-model="search.groupIds"></multiple-item-group-auto-complete>
+                </div>
+                <div class="col-md-3">
+                    <label>Customer</label>
+                    <multiple-organization-auto-complete ng-model="search.customerIds" name="customer" tag="Customer"></multiple-organization-auto-complete>
+                </div>
+                <div class="col-md-3">
+                    <label>Supplier</label>
+                    <multiple-organization-auto-complete ng-model="search.supplierIds" name="supplier" tag="Supplier"></multiple-organization-auto-complete>
+                </div>
+                <div class="col-md-3">
+                    <label>Title</label>
+                    <multiple-organization-auto-complete ng-model="search.titleIds" name="title" tag="Title"></multiple-organization-auto-complete>
+                </div>
+
+            </div>
+            <div class="form-group">
+
+                <div class="col-md-3">
+                    <label>Tag</label>
+
+                    <ui-select name="tags" ng-model="search.tags">
+                        <ui-select-match allow-clear="true">
+                            <div ng-bind="$select.selected"></div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="tag in ['Product', 'Material']| filter: $select.search">
+                            {{tag}}
+                        </ui-select-choices>
+                    </ui-select>
+
+                </div>
+                <div class="col-md-3">
+                    <label>Require Collect Seasonal Pack</label>
+                    <md-switch class="md-primary" aria-label="Require Collect Seasonal Pack" ng-model="search.requireCollectSeasonalPack"
+                        style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                </div>
+                <div class="col-md-3">
+                    <label>Require Case UPC Approval</label>
+                    <md-switch class="md-primary" aria-label="Has Item UPC Code Collect" ng-model="search.hasItemUpcCodeCollect"
+                        style="margin-top: 0;margin-bottom: 0;"></md-switch>
+                </div>
+            </div>
+        </div>
+        <div class="form-actions right" style="border-bottom: 1px solid #cec8c8">
+            <waitting-btn type="button" btn-class="btn yellow" ng-click="export()" value="'Export to XLSX'" is-loading="exporting"></waitting-btn>
+            <waitting-btn type="button" btn-class="btn blue" ng-click="searchItems()" value="'Search'" is-loading="isLoading"></waitting-btn>
+            <button type="button" class="btn yellow" style="float:left" ng-click="batchItem()" permission-check="{{'item::itemSpec_write'}}">Batch
+                Update</button>
+        </div>
+    </div>
+    <!--<order-search-form is-loading="isLoading" search-orders="searchItems(searchParam)"></order-search-form>-->
+    <div ng-show="isLoading" class="text-center">
+        <img src="assets/img/loading-spinner-grey.gif"><span>&nbsp;LOADING...</span>
+    </div>
+    <div class="table-scrollable item-list-continer">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" ng-checked="selectAll" ng-click="checkAllItems()" name="selectAll"></th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Tags</th>
+                    <th>Status</th>
+                    <th>Customer</th>
+                    <th>Title</th>
+                    <th>Supplier</th>
+                    <th>Grade</th>
+                    <th>Item Group</th>
+                    <th>Has Serial Number</th>
+                    <th>UPC</th>
+                    <th>Bundle</th>
+                    <th ng-if="columnDefs">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in items">
+                    <td>
+                        <input type="checkbox" ng-checked="isChecked(item) " ng-click="checkItem(item)">
+                    </td>
+                    <td><a ng-href="{{'#/fd/item/itemspec/edit/' + item.id}}" target="_blank">{{item.id}}</a></td>
+                    <td>
+                        <item-display item="item"></item-display>
+                    </td>
+                    <td>{{item.desc}}</td>
+                    <td><span ng-repeat="tag in item.tags">
+                            {{tag}}&nbsp;
+                        </span></td>
+                    <td>{{item.status}}</td>
+                    <td>{{item.customer.name}}</td>
+                    <td><span ng-repeat="title in item.titleInfos">
+                            {{title.name}}&nbsp;
+                        </span>
+                    </td>
+                    <td><span ng-repeat="supplier in item.supplierInfos" style=" display: inline-block; border-radius: 4px; padding:5px 2px; margin: 3px 5px 0 0 ;  background: #faf9de">
+                            {{supplier.name}}&nbsp;
+                        </span>
+                    </td>
+                    <td>{{item.grade}}</td>
+                    <td>{{item.itemGroupName}}</td>
+                    <td>{{item.hasSerialNumber ? 'Yes' : 'No'}}</td>
+                    <td>{{item.upcCode}}</td>
+                    <td>{{item.bundle ? 'Yes' : 'No'}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <pager total-count="paging.totalCount" current-page="paging.pageNo" page-size="pageSize" load-content="loadContent(currentPage)"></pager>
+</div>
+</div>

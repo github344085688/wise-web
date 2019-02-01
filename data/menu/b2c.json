@@ -1,0 +1,25 @@
+[{
+  "title": "Online Order",
+  "icon": "receipt",
+  "url": ""
+},{
+  "title": "Offline Order",
+  "icon": "receipt",
+  "url": ""
+},{
+  "title": "RMA Order",
+  "icon": "receipt",
+  "url": ""
+},{
+  "title": "Rate Setup",
+  "icon": "perm_data_setting",
+  "url": ""
+},{
+  "title": "Account Management",
+  "icon": "account_circle",
+  "url": ""
+},{
+  "title": "Customer Interest Analysis",
+  "icon": "recent_actors",
+  "url": ""
+}]

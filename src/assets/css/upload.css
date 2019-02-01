@@ -1,0 +1,28 @@
+.upload-well{
+    min-height: 180px;
+    border: 2px dashed #028AF4;
+    background: #fff;
+    padding: 20px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.upload-well ul{
+    list-style: none;
+}
+.upload-well ul li{
+    float: left;
+    margin: 0 20px;
+}
+
+.upload-well img{
+    float: none;
+    margin: 0 auto;
+    width: 100px;
+    height: 100px;
+    cursor: hand;
+    -webkit-border-radius: 50% !important;
+    -moz-border-radius: 50% !important;
+    border-radius: 20px !important;
+    border: 5px solid #f1f1f1;
+}

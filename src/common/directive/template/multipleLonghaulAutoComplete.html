@@ -1,0 +1,16 @@
+<ui-select ng-model="$parent.ngModel" required="{{required}}" on-select="_onSelect($select.selected)"
+           on-remove="_onRemove($select.selected)" multiple>
+    <ui-select-match>
+        {{$item.longHaulNo}}
+    </ui-select-match>
+    <ui-select-choices repeat="item in longHauls | filter: $select.search.longHaulNo"
+                       refresh="getLongHaulList($select.search)">
+        <div>
+            [{{item.longHaulShipDay.join(",")}}]
+            {{item.longHaulNo}}
+        </div>
+    </ui-select-choices>
+    <ui-select-no-choice>
+        No available option.
+    </ui-select-no-choice>
+</ui-select>
